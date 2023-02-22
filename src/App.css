@@ -14,3 +14,4 @@ body{
 #root{
     @apply h-full flex flex-col 2xl:mx-auto 2xl:container;
 }
+

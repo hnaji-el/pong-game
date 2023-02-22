@@ -1,19 +1,19 @@
 import React, { useEffect,createContext } from "react";
 import Navigation from "../Navigation/Navigation";
 
-export const ActiveHome = createContext<boolean>(false)
+export const ActiveProfile = createContext<boolean>(false)
 
 export default function Home() {
   useEffect(() => {
-    document.title = "Pong - Home";
+    document.title = "Pong - Profile";
   }, []);
 
   return(
-    <ActiveHome.Provider value={true}>
+    <ActiveProfile.Provider value={true}>
       <Navigation />
       <main>
-        Home
+        Profile
       </main>
-    </ActiveHome.Provider>
+    </ActiveProfile.Provider>
   );
 }

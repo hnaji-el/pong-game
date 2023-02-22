@@ -12,6 +12,7 @@ import { ActiveHome } from "../Routes/Home"
 import { ActiveMessages } from "../Routes/Messages"
 import { ActiveProfile } from "../Routes/Profile"
 import logo from '../../assets/logo.svg'
+import ListFriendOnline from "../ListFriendOnline";
 
 export default function SideBar() {
   const home = useContext(ActiveHome);
@@ -20,7 +21,7 @@ export default function SideBar() {
 
   return (
     <>
-      <section className="fixed bottom-0 w-full px-3 pb-3 bg-body 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:pb-0 lg:bg-sideBackground lg:top-0 lg:left-0">
+      <section className="fixed bottom-0 w-full px-3 pb-3 bg-body 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0">
         <Link to="/" className=" hidden lg:flex items-center justify-center">
           <img src={logo} alt="Pong logo" className="w-44" />
         </Link>
@@ -106,17 +107,7 @@ export default function SideBar() {
             </li>
           </ul>
         </nav>
-        <div className='flex flex-col gap-6 h-full overflow-hidden'>
-          <div className=' px-2 flex items-center justify-between'>
-            <span className='text-primaryText text-sm'>Friends</span>
-            <span className='bg-shape text-secondaryText text-xs p-2 rounded-full h-5 w-5 flex justify-center items-center font-bold'>3</span>
-          </div>
-          <div className='flex flex-col gap-7 h-full overflow-auto overflow-x-hidden'>
-            <CardFriendOnline/>
-            <CardFriendOnline/>
-            <CardFriendOnline/>
-          </div>
-        </div> 
+        <ListFriendOnline />
       </section>
       <button className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden phone-nav">
         <ControllerIcon edit="w-8" />

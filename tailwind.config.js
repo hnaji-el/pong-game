@@ -32,6 +32,9 @@ module.exports = {
       fontFamily: {
         sans: ['Poppins'],
       },
+      screens: {
+        '1xl':'1186px'
+      }
     },
   },
   plugins: [],

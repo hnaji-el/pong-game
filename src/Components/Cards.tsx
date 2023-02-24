@@ -63,6 +63,36 @@ export function CardProfile() {
   );
 }
 
+export function CardProfileUser() {
+  return (
+    <div className={`flex items-center`}>
+      <div className="flex items-center gap-2">
+        <img
+          src={pictureUser}
+          alt="Profile"
+          className="w-20 h-20 rounded-full"
+        />
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
+            >
+              {firstLetterCapital("mouassit")}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className={`w-2 h-2 rounded-full bg-online`}></span>
+            <span className="text-secondaryText font-light text-sm">
+              Online
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function CardAchievments() {
   return (
     <div className="flex items-center justify-center p-5 w-[26rem] shadow gap-5 bg-body rounded-xl">

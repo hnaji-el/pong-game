@@ -1,0 +1,15 @@
+import React from "react";
+import {CardUser} from "./Cards"
+function Friends() {
+  return (
+    <div className="flex pt-10 pb-[7.3rem] lg:pb-10 flex-col gap-12">
+      <div className="flex w-full flex-col md:flex-row gap-12">
+        <CardUser />
+        <CardUser />
+        <CardUser />
+      </div>
+    </div>
+  );
+}
+
+export default Friends;

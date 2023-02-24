@@ -6,13 +6,13 @@ interface Props {
   edit?: string;
 }
 
-interface typeContext {
+interface TypeContext {
   state: number;
   setState: React.Dispatch<React.SetStateAction<number>>;
   count: number;
 }
 
-export const indexTab = createContext<typeContext>({
+export const indexTab = createContext<TypeContext>({
   state: 0,
   setState: () => { },
   count: 0,
@@ -36,7 +36,6 @@ export function TabsList({ children }: Props) {
 
 export function Tab({ children }: Props) {
   const tabs = useContext(indexTab);
-  console.log(tabs);
   
   return (
     <button

@@ -74,3 +74,14 @@ export function CardAchievments(){
   </div>
   )
 }
+
+export function CardUser(){
+  return(
+    <Link to ="/" className='flex items-center p-4 card-user shadow justify-between bg-body rounded-xl'>
+    <div className='flex gap-3 items-center'>
+        <img src={friendPicture} alt="Friend" className='w-12 h-12 rounded-full' />
+        <span className='text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap'>{"mouassit".charAt(0).toUpperCase() + "mouassit".slice(1)}</span>
+    </div>
+</Link>
+  )
+}

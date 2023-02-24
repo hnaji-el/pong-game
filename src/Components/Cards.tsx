@@ -2,8 +2,9 @@ import React from "react";
 import friendPicture from "../assets/friend.jpg";
 import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
-import { SettingsIcon } from "./Icons";
+import { PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
+import { firstLetterCapital } from "../helpers";
 
 export function CardFriendOnline() {
   return (
@@ -42,9 +43,8 @@ export function CardProfile() {
           <div className="flex items-center gap-2">
             <span
               className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
-              id="username"
             >
-              {"mouassit".charAt(0).toUpperCase() + "mouassit".slice(1)}
+              {firstLetterCapital("mouassit")}
             </span>
             <button className="w-8 h-8 bg-shape flex justify-center items-center rounded-full">
               <SettingsIcon edit="w-4 h-4 fill-secondaryText" />
@@ -63,25 +63,39 @@ export function CardProfile() {
   );
 }
 
-export function CardAchievments(){
-  return(
-    <div className='flex items-center justify-center p-5 w-[26rem] shadow gap-5 bg-body rounded-xl'>
-    <CircleAchievements/>
-    <div className='flex flex-col gap-1'>
-        <span className='text-primaryText text-4xl'>10</span>
-        <span className='text-secondaryText text-sm'>Achievements completed</span>
+export function CardAchievments() {
+  return (
+    <div className="flex items-center justify-center p-5 w-[26rem] shadow gap-5 bg-body rounded-xl">
+      <CircleAchievements />
+      <div className="flex flex-col gap-1">
+        <span className="text-primaryText text-4xl">10</span>
+        <span className="text-secondaryText text-sm">
+          Achievements completed
+        </span>
+      </div>
     </div>
-  </div>
-  )
+  );
 }
 
-export function CardUser(){
-  return(
-    <Link to ="/" className='flex items-center p-4 card-user shadow justify-between bg-body rounded-xl'>
-    <div className='flex gap-3 items-center'>
-        <img src={friendPicture} alt="Friend" className='w-12 h-12 rounded-full' />
-        <span className='text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap'>{"mouassit".charAt(0).toUpperCase() + "mouassit".slice(1)}</span>
-    </div>
-</Link>
-  )
+export function CardUser() {
+  return (
+    <Link
+      to="/"
+      className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl"
+    >
+      <div className="flex gap-3 items-center">
+        <img
+          src={friendPicture}
+          alt="Friend"
+          className="w-12 h-12 rounded-full"
+        />
+        <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
+          {firstLetterCapital("mouassit")}
+        </span>
+      </div>
+      <button className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover">
+        <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+      </button>
+    </Link>
+  );
 }

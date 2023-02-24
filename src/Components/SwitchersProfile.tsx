@@ -1,6 +1,7 @@
 import React from "react";
 import Achievements from "./Achievements";
 import Friends from "./Friends";
+import MatchHistory from "./MatchHistory";
 import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "./Tabs";
 
 export default function SwitchersProfile() {
@@ -19,8 +20,7 @@ export default function SwitchersProfile() {
           <Friends />
         </TabContent>
         <TabContent edit="overflow-visible">
-          {/*<MatchHistory matchHistory={matchHistory} />*/}
-          Match History
+          <MatchHistory />
         </TabContent>
       </TabsPanels>
     </Tabs>

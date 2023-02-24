@@ -3,6 +3,7 @@ import logo from "../../assets/logo.svg";
 import pictureUser from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
 import { SearchIcon, ControllerIcon, ArrowDownIcon } from "../Icons";
+import { firstLetterCapital } from "../../helpers";
 
 export default function NavBar() {
   return (
@@ -34,7 +35,7 @@ export default function NavBar() {
                 className="w-10 h-10 rounded-full"
               />
               <span className="max-w-[9.6rem] overflow-hidden text-ellipsis	whitespace-nowrap">
-                {"mouassit".charAt(0).toUpperCase() + "mouassit".slice(1)}
+                {firstLetterCapital("mouassit")}
               </span>
             </div>
             <span className="bg-shape w-4 h-4 rounded-full flex justify-center items-center">

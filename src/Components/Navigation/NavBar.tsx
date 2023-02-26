@@ -39,7 +39,11 @@ export default function NavBar() {
             arrow={true}
           />
           <DropdownList>
-            <DropdownItem>
+            <DropdownItem
+              onClick={() => {
+                console.log(5);
+              }}
+            >
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>

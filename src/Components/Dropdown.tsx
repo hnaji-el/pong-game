@@ -1,10 +1,17 @@
-import React, { createContext, useState, useContext, useRef, useEffect } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useRef,
+  useEffect,
+} from "react";
 import { firstLetterCapital } from "../helpers";
-import { ArrowDownIcon,ArrowUpIcon } from "./Icons";
+import { ArrowDownIcon, ArrowUpIcon } from "./Icons";
 
 interface PropsDropdown {
   children?: JSX.Element | JSX.Element[] | string;
   edit?: string;
+  onClick?: () => void;
 }
 
 interface PropsDropdownBtn {
@@ -26,20 +33,26 @@ export const DisplayContext = createContext<TypeContext>({
 
 export function Dropdown({ children }: PropsDropdown) {
   const [dropdown, setDropdown] = useState<boolean>(false);
-  const refDropDown = useRef<any>(null)
+  const refDropDown = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.addEventListener("mousedown", (e) => {
-      if (refDropDown.current && dropdown && !refDropDown.current.contains(e.target))
-        setDropdown(false)
-    })
-  },[dropdown])
+    document.addEventListener("click", (e) => {
+      if (
+        refDropDown.current &&
+        dropdown &&
+        !refDropDown.current.contains(e.target as HTMLDivElement)
+      )
+        setDropdown(false);
+    });
+  }, [dropdown]);
 
   return (
     <DisplayContext.Provider
       value={{ dropdown: dropdown, setDropdown: setDropdown }}
     >
-      <div className="relative text-primaryText text-sm" ref={refDropDown}>{children}</div>
+      <div className="relative text-primaryText text-sm" ref={refDropDown}>
+        {children}
+      </div>
     </DisplayContext.Provider>
   );
 }
@@ -91,18 +104,26 @@ export function DropdownList({ children }: PropsDropdown) {
   let changeStateDropdown = useContext(DisplayContext);
 
   if (changeStateDropdown.dropdown)
-  return (
-    <div className="absolute top-12 rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2">
-      {children}
-    </div>
+    return (
+      <div className="absolute top-12 rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2">
+        {children}
+      </div>
     );
-  
-  return null
+
+  return null;
 }
 
-export function DropdownItem({ children }: PropsDropdown) {
+export function DropdownItem({ children,onClick }: PropsDropdown) {
+  let changeStateDropdown = useContext(DisplayContext);
   return (
-    <button className="flex gap-2 hover:bg-backgroundHover items-center justify-center p-2">
+    <button
+      className="flex gap-2 hover:bg-backgroundHover items-center justify-center p-2"
+      onClick={() => {
+        if(onClick)
+          onClick();
+        changeStateDropdown.setDropdown(false);
+      }}
+    >
       {children}
     </button>
   );

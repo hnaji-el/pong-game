@@ -497,7 +497,7 @@ export function SettingsNavIcon(props: typeProps) {
       className={props.edit}
     >
       <defs>
-        <clipPath id="clip-path">
+        <clipPath id="clip_path">
           <rect
             id="Rectangle_46"
             data-name="Rectangle 46"
@@ -518,7 +518,7 @@ export function SettingsNavIcon(props: typeProps) {
               <g
                 id="Group_361"
                 data-name="Group 361"
-                clipPath="url(#clip-path)"
+                clipPath="url(#clip_path)"
               >
                 <g id="g121" transform="translate(0 -0.152)">
                   <g id="g127">

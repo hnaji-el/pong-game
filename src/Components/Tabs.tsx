@@ -14,7 +14,7 @@ interface TypeContext {
 
 export const indexTab = createContext<TypeContext>({
   state: 0,
-  setState: () => { },
+  setState: () => {},
   count: 0,
 });
 
@@ -22,7 +22,7 @@ export function Tabs({ children, edit }: Props) {
   const [state, setState] = useState<number>(0);
 
   return (
-    <indexTab.Provider value={{ state: state, setState: setState,count: 0 }}>
+    <indexTab.Provider value={{ state: state, setState: setState, count: 0 }}>
       <div className={`flex flex-col gap-6 h-full lg:overflow-hidden ${edit}`}>
         {children}
       </div>
@@ -36,10 +36,14 @@ export function TabsList({ children }: Props) {
 
 export function Tab({ children }: Props) {
   const tabs = useContext(indexTab);
-  
+
   return (
     <button
-      className= {`flex-1 flex justify-center items-center pb-2 border-b-[1px] ${tabs.state === tabs.count++ ?"text-primaryText border-b-primary":"text-secondaryText border-b-shape"}`}
+      className={`flex-1 flex justify-center items-center pb-2 border-b-[1px] ${
+        tabs.state === tabs.count++
+          ? "text-primaryText border-b-primary"
+          : "text-secondaryText border-b-shape"
+      }`}
       onClick={(e) => {
         let index = getIndexElement(e);
         tabs.setState(index);

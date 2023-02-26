@@ -2,8 +2,13 @@ import React from "react";
 import logo from "../../assets/logo.svg";
 import pictureUser from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
-import { SearchIcon, ControllerIcon, ArrowDownIcon } from "../Icons";
-import { firstLetterCapital } from "../../helpers";
+import {
+  SearchIcon,
+  ControllerIcon,
+  SettingsNavIcon,
+  LogoutIcon,
+} from "../Icons";
+import { Dropdown, DropdownBtn, DropdownList, DropdownItem } from "../Dropdown";
 
 export default function NavBar() {
   return (
@@ -26,23 +31,24 @@ export default function NavBar() {
           <ControllerIcon edit="w-7" />
           <span>Play now</span>
         </button>
-        <div className="relative text-primaryText text-sm">
-          <button className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              <img
-                src={pictureUser}
-                alt="User"
-                className="w-10 h-10 rounded-full"
-              />
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis	whitespace-nowrap">
-                {firstLetterCapital("mouassit")}
-              </span>
-            </div>
-            <span className="bg-shape w-4 h-4 rounded-full flex justify-center items-center">
-              <ArrowDownIcon edit="w-1.5 fill-secondaryText" />
-            </span>
-          </button>
-        </div>
+        <Dropdown>
+          <DropdownBtn
+            type="text"
+            title="mouassit"
+            imgTitle={pictureUser}
+            arrow={true}
+          />
+          <DropdownList>
+            <DropdownItem>
+              <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
+              <span>Settings</span>
+            </DropdownItem>
+            <DropdownItem>
+              <LogoutIcon edit="w-5 h-5 fill-primaryText" />
+              <span>Logout</span>
+            </DropdownItem>
+          </DropdownList>
+        </Dropdown>
       </div>
     </section>
   );

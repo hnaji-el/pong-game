@@ -10,7 +10,11 @@ import {
 } from "../Icons";
 import { Dropdown, DropdownBtn, DropdownList, DropdownItem } from "../Dropdown";
 
-export default function NavBar() {
+interface typeProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function NavBar({ setOpen }: typeProps) {
   return (
     <section className="flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">
       <Link to="/" className="lg:hidden">
@@ -41,7 +45,7 @@ export default function NavBar() {
           <DropdownList>
             <DropdownItem
               onClick={() => {
-                console.log(5);
+                if (setOpen) setOpen(true);
               }}
             >
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />

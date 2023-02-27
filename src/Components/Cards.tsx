@@ -6,6 +6,10 @@ import { PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
 import { firstLetterCapital } from "../helpers";
 
+interface TypeCardProfile {
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export function CardFriendOnline() {
   return (
     <Link
@@ -30,7 +34,7 @@ export function CardFriendOnline() {
   );
 }
 
-export function CardProfile() {
+export function CardProfile({ setOpen }: TypeCardProfile) {
   return (
     <div className={`flex items-center`}>
       <div className="flex items-center gap-2">
@@ -46,7 +50,12 @@ export function CardProfile() {
             >
               {firstLetterCapital("mouassit")}
             </span>
-            <button className="w-8 h-8 bg-shape flex justify-center items-center rounded-full">
+            <button
+              className="w-8 h-8 bg-shape flex justify-center items-center rounded-full"
+              onClick={() => {
+                if (setOpen) setOpen(true);
+              }}
+            >
               <SettingsIcon edit="w-4 h-4 fill-secondaryText" />
             </button>
           </div>

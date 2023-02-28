@@ -6,12 +6,12 @@ import {
   SearchIcon,
   ControllerIcon,
 } from "../Icons";
-import { Link } from "react-router-dom"
-import userPicture from "../../assets/user.jpg"
-import { ActiveHome } from "../Routes/Home"
-import { ActiveMessages } from "../Routes/Messages"
-import { ActiveProfile } from "../Routes/Profile"
-import logo from '../../assets/logo.svg'
+import { Link } from "react-router-dom";
+import userPicture from "../../assets/user.jpg";
+import { ActiveHome } from "../Routes/Home";
+import { ActiveMessages } from "../Routes/Messages";
+import { ActiveProfile } from "../Routes/Profile";
+import logo from "../../assets/logo.svg";
 import ListFriendOnline from "../ListFriendOnline";
 
 export default function SideBar() {
@@ -30,7 +30,9 @@ export default function SideBar() {
             <li className="lg:w-full">
               <Link
                 to="/"
-                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${home?"lg:bg-shape lg:border-l-[6px] lg:border-primary":""}`}
+                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
+                  home ? "lg:bg-shape lg:border-l-[6px] lg:border-primary" : ""
+                }`}
               >
                 <HomeIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
@@ -49,7 +51,11 @@ export default function SideBar() {
             <li className="lg:w-full">
               <Link
                 to="/Messages"
-                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${messages?"lg:bg-shape lg:border-l-[6px] lg:border-primary":""}`}
+                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
+                  messages
+                    ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
+                    : ""
+                }`}
               >
                 <MessagesIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
@@ -68,7 +74,11 @@ export default function SideBar() {
             <li className="lg:w-full">
               <Link
                 to="/Profile"
-                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${profile?"lg:bg-shape lg:border-l-[6px] lg:border-primary":""}`}
+                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
+                  profile
+                    ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
+                    : ""
+                }`}
               >
                 <UserIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${

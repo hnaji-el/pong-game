@@ -1,15 +1,25 @@
-import React, { useState } from "react";
-import userImg from "../../../assets/user.jpg";
+import React from "react";
 import { EditAvatarIcon } from "../../Icons";
 
 interface TypeProps {
+  value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+  pictureUser: string;
+  setPictureUser: React.Dispatch<React.SetStateAction<string>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setTfa: React.Dispatch<React.SetStateAction<boolean>>;
+  enable: boolean;
 }
 
-export default function Settings({ setOpen }: TypeProps) {
-  const [pictureUser, setPictureUser] = useState<string>(userImg);
-  const [value, setValue] = useState<string>("mouassit");
-  const [switchBtn, setSwitchBtn] = useState<boolean>(false);
+export default function Settings({
+  value,
+  setValue,
+  pictureUser,
+  setPictureUser,
+  setOpen,
+  setTfa,
+  enable,
+}: TypeProps) {
   return (
     <div className="flex flex-col justify-between py-6">
       <div>
@@ -69,15 +79,14 @@ export default function Settings({ setOpen }: TypeProps) {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-primaryText">
-                <span>{switchBtn ? "Disable" : "Enable"}</span> 2FA
+                <span>{enable ? "Disable" : "Enable"}</span> 2FA
               </span>
               <button
                 className={`flex h-7 w-12 px-1 ${
-                  switchBtn ? "justify-end bg-primary" : "justify-start bg-body"
+                  enable ? "justify-end bg-primary" : "justify-start bg-body"
                 } items-center rounded-full`}
                 onClick={() => {
-                  if (!switchBtn) setSwitchBtn(true);
-                  else setSwitchBtn(false);
+                  setTfa(true);
                 }}
               >
                 <span className="h-5 w-5 rounded-full bg-primaryText"></span>

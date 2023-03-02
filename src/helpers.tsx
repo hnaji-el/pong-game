@@ -17,3 +17,9 @@ export function getIndexElement(
 export function firstLetterCapital(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
+
+export function checkNickname(value: string): string {
+  if (!value.trim().length) return "Zone text empty";
+
+  return "";
+}

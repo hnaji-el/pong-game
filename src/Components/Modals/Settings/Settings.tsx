@@ -1,5 +1,7 @@
-import React from "react";
-import { EditAvatarIcon } from "../../Icons";
+import React, { useState } from "react";
+import { checkNickname } from "../../../helpers";
+import { EditAvatarIcon, ExclamationIcon } from "../../Icons";
+import InputForm from "../../InputForm";
 
 interface TypeProps {
   value: string;
@@ -20,8 +22,10 @@ export default function Settings({
   setTfa,
   enable,
 }: TypeProps) {
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorImage, setErrorImage] = useState<string>("");
   return (
-    <div className="flex flex-col justify-between py-6">
+    <form className="flex flex-col justify-between py-6">
       <div>
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
           <div className="flex flex-col items-center gap-3">
@@ -30,7 +34,14 @@ export default function Settings({
               alt="User"
               className="h-24 w-24 rounded-full"
             />
+            {errorImage.length ? (
+              <div className="text-error text-xs font-medium fill-error flex gap-1.5">
+                <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
+                <span>{errorImage}</span>
+              </div>
+            ) : null}
             <button
+              type="button"
               className="flex w-28 items-center justify-center gap-1 rounded-md bg-primary p-2 text-sm text-primaryText"
               onClick={() => {
                 let inputFile = document.getElementById("file");
@@ -56,32 +67,25 @@ export default function Settings({
                       extention === "JPG"
                     ) {
                       setPictureUser(URL.createObjectURL(e.target.files[0]));
-                    }
+                    } else setErrorImage("Inavlid format (png - jpg)");
                   }
                 }}
               />
             </button>
           </div>
           <div className="flex flex-col justify-start gap-6">
-            <div className="flex w-full flex-col gap-1.5 lg:w-64">
-              <label htmlFor="Username" className="text-sm text-primaryText">
-                Username
-              </label>
-              <input
-                type="text"
-                className={`placeholder-secondary-text rounded-md bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light`}
-                placeholder="Enter username"
-                value={value}
-                onChange={(e) => {
-                  setValue(e.currentTarget.value);
-                }}
-              />
-            </div>
+            <InputForm
+              value={value}
+              setValue={setValue}
+              errorMessage={errorMessage}
+              setErrorMessage={setErrorMessage}
+            />
             <div className="flex items-center justify-between">
               <span className="text-sm text-primaryText">
                 <span>{enable ? "Disable" : "Enable"}</span> 2FA
               </span>
               <button
+                type="button"
                 className={`flex h-7 w-12 px-1 ${
                   enable ? "justify-end bg-primary" : "justify-start bg-body"
                 } items-center rounded-full`}
@@ -98,6 +102,7 @@ export default function Settings({
       <div className="flex w-full items-center justify-end gap-3">
         <button
           className="w-32 rounded-md bg-shape p-2 text-sm text-primaryText shadow"
+          type="button"
           onClick={() => {
             setOpen(false);
             document.body.style.overflow = "auto";
@@ -106,8 +111,16 @@ export default function Settings({
           Cancel
         </button>
         <button
+          type="submit"
           className="w-32 rounded-md bg-primary p-2 text-sm text-primaryText"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            let errorMessage = checkNickname(value);
+
+            if (errorMessage.length) {
+              setErrorMessage(errorMessage);
+              return;
+            }
             setOpen(false);
             document.body.style.overflow = "auto";
           }}
@@ -115,6 +128,6 @@ export default function Settings({
           Save
         </button>
       </div>
-    </div>
+    </form>
   );
 }

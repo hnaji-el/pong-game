@@ -9,10 +9,11 @@ import SearchInput from "../SearchInput";
 export default function Navigation() {
   const [open, setOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
+
   return (
     <>
       <NavBar setOpen={setOpen} />
-      <SideBar setOpenSearch={setOpenSearch}/>
+      <SideBar setOpenSearch={setOpenSearch} />
       {open ? (
         <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
           <ModalHeader setOpen={setOpen}>Settings</ModalHeader>
@@ -22,7 +23,7 @@ export default function Navigation() {
         </Modal>
       ) : null}
       {openSearch ? (
-        <ModalSearch>
+        <ModalSearch setOpenSearch={setOpenSearch}>
           <SearchInput modal={true} />
         </ModalSearch>
       ) : null}

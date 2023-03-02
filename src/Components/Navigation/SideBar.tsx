@@ -46,16 +46,12 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 }}
               >
                 <HomeIcon
-                  edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
-                    home ? "lg:fill-primary" : "lg:fill-secondaryText"
-                  } ${
+                  edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
                     home && !clickSearch ? "fill-primary" : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    home ? "lg:text-primary" : "lg:text-secondaryText"
-                  } ${
                     home && !clickSearch ? "text-primary" : "text-secondaryText"
                   }`}
                 >
@@ -78,9 +74,7 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 }}
               >
                 <MessagesIcon
-                  edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
-                    messages ? "lg:fill-primary" : "lg:fill-secondaryText"
-                  } ${
+                  edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
                     messages && !clickSearch
                       ? "fill-primary"
                       : "fill-secondaryText"
@@ -88,8 +82,6 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    messages ? "lg:text-primary" : "lg:text-secondaryText"
-                  } ${
                     messages && !clickSearch
                       ? "text-primary"
                       : "text-secondaryText"
@@ -115,8 +107,6 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
               >
                 <UserIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
-                    profile ? "lg:fill-primary" : "lg:fill-secondaryText"
-                  } ${
                     profile && !clickSearch
                       ? "fill-primary"
                       : "fill-secondaryText"
@@ -124,8 +114,6 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    profile ? "lg:text-primary" : "lg:text-secondaryText"
-                  } ${
                     profile && !clickSearch
                       ? "text-primary"
                       : "text-secondaryText"

@@ -12,7 +12,7 @@ export function Modal({ children, edit }: TypeProps) {
     document.body.style.overflow = "hidden";
   }, []);
   return (
-    <div className="absolute left-0 top-0 flex justify-center items-center lg:items-start bg-black/30 w-full h-full backdrop-blur-sm z-[999]">
+    <div className="fixed left-0 top-0 flex justify-center items-center lg:items-start bg-black/30 w-full h-full backdrop-blur-sm z-[999]">
       <div
         className={`bg-shape mt-0 lg:mt-8 rounded-lg flex flex-col pt-4 px-4 ${edit}`}
       >

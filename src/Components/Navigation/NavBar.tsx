@@ -3,33 +3,24 @@ import logo from "../../assets/logo.svg";
 import pictureUser from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
 import {
-  SearchIcon,
   ControllerIcon,
   SettingsNavIcon,
   LogoutIcon,
 } from "../Icons";
 import { Dropdown, DropdownBtn, DropdownList, DropdownItem } from "../Dropdown";
+import SearchInput from "../SearchInput";
 
-interface typeProps {
+interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function NavBar({ setOpen }: typeProps) {
+export default function NavBar({ setOpen }: TypeProps) {
   return (
     <section className="flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">
       <Link to="/" className="lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
       </Link>
-      <div className="hidden lg:block flex-1 relative">
-        <div className="flex items-center bg-shape pr-4 rounded-md">
-          <input
-            type="text"
-            placeholder="Search for user"
-            className="flex-1 bg-transparent placeholder-secondary-text placeholder:font-light placeholder:text-sm font-light text-sm p-3 pl-4 pr-1.5 focus:outline-none text-primaryText"
-          />
-          <SearchIcon edit="w-4 fill-secondaryText" />
-        </div>
-      </div>
+      <SearchInput />
       <div className="hidden lg:flex items-center gap-5">
         <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">
           <ControllerIcon edit="w-7" />

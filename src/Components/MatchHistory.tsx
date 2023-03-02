@@ -3,7 +3,7 @@ import MatchHistoryUser from './MatchHistoryUser'
 
 export default function MatchHistory() {
     return (
-        <div className="content-profile flex pt-10 lg:pb-10">
+        <div className="pt-5 pb-[7.6rem] lg:pb-[2.7rem] flex">
         <table className="table w-full ">
           <thead>
             <tr className="rounded-xl bg-body font-medium text-primaryText shadow">

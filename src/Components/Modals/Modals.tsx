@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { CloseIcon } from "../Icons";
 
-interface Props {
+interface TypeProps {
   children: JSX.Element | JSX.Element[] | string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   edit?: string;
 }
 
-export function Modal({ children, edit }: Props) {
+export function Modal({ children, edit }: TypeProps) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
   }, []);
@@ -22,7 +22,7 @@ export function Modal({ children, edit }: Props) {
   );
 }
 
-export function ModalHeader({ children, edit, setOpen }: Props) {
+export function ModalHeader({ children, edit, setOpen }: TypeProps) {
   return (
     <div
       className={`flex items-center w-full justify-between border-secondaryText pb-5 ${edit}`}
@@ -44,6 +44,6 @@ export function ModalHeader({ children, edit, setOpen }: Props) {
   );
 }
 
-export function ModalBody({ children, edit }: Props) {
+export function ModalBody({ children, edit }: TypeProps) {
   return <div className={`flex h-full ${edit}`}>{children}</div>;
 }

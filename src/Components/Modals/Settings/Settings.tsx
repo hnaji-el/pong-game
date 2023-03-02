@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { checkNickname } from "../../../helpers";
-import { EditAvatarIcon, ExclamationIcon } from "../../Icons";
+import { EditAvatarIcon } from "../../Icons";
 import InputForm from "../../InputForm";
 
 interface TypeProps {
@@ -23,7 +23,6 @@ export default function Settings({
   enable,
 }: TypeProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [errorImage, setErrorImage] = useState<string>("");
   return (
     <form className="flex flex-col justify-between py-6">
       <div>
@@ -34,12 +33,6 @@ export default function Settings({
               alt="User"
               className="h-24 w-24 rounded-full"
             />
-            {errorImage.length ? (
-              <div className="text-error text-xs font-medium fill-error flex gap-1.5">
-                <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
-                <span>{errorImage}</span>
-              </div>
-            ) : null}
             <button
               type="button"
               className="flex w-28 items-center justify-center gap-1 rounded-md bg-primary p-2 text-sm text-primaryText"
@@ -67,7 +60,7 @@ export default function Settings({
                       extention === "JPG"
                     ) {
                       setPictureUser(URL.createObjectURL(e.target.files[0]));
-                    } else setErrorImage("Inavlid format (png - jpg)");
+                    }
                   }
                 }}
               />

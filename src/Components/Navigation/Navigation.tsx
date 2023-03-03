@@ -25,6 +25,7 @@ export default function Navigation() {
       {openSearch ? (
         <ModalSearch setOpenSearch={setOpenSearch}>
           <SearchInput modal={true} />
+          <button className="bg-green-200">hello</button>
         </ModalSearch>
       ) : null}
     </>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import {
   HomeIcon,
   MessagesIcon,
@@ -19,14 +19,14 @@ interface TypeProps {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SideBar({ openSearch,setOpenSearch }: TypeProps) {
+export default function SideBar({ openSearch, setOpenSearch }: TypeProps) {
   const home = useContext(ActiveHome);
   const messages = useContext(ActiveMessages);
   const profile = useContext(ActiveProfile);
 
   return (
     <>
-      <section className="fixed bottom-0 w-full px-3 pb-3 bg-body 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0">
+      <section className={`fixed bottom-0 w-full px-3 pb-3 ${!openSearch?"bg-body":""} 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0`}>
         <Link to="/" className=" hidden lg:flex items-center justify-center">
           <img src={logo} alt="Pong logo" className="w-44" />
         </Link>

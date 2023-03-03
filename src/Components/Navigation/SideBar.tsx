@@ -15,15 +15,14 @@ import logo from "../../assets/logo.svg";
 import ListFriendOnline from "../ListFriendOnline";
 
 interface TypeProps {
+  openSearch: boolean;
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SideBar({ setOpenSearch }: TypeProps) {
+export default function SideBar({ openSearch,setOpenSearch }: TypeProps) {
   const home = useContext(ActiveHome);
   const messages = useContext(ActiveMessages);
   const profile = useContext(ActiveProfile);
-
-  const [clickSearch, setClickSearch] = useState<boolean>(false);
 
   return (
     <>
@@ -41,18 +40,17 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
-                  setClickSearch(false);
                   document.body.style.overflow = "auto";
                 }}
               >
                 <HomeIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    home && !clickSearch ? "fill-primary" : "fill-secondaryText"
+                    home && !openSearch ? "fill-primary" : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    home && !clickSearch ? "text-primary" : "text-secondaryText"
+                    home && !openSearch ? "text-primary" : "text-secondaryText"
                   }`}
                 >
                   Home
@@ -69,20 +67,19 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
-                  setClickSearch(false);
                   document.body.style.overflow = "auto";
                 }}
               >
                 <MessagesIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    messages && !clickSearch
+                    messages && !openSearch
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    messages && !clickSearch
+                    messages && !openSearch
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -101,20 +98,19 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
-                  setClickSearch(false);
                   document.body.style.overflow = "auto";
                 }}
               >
                 <UserIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
-                    profile && !clickSearch
+                    profile && !openSearch
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    profile && !clickSearch
+                    profile && !openSearch
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -128,17 +124,16 @@ export default function SideBar({ setOpenSearch }: TypeProps) {
                 className="flex flex-col justify-center items-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(true);
-                  setClickSearch(true);
                 }}
               >
                 <SearchIcon
                   edit={`w-5 h-6 ${
-                    clickSearch ? "fill-primary" : "fill-secondaryText"
+                    openSearch ? "fill-primary" : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    clickSearch ? "text-primary" : "text-secondaryText"
+                    openSearch ? "text-primary" : "text-secondaryText"
                   }`}
                 >
                   Search

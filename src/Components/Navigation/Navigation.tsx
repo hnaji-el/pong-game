@@ -16,7 +16,12 @@ export default function Navigation() {
   return (
     <>
       <NavBar setOpen={setOpen} />
-      <SideBar openSearch={openSearch} setOpenSearch={setOpenSearch} openSettings={openSettings} setOpenSettings={setOpenSettings} />
+      <SideBar
+        openSearch={openSearch}
+        setOpenSearch={setOpenSearch}
+        openSettings={openSettings}
+        setOpenSettings={setOpenSettings}
+      />
       {open ? (
         <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
           <ModalHeader setOpen={setOpen}>Settings</ModalHeader>
@@ -32,7 +37,7 @@ export default function Navigation() {
       ) : null}
       {openSettings ? (
         <ModalSettings setOpenSettings={setOpenSettings}>
-          <ViewSettings />
+          <ViewSettings setOpen={setOpen} />
         </ModalSettings>
       ) : null}
     </>

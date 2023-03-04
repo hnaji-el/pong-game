@@ -17,17 +17,36 @@ import ListFriendOnline from "../ListFriendOnline";
 interface TypeProps {
   openSearch: boolean;
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  openSettings: boolean;
+  setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SideBar({ openSearch, setOpenSearch }: TypeProps) {
+export default function SideBar({
+  openSearch,
+  setOpenSearch,
+  openSettings,
+  setOpenSettings,
+}: TypeProps) {
   const home = useContext(ActiveHome);
   const messages = useContext(ActiveMessages);
   const profile = useContext(ActiveProfile);
 
   return (
     <>
-      <section className={`fixed bottom-0 w-full px-3 pb-3 ${!openSearch?"bg-body":""} 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0`}>
-        <Link to="/" className=" hidden lg:flex items-center justify-center">
+      <section
+        className={`fixed bottom-0 w-full px-3 pb-3 ${
+          !openSearch ? "bg-body" : ""
+        } 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0`}
+      >
+        <Link
+          to="/"
+          className=" hidden lg:flex items-center justify-center"
+          onClick={() => {
+            setOpenSearch(false);
+            setOpenSettings(false);
+            document.body.style.overflow = "auto";
+          }}
+        >
           <img src={logo} alt="Pong logo" className="w-44" />
         </Link>
         <nav className="bg-sideBackground shadow-lg p-2 px-3 rounded-lg lg:rounded-none lg:shadow-none lg:bg-transparent lg:p-0 lg:px-0">
@@ -40,17 +59,22 @@ export default function SideBar({ openSearch, setOpenSearch }: TypeProps) {
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
+                  setOpenSettings(false);
                   document.body.style.overflow = "auto";
                 }}
               >
                 <HomeIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    home && !openSearch ? "fill-primary" : "fill-secondaryText"
+                    home && !openSearch && !openSettings
+                      ? "fill-primary"
+                      : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    home && !openSearch ? "text-primary" : "text-secondaryText"
+                    home && !openSearch && !openSettings
+                      ? "text-primary"
+                      : "text-secondaryText"
                   }`}
                 >
                   Home
@@ -67,19 +91,20 @@ export default function SideBar({ openSearch, setOpenSearch }: TypeProps) {
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
+                  setOpenSettings(false);
                   document.body.style.overflow = "auto";
                 }}
               >
                 <MessagesIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    messages && !openSearch
+                    messages && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    messages && !openSearch
+                    messages && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -98,19 +123,20 @@ export default function SideBar({ openSearch, setOpenSearch }: TypeProps) {
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
+                  setOpenSettings(false);
                   document.body.style.overflow = "auto";
                 }}
               >
                 <UserIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
-                    profile && !openSearch
+                    profile && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    profile && !openSearch
+                    profile && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -141,16 +167,20 @@ export default function SideBar({ openSearch, setOpenSearch }: TypeProps) {
               </button>
             </li>
             <li className="lg:hidden">
-              <Link
-                to="/"
-                className="flex flex-col justify-center items-center gap-1.5"
+              <button
+                className={`flex flex-col justify-center items-center gap-1.5 ${
+                  openSettings ? "border-[2px] border-primary rounded-full" : ""
+                }`}
+                onClick={() => {
+                  setOpenSettings(true);
+                }}
               >
                 <img
                   className="w-10 h-10 rounded-3xl"
                   src={userPicture}
                   alt="User profile"
                 />
-              </Link>
+              </button>
             </li>
           </ul>
         </nav>

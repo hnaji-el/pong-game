@@ -1,5 +1,5 @@
 import React from "react";
-import CardFriendMessage from "./CardFriendMessage";
+import { CardFriendMessage } from "./Cards";
 import { SearchIcon } from "./Icons";
 
 export default function Chats() {

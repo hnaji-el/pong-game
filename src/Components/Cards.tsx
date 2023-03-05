@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
 import { firstLetterCapital } from "../helpers";
+import PictureFriend from "../assets/friend.jpg";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -136,5 +137,60 @@ export function CardUser() {
         <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
       </button>
     </Link>
+  );
+}
+
+export function CardFriendMessage() {
+  return (
+    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex justify-between px-3 lg:px-2 py-4 hover:bg-backgroundHover cursor-pointer">
+      <div className="flex items-center gap-2">
+        <img
+          src={PictureFriend}
+          alt="Friend"
+          className="h-10 w-10 rounded-full"
+        />
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1.5">
+            <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
+              {firstLetterCapital("mouassit")}
+            </span>
+          </div>
+          <span className="w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
+            hello
+          </span>
+        </div>
+      </div>
+      <div className="relative">
+        <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+      </div>
+    </div>
+  );
+}
+
+export function CardChatFriend() {
+  return (
+    <div className="flex flex-1 items-center">
+      <div className="flex items-center gap-2">
+        <img
+          src={PictureFriend}
+          alt="Friend"
+          className="h-14 w-14 rounded-full"
+        />
+
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-1.5">
+            <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap">
+              {firstLetterCapital("mouassit")}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-online"></span>
+            <span className="text-sm font-light text-secondaryText">
+              Online
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -38,17 +38,18 @@ export default function SideBar({
           !openSearch ? "bg-body" : ""
         } 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0`}
       >
-        <Link
-          to="/"
-          className=" hidden lg:flex items-center justify-center"
-          onClick={() => {
-            setOpenSearch(false);
-            setOpenSettings(false);
-            document.body.style.overflow = "auto";
-          }}
-        >
-          <img src={logo} alt="Pong logo" className="w-44" />
-        </Link>
+        <div className=" hidden lg:flex items-center justify-center">
+          <Link
+            to="/"
+            onClick={() => {
+              setOpenSearch(false);
+              setOpenSettings(false);
+              document.body.style.overflow = "auto";
+            }}
+          >
+            <img src={logo} alt="Pong logo" className="w-48 lg:w-44" />
+          </Link>
+        </div>
         <nav className="bg-sideBackground shadow-lg p-2 px-3 rounded-lg lg:rounded-none lg:shadow-none lg:bg-transparent lg:p-0 lg:px-0">
           <ul className="flex justify-between items-center lg:items-start  lg:flex-col lg:gap-12">
             <li className="lg:w-full">

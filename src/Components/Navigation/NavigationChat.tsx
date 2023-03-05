@@ -4,6 +4,10 @@ import SettingsBody from "../Modals/Settings/SettingsBody";
 import PhoneNav from "./PhoneNav";
 import NavBarChat from "./NavBarChat";
 import SideBarChat from "./SideBarChat";
+import ModalSearch from "../Modals/ModalSearch";
+import SearchInput from "../SearchInput";
+import ModalSettings from "../Modals/ModalSettings";
+import ViewSettings from "../ViewSettings";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
@@ -11,6 +15,7 @@ export default function NavigationChat() {
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   return (
     <>
+      <NavBarChat setOpen={setOpen}/>
       <SideBarChat
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
@@ -28,6 +33,16 @@ export default function NavigationChat() {
             <SettingsBody setOpen={setOpen} />
           </ModalBody>
         </Modal>
+      ) : null}
+      {openSearch ? (
+        <ModalSearch setOpenSearch={setOpenSearch}>
+          <SearchInput modal={true} />
+        </ModalSearch>
+      ) : null}
+      {openSettings ? (
+        <ModalSettings setOpenSettings={setOpenSettings}>
+          <ViewSettings setOpen={setOpen} />
+        </ModalSettings>
       ) : null}
     </>
   );

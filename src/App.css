@@ -4,8 +4,8 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar{
-    width: .4rem;
-    height: .4rem;
+    background-color: rgba(0, 0, 0, 0.147);
+    @apply w-[.4rem] h-[.4rem];
 }
 
 

@@ -5,7 +5,7 @@ import { PointsIcon } from "./Icons";
 
 export default function CardFriendMessage() {
   return (
-    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex justify-between lg:px-2 py-4 hover:bg-backgroundHover cursor-pointer">
+    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex justify-between px-3 lg:px-2 py-4 hover:bg-backgroundHover cursor-pointer">
       <div className="flex items-center gap-2">
         <img
           src={PictureFriend}

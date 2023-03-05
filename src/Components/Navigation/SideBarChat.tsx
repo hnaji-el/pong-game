@@ -16,7 +16,7 @@ export default function SideBarChat({
 }: TypeProps) {
   return (
     <>
-      <section className="lg:fixed h-full pb-3 2xl:left-auto z-[999] flex flex-col w-full lg:w-60 px-3 lg:px-0 py-7 gap-12 lg:bg-sideBackground lg:top-0 lg:left-0">
+      <section className="lg:fixed h-full 2xl:left-auto z-[999] flex flex-col w-full lg:w-60  lg:px-0 pt-7 pb-[12.95rem] lg:py-7 gap-12 lg:bg-sideBackground lg:top-0 lg:left-0">
         <Link
           to="/"
           className=" flex items-center justify-center"
@@ -29,7 +29,7 @@ export default function SideBarChat({
           <img src={logo} alt="Pong logo" className="w-48 lg:w-44" />
         </Link>
         <Tabs>
-          <TabsList edit="lg:mx-2">
+          <TabsList edit="mx-3 lg:mx-2">
             <Tab>Chats</Tab>
             <Tab>Channels</Tab>
           </TabsList>

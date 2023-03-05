@@ -11,9 +11,6 @@ export default function Messages() {
   return(
     <ActiveMessages.Provider value={true}>
       <NavigationChat />
-      <main className="mx-3 pb-20 lg:pb-1 pt-10 lg:ml-64 lg:mr-4 ">
-        Messages
-      </main>
     </ActiveMessages.Provider>
   );
 }

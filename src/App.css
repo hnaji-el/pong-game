@@ -3,6 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar{
+    width: .4rem;
+    height: .4rem;
+}
+
+
+::-webkit-scrollbar-thumb{
+    @apply bg-shape rounded-full
+}
+
 body,html{
     height: 100vh;
     width: 100%;

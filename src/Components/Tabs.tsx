@@ -30,8 +30,8 @@ export function Tabs({ children, edit }: Props) {
   );
 }
 
-export function TabsList({ children }: Props) {
-  return <div className="text-sm flex items-center px-2">{children}</div>;
+export function TabsList({ children,edit }: Props) {
+  return <div className={`text-sm flex items-center ${edit}`}>{children}</div>;
 }
 
 export function Tab({ children }: Props) {

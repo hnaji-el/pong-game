@@ -1,21 +1,19 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/logo.svg";
+import React, { useContext } from "react";
 import pictureUser from "../../assets/user.jpg";
 import { CardChatFriend } from "../Cards";
 import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
+import { StateMssages } from "../Routes/Messages";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function NavBarChat({ setOpen }: TypeProps) {
+  const stateMessage = useContext(StateMssages);
+
   return (
-    <section className="hidden lg:flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">
-      <Link to="/" className="lg:hidden">
-        <img src={logo} alt="Pong logo" className="w-48" />
-      </Link>
+    <section className={`${!stateMessage.click?"hidden":""} lg:flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5`}>
       <CardChatFriend />
       <div className="hidden lg:flex items-center gap-5">
         <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">

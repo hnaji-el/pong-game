@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import userPicture from "../../assets/user.jpg";
 import { ActiveHome } from "../Routes/Home";
-import { ActiveMessages } from "../Routes/Messages";
+import { StateMssages } from "../Routes/Messages";
 import { ActiveProfile } from "../Routes/Profile";
 import ListFriendOnline from "../ListFriendOnline";
 
@@ -27,7 +27,7 @@ export default function PhoneNav({
   setOpenSettings,
 }: TypeProps) {
   const home = useContext(ActiveHome);
-  const messages = useContext(ActiveMessages);
+  const messages = useContext(StateMssages);
   const profile = useContext(ActiveProfile);
 
   return (
@@ -79,14 +79,14 @@ export default function PhoneNav({
               >
                 <MessagesIcon
                   edit={`w-6 h-6 ${
-                    messages && !openSearch && !openSettings
+                    messages.active && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    messages && !openSearch && !openSettings
+                    messages.active && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}

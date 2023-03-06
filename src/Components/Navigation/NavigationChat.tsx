@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
 import SettingsBody from "../Modals/Settings/SettingsBody";
 import PhoneNav from "./PhoneNav";
@@ -8,18 +8,24 @@ import ModalSearch from "../Modals/ModalSearch";
 import SearchInput from "../SearchInput";
 import ModalSettings from "../Modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
+import { StateMssages } from "../Routes/Messages";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+
+  const stateMessage = useContext(StateMssages);
+
   return (
     <>
-      <NavBarChat setOpen={setOpen}/>
-      <SideBarChat
-        setOpenSearch={setOpenSearch}
-        setOpenSettings={setOpenSettings}
-      />
+      <NavBarChat setOpen={setOpen} />
+      {!stateMessage.click ? (
+        <SideBarChat
+          setOpenSearch={setOpenSearch}
+          setOpenSettings={setOpenSettings}
+        />
+      ) : null}
       <PhoneNav
         openSearch={openSearch}
         setOpenSearch={setOpenSearch}

@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import userPicture from "../../assets/user.jpg";
 import { ActiveHome } from "../Routes/Home";
-import { ActiveMessages } from "../Routes/Messages";
+import { StateMssages } from "../Routes/Messages";
 import { ActiveProfile } from "../Routes/Profile";
 import logo from "../../assets/logo.svg";
 import ListFriendOnline from "../ListFriendOnline";
@@ -28,7 +28,7 @@ export default function SideBar({
   setOpenSettings,
 }: TypeProps) {
   const home = useContext(ActiveHome);
-  const messages = useContext(ActiveMessages);
+  const messages = useContext(StateMssages);
   const profile = useContext(ActiveProfile);
 
   return (
@@ -86,7 +86,7 @@ export default function SideBar({
               <Link
                 to="/Messages"
                 className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
-                  messages
+                  messages.active
                     ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
                     : ""
                 }`}
@@ -98,14 +98,14 @@ export default function SideBar({
               >
                 <MessagesIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    messages && !openSearch && !openSettings
+                    messages.active && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs lg:text-primaryText lg:text-sm ${
-                    messages && !openSearch && !openSettings
+                    messages.active && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}

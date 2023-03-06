@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import friendPicture from "../assets/friend.jpg";
 import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
@@ -6,6 +6,8 @@ import { PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
 import { firstLetterCapital } from "../helpers";
 import PictureFriend from "../assets/friend.jpg";
+import { StateMssages } from "./Routes/Messages";
+
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -141,8 +143,11 @@ export function CardUser() {
 }
 
 export function CardFriendMessage() {
+  const stateMessages = useContext(StateMssages);
   return (
-    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex justify-between px-3 lg:px-2 py-4 hover:bg-backgroundHover cursor-pointer">
+    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex justify-between px-3 lg:px-2 py-4 hover:bg-backgroundHover cursor-pointer" onClick={() => {
+      stateMessages.setClick(true);
+    }}>
       <div className="flex items-center gap-2">
         <img
           src={PictureFriend}
@@ -176,7 +181,6 @@ export function CardChatFriend() {
           alt="Friend"
           className="h-14 w-14 rounded-full"
         />
-
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
             <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap">

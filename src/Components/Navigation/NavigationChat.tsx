@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
 import SettingsBody from "../Modals/Settings/SettingsBody";
 import PhoneNav from "./PhoneNav";
@@ -8,11 +8,13 @@ import ModalSearch from "../Modals/ModalSearch";
 import SearchInput from "../SearchInput";
 import ModalSettings from "../Modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
+import { StateMssages } from "../Routes/Messages";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+  const stateMessages = useContext(StateMssages);
 
   return (
     <>
@@ -21,12 +23,14 @@ export default function NavigationChat() {
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
       />
-      <PhoneNav
-        openSearch={openSearch}
-        setOpenSearch={setOpenSearch}
-        openSettings={openSettings}
-        setOpenSettings={setOpenSettings}
-      />
+      {!stateMessages.click ? (
+        <PhoneNav
+          openSearch={openSearch}
+          setOpenSearch={setOpenSearch}
+          openSettings={openSettings}
+          setOpenSettings={setOpenSettings}
+        />
+      ) : null}
       {open ? (
         <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
           <ModalHeader setOpen={setOpen}>Settings</ModalHeader>

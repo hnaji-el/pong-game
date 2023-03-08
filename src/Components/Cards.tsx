@@ -1,13 +1,12 @@
-import React,{useContext} from "react";
+import React, { useContext } from "react";
 import friendPicture from "../assets/friend.jpg";
 import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
-import { PointsIcon, SettingsIcon } from "./Icons";
+import { ArrowLeftIcon, PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
 import { firstLetterCapital } from "../helpers";
 import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
-
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -145,36 +144,52 @@ export function CardUser() {
 export function CardFriendMessage() {
   const stateMessages = useContext(StateMssages);
   return (
-    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex justify-between px-3 lg:px-2 py-4 hover:bg-backgroundHover cursor-pointer" onClick={() => {
-      stateMessages.setClick(true);
-    }}>
-      <div className="flex items-center gap-2">
-        <img
-          src={PictureFriend}
-          alt="Friend"
-          className="h-10 w-10 rounded-full"
-        />
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-1.5">
-            <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
-              {firstLetterCapital("mouassit")}
+    <div
+      className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 cursor-pointer"
+      onClick={() => {
+        stateMessages.setClick(true);
+      }}
+    >
+      <button className="flex flex-1 justify-between py-4">
+        <div className="flex items-center gap-2">
+          <img
+            src={PictureFriend}
+            alt="Friend"
+            className="h-10 w-10 rounded-full"
+          />
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1.5">
+              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
+                {firstLetterCapital("mouassit")}
+              </span>
+            </div>
+            <span className="text-left w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
+              hello
             </span>
           </div>
-          <span className="w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
-            hello
-          </span>
         </div>
-      </div>
-      <div className="relative">
-        <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-      </div>
+      </button>
+      <span className="flex justify-center items-center">
+        <button className="relative rounded-full">
+          <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+        </button>
+      </span>
     </div>
   );
 }
 
 export function CardChatFriend() {
+  const stateMessages = useContext(StateMssages);
   return (
-    <div className="flex flex-1 items-center">
+    <div className="flex flex-1 items-center gap-4">
+      <button
+        className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape"
+        onClick={() => {
+          stateMessages.setClick(false);
+        }}
+      >
+        <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+      </button>
       <div className="flex items-center gap-2">
         <img
           src={PictureFriend}

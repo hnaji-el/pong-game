@@ -4,7 +4,6 @@ import BoxMessagesUser from "./BoxMessagesUser";
 
 export default function ChatBox() {
   const chatBox = useRef<HTMLDivElement>(null);
-  console.log("render");
 
   useEffect(() => {
     if (chatBox.current) {

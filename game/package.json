@@ -8,10 +8,11 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "front:build": "npm start --prefix ../frontend",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "npm run front:build && nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/game/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -20,11 +21,13 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^9.0.0",
+    "@nestjs/common": "^9.3.9",
     "@nestjs/core": "^9.0.0",
-    "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-express": "^9.3.9",
     "@nestjs/platform-socket.io": "^9.3.9",
+    "@nestjs/serve-static": "^3.0.1",
     "@nestjs/websockets": "^9.3.9",
+    "cors": "^2.8.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
@@ -38,6 +41,7 @@
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "concurrently": "^7.6.0",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",

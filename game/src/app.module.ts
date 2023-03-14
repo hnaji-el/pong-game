@@ -1,11 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AppController } from './app.controller';
-import {SocketGateway} from './socket/socket.gateway'
 import { GameService } from './game/game.service';
+import { SocketGateway } from './socket/socket.gateway';
+
 @Module({
   imports: [],
-  controllers: [AppController],
-  providers: [SocketGateway, AppService, GameService],
+  controllers: [], // Add WebSocket controllers
+  providers: [GameService, SocketGateway],
 })
 export class AppModule {}
+
+// ServeStaticModule.forRoot({
+//   rootPath: join('..', 'frontend', 'build'),
+//   exclude: ['/api*'],
+// }),

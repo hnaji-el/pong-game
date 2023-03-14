@@ -6,14 +6,19 @@ import { GameState } from "../../../shared/types";
 
 export default function Queue() {
   const navigate = useNavigate();
+  let playerId: number;
 
   socket.emit("queuing");
   // console.log("LAUNCH GAME");
   socket.on("launchGame", (roomId : string, gameState :GameState) => {
-    navigate("/game", {state:{roomId, gameState}});
+    navigate("/game", {state:{roomId, gameState, playerId}});
     // console.log("LAUNCH GAME .ON from /queue");
   });
-
+  socket.on("setPlayerId", (Id: number) => {
+    console.log("playerId" + playerId);
+    playerId = Id;
+    
+  });
   // useEffect(() => {
   //   setTimeout(() => {
   //     navigate("/game");

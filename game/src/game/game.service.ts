@@ -21,15 +21,19 @@ export class GameService {
       y: 600 / 2 - 100 / 2,
     };
   }
+  moveBall(gameState: GameState): void {
+    gameState.ball.x += gameState.ball.dx;
+    gameState.ball.y += gameState.ball.dy;
+  }
   addToQueue(player: Socket, server: Server): void {
     const a: GameState = {
-      players: [this.createPlayer(20), this.createPlayer(600 - 20 - 20)],
+      players: [this.createPlayer(20), this.createPlayer(1200 - 20 - 20)],
       ball: {
-        dx: 20,
-        dy: 20,
+        dx: 1,
+        dy: 2,
         h: 20,
         w: 20,
-        x: 600 / 2 - 20 / 2,
+        x: 1200 / 2 - 20 / 2,
         y: 600 / 2 - 20 / 2,
       },
     };
@@ -40,11 +44,17 @@ export class GameService {
       if (player1 && player2) {
         const roomId = `game-${new Date().getTime()}`;
         // console.log('roomId', roomId);
-        
+
         this.roomIdToGameState.set(roomId, a);
         player1.join(roomId);
         player2.join(roomId);
+        // send to each player so they can keep their id for paddle
+        player1.emit('setPlayerId', 0);
+        player2.emit('setPlayerId', 1);
+        // console.log('setPLAYER');
+
         server.to(roomId).emit('launchGame', roomId, a);
+        // server.to(roomId).emit('setPlayerId', 1);
 
         // return roomId;
       }
@@ -62,11 +72,39 @@ export class GameService {
     // keep updating ball position
     setInterval(() => {
       if (gameState) {
-        gameState.ball.x += gameState.ball.dx;
-        gameState.ball.y += gameState.ball.dy;
+        this.moveBall(gameState);
+        // collision in every corner to keep the ball moving each side
+        if (
+          gameState.ball.x <= 0 ||
+          gameState.ball.x + gameState.ball.w >= 1200
+        ) {
+          gameState.ball.dx *= -1;
+        }
+        if (
+          gameState.ball.y <= 0 ||
+          gameState.ball.y + gameState.ball.h >= 600
+        ) {
+          gameState.ball.dy *= -1;
+        }
         server.to(roomId).emit('updateGameState', gameState);
         // console.log('update game state');
       }
-    }, 1000 / 60);
+    }, 1000 / 200);
+  }
+  keyDown(
+    client: Socket,
+    arrow: string,
+    roomId: string,
+    playerId: number,
+  ): void {
+    const gameState = this.roomIdToGameState.get(roomId);
+
+    if (gameState) {
+      if (arrow === 'up') {
+        gameState.players[playerId].y -= gameState.players[playerId].dy;
+      } else {
+        gameState.players[playerId].y += gameState.players[playerId].dy;
+      }
+    }
   }
 }

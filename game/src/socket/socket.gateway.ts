@@ -10,7 +10,7 @@ import { GameService } from '../game/game.service';
 
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3001',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   },
@@ -35,8 +35,24 @@ export class SocketGateway implements OnGatewayConnection {
   }
   @SubscribeMessage('startingGame')
   handleStartingGame(server: Server, roomId: string): void {
-    console.log('starting game in room ' + roomId);
 
     this.gameService.startGame(roomId, server);
+  }
+  // @SubscribeMessage('playerId')
+  // handlePlayerId(client: Socket, playerId: number): void {
+  //   this.gameService.setPlayerId(client, playerId);
+  // }
+  @SubscribeMessage('keyDown')
+  handleKeyDown(
+    client: Socket,
+    payload: { arrow: string; roomId: string; playerId: number },
+  ): void {
+
+    this.gameService.keyDown(
+      client,
+      payload.arrow,
+      payload.roomId,
+      payload.playerId,
+    );
   }
 }

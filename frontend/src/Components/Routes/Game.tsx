@@ -5,18 +5,16 @@ import socket from "../socket";
 // import {GameState} from "../../../../shared/types"
 import { GameState } from ".../../../shared/types";
 
-const CANVA_WIDTH = 600;
+const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "teal";
 export default function Game() {
   const loc = useLocation();
-  // console.log(`roomId ======= ${loc.state.roomId}`);
-  // console.log(`gameState ======= ${loc.state.gameState}`);
-  
+
+
   useEffect(() => {
-    // console.log("LAUNCH GAME .ON from /game");
-    gameLogic(loc.state.roomId, loc.state.gameState);
+    gameLogic(loc.state.roomId, loc.state.gameState, loc.state.playerId);
   }, []);
   return (
     <>
@@ -63,11 +61,8 @@ function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
   );
 }
 function init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-  // initialScreen.style.display = "none";
-  // gameScreen.style.display = "block";
-  // canvas.width    = WIDTH;
-  // canvas.height   = HEIGHT;
-  canvas.width = canvas.height = CANVA_HEIGHT;
+  canvas.height = CANVA_HEIGHT;
+  canvas.width = CANVA_WIDTH;
   ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
@@ -77,25 +72,34 @@ function init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
 //   requestAnimationFrame(() => gameLoop(gameState, ctx));
 // }
 
-function gameLogic(roomId: string, gameState: GameState) {
+function gameLogic(roomId: string, gameState: GameState, playerId: number) {
   const canvas: HTMLCanvasElement = document.getElementById(
     "canvas"
   ) as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
-  // console.log(`room id: gamelogic ${roomId}`);
-  // console.log(gameState);
-  // socket.on('initialState',paintGame);
-
   init(canvas, ctx);
   paintGame(gameState, ctx);
-
   socket.emit("startingGame", roomId);
   // gameLoop(gameState, ctx);
   socket.on("updateGameState", (gameState: GameState) => {
     paintGame(gameState, ctx);
-    // console.log("updateGameState");
   });
-  // listen for spacebar
-  // gameloop function
-  // paintGame();
+  // setPlayerId
+  // listening on keydown
+  document.addEventListener("keydown", (e) => {
+    // send up and down
+    console.log("playerId:" + playerId);
+    
+    if (e.key === "ArrowUp") {
+      // console.log("key pressed" + e.key);
+      
+      socket.emit("keyDown", { arrow: "up", roomId: roomId, playerId: playerId });
+      // socket.emit("k")
+    } else if (e.key === "ArrowDown") {
+      // console.log("key pressed" + e.key);
+      socket.emit("keyDown",{ arrow: "down", roomId: roomId, playerId: playerId });
+    }
+    //
+    
+  });
 }

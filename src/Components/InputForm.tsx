@@ -2,7 +2,7 @@ import React from "react";
 import { ExclamationIcon } from "./Icons";
 
 interface TypeProps {
-  edit: string;
+  edit?: string;
   editError?: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;

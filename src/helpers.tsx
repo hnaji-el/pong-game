@@ -35,3 +35,21 @@ export function checkPasswordChannel(value: string): string {
 
   return "";
 }
+
+export function checkDisableCode(value: string): string {
+  if (!value.trim().length) return "Zone text empty";
+  if (!/^[0-9]+$/.test(value)) return "Digit only";
+  if (value.length > 6) return "Maximum 6 digit";
+  if (value.length < 6) return "Minimum 6 digit";
+
+  return "";
+}
+
+export function checkEnableCode(value: string): string {
+  if (!value.trim().length) return "Zone text empty";
+  if (!/^[0-9]+$/.test(value)) return "Digit only";
+  if (value.length > 6) return "Maximum 6 digit";
+  if (value.length < 6) return "Minimum 6 digit";
+
+  return "";
+}

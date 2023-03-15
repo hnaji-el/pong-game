@@ -2,7 +2,14 @@ import React, { useContext } from "react";
 import friendPicture from "../assets/friend.jpg";
 import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
-import { ArrowLeftIcon, PointsIcon, SettingsIcon } from "./Icons";
+import {
+  ArrowLeftIcon,
+  EyeChannelIcon,
+  GroupIcon,
+  PlusIcon,
+  PointsIcon,
+  SettingsIcon,
+} from "./Icons";
 import CircleAchievements from "./CircleAchievements";
 import { firstLetterCapital } from "../helpers";
 import PictureFriend from "../assets/friend.jpg";
@@ -141,7 +148,7 @@ export function CardUser() {
   );
 }
 
-export function CardFriendMessage() {
+export function CardConversation() {
   const stateMessages = useContext(StateMssages);
   return (
     <div
@@ -207,6 +214,48 @@ export function CardChatFriend() {
             <span className="text-sm font-light text-secondaryText">
               Online
             </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function CardChatChannel() {
+  const stateMessages = useContext(StateMssages);
+  return (
+    <div className="flex flex-1 items-center gap-4">
+      <button
+        className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape"
+        onClick={() => {
+          stateMessages.setClick(false);
+        }}
+      >
+        <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+      </button>
+      <div className="flex items-center w-full gap-2">
+        <img
+          src={PictureFriend}
+          alt="Friend"
+          className="h-14 w-14 rounded-full"
+        />
+        <div className="flex lg:gap-4 w-full justify-between lg:justify-start">
+          <div className="flex items-center gap-1.5">
+            <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+              channel 01
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
+              <PlusIcon edit="fill-secondaryText w-4 h-4" />
+            </button>
+            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
+              <GroupIcon edit="fill-secondaryText w-5 h-5" />
+            </button>
+            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
+              <EyeChannelIcon edit="fill-secondaryText w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>

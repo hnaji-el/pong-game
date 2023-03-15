@@ -1,5 +1,5 @@
 import React from "react";
-import { CardFriendMessage } from "./Cards";
+import { CardConversation } from "./Cards";
 import { SearchIcon } from "./Icons";
 
 export default function Chats() {
@@ -14,32 +14,32 @@ export default function Chats() {
         />
       </div>
       <div className="flex h-full flex-col overflow-auto">
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
-        <CardFriendMessage />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
+        <CardConversation />
       </div>
     </div>
   );

@@ -14,6 +14,10 @@ export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+  const [createChannel, setCreateChannel] = useState<boolean>(false);
+  const [addMember, setAddMember] = useState<boolean>(false);
+  const [members, setMembers] = useState<boolean>(false);
+  const [channelPassword, setChannelPassword] = useState<boolean>(false);
   const stateMessages = useContext(StateMssages);
 
   return (
@@ -49,6 +53,13 @@ export default function NavigationChat() {
           <ViewSettings setOpen={setOpen} />
         </ModalSettings>
       ) : null}
+
+      <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
+        <ModalHeader setOpen={setOpen}>Create channel</ModalHeader>
+        <ModalBody edit="justify-center">
+          create channel
+        </ModalBody>
+      </Modal>
     </>
   );
 }

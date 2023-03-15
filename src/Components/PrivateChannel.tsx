@@ -16,6 +16,7 @@ export default function PublicChannel({setCreateChannel}:TypeProps) {
       <div className="flex flex-col lg:flex-row items-center lg:items-end gap-3 ">
         <div className="flex flex-col gap-1.5 w-80 lg:w-full">
           <InputForm
+            edit="w-full"
             editError="lg:hidden"
             label="name channel"
             value={value}

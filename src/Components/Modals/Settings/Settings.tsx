@@ -68,7 +68,7 @@ export default function Settings({
           </div>
           <div className="flex flex-col justify-start gap-6">
             <InputForm
-              edit="lg:w-64"
+              edit="w-full lg:w-64"
               value={value}
               setValue={setValue}
               label="username"

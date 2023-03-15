@@ -24,10 +24,7 @@ export default function InputPasswordForm({
   return (
     <div className="flex flex-col w-80 lg:w-full gap-1">
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor={label}
-          className="text-sm text-primaryText capitalize"
-        >
+        <label htmlFor={label} className="text-sm text-primaryText capitalize">
           {label}
         </label>
         <div className="flex">
@@ -46,7 +43,7 @@ export default function InputPasswordForm({
           <button
             type="button"
             className={`rounded-md rounded-l-none bg-secondaryText p-3 ${
-              errorPassword.length ? "border-error border-r-0 border-l-0" : ""
+              errorPassword.length ? "border-[1px] border-error border-l-0" : ""
             }`}
             onClick={() => {
               passwordBtn ? setPasswordBtn(false) : setPasswordBtn(true);

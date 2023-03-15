@@ -2,7 +2,7 @@ import React from "react";
 import { ExclamationIcon } from "./Icons";
 
 interface TypeProps {
-  edit?: string;
+  edit: string;
   editError?: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
@@ -21,7 +21,7 @@ export default function InputForm({
   setErrorMessage,
 }: TypeProps) {
   return (
-    <div className={`flex w-full flex-col gap-1.5 ${edit}`}>
+    <div className={`flex flex-col gap-1.5 ${edit}`}>
       <label htmlFor={label} className="text-sm text-primaryText capitalize">
         {label}
       </label>

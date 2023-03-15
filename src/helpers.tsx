@@ -29,3 +29,9 @@ export function checkChannelName(value: string): string {
 
   return "";
 }
+
+export function checkPasswordChannel(value: string): string {
+  if (!value.trim().length) return "Zone text empty";
+
+  return "";
+}

@@ -34,11 +34,13 @@ export default function InputForm({
         value={value}
         onChange={(e) => {
           setErrorMessage("");
-          if (setValue) setValue(e.currentTarget.value);
+          setValue(e.currentTarget.value);
         }}
       />
       {errorMessage.length ? (
-        <div className={`text-error text-xs font-medium fill-error flex gap-1.5 ${editError}`}>
+        <div
+          className={`text-error text-xs font-medium fill-error flex gap-1.5 ${editError}`}
+        >
           <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
           <span>{errorMessage}</span>
         </div>

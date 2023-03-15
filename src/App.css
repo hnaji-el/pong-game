@@ -22,7 +22,7 @@ body{
     @apply bg-body;
 }
 #root{
-    @apply h-full flex flex-col 2xl:mx-auto 2xl:container;
+    @apply relative h-full flex flex-col 2xl:mx-auto 2xl:container;
 }
 
 .shadow{

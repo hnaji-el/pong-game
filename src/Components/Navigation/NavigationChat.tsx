@@ -57,7 +57,7 @@ export default function NavigationChat() {
       ) : null}
 
       {createChannel ? (
-        <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
+        <Modal edit="w-[90%] h-[40rem] lg:w-[40rem] lg:h-[21.5rem]">
           <ModalHeader setOpen={setCreateChannel}>Create channel</ModalHeader>
           <ModalBody edit="justify-center">
             <CreateChannel setCreateChannel={setCreateChannel} />

@@ -9,11 +9,13 @@ import { StateMssages } from "../Routes/Messages";
 interface TypeProps {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SideBarChat({
   setOpenSearch,
   setOpenSettings,
+  setCreateChannel
 }: TypeProps) {
   const stateMessage = useContext(StateMssages);
 
@@ -42,7 +44,7 @@ export default function SideBarChat({
               <Chats />
             </TabContent>
             <TabContent>
-              <Channels />
+              <Channels setCreateChannel={setCreateChannel} />
             </TabContent>
           </TabsPanels>
         </Tabs>

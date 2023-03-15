@@ -23,3 +23,9 @@ export function checkNickname(value: string): string {
 
   return "";
 }
+
+export function checkChannelName(value: string): string {
+  if (!value.trim().length) return "Zone text empty";
+
+  return "";
+}

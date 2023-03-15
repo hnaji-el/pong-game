@@ -9,6 +9,7 @@ import SearchInput from "../SearchInput";
 import ModalSettings from "../Modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
 import { StateMssages } from "../Routes/Messages";
+import CreateChannel from "../CreateChannel";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
@@ -26,6 +27,7 @@ export default function NavigationChat() {
       <SideBarChat
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
+        setCreateChannel={setCreateChannel}
       />
       {!stateMessages.click ? (
         <PhoneNav
@@ -54,12 +56,14 @@ export default function NavigationChat() {
         </ModalSettings>
       ) : null}
 
-      <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
-        <ModalHeader setOpen={setOpen}>Create channel</ModalHeader>
-        <ModalBody edit="justify-center">
-          create channel
-        </ModalBody>
-      </Modal>
+      {createChannel ? (
+        <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
+          <ModalHeader setOpen={setCreateChannel}>Create channel</ModalHeader>
+          <ModalBody edit="justify-center">
+            <CreateChannel setCreateChannel={setCreateChannel} />
+          </ModalBody>
+        </Modal>
+      ) : null}
     </>
   );
 }

@@ -19,6 +19,10 @@ interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+interface TypePropsChannel {
+  setAddMember: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export function CardFriendOnline() {
   return (
     <Link
@@ -221,7 +225,7 @@ export function CardChatFriend() {
   );
 }
 
-export function CardChatChannel() {
+export function CardChatChannel({ setAddMember }: TypePropsChannel) {
   const stateMessages = useContext(StateMssages);
   return (
     <div className="flex flex-1 items-center gap-4">
@@ -247,7 +251,12 @@ export function CardChatChannel() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape"
+              onClick={() => {
+                setAddMember(true);
+              }}
+            >
               <PlusIcon edit="fill-secondaryText w-4 h-4" />
             </button>
             <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
@@ -259,6 +268,38 @@ export function CardChatChannel() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function CardFriendMember() {
+  return (
+    <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
+      <div className="flex items-center gap-2">
+        <img
+          src={pictureUser}
+          alt="Profile"
+          className="w-12 h-12 rounded-full"
+        />
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-3">
+            <span
+              className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
+            >
+              mouassit
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className={`w-2 h-2 rounded-full bg-online`}></span>
+            <span className="text-secondaryText font-light text-sm capitalize">
+              online
+            </span>
+          </div>
+        </div>
+      </div>
+      <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
+        <PlusIcon edit="fill-secondaryText w-3 h-3" />
+      </button>
     </div>
   );
 }

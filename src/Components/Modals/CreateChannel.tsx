@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { CheckIcon } from "./Icons";
-import PrivateChannel from "./PrivateChannel";
-import ProtectedChannel from "./ProtectedChannel";
-import PublicChannel from "./PublicChannel";
+import { CheckIcon } from "../Icons";
+import PrivateChannel from "../PrivateChannel";
+import ProtectedChannel from "../ProtectedChannel";
+import PublicChannel from "../PublicChannel";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

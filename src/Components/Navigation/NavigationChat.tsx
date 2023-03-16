@@ -9,21 +9,24 @@ import SearchInput from "../SearchInput";
 import ModalSettings from "../Modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
 import { StateMssages } from "../Routes/Messages";
-import CreateChannel from "../CreateChannel";
+import CreateChannel from "../Modals/CreateChannel";
+import AddMember from "../Modals/AddMember";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [createChannel, setCreateChannel] = useState<boolean>(false);
+
   const [addMember, setAddMember] = useState<boolean>(false);
   const [members, setMembers] = useState<boolean>(false);
   const [channelPassword, setChannelPassword] = useState<boolean>(false);
+
   const stateMessages = useContext(StateMssages);
 
   return (
     <>
-      <NavBarChat setOpen={setOpen} />
+      <NavBarChat setOpen={setOpen} setAddMember={setAddMember} />
       <SideBarChat
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
@@ -61,6 +64,16 @@ export default function NavigationChat() {
           <ModalHeader setOpen={setCreateChannel}>Create channel</ModalHeader>
           <ModalBody edit="justify-center">
             <CreateChannel setCreateChannel={setCreateChannel} />
+          </ModalBody>
+        </Modal>
+      ) : null}
+      {addMember ? (
+        <Modal edit="h-auto w-[90%] lg:w-[40rem] px-0">
+          <ModalHeader setOpen={setAddMember} edit="px-4">
+            Add member
+          </ModalHeader>
+          <ModalBody edit="justify-center">
+            <AddMember />
           </ModalBody>
         </Modal>
       ) : null}

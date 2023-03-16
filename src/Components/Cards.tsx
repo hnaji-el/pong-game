@@ -14,6 +14,7 @@ import CircleAchievements from "./CircleAchievements";
 import { firstLetterCapital } from "../helpers";
 import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
+import PasswordChannel from "./PasswordChannel";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -275,9 +276,8 @@ export function CardChatChannel({
             >
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
             </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
-              <EyeChannelIcon edit="fill-secondaryText w-5 h-5" />
-            </button>
+              <PasswordChannel />
+              {/* <EyeChannelIcon edit="fill-secondaryText w-5 h-5" /> */}
           </div>
         </div>
       </div>

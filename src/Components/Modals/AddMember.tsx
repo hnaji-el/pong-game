@@ -1,7 +1,6 @@
 import React from "react";
 import FriendMember from "../FriendMember";
 import InputSearchMembers from "../InputSearchMembers";
-import MembersContainer from "../MembersContainer";
 
 export default function AddMember() {
   return (

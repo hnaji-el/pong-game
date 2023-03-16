@@ -4,7 +4,6 @@ import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
 import {
   ArrowLeftIcon,
-  EyeChannelIcon,
   GroupIcon,
   PlusIcon,
   PointsIcon,
@@ -15,6 +14,7 @@ import { firstLetterCapital } from "../helpers";
 import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
 import PasswordChannel from "./PasswordChannel";
+import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -151,9 +151,14 @@ export function CardUser() {
           {firstLetterCapital("mouassit")}
         </span>
       </div>
-      <button className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover">
-        <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-      </button>
+
+      <Dropdown>
+        <DropdownBtn type="icon" />
+        <DropdownList edit="top-6">
+          <DropdownItem>Settings</DropdownItem>
+          <DropdownItem>Logout</DropdownItem>
+        </DropdownList>
+      </Dropdown>
     </Link>
   );
 }
@@ -276,8 +281,8 @@ export function CardChatChannel({
             >
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
             </button>
-              <PasswordChannel />
-              {/* <EyeChannelIcon edit="fill-secondaryText w-5 h-5" /> */}
+            <PasswordChannel />
+            {/* <EyeChannelIcon edit="fill-secondaryText w-5 h-5" /> */}
           </div>
         </div>
       </div>

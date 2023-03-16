@@ -34,7 +34,7 @@ export default function NavBarChat({ setOpen, setAddMember,setMembers }: TypePro
             imgTitle={pictureUser}
             arrow={true}
           />
-          <DropdownList>
+          <DropdownList edit="top-12">
             <DropdownItem
               onClick={() => {
                 if (setOpen) setOpen(true);

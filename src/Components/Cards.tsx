@@ -21,6 +21,11 @@ interface TypeCardProfile {
 
 interface TypePropsChannel {
   setAddMember: React.Dispatch<React.SetStateAction<boolean>>;
+  setMembers: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+interface TypeMember {
+  role?: string;
 }
 
 export function CardFriendOnline() {
@@ -225,7 +230,10 @@ export function CardChatFriend() {
   );
 }
 
-export function CardChatChannel({ setAddMember }: TypePropsChannel) {
+export function CardChatChannel({
+  setAddMember,
+  setMembers,
+}: TypePropsChannel) {
   const stateMessages = useContext(StateMssages);
   return (
     <div className="flex flex-1 items-center gap-4">
@@ -259,7 +267,12 @@ export function CardChatChannel({ setAddMember }: TypePropsChannel) {
             >
               <PlusIcon edit="fill-secondaryText w-4 h-4" />
             </button>
-            <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
+            <button
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape"
+              onClick={() => {
+                setMembers(true);
+              }}
+            >
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
             </button>
             <button className="flex h-10 w-10 items-center justify-center rounded-full bg-shape">
@@ -299,6 +312,49 @@ export function CardFriendMember() {
       </div>
       <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
         <PlusIcon edit="fill-secondaryText w-3 h-3" />
+      </button>
+    </div>
+  );
+}
+
+export function CardMember({ role }: TypeMember) {
+  return (
+    <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
+      <div className="flex items-center gap-2">
+        <img
+          src={pictureUser}
+          alt="Profile"
+          className="w-12 h-12 rounded-full"
+        />
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-3">
+            <span
+              className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
+            >
+              mouassit
+            </span>
+            <span
+              className={`w-16 rounded-sm ${
+                role === "owner"
+                  ? "bg-ownerBg text-ownerText"
+                  : role === "admin"
+                  ? "bg-adminBg text-adminText"
+                  : ""
+              } flex justify-center items-center text-xs capitalize`}
+            >
+              {role}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className={`w-2 h-2 rounded-full bg-online`}></span>
+            <span className="text-secondaryText font-light text-sm capitalize">
+              online
+            </span>
+          </div>
+        </div>
+      </div>
+      <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
+        <PointsIcon edit="fill-secondaryText w-3 h-3" />
       </button>
     </div>
   );

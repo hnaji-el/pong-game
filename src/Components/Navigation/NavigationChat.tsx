@@ -11,6 +11,7 @@ import ViewSettings from "../ViewSettings";
 import { StateMssages } from "../Routes/Messages";
 import CreateChannel from "../Modals/CreateChannel";
 import AddMember from "../Modals/AddMember";
+import Members from "../Modals/Members";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
@@ -26,7 +27,11 @@ export default function NavigationChat() {
 
   return (
     <>
-      <NavBarChat setOpen={setOpen} setAddMember={setAddMember} />
+      <NavBarChat
+        setOpen={setOpen}
+        setAddMember={setAddMember}
+        setMembers={setMembers}
+      />
       <SideBarChat
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
@@ -74,6 +79,17 @@ export default function NavigationChat() {
           </ModalHeader>
           <ModalBody edit="justify-center">
             <AddMember />
+          </ModalBody>
+        </Modal>
+      ) : null}
+
+      {members ? (
+        <Modal edit="h-auto w-[90%] lg:w-[40rem] px-0">
+          <ModalHeader setOpen={setMembers} edit="px-4">
+            Members
+          </ModalHeader>
+          <ModalBody edit="justify-center">
+            <Members />
           </ModalBody>
         </Modal>
       ) : null}

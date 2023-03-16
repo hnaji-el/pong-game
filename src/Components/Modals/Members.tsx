@@ -1,13 +1,12 @@
 import React from "react";
-import FriendMember from "../FriendMember";
 import InputSearchMembers from "../InputSearchMembers";
 import MembersContainer from "../MembersContainer";
 
-export default function AddMember() {
+export default function Members() {
   return (
     <div className="pt-6 w-full flex flex-col gap-6">
-      <InputSearchMembers placeholder="Search for friend" />
-      <FriendMember />
+      <InputSearchMembers placeholder="Search for member" />
+      <MembersContainer />
     </div>
   );
 }

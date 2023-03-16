@@ -24,7 +24,7 @@ export function Modal({ children, edit }: TypeProps) {
 
 export function ModalHeader({ children, edit, setOpen }: TypeProps) {
   return (
-    <div>
+    <>
       <div
         className={`flex items-center w-full justify-between border-secondaryText ${edit}`}
       >
@@ -44,7 +44,7 @@ export function ModalHeader({ children, edit, setOpen }: TypeProps) {
       <div className={`pt-5 ${edit}`}>
         <div className={`h-[1px] w-full bg-secondaryText`}></div>
       </div>
-    </div>
+    </>
   );
 }
 

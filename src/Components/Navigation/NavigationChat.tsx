@@ -18,11 +18,8 @@ export default function NavigationChat() {
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const [createChannel, setCreateChannel] = useState<boolean>(false);
-
   const [addMember, setAddMember] = useState<boolean>(false);
   const [members, setMembers] = useState<boolean>(false);
-  const [channelPassword, setChannelPassword] = useState<boolean>(false);
-
   const stateMessages = useContext(StateMssages);
 
   return (

@@ -102,6 +102,10 @@ export function DropdownBtn({
       <button
         className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover"
         onClick={(e) => {
+          e.currentTarget.parentElement?.parentElement?.parentElement?.parentElement
+            ?.querySelector(".list-dropdown")
+            ?.parentElement?.querySelector("button")
+            ?.click();
           e.preventDefault();
           e.stopPropagation();
           if (changeStateDropdown.dropdown) {
@@ -124,7 +128,7 @@ export function DropdownList({ children, edit }: PropsDropdown) {
   if (changeStateDropdown.dropdown)
     return (
       <div
-        className={`absolute rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2 z-[999] ${edit}`}
+        className={`absolute rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2 z-[999] list-dropdown ${edit}`}
       >
         {children}
       </div>

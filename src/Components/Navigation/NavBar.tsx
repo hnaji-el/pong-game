@@ -2,11 +2,7 @@ import React from "react";
 import logo from "../../assets/logo.svg";
 import pictureUser from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
-import {
-  ControllerIcon,
-  SettingsNavIcon,
-  LogoutIcon,
-} from "../Icons";
+import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 import { Dropdown, DropdownBtn, DropdownList, DropdownItem } from "../Dropdown";
 import SearchInput from "../SearchInput";
 
@@ -35,6 +31,7 @@ export default function NavBar({ setOpen }: TypeProps) {
           />
           <DropdownList edit="top-12">
             <DropdownItem
+              edit="justify-center p-2"
               onClick={() => {
                 if (setOpen) setOpen(true);
               }}
@@ -42,7 +39,7 @@ export default function NavBar({ setOpen }: TypeProps) {
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem edit="justify-center p-2">
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />
               <span>Logout</span>
             </DropdownItem>

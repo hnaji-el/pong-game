@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { firstLetterCapital } from "../helpers";
-import { ArrowDownIcon, ArrowUpIcon, PointsIcon } from "./Icons";
+import { ArrowDownIcon, ArrowUpIcon } from "./Icons";
 
 interface PropsDropdown {
   children?: JSX.Element | JSX.Element[] | string;
@@ -19,6 +19,8 @@ interface PropsDropdownBtn {
   title?: string;
   imgTitle?: string;
   arrow?: boolean;
+  icon?: JSX.Element | undefined;
+  edit?:string
 }
 
 interface TypeContext {
@@ -62,6 +64,8 @@ export function DropdownBtn({
   title,
   imgTitle,
   arrow,
+  icon,
+  edit
 }: PropsDropdownBtn) {
   let changeStateDropdown = useContext(DisplayContext);
 
@@ -100,7 +104,7 @@ export function DropdownBtn({
   if (type === "icon")
     return (
       <button
-        className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover"
+        className={`flex items-center justify-center rounded-full p-1 ${edit}`}
         onClick={(e) => {
           e.currentTarget.parentElement?.parentElement?.parentElement?.parentElement
             ?.querySelector(".list-dropdown")
@@ -115,7 +119,7 @@ export function DropdownBtn({
           changeStateDropdown.setDropdown(true);
         }}
       >
-        <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+        {icon}
       </button>
     );
 
@@ -128,7 +132,7 @@ export function DropdownList({ children, edit }: PropsDropdown) {
   if (changeStateDropdown.dropdown)
     return (
       <div
-        className={`absolute rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2 z-[999] list-dropdown ${edit}`}
+        className={`absolute rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2 z-[999] list-dropdown cursor-default  ${edit}`}
       >
         {children}
       </div>
@@ -137,11 +141,11 @@ export function DropdownList({ children, edit }: PropsDropdown) {
   return null;
 }
 
-export function DropdownItem({ children, onClick }: PropsDropdown) {
+export function DropdownItem({ children, edit, onClick }: PropsDropdown) {
   let changeStateDropdown = useContext(DisplayContext);
   return (
     <button
-      className="flex gap-2 hover:bg-backgroundHover items-center justify-center p-2"
+      className={`flex gap-2 hover:bg-backgroundHover items-center ${edit}`}
       onClick={(e) => {
         if (onClick) onClick();
         e.preventDefault();

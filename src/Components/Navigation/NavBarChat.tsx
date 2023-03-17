@@ -11,7 +11,11 @@ interface TypeProps {
   setMembers: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function NavBarChat({ setOpen, setAddMember,setMembers }: TypeProps) {
+export default function NavBarChat({
+  setOpen,
+  setAddMember,
+  setMembers,
+}: TypeProps) {
   const stateMessage = useContext(StateMssages);
 
   return (
@@ -36,6 +40,7 @@ export default function NavBarChat({ setOpen, setAddMember,setMembers }: TypePro
           />
           <DropdownList edit="top-12">
             <DropdownItem
+              edit="justify-center p-2"
               onClick={() => {
                 if (setOpen) setOpen(true);
               }}
@@ -43,7 +48,7 @@ export default function NavBarChat({ setOpen, setAddMember,setMembers }: TypePro
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>
-            <DropdownItem>
+            <DropdownItem edit="justify-center p-2">
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />
               <span>Logout</span>
             </DropdownItem>

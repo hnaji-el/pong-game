@@ -153,10 +153,14 @@ export function CardUser() {
       </div>
 
       <Dropdown>
-        <DropdownBtn type="icon" />
+        <DropdownBtn
+          type="icon"
+          icon={<PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />}
+          edit="h-4 w-4 bg-shape hover:bg-backgroundHover"
+        />
         <DropdownList edit="top-6">
-          <DropdownItem>Settings</DropdownItem>
-          <DropdownItem>Logout</DropdownItem>
+          <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
+          <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
         </DropdownList>
       </Dropdown>
     </Link>
@@ -166,13 +170,14 @@ export function CardUser() {
 export function CardConversation() {
   const stateMessages = useContext(StateMssages);
   return (
-    <div
+    <Link
+      to=""
       className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 cursor-pointer"
       onClick={() => {
         stateMessages.setClick(true);
       }}
     >
-      <button className="flex flex-1 justify-between py-4">
+      <div className="flex flex-1 justify-between py-4">
         <div className="flex items-center gap-2">
           <img
             src={PictureFriend}
@@ -190,13 +195,20 @@ export function CardConversation() {
             </span>
           </div>
         </div>
-      </button>
+      </div>
       <span className="flex justify-center items-center">
-        <button className="relative rounded-full">
-          <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-        </button>
+        <Dropdown>
+          <DropdownBtn
+            type="icon"
+            icon={<PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />}
+          />
+          <DropdownList edit="top-6">
+            <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
+            <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
+          </DropdownList>
+        </Dropdown>
       </span>
-    </div>
+    </Link>
   );
 }
 
@@ -282,7 +294,6 @@ export function CardChatChannel({
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
             </button>
             <PasswordChannel />
-            {/* <EyeChannelIcon edit="fill-secondaryText w-5 h-5" /> */}
           </div>
         </div>
       </div>
@@ -358,9 +369,21 @@ export function CardMember({ role }: TypeMember) {
           </div>
         </div>
       </div>
-      <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
+
+      <Dropdown>
+        <DropdownBtn
+          type="icon"
+          icon={<PointsIcon edit="fill-secondaryText w-3 h-3" />}
+          edit="h-7 w-7 bg-body"
+        />
+        <DropdownList edit="top-10">
+          <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
+          <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
+        </DropdownList>
+      </Dropdown>
+      {/* <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
         <PointsIcon edit="fill-secondaryText w-3 h-3" />
-      </button>
+      </button> */}
     </div>
   );
 }

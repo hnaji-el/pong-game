@@ -101,7 +101,9 @@ export function DropdownBtn({
     return (
       <button
         className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover"
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
           if (changeStateDropdown.dropdown) {
             changeStateDropdown.setDropdown(false);
             return;
@@ -136,8 +138,10 @@ export function DropdownItem({ children, onClick }: PropsDropdown) {
   return (
     <button
       className="flex gap-2 hover:bg-backgroundHover items-center justify-center p-2"
-      onClick={() => {
+      onClick={(e) => {
         if (onClick) onClick();
+        e.preventDefault();
+        e.stopPropagation();
         changeStateDropdown.setDropdown(false);
       }}
     >

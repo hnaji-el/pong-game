@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import friendPicture from "../assets/friend.jpg";
 import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
 import {
+  AddFiriendSearchIcon,
   ArrowLeftIcon,
   GroupIcon,
   PlusIcon,
@@ -27,6 +28,10 @@ interface TypePropsChannel {
 
 interface TypeMember {
   role?: string;
+}
+
+interface TypeSearch {
+  type: string;
 }
 
 export function CardFriendOnline() {
@@ -156,7 +161,7 @@ export function CardUser() {
         <DropdownBtn
           type="icon"
           icon={<PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />}
-          edit="h-4 w-4 bg-shape hover:bg-backgroundHover"
+          edit="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover"
         />
         <DropdownList edit="top-6">
           <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
@@ -201,6 +206,7 @@ export function CardConversation() {
           <DropdownBtn
             type="icon"
             icon={<PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />}
+            edit="p-0"
           />
           <DropdownList edit="top-6">
             <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
@@ -374,16 +380,59 @@ export function CardMember({ role }: TypeMember) {
         <DropdownBtn
           type="icon"
           icon={<PointsIcon edit="fill-secondaryText w-3 h-3" />}
-          edit="h-7 w-7 bg-body"
+          edit="p-1 h-7 w-7 bg-body"
         />
         <DropdownList edit="top-10">
           <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
           <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
         </DropdownList>
       </Dropdown>
-      {/* <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
-        <PointsIcon edit="fill-secondaryText w-3 h-3" />
-      </button> */}
     </div>
+  );
+}
+
+export function CardSearchUser({ type }: TypeSearch) {
+  const [stateUser, setStateUser] = useState<string>(type);
+  return (
+    <Link to="/Profile" className="hover:bg-backgroundHover px-4 py-2">
+      <div className="flex items-center justify-between w-full">
+        <div className="flex items-center gap-3">
+          <img
+            src={pictureUser}
+            alt="users"
+            className="w-12 h-12 rounded-full"
+          />
+          <span className="text-primaryText text-sm username-search capitalize">
+            mouassit
+          </span>
+        </div>
+        {stateUser && stateUser === "friend" ? (
+          <Dropdown>
+            <DropdownBtn
+              type="icon"
+              icon={
+                <PointsIcon edit="w-[.7rem] h-[.7rem] fill-secondaryText" />
+              }
+              edit="p-1 h-7 w-7 bg-shape hover:bg-backgroundHover"
+            />
+            <DropdownList edit="top-10">
+              <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
+              <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
+            </DropdownList>
+          </Dropdown>
+        ) : (
+          <button
+            className="w-7 h-7 rounded-full  flex justify-center items-center bg-shape hover:bg-backgroundHover"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setStateUser("friend");
+            }}
+          >
+            <AddFiriendSearchIcon edit="w-4 h-4 fill-secondaryText" />
+          </button>
+        )}
+      </div>
+    </Link>
   );
 }

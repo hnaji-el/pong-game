@@ -104,7 +104,7 @@ export function DropdownBtn({
   if (type === "icon")
     return (
       <button
-        className={`flex items-center justify-center rounded-full p-1 ${edit}`}
+        className={`flex items-center justify-center rounded-full ${edit}`}
         onClick={(e) => {
           e.currentTarget.parentElement?.parentElement?.parentElement?.parentElement
             ?.querySelector(".list-dropdown")

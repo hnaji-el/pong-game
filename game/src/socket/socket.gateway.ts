@@ -35,6 +35,7 @@ export class SocketGateway implements OnGatewayConnection {
   }
   @SubscribeMessage('startingGame')
   handleStartingGame(server: Server, roomId: string): void {
+    console.log('starting game in room ' + roomId);
 
     this.gameService.startGame(roomId, server);
   }
@@ -47,7 +48,6 @@ export class SocketGateway implements OnGatewayConnection {
     client: Socket,
     payload: { arrow: string; roomId: string; playerId: number },
   ): void {
-
     this.gameService.keyDown(
       client,
       payload.arrow,

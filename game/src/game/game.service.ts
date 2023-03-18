@@ -29,8 +29,8 @@ export class GameService {
     const a: GameState = {
       players: [this.createPlayer(20), this.createPlayer(1200 - 20 - 20)],
       ball: {
-        dx: 1,
-        dy: 2,
+        dx: 0.8,
+        dy: 1.2,
         h: 20,
         w: 20,
         x: 1200 / 2 - 20 / 2,
@@ -63,34 +63,92 @@ export class GameService {
     }
   }
 
+  goalScored(gameState: GameState, playerId: number): void {
+    gameState.players[playerId].score += 1;
+    gameState.ball.x = 1200 / 2 - 20 / 2;
+    gameState.ball.y = 600 / 2 - 20 / 2;
+    // wait a bit before starting again
+    gameState.ball.dx *= -1;
+    // setTimeout(() => {
+    // }, 1000);
+  }
+  collisionWithPaddle(gameState: GameState): void {
+    // create a tmp gameState with the new position of the ball
+    const tmpGameState = JSON.parse(JSON.stringify(gameState));
+    // this.moveBall(tmpGameState);
+    // check if the ball is colliding with the paddle
+    // move ball enough to not have collision and ball go inside paddle
+    tmpGameState.ball.x += 2 * tmpGameState.ball.dx;
+    tmpGameState.ball.y += 2 * tmpGameState.ball.dy;
+
+    if (
+      tmpGameState.ball.x <=
+        tmpGameState.players[0].x + tmpGameState.players[0].w &&
+      tmpGameState.ball.x >= tmpGameState.players[0].x &&
+      tmpGameState.ball.y >= tmpGameState.players[0].y &&
+      tmpGameState.ball.y <=
+        tmpGameState.players[0].y + tmpGameState.players[0].h
+    ) {
+      // dont collide with paddle if ball is going away from paddle
+      // collide only if ball is going towards paddle
+      if (tmpGameState.ball.dx < 0) gameState.ball.dx *= -1;
+
+      // if (tmpGameState.ball.dx < 0) {
+
+      // gameState.ball.dx *= -1;
+    }
+    if (
+      tmpGameState.ball.x + tmpGameState.ball.w >= tmpGameState.players[1].x &&
+      tmpGameState.ball.x + tmpGameState.ball.w <=
+        tmpGameState.players[1].x + tmpGameState.players[1].w &&
+      tmpGameState.ball.y >= tmpGameState.players[1].y &&
+      tmpGameState.ball.y <=
+        tmpGameState.players[1].y + tmpGameState.players[1].h
+    ) {
+      // collide only if ball is going towards paddle
+      if (tmpGameState.ball.dx > 0) gameState.ball.dx *= -1;
+      // gameState.ball.dx *= -1;
+    }
+  }
+
+  collisionWithWall(gameState: GameState): void {
+    if (gameState.ball.y <= 0 || gameState.ball.y + gameState.ball.h >= 600) {
+      gameState.ball.dy *= -1;
+    }
+  }
+
+  checkGoal(gameState: GameState) {
+    if (gameState.ball.x <= 0) {
+      this.goalScored(gameState, 1);
+    } else if (gameState.ball.x + gameState.ball.w >= 1200) {
+      this.goalScored(gameState, 0);
+    }
+  }
+  checkScore(gameState: GameState, roomId: string, server: Server, timer: any) {
+    if (gameState.players[0].score === 5) {
+      server.to(roomId).emit('gameOver', gameState);
+      clearInterval(timer);
+    } else if (gameState.players[1].score === 5) {
+      server.to(roomId).emit('gameOver', gameState);
+      clearInterval(timer);
+    } else {
+      server.to(roomId).emit('updateGameState', gameState);
+    }
+  }
+
   startGame(roomId: string, server: Server): void {
-    // console.log('start game');
-
     const gameState = this.roomIdToGameState.get(roomId);
-    // console.log(roomId);
-
-    // keep updating ball position
-    setInterval(() => {
+    const timer = setInterval(() => {
       if (gameState) {
         this.moveBall(gameState);
-        // collision in every corner to keep the ball moving each side
-        if (
-          gameState.ball.x <= 0 ||
-          gameState.ball.x + gameState.ball.w >= 1200
-        ) {
-          gameState.ball.dx *= -1;
-        }
-        if (
-          gameState.ball.y <= 0 ||
-          gameState.ball.y + gameState.ball.h >= 600
-        ) {
-          gameState.ball.dy *= -1;
-        }
-        server.to(roomId).emit('updateGameState', gameState);
-        // console.log('update game state');
+        this.collisionWithPaddle(gameState);
+        this.collisionWithWall(gameState);
+        this.checkGoal(gameState);
+        this.checkScore(gameState, roomId, server, timer);
       }
     }, 1000 / 200);
   }
+
   keyDown(
     client: Socket,
     arrow: string,

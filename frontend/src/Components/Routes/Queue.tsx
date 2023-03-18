@@ -15,7 +15,7 @@ export default function Queue() {
     // console.log("LAUNCH GAME .ON from /queue");
   });
   socket.on("setPlayerId", (Id: number) => {
-    console.log("playerId" + playerId);
+    // console.log("playerId" + playerId);
     playerId = Id;
     
   });

@@ -20,7 +20,7 @@ interface PropsDropdownBtn {
   imgTitle?: string;
   arrow?: boolean;
   icon?: JSX.Element | undefined;
-  edit?:string
+  edit?: string;
 }
 
 interface TypeContext {
@@ -65,7 +65,7 @@ export function DropdownBtn({
   imgTitle,
   arrow,
   icon,
-  edit
+  edit,
 }: PropsDropdownBtn) {
   let changeStateDropdown = useContext(DisplayContext);
 

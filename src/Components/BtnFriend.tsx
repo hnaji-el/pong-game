@@ -1,11 +1,5 @@
 import React from "react";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
-import {
-  FriendIcon,
-  ArrowDownIcon,
-  SettingsNavIcon,
-  LogoutIcon,
-} from "./Icons";
 
 export default function BtnFriend() {
   return (

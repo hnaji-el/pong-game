@@ -1,18 +1,24 @@
 import React from "react";
-import { FriendIcon, ArrowDownIcon } from "./Icons";
+import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
+import {
+  FriendIcon,
+  ArrowDownIcon,
+  SettingsNavIcon,
+  LogoutIcon,
+} from "./Icons";
 
 export default function BtnFriend() {
   return (
-    <div className="relative">
-      <button className="w-36 p-2 rounded-md bg-shape gap-6 flex items-center justify-center">
-        <div className="flex gap-2">
-          <FriendIcon edit="w-5 fill-primaryText" />
-          <span className="text-primaryText text-sm">Friends</span>
-        </div>
-        <span className="rounded-full">
-          <ArrowDownIcon edit="w-2 h-2 fill-primaryText" />
-        </span>
-      </button>
-    </div>
+    <Dropdown>
+      <DropdownBtn type="button" title="mouassit" arrow={true} />
+      <DropdownList edit="top-12 w-full">
+        <DropdownItem edit="items-center py-2 px-3 capitalize">
+          <span>Settings</span>
+        </DropdownItem>
+        <DropdownItem edit="items-center py-2 px-3 capitalize">
+          <span>Logout</span>
+        </DropdownItem>
+      </DropdownList>
+    </Dropdown>
   );
 }

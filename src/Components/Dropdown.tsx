@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { firstLetterCapital } from "../helpers";
-import { ArrowDownIcon, ArrowUpIcon } from "./Icons";
+import { ArrowDownIcon, ArrowUpIcon, FriendIcon } from "./Icons";
 
 interface PropsDropdown {
   children?: JSX.Element | JSX.Element[] | string;
@@ -105,13 +105,7 @@ export function DropdownBtn({
     return (
       <button
         className={`flex items-center justify-center rounded-full ${edit}`}
-        onClick={(e) => {
-          e.currentTarget.parentElement?.parentElement?.parentElement?.parentElement
-            ?.querySelector(".list-dropdown")
-            ?.parentElement?.querySelector("button")
-            ?.click();
-          e.preventDefault();
-          e.stopPropagation();
+        onClick={() => {
           if (changeStateDropdown.dropdown) {
             changeStateDropdown.setDropdown(false);
             return;
@@ -120,6 +114,34 @@ export function DropdownBtn({
         }}
       >
         {icon}
+      </button>
+    );
+
+  if (type === "button")
+    return (
+      <button
+        className="w-36 p-2 rounded-md bg-shape gap-6 flex items-center justify-center"
+        onClick={() => {
+          if (changeStateDropdown.dropdown) {
+            changeStateDropdown.setDropdown(false);
+            return;
+          }
+          changeStateDropdown.setDropdown(true);
+        }}
+      >
+        <div className="flex gap-2">
+          <FriendIcon edit="w-5 fill-primaryText" />
+          <span className="text-primaryText text-sm">{title}</span>
+        </div>
+        <span className="rounded-full">
+          {arrow ? (
+            changeStateDropdown.dropdown ? (
+              <ArrowUpIcon edit="w-2 h-2 fill-primaryText" />
+            ) : (
+              <ArrowDownIcon edit="w-2 h-2 fill-primaryText" />
+            )
+          ) : null}
+        </span>
       </button>
     );
 

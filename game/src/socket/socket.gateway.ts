@@ -30,19 +30,19 @@ export class SocketGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('queuing')
-  handleQueuing(client: Socket): void {
-    this.gameService.addToQueue(client, this.server);
+  handleQueuing(client: Socket, mode: string): void {
+    this.gameService.addToQueue(client, this.server, mode);
   }
+  // handleStartingGame(server: Server, roomId: string, mode: string): void {
   @SubscribeMessage('startingGame')
-  handleStartingGame(server: Server, roomId: string): void {
-    console.log('starting game in room ' + roomId);
-
-    this.gameService.startGame(roomId, server);
+  handleStartingGame(
+    server: Server,
+    { roomId, mode }: { roomId: string; mode: string },
+  ): void {
+    console.log('starting game in room ' + roomId + ' with mode ' + mode);
+    this.gameService.startGame(roomId, server, mode);
   }
-  // @SubscribeMessage('playerId')
-  // handlePlayerId(client: Socket, playerId: number): void {
-  //   this.gameService.setPlayerId(client, playerId);
-  // }
+
   @SubscribeMessage('keyDown')
   handleKeyDown(
     client: Socket,

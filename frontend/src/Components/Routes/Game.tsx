@@ -2,22 +2,30 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 import socket from "../socket";
-// import {GameState} from "../../../../shared/types"
 import { GameState } from ".../../../shared/types";
-import { log } from "console";
 
-const CANVA_WIDTH = 1200;
-const CANVA_HEIGHT = 600;
+let CANVA_WIDTH: number;
+let CANVA_HEIGHT: number;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
 export default function Game() {
   const loc = useLocation();
-
+  console.log(loc.state.roomId);
+  console.log(loc.state.gameState);
+  console.log(loc.state.playerId);
+  console.log(loc.state.mode);
+  
   const navigate = useNavigate();
   useEffect(() => {
-    gameLogic(loc.state.roomId, loc.state.gameState, loc.state.playerId, () => {
-      navigate("/");
-    });
+    gameLogic(
+      loc.state.roomId,
+      loc.state.gameState,
+      loc.state.playerId,
+      loc.state.mode,
+      () => {
+        navigate("/");
+      }
+    );
   }, []);
   return (
     <>
@@ -30,111 +38,91 @@ export default function Game() {
 }
 
 function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
-  // init() // temporary
-
   ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
   ctx.fillStyle = PLAYER_COLOR;
-  ctx.fillRect(
+  ctx.fillStyle = PLAYER_COLOR;
+  ctx.beginPath();
+  ctx.roundRect(
     state.players[0].x,
     state.players[0].y,
     state.players[0].w,
-    state.players[0].h
+    state.players[0].h,
+    40
   );
-  ctx.fillRect(
+  ctx.fill();
+  ctx.roundRect(
     state.players[1].x,
     state.players[1].y,
     state.players[1].w,
-    state.players[1].h
+    state.players[1].h,
+    40
   );
-  // ctx.roundRect(player.x, player.y, player.w, player.h, [40])
-  ctx.fillStyle = "#7970B3";
-  // fillStyle with  #7970B3
-  ctx.beginPath();
-  ctx.roundRect(state.ball.x, state.ball.y, state.ball.w, state.ball.h, [40]);
   ctx.fill();
-
+  ctx.roundRect(state.ball.x, state.ball.y, state.ball.w, state.ball.h, 40);
+  ctx.fill();
+  ctx.font = "50px serif";
   ctx.fillText(
     "Player 1: " +
       state.players[0].score +
       " - " +
       "Player 2: " +
       state.players[1].score,
-    250,
+    400,
     100
   );
 }
 function init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
   canvas.height = CANVA_HEIGHT;
+  CANVA_HEIGHT = 600;
+  CANVA_WIDTH = 1200;
   canvas.width = CANVA_WIDTH;
   ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
-// function gameLoop(gameState: GameState, ctx: CanvasRenderingContext2D) {
-//   // paintGame();
-//   // listening on server gamestate
-//   requestAnimationFrame(() => gameLoop(gameState, ctx));
-// }
-
-function gameLogic(roomId: string, gameState: GameState, playerId: number, navigate: () => void) {
+function gameLogic(
+  roomId: string,
+  gameState: GameState,
+  playerId: number,
+  mode: string,
+  navigate: () => void
+) {
   const canvas: HTMLCanvasElement = document.getElementById(
     "canvas"
   ) as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
+
   init(canvas, ctx);
   paintGame(gameState, ctx);
-  socket.emit("startingGame", roomId);
-  // gameLoop(gameState, ctx);
+  socket.emit("startingGame", { roomId, mode});
   socket.on("updateGameState", (gameState: GameState) => {
     paintGame(gameState, ctx);
   });
-  // add socket gameover listener that draws gameover screen with score and a go to first page button
   socket.on("gameOver", (gameState: GameState) => {
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
     ctx.fillStyle = PLAYER_COLOR;
-    // draw winner is player 1 or player 2
-
-    // paintGame(gameState, ctx);
-    // ctx.fillStyle = "white";
-    // ctx.fillText(
-    //   "Player 1: " +
-    //     gameState.players[0].score +
-    //     " - " +
-    //     "Player 2: " +
-    //     gameState.players[1].score,
-    //   250,
-    //   100
-    // );
-    // console.log("game over");
-
     if (gameState.players[0].score > gameState.players[1].score) {
       ctx.fillStyle = "white";
-      ctx.fillText("Player 1 wins!", 450, 200);
-
-      console.log("player 1 wins");
+      ctx.fillText("Player 1 wins!", 450, 450);
     } else if (gameState.players[0].score < gameState.players[1].score) {
       ctx.fillStyle = "white";
-      ctx.fillText("Player 2 wins!", 450, 200);
+      ctx.fillText("Player 2 wins!", 450, 450);
       console.log("player 2 wins");
     }
     const button = document.createElement("button");
     button.innerHTML = "Go back to main page";
     button.style.backgroundColor = "white";
     button.style.zIndex = "999";
-    // const Navigate = useNavigate();
     button.onclick = function () {
-      // Navigate("/");
       navigate();
-      // window.location.href = "mainpage.html";
     };
     // document.body.appendChild(button);
     // canvas.appendChild(button);
-    console.log(canvas);
-    
   });
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowUp") {
+      console.log(roomId);
       socket.emit("keyDown", {
         arrow: "up",
         roomId: roomId,
@@ -147,6 +135,5 @@ function gameLogic(roomId: string, gameState: GameState, playerId: number, navig
         playerId: playerId,
       });
     }
-    //
   });
 }

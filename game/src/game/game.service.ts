@@ -7,8 +7,11 @@ import { log } from 'console';
 
 @Injectable()
 export class GameService {
-  private players: Socket[] = [];
-  // map roomId to game state
+  // private Players: Socket[] = [];
+  private players: { hard: Socket[]; easy: Socket[] } = {
+    hard: [],
+    easy: [],
+  };
   private roomIdToGameState: Map<string, GameState> = new Map();
   createPlayer(x: number): Player {
     return {
@@ -25,7 +28,8 @@ export class GameService {
     gameState.ball.x += gameState.ball.dx;
     gameState.ball.y += gameState.ball.dy;
   }
-  addToQueue(player: Socket, server: Server): void {
+  addToQueue(player: Socket, server: Server, mode: string): void {
+    // log mode
     const a: GameState = {
       players: [this.createPlayer(20), this.createPlayer(1200 - 20 - 20)],
       ball: {
@@ -37,10 +41,11 @@ export class GameService {
         y: 600 / 2 - 20 / 2,
       },
     };
-    this.players.push(player);
-    if (this.players.length >= 2) {
-      const player1 = this.players.shift();
-      const player2 = this.players.shift();
+    this.players[mode].push(player);
+    if (this.players[mode].length >= 2) {
+      const player1 = this.players[mode].shift();
+      const player2 = this.players[mode].shift();
+      console.log(this.players[mode].length);
       if (player1 && player2) {
         const roomId = `game-${new Date().getTime()}`;
         // console.log('roomId', roomId);
@@ -53,7 +58,7 @@ export class GameService {
         player2.emit('setPlayerId', 1);
         // console.log('setPLAYER');
 
-        server.to(roomId).emit('launchGame', roomId, a);
+        server.to(roomId).emit('launchGame', roomId, a, mode);
         // server.to(roomId).emit('setPlayerId', 1);
 
         // return roomId;
@@ -63,8 +68,9 @@ export class GameService {
     }
   }
 
-  goalScored(gameState: GameState, playerId: number): void {
+  goalScored(gameState: GameState, playerId: number, mode): void {
     gameState.players[playerId].score += 1;
+    if (mode === 'hard') gameState.players[1 - playerId].h -= 8;
     gameState.ball.x = 1200 / 2 - 20 / 2;
     gameState.ball.y = 600 / 2 - 20 / 2;
     // wait a bit before starting again
@@ -72,6 +78,7 @@ export class GameService {
     // setTimeout(() => {
     // }, 1000);
   }
+
   collisionWithPaddle(gameState: GameState): void {
     // create a tmp gameState with the new position of the ball
     const tmpGameState = JSON.parse(JSON.stringify(gameState));
@@ -117,11 +124,11 @@ export class GameService {
     }
   }
 
-  checkGoal(gameState: GameState) {
+  checkGoal(gameState: GameState, mode: string) {
     if (gameState.ball.x <= 0) {
-      this.goalScored(gameState, 1);
+      this.goalScored(gameState, 1, mode);
     } else if (gameState.ball.x + gameState.ball.w >= 1200) {
-      this.goalScored(gameState, 0);
+      this.goalScored(gameState, 0, mode);
     }
   }
   checkScore(gameState: GameState, roomId: string, server: Server, timer: any) {
@@ -136,14 +143,14 @@ export class GameService {
     }
   }
 
-  startGame(roomId: string, server: Server): void {
+  startGame(roomId: string, server: Server, mode: string): void {
     const gameState = this.roomIdToGameState.get(roomId);
     const timer = setInterval(() => {
       if (gameState) {
         this.moveBall(gameState);
         this.collisionWithPaddle(gameState);
         this.collisionWithWall(gameState);
-        this.checkGoal(gameState);
+        this.checkGoal(gameState, mode);
         this.checkScore(gameState, roomId, server, timer);
       }
     }, 1000 / 200);
@@ -156,12 +163,17 @@ export class GameService {
     playerId: number,
   ): void {
     const gameState = this.roomIdToGameState.get(roomId);
+    // console.log(roomId);
 
     if (gameState) {
       if (arrow === 'up') {
-        gameState.players[playerId].y -= gameState.players[playerId].dy;
+        // paddle should not go out of the screen
+        if (gameState.players[playerId].y > 0)
+          gameState.players[playerId].y -= gameState.players[playerId].dy;
       } else {
-        gameState.players[playerId].y += gameState.players[playerId].dy;
+        // paddle should not go out of the screen
+        if (gameState.players[playerId].y + gameState.players[playerId].h < 600)
+          gameState.players[playerId].y += gameState.players[playerId].dy;
       }
     }
   }

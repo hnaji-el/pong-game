@@ -19,7 +19,7 @@ export default function PasswordChannel() {
   return (
     <div className="relative" ref={refDropDown}>
       <button
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-shape"
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
         onClick={() => {
           channelPassword
             ? setChannelPassword(false)

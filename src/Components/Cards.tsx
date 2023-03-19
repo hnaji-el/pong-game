@@ -15,7 +15,6 @@ import { firstLetterCapital } from "../helpers";
 import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
 import PasswordChannel from "./PasswordChannel";
-import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 interface TypeCardProfile {
@@ -203,8 +202,8 @@ export function CardConversation() {
       </Link>
       <span className="flex justify-center items-center">
         <Menu>
-          <MenuButton className="p-0 flex items-center justify-center rounded-full">
-            <PointsIcon edit="w-2 h-2 fill-secondaryText" />
+          <MenuButton className="p-0 flex items-center justify-center rounded-full group">
+            <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText"/>
           </MenuButton>
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
             <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
@@ -264,7 +263,7 @@ export function CardChatChannel({
   return (
     <div className="flex flex-1 items-center gap-4">
       <button
-        className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape"
+        className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape hover:bg-backgroundHover"
         onClick={() => {
           stateMessages.setClick(false);
         }}
@@ -286,7 +285,7 @@ export function CardChatChannel({
 
           <div className="flex items-center gap-4">
             <button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
               onClick={() => {
                 setAddMember(true);
               }}
@@ -294,7 +293,7 @@ export function CardChatChannel({
               <PlusIcon edit="fill-secondaryText w-4 h-4" />
             </button>
             <button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
               onClick={() => {
                 setMembers(true);
               }}

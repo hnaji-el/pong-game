@@ -7,7 +7,6 @@ export default function MembersContainer() {
       <div className="flex flex-col gap-6">
         <CardMember role="owner" />
         <CardMember role="admin" />
-        <CardMember />
       </div>
     </div>
   );

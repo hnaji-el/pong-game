@@ -16,6 +16,7 @@ import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
 import PasswordChannel from "./PasswordChannel";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -142,11 +143,8 @@ export function CardAchievments() {
 
 export function CardUser() {
   return (
-    <Link
-      to="/"
-      className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl"
-    >
-      <div className="flex gap-3 items-center">
+    <div className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl">
+      <Link to="/" className="flex w-full gap-3 items-center">
         <img
           src={friendPicture}
           alt="Friend"
@@ -155,34 +153,36 @@ export function CardUser() {
         <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
           {firstLetterCapital("mouassit")}
         </span>
-      </div>
+      </Link>
 
-      <Dropdown>
-        <DropdownBtn
-          type="icon"
-          icon={<PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />}
-          edit="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover"
-        />
-        <DropdownList edit="top-6">
-          <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
-          <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
-        </DropdownList>
-      </Dropdown>
-    </Link>
+      <Menu>
+        <MenuButton className="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover flex items-center justify-center rounded-full">
+          <PointsIcon edit="w-2 h-2 fill-secondaryText" />
+        </MenuButton>
+        <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+            settings
+          </MenuItem>
+          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+            logout
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    </div>
   );
 }
 
 export function CardConversation() {
   const stateMessages = useContext(StateMssages);
   return (
-    <Link
-      to=""
-      className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 cursor-pointer"
-      onClick={() => {
-        stateMessages.setClick(true);
-      }}
-    >
-      <div className="flex flex-1 justify-between py-4">
+    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2">
+      <Link
+        to=""
+        className="flex flex-1 justify-between py-4"
+        onClick={() => {
+          stateMessages.setClick(true);
+        }}
+      >
         <div className="flex items-center gap-2">
           <img
             src={PictureFriend}
@@ -200,21 +200,23 @@ export function CardConversation() {
             </span>
           </div>
         </div>
-      </div>
+      </Link>
       <span className="flex justify-center items-center">
-        <Dropdown>
-          <DropdownBtn
-            type="icon"
-            icon={<PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />}
-            edit="p-0"
-          />
-          <DropdownList edit="top-6">
-            <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
-            <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
-          </DropdownList>
-        </Dropdown>
+        <Menu>
+          <MenuButton className="p-0 flex items-center justify-center rounded-full">
+            <PointsIcon edit="w-2 h-2 fill-secondaryText" />
+          </MenuButton>
+          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+              settings
+            </MenuItem>
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+              logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </span>
-    </Link>
+    </div>
   );
 }
 
@@ -376,17 +378,19 @@ export function CardMember({ role }: TypeMember) {
         </div>
       </div>
 
-      <Dropdown>
-        <DropdownBtn
-          type="icon"
-          icon={<PointsIcon edit="fill-secondaryText w-3 h-3" />}
-          edit="p-1 h-7 w-7 bg-body"
-        />
-        <DropdownList edit="top-10">
-          <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
-          <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
-        </DropdownList>
-      </Dropdown>
+      <Menu>
+        <MenuButton className="p-1 h-7 w-7 bg-body flex items-center justify-center rounded-full">
+          <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
+        </MenuButton>
+        <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+            settings
+          </MenuItem>
+          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+            logout
+          </MenuItem>
+        </MenuList>
+      </Menu>
     </div>
   );
 }
@@ -394,9 +398,9 @@ export function CardMember({ role }: TypeMember) {
 export function CardSearchUser({ type }: TypeSearch) {
   const [stateUser, setStateUser] = useState<string>(type);
   return (
-    <Link to="/Profile" className="hover:bg-backgroundHover px-4 py-2">
+    <div className="hover:bg-backgroundHover px-4 py-2">
       <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-3">
+        <Link to="/Profile" className="flex items-center gap-3 flex-1">
           <img
             src={pictureUser}
             alt="users"
@@ -405,21 +409,21 @@ export function CardSearchUser({ type }: TypeSearch) {
           <span className="text-primaryText text-sm username-search capitalize">
             mouassit
           </span>
-        </div>
+        </Link>
         {stateUser && stateUser === "friend" ? (
-          <Dropdown>
-            <DropdownBtn
-              type="icon"
-              icon={
-                <PointsIcon edit="w-[.7rem] h-[.7rem] fill-secondaryText" />
-              }
-              edit="p-1 h-7 w-7 bg-shape hover:bg-backgroundHover"
-            />
-            <DropdownList edit="top-10">
-              <DropdownItem edit="py-2 px-3">Settings</DropdownItem>
-              <DropdownItem edit="py-2 px-3">Logout</DropdownItem>
-            </DropdownList>
-          </Dropdown>
+          <Menu>
+            <MenuButton className="p-1 h-7 w-7 bg-shape hover:bg-backgroundHover rounded-full">
+              <PointsIcon edit="w-[.7rem] h-[.7rem] fill-secondaryText mx-auto" />
+            </MenuButton>
+            <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+              <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+                settings
+              </MenuItem>
+              <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+                logout
+              </MenuItem>
+            </MenuList>
+          </Menu>
         ) : (
           <button
             className="w-7 h-7 rounded-full  flex justify-center items-center bg-shape hover:bg-backgroundHover"
@@ -433,6 +437,6 @@ export function CardSearchUser({ type }: TypeSearch) {
           </button>
         )}
       </div>
-    </Link>
+    </div>
   );
 }

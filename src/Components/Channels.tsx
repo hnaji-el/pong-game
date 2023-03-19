@@ -24,7 +24,7 @@ export default function Channels({setCreateChannel}:TypeProps) {
           <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
         </button>
       </div>
-      <div className="flex h-full flex-col overflow-auto">
+      <div className="flex h-full relative flex-col overflow-auto">
         <CardConversation />
         <CardConversation />
         <CardConversation />

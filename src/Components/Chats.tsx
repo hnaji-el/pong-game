@@ -13,7 +13,7 @@ export default function Chats() {
           className="placeholder-secondary-text flex-1 bg-transparent py-2.5 px-2 text-xs font-light text-primaryText placeholder:text-xs placeholder:font-light focus:outline-none"
         />
       </div>
-      <div className="flex h-full flex-col overflow-auto">
+      <div className="flex h-full relative flex-col overflow-auto">
         <CardConversation />
         <CardConversation />
         <CardConversation />

@@ -33,7 +33,7 @@ module.exports = {
         sans: ['Poppins'],
       },
       screens: {
-        '1xl': '1186px',
+        '1xl': '1186px'
       }
     },
   },

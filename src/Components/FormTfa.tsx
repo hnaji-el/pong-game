@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { checkDisableCode } from "../../helpers";
-import { KeyIcon } from "../Icons";
-import InputForm from "../InputForm";
+import { checkDisableCode } from "../helpers";
+import { KeyIcon } from "./Icons";
+import InputForm from "./InputForm";
 
 export default function FormTfa() {
   const [errorMessage, setErrorMessage] = useState<string>("");

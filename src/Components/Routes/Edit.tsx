@@ -7,11 +7,10 @@ import {
   PointsTop,
 } from "../PongElements";
 import logo from "../../assets/logo.svg";
-import FormTfa from "../FormTfa";
-
-export default function Tfa() {
+import FormEdit from "../FormEdit"
+export default function Edit() {
   useEffect(() => {
-    document.title = "Pong - Tfa";
+    document.title = "Pong - Edit Profile";
   }, []);
   return (
     <div className="flex flex-col gap-10 h-full">
@@ -25,8 +24,8 @@ export default function Tfa() {
         <ArrowRight edit="absolute bottom-0 left-0 w-9 lg:w-[2.5rem]" />
         <PointsBottom edit="absolute bottom-0 right-0 w-16 w-[4.1rem]" />
         <ArrowLeft edit="absolute top-0 right-0 w-9 lg:w-[2.5rem]" />
-        <div className="flex items-center gap-60 w-full justify-center h-full relative bottom-5">
-          <FormTfa />
+        <div className="flex items-center gap-60 w-full justify-center h-full relative bottom-5 ">
+          <FormEdit />
         </div>
       </main>
     </div>

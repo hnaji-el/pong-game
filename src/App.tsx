@@ -8,15 +8,17 @@ import Redirection from "./Components/Routes/Redirection"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "./Components/Routes/Login"
 import Tfa from "./Components/Routes/Tfa"
+import Edit from "./Components/Routes/Edit"
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Tfa" element={<Tfa />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Redirection" element={<Redirection />} />
+        <Route path="/Edit" element={<Edit />} />
+        <Route path="/Tfa" element={<Tfa />} />
         <Route path="/Messages" element={<Messages />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/ProfileUser" element={<ProfileUser />} />

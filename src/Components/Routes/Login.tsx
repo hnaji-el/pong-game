@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.svg";
 import logo42 from "../../assets/logo42.svg";
-import { ControllerIcon } from "../Icons";
 import {
   ArrowLeft,
   ArrowRight,
@@ -28,7 +27,7 @@ export default function Login() {
         <PointsBottom edit="absolute bottom-0 right-0 w-16 w-[4.1rem]" />
         <ArrowLeft edit="absolute top-0 right-0 w-9 lg:w-[2.5rem]" />
 
-        <div className="flex items-center gap-60 w-full justify-center h-full relative bottom-5">
+        <div className="flex items-center gap-60 w-full justify-center h-full lg:relative lg:bottom-5">
           <div className="flex flex-col items-center lg:items-start gap-9">
             <span className="text-primaryText font-extrabold text-[2.6rem] ">
               Play pong games

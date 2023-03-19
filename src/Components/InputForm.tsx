@@ -9,6 +9,7 @@ interface TypeProps {
   label: string;
   errorMessage: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  backgroundColor?:string
 }
 
 export default function InputForm({
@@ -19,6 +20,7 @@ export default function InputForm({
   label,
   errorMessage,
   setErrorMessage,
+  backgroundColor
 }: TypeProps) {
   return (
     <div className={`flex flex-col gap-1.5 ${edit}`}>
@@ -27,7 +29,7 @@ export default function InputForm({
       </label>
       <input
         type="text"
-        className={`placeholder-secondary-text rounded-md bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light ${
+        className={`${backgroundColor} placeholder-secondary-text rounded-md bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light ${
           errorMessage.length ? "border-[1px] border-error" : ""
         }`}
         placeholder={`Enter ${label}`}

@@ -153,7 +153,6 @@ export function CardUser() {
           {firstLetterCapital("mouassit")}
         </span>
       </Link>
-
       <Menu>
         <MenuButton className="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover flex items-center justify-center rounded-full">
           <PointsIcon edit="w-2 h-2 fill-secondaryText" />

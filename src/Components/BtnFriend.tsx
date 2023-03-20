@@ -4,7 +4,7 @@ import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
 export default function BtnFriend() {
   return (
     <Dropdown>
-      <DropdownBtn type="button" title="mouassit" arrow={true} />
+      <DropdownBtn type="button" title="Friends" arrow={true} />
       <DropdownList edit="top-12 w-full">
         <DropdownItem edit="items-center py-2 px-3 capitalize">
           <span>Settings</span>

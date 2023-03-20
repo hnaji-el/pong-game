@@ -4,6 +4,8 @@ import { CardProfileUser } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
 import BtnFriend from "../BtnFriend";
 import { BtnMessage } from "../BtnMessage";
+import BlockUser from "../BlockUser";
+import BtnAddFriend from "../BtnAddFriend";
 
 export default function ProfileUser() {
   useEffect(() => {
@@ -13,10 +15,12 @@ export default function ProfileUser() {
     <>
       <Navigation />
       <main className="mx-3 pt-10 lg:ml-64 lg:mr-4 flex flex-col gap-12 h-full pb-0">
+        {/* <BlockUser /> */}
         <section className="flex  flex-col items-center gap-10  justify-center lg:flex-row lg:justify-between">
           <CardProfileUser />
           <div className="flex flex-row lg:flex-col 1xl:flex-row items-center gap-3">
-            <BtnFriend />
+            {/* <BtnFriend /> */}
+            <BtnAddFriend />
             <BtnMessage />
           </div>
           <div className="flex gap-10">

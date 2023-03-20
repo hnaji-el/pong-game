@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "./Components/Routes/Login"
 import Tfa from "./Components/Routes/Tfa"
 import Edit from "./Components/Routes/Edit"
+import NotFound from "./Components/Routes/NotFound"
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/NotFound" element={<NotFound />} />
         <Route path="/Redirection" element={<Redirection />} />
         <Route path="/Edit" element={<Edit />} />
         <Route path="/Tfa" element={<Tfa />} />

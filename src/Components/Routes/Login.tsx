@@ -32,7 +32,7 @@ export default function Login() {
             <span className="text-primaryText font-extrabold text-[2.6rem] font-test">
               Play pong games
             </span>
-            <p className="text-primaryText font-light text-lg w-[21rem]">
+            <p className="text-primaryText font-light text-lg w-[23.8rem]">
               Platform for playing pong games with your friends and stream your
               matches.
             </p>

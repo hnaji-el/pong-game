@@ -22,7 +22,7 @@ body {
   @apply bg-body;
 }
 #root {
-  @apply relative h-full flex flex-col 2xl:mx-auto 2xl:container;
+  @apply relative h-full flex flex-col 2xl:mx-auto 2xl:container font-poppins;
 }
 
 .shadow {
@@ -30,17 +30,25 @@ body {
 }
 
 .loader {
-  border-top-color: #7970B3;
+  border-top-color: #7970b3;
   -webkit-animation: spinner 1.5s linear infinite;
   animation: spinner 1s linear infinite;
 }
 
 @-webkit-keyframes spinner {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spinner {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

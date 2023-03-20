@@ -29,7 +29,7 @@ export default function Login() {
 
         <div className="flex items-center gap-60 w-full justify-center h-full lg:relative lg:bottom-5">
           <div className="flex flex-col items-center lg:items-start gap-9">
-            <span className="text-primaryText font-extrabold text-[2.6rem] ">
+            <span className="text-primaryText font-extrabold text-[2.6rem] font-test">
               Play pong games
             </span>
             <p className="text-primaryText font-light text-lg w-[21rem]">

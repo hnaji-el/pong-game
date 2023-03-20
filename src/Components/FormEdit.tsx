@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { checkEnableCode, checkNickname } from "../helpers";
+import { checkNickname } from "../helpers";
 import InputForm from "./InputForm";
 import userImg from "../assets/user.jpg";
 import { EditAvatarIcon } from "./Icons";

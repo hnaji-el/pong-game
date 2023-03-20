@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import Navigation from "../Navigation/Navigation";
 import { CardProfileUser } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
-import BtnFriend from "../BtnFriend";
 import { BtnMessage } from "../BtnMessage";
-import BlockUser from "../BlockUser";
 import BtnAddFriend from "../BtnAddFriend";
 
 export default function ProfileUser() {

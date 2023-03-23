@@ -1,3 +1,5 @@
+// import { Socket } from "dgram";
+
 export type Pos = {
   x: number;
   y: number;
@@ -14,7 +16,9 @@ export type Shape = {
 
 export type Ball = Shape & Pos & Velocity;
 
-export type Player = { score: number } & Shape & Pos & Velocity;
+export type Player = { score: number } & Shape &
+  Pos &
+  Velocity & { id: string };
 
 export type GameState = {
   players: [Player, Player];

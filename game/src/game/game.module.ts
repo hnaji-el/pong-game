@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { GameModule } from './game/game.module';
+import { GameService } from './game.service';
+import { GameGateway } from './game.gateway';
 @Module({
-  imports: [GameModule],
+  imports: [],
   controllers: [], // Add WebSocket controllers
-  providers: [],
+  providers: [GameService, GameGateway],
 })
-export class AppModule {}
+export class GameModule {}
 
 // ServeStaticModule.forRoot({
 //   rootPath: join('..', 'frontend', 'build'),

@@ -7,12 +7,43 @@ import { log } from 'console';
 
 @Injectable()
 export class GameService {
-  // private Players: Socket[] = [];
-  private players: { hard: Socket[]; easy: Socket[] } = {
-    hard: [],
-    easy: [],
-  };
+  private easyModeQueue: Socket[] = [];
+  private hardModeQueue: Socket[] = [];
+  // array for both queues with key easy and hard
+  private clientIdToRoomId: Map<string, string> = new Map();
   private roomIdToGameState: Map<string, GameState> = new Map();
+  removePlayer(player: Socket, server: Server): void {
+    if (this.easyModeQueue.includes(player)) {
+      this.easyModeQueue = this.easyModeQueue.filter((p) => p.id !== player.id);
+    } else if (this.hardModeQueue.includes(player)) {
+      this.hardModeQueue = this.hardModeQueue.filter((p) => p.id !== player.id);
+    } else {
+      const roomId = this.clientIdToRoomId.get(player.id);
+      if (roomId) {
+        console.log('player id ', player.id);
+        const gameState = this.roomIdToGameState.get(roomId);
+        if (gameState) {
+          console.log('GAME STATE');
+          const player1 = gameState.players[0];
+          const player2 = gameState.players[1];
+          if (player1.id === player.id) {
+            console.log('player 2 wins');
+            console.log(player2.score);
+            player2.score = 5;
+          } else if (player2.id === player.id) {
+            console.log(player2.score);
+            console.log('player 1 wins');
+            player1.score = 5;
+          }
+          player.leave(roomId);
+
+          this.roomIdToGameState.delete(roomId);
+          // finish game
+          // server.to(roomId).emit('finishGame');
+        }
+      }
+    }
+  }
   createPlayer(x: number): Player {
     return {
       score: 0,
@@ -22,18 +53,47 @@ export class GameService {
       w: 20,
       x: x,
       y: 600 / 2 - 100 / 2,
+      id: '',
     };
   }
   moveBall(gameState: GameState): void {
     gameState.ball.x += gameState.ball.dx;
     gameState.ball.y += gameState.ball.dy;
   }
+
+  setGame(server: Server, gameState: GameState, mode: string): void {
+    let player1: Socket;
+    let player2: Socket;
+
+    if (mode === 'easy') {
+      player1 = this.easyModeQueue.shift();
+      player2 = this.easyModeQueue.shift();
+    } else {
+      player1 = this.hardModeQueue.shift();
+      player2 = this.hardModeQueue.shift();
+    }
+    if (player1 && player2) {
+      const roomId = `game-${new Date().getTime()}`;
+      console.log('roomId', roomId);
+      gameState.players[0].id = player1.id;
+      gameState.players[1].id = player2.id;
+      this.roomIdToGameState.set(roomId, gameState);
+      player1.join(roomId);
+      player2.join(roomId);
+      this.clientIdToRoomId.set(player1.id, roomId);
+      this.clientIdToRoomId.set(player2.id, roomId);
+      player1.emit('setPlayerId', 0);
+      player2.emit('setPlayerId', 1);
+      server.to(roomId).emit('launchGame', roomId, gameState, mode);
+    }
+  }
   addToQueue(player: Socket, server: Server, mode: string): void {
-    // log mode
-    const a: GameState = {
+    // console.log('addToQueue');
+    console.log('mode', mode);
+    const gameState: GameState = {
       players: [this.createPlayer(20), this.createPlayer(1200 - 20 - 20)],
       ball: {
-        dx: 0.8,
+        dx: 1.8,
         dy: 1.2,
         h: 20,
         w: 20,
@@ -41,50 +101,26 @@ export class GameService {
         y: 600 / 2 - 20 / 2,
       },
     };
-    this.players[mode].push(player);
-    if (this.players[mode].length >= 2) {
-      const player1 = this.players[mode].shift();
-      const player2 = this.players[mode].shift();
-      console.log(this.players[mode].length);
-      if (player1 && player2) {
-        const roomId = `game-${new Date().getTime()}`;
-        // console.log('roomId', roomId);
+    if (mode === 'easy') this.easyModeQueue.push(player);
+    else this.hardModeQueue.push(player);
 
-        this.roomIdToGameState.set(roomId, a);
-        player1.join(roomId);
-        player2.join(roomId);
-        // send to each player so they can keep their id for paddle
-        player1.emit('setPlayerId', 0);
-        player2.emit('setPlayerId', 1);
-        // console.log('setPLAYER');
-
-        server.to(roomId).emit('launchGame', roomId, a, mode);
-        // server.to(roomId).emit('setPlayerId', 1);
-
-        // return roomId;
-      }
+    if (this.easyModeQueue.length >= 2) {
+      this.setGame(server, gameState, 'easy');
+    } else if (this.hardModeQueue.length >= 2) {
+      this.setGame(server, gameState, 'hard');
     } else {
-      player.emit('waitingInQueue');
+      player.emit('waitingInQueue', mode);
     }
   }
 
-  goalScored(gameState: GameState, playerId: number, mode): void {
+  goalScored(gameState: GameState, playerId: number): void {
     gameState.players[playerId].score += 1;
-    if (mode === 'hard') gameState.players[1 - playerId].h -= 8;
     gameState.ball.x = 1200 / 2 - 20 / 2;
     gameState.ball.y = 600 / 2 - 20 / 2;
-    // wait a bit before starting again
     gameState.ball.dx *= -1;
-    // setTimeout(() => {
-    // }, 1000);
   }
-
   collisionWithPaddle(gameState: GameState): void {
-    // create a tmp gameState with the new position of the ball
     const tmpGameState = JSON.parse(JSON.stringify(gameState));
-    // this.moveBall(tmpGameState);
-    // check if the ball is colliding with the paddle
-    // move ball enough to not have collision and ball go inside paddle
     tmpGameState.ball.x += 2 * tmpGameState.ball.dx;
     tmpGameState.ball.y += 2 * tmpGameState.ball.dy;
 
@@ -96,13 +132,7 @@ export class GameService {
       tmpGameState.ball.y <=
         tmpGameState.players[0].y + tmpGameState.players[0].h
     ) {
-      // dont collide with paddle if ball is going away from paddle
-      // collide only if ball is going towards paddle
       if (tmpGameState.ball.dx < 0) gameState.ball.dx *= -1;
-
-      // if (tmpGameState.ball.dx < 0) {
-
-      // gameState.ball.dx *= -1;
     }
     if (
       tmpGameState.ball.x + tmpGameState.ball.w >= tmpGameState.players[1].x &&
@@ -112,9 +142,7 @@ export class GameService {
       tmpGameState.ball.y <=
         tmpGameState.players[1].y + tmpGameState.players[1].h
     ) {
-      // collide only if ball is going towards paddle
       if (tmpGameState.ball.dx > 0) gameState.ball.dx *= -1;
-      // gameState.ball.dx *= -1;
     }
   }
 
@@ -126,18 +154,27 @@ export class GameService {
 
   checkGoal(gameState: GameState, mode: string) {
     if (gameState.ball.x <= 0) {
-      this.goalScored(gameState, 1, mode);
+      this.goalScored(gameState, 1);
+      if (mode === 'hard') gameState.players[0].h -= 10;
     } else if (gameState.ball.x + gameState.ball.w >= 1200) {
-      this.goalScored(gameState, 0, mode);
+      this.goalScored(gameState, 0);
+      if (mode === 'hard') gameState.players[1].h -= 10;
     }
   }
+
   checkScore(gameState: GameState, roomId: string, server: Server, timer: any) {
     if (gameState.players[0].score === 5) {
       server.to(roomId).emit('gameOver', gameState);
       clearInterval(timer);
+      this.roomIdToGameState.delete(roomId);
+      this.clientIdToRoomId.delete(gameState.players[0].id);
+      this.clientIdToRoomId.delete(gameState.players[1].id);
     } else if (gameState.players[1].score === 5) {
       server.to(roomId).emit('gameOver', gameState);
       clearInterval(timer);
+      this.roomIdToGameState.delete(roomId);
+      this.clientIdToRoomId.delete(gameState.players[0].id);
+      this.clientIdToRoomId.delete(gameState.players[1].id);
     } else {
       server.to(roomId).emit('updateGameState', gameState);
     }
@@ -163,17 +200,12 @@ export class GameService {
     playerId: number,
   ): void {
     const gameState = this.roomIdToGameState.get(roomId);
-    // console.log(roomId);
 
     if (gameState) {
       if (arrow === 'up') {
-        // paddle should not go out of the screen
-        if (gameState.players[playerId].y > 0)
-          gameState.players[playerId].y -= gameState.players[playerId].dy;
+        gameState.players[playerId].y -= gameState.players[playerId].dy;
       } else {
-        // paddle should not go out of the screen
-        if (gameState.players[playerId].y + gameState.players[playerId].h < 600)
-          gameState.players[playerId].y += gameState.players[playerId].dy;
+        gameState.players[playerId].y += gameState.players[playerId].dy;
       }
     }
   }

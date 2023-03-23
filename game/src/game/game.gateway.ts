@@ -6,7 +6,7 @@ import {
   OnGatewayConnection,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { GameService } from '../game/game.service';
+import { GameService } from './game.service';
 
 @WebSocketGateway({
   cors: {
@@ -15,13 +15,17 @@ import { GameService } from '../game/game.service';
     credentials: true,
   },
 })
-export class SocketGateway implements OnGatewayConnection {
+export class GameGateway implements OnGatewayConnection {
   constructor(@Inject(GameService) private readonly gameService: GameService) {}
 
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
     console.log(`Client connected: ${client.id}`);
+  }
+  handleDisconnect(client: Socket) {
+    console.log(`Client disconnected: ${client.id}`);
+    this.gameService.removePlayer(client, this.server);
   }
 
   @SubscribeMessage('sendMessage')
@@ -33,14 +37,17 @@ export class SocketGateway implements OnGatewayConnection {
   handleQueuing(client: Socket, mode: string): void {
     this.gameService.addToQueue(client, this.server, mode);
   }
-  // handleStartingGame(server: Server, roomId: string, mode: string): void {
   @SubscribeMessage('startingGame')
   handleStartingGame(
-    server: Server,
-    { roomId, mode }: { roomId: string; mode: string },
+    client: Socket,
+    payload: {
+      roomId: string;
+      mode: string;
+    },
   ): void {
-    console.log('starting game in room ' + roomId + ' with mode ' + mode);
-    this.gameService.startGame(roomId, server, mode);
+    console.log('starting game in room ' + payload.roomId);
+
+    this.gameService.startGame(payload.roomId, this.server, payload.mode);
   }
 
   @SubscribeMessage('keyDown')

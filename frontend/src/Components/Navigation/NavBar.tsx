@@ -23,7 +23,7 @@ export default function NavBar({ setOpen }: TypeProps) {
       <SearchInput />
       <div className="hidden lg:flex items-center gap-5">
         
-        <Link to="/Queue" className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">
+        <Link to="/Game" className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">
           <ControllerIcon edit="w-7" />
           <span>Play now</span>
         </Link>

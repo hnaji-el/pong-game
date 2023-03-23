@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GameService } from './game.service';
 import { GameGateway } from './game.gateway';
+import { GameController } from './game.controller';
 @Module({
   imports: [],
-  controllers: [], // Add WebSocket controllers
+  controllers: [GameController],
   providers: [GameService, GameGateway],
 })
 export class GameModule {}

@@ -12,6 +12,23 @@ export class GameService {
   // array for both queues with key easy and hard
   private clientIdToRoomId: Map<string, string> = new Map();
   private roomIdToGameState: Map<string, GameState> = new Map();
+
+  getLiveGames(): string[] {
+    //  set dummy values
+    this.roomIdToGameState.set('game-1', {} as GameState);
+    this.roomIdToGameState.set('game-2', {} as GameState);
+    this.roomIdToGameState.set('game-3', {} as GameState);
+    return Array.from(this.roomIdToGameState.keys());
+  }
+  watchGame(client: Socket, roomId: string): void {
+    console.log('watching game in room ' + roomId);
+    client.join(roomId);
+    const gameState = this.roomIdToGameState.get(roomId);
+    if (gameState) {
+      client.emit('gameState', gameState);
+    }
+  }
+
   removePlayer(player: Socket, server: Server): void {
     if (this.easyModeQueue.includes(player)) {
       this.easyModeQueue = this.easyModeQueue.filter((p) => p.id !== player.id);

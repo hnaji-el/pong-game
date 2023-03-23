@@ -28,6 +28,10 @@ export class GameGateway implements OnGatewayConnection {
     this.gameService.removePlayer(client, this.server);
   }
 
+  @SubscribeMessage('watchGame')
+  handleWatchGame(client: Socket, roomId: string): void {
+    this.gameService.watchGame(client, roomId);
+  }
   @SubscribeMessage('sendMessage')
   handleSendMessage(client: any, message: any): void {
     console.log('Message received:', message);

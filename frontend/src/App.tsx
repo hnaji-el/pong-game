@@ -1,11 +1,11 @@
-import React from "react"
-import "./App.css"
-import Home from "./Components/Routes/Home"
-import Messages from "./Components/Routes/Messages"
-import Profile from "./Components/Routes/Profile"
-import ProfileUser from "./Components/Routes/ProfileUser"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Game from "./Components/Routes/Game"
+import React from "react";
+import "./App.css";
+import Home from "./Components/Routes/Home";
+import Messages from "./Components/Routes/Messages";
+import Profile from "./Components/Routes/Profile";
+import ProfileUser from "./Components/Routes/ProfileUser";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Game from "./Components/Routes/Game";
 function App() {
   // const socket = io("http://localhost:3000");
   // socket.on()
@@ -21,5 +21,6 @@ function App() {
     </BrowserRouter>
   );
 }
+
 
 export default App;

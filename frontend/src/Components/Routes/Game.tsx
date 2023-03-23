@@ -12,51 +12,60 @@ const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
 export default function Game() {
   const loc = useLocation();
-
+  // if no state is passed, then the user is not joining a game, but creating a new one
+  const roomId = loc.state ? loc.state.roomId : undefined;
   let socket: Socket;
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
 
   useEffect(() => {
     socket = io("http://192.168.1.2:3000");
-    const button = document.getElementById("easy") as HTMLButtonElement;
-    button.addEventListener("click", () => {
-      socket.emit("queuing", "easy");
-    });
-    const button2 = document.getElementById("hard") as HTMLButtonElement;
-    button2.addEventListener("click", () => {
-      socket.emit("queuing", "hard");
-    });
-
-    socket.on("setPlayerId", (Id: number) => {
-      playerIdRef.current = Id;
-    });
-    socket.on(
-      "launchGame",
-      (roomId: string, gameState: GameState, mode: string) => {
-        gameLogic(roomId, gameState, playerIdRef.current, mode, () => {
-          navigate("/");
-        });
-      }
-    );
-    socket.on("waitingInQueue", (mode: string) => {
-      // hide buttons and show waiting message
-      console.log('waiting in queue')
+    if (roomId) {
+      gameLogic(roomId, undefined, -1, 'undefined', () => {
+        navigate("/");
+      });
+      socket.emit("watchGame", roomId);
+      console.log("joining game");
+    } else {
       const button = document.getElementById("easy") as HTMLButtonElement;
-      button.style.display = "none";
+      button.addEventListener("click", () => {
+        socket.emit("queuing", "easy");
+      });
       const button2 = document.getElementById("hard") as HTMLButtonElement;
-      button2.style.display = "none";
-      const waiting = document.getElementById(
-        "waiting"
-      ) as HTMLParagraphElement;
-      waiting.style.display = "block";
-      waiting.innerText = `Waiting for ${mode} game...`;
-    });
+      button2.addEventListener("click", () => {
+        socket.emit("queuing", "hard");
+      });
 
+      socket.on("setPlayerId", (Id: number) => {
+        playerIdRef.current = Id;
+      });
+      socket.on(
+        "launchGame",
+        (roomId: string, gameState: GameState, mode: string) => {
+          gameLogic(roomId, gameState, playerIdRef.current, mode, () => {
+            navigate("/");
+          });
+        }
+      );
+      socket.on("waitingInQueue", (mode: string) => {
+        // hide buttons and show waiting message
+        console.log("waiting in queue");
+        const button = document.getElementById("easy") as HTMLButtonElement;
+        button.style.display = "none";
+        const button2 = document.getElementById("hard") as HTMLButtonElement;
+        button2.style.display = "none";
+        const waiting = document.getElementById(
+          "waiting"
+        ) as HTMLParagraphElement;
+        waiting.style.display = "block";
+        waiting.innerText = `Waiting for ${mode} game...`;
+      });
+    }
     return () => {
       socket.disconnect();
     };
   }, []);
+
   function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
@@ -96,7 +105,7 @@ export default function Game() {
   }
   function gameLogic(
     roomId: string,
-    gameState: GameState,
+    gameState: GameState | undefined,
     playerId: number,
     mode: string,
     navigate: () => void
@@ -107,7 +116,7 @@ export default function Game() {
     button2.style.display = "none";
     const waiting = document.getElementById("waiting") as HTMLParagraphElement;
     waiting.style.display = "none";
-    
+
     // const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const canvas: HTMLCanvasElement = document.getElementById(
       "canvas"
@@ -115,7 +124,8 @@ export default function Game() {
     canvas.style.display = "block";
     const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
     init(canvas, ctx);
-    paintGame(gameState, ctx);
+    if (gameState)
+      paintGame(gameState, ctx);
     if (playerId === 0) {
       socket.emit("startingGame", {
         roomId: roomId,

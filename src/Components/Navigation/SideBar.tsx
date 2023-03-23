@@ -72,7 +72,7 @@ export default function SideBar({
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm ${
+                  className={`text-xs lg:text-primaryText lg:text-sm lg:relative lg:top-[.1rem] ${
                     home && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
@@ -136,7 +136,7 @@ export default function SideBar({
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm ${
+                  className={`text-xs lg:text-primaryText lg:text-sm lg:relative lg:top-[.1rem] ${
                     profile && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"

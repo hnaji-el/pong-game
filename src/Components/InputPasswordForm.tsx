@@ -58,7 +58,7 @@ export default function InputPasswordForm({
         </div>
         {errorPassword.length ? (
           <div className="text-error text-xs font-medium fill-error flex gap-1.5">
-            <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
+            <ExclamationIcon edit="w-3 h-3 relative top-[.1rem]" />
             <span>{errorPassword}</span>
           </div>
         ) : null}

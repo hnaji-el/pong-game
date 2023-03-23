@@ -202,7 +202,50 @@ export function CardConversation() {
       <span className="flex justify-center items-center">
         <Menu>
           <MenuButton className="p-0 flex items-center justify-center rounded-full group">
-            <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText"/>
+            <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+          </MenuButton>
+          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+              settings
+            </MenuItem>
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
+              logout
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      </span>
+    </div>
+  );
+}
+
+export function CardChannelConversation() {
+  const stateMessages = useContext(StateMssages);
+  return (
+    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2">
+      <Link
+        to=""
+        className="flex flex-1 justify-between py-4"
+        onClick={() => {
+          stateMessages.setClick(true);
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1.5">
+              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
+                {firstLetterCapital("channel")}
+              </span>
+            </div>
+            <span className="text-left w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
+              hello
+            </span>
+          </div>
+        </div>
+      </Link>
+      <span className="flex justify-center items-center">
+        <Menu>
+          <MenuButton className="p-0 flex items-center justify-center rounded-full group">
+            <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </MenuButton>
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
             <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
@@ -413,12 +456,9 @@ export function CardSearchUser({ type }: TypeSearch) {
             <MenuButton className="p-1 h-7 w-7 bg-shape hover:bg-backgroundHover rounded-full">
               <PointsIcon edit="w-[.7rem] h-[.7rem] fill-secondaryText mx-auto" />
             </MenuButton>
-            <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-              <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-                settings
-              </MenuItem>
-              <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-                logout
+            <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-2 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+              <MenuItem className="flex gap-2 hover:bg-backgroundHover font-light justify-center items-center py-2 px-3">
+                Invite to play
               </MenuItem>
             </MenuList>
           </Menu>

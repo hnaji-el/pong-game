@@ -1,5 +1,5 @@
 import React from "react";
-import { CardConversation } from "./Cards";
+import { CardChannelConversation } from "./Cards";
 import { PlusIcon, SearchIcon } from "./Icons";
 
 interface TypeProps{
@@ -14,7 +14,7 @@ export default function Channels({setCreateChannel}:TypeProps) {
           <SearchIcon edit="w-3 fill-secondaryText relative" />
           <input
             type="text"
-            placeholder="Search for friend"
+            placeholder="Search for channel"
             className="placeholder-secondary-text flex-1 bg-transparent py-2.5 px-2 text-xs font-light text-primaryText placeholder:text-xs placeholder:font-light focus:outline-none"
           />
         </div>
@@ -25,32 +25,7 @@ export default function Channels({setCreateChannel}:TypeProps) {
         </button>
       </div>
       <div className="flex h-full relative flex-col overflow-auto">
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
+        <CardChannelConversation />
       </div>
     </div>
   );

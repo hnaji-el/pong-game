@@ -43,8 +43,8 @@ export default function InputForm({
         <div
           className={`text-error text-xs font-medium fill-error flex gap-1.5 ${editError}`}
         >
-          <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
-          <span>{errorMessage}</span>
+          <ExclamationIcon edit="w-3 h-3 relative top-[.1rem]" />
+          <span className="font-medium">{errorMessage}</span>
         </div>
       ) : null}
     </div>

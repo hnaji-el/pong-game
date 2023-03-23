@@ -1,3 +1,10 @@
+interface TypeData {
+  id: number;
+  username: string;
+  picture: string;
+  friend: boolean;
+}
+
 export function getIndexElement(
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>
 ): number {
@@ -52,4 +59,14 @@ export function checkEnableCode(value: string): string {
   if (value.length < 6) return "Minimum 6 digit";
 
   return "";
+}
+
+export function filterByName(data: TypeData[], value: string): TypeData[] {
+  let newData: TypeData[];
+
+  newData = data.filter((e: TypeData) => {
+    if (e.username.toLowerCase().indexOf(value.toLowerCase()) !== -1) return e;
+    return false;
+  });
+  return newData;
 }

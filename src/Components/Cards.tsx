@@ -31,7 +31,12 @@ interface TypeMember {
 }
 
 interface TypeSearch {
-  type: string;
+  data: {
+    id: number;
+    username: string;
+    picture: string;
+    friend: boolean;
+  };
 }
 
 export function CardFriendOnline() {
@@ -436,22 +441,22 @@ export function CardMember({ role }: TypeMember) {
   );
 }
 
-export function CardSearchUser({ type }: TypeSearch) {
-  const [stateUser, setStateUser] = useState<string>(type);
+export function CardSearchUser({ data }: TypeSearch) {
+  const [stateFriend, setFriend] = useState<boolean>(data.friend);
   return (
     <div className="hover:bg-backgroundHover px-4 py-2">
       <div className="flex items-center justify-between w-full">
         <Link to="/Profile" className="flex items-center gap-3 flex-1">
           <img
-            src={pictureUser}
+            src={data.picture}
             alt="users"
             className="w-12 h-12 rounded-full"
           />
           <span className="text-primaryText text-sm username-search capitalize">
-            mouassit
+            {data.username}
           </span>
         </Link>
-        {stateUser && stateUser === "friend" ? (
+        {stateFriend ? (
           <Menu>
             <MenuButton className="p-1 h-7 w-7 bg-shape hover:bg-backgroundHover rounded-full">
               <PointsIcon edit="w-[.7rem] h-[.7rem] fill-secondaryText mx-auto" />
@@ -468,7 +473,7 @@ export function CardSearchUser({ type }: TypeSearch) {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setStateUser("friend");
+              setFriend(true);
             }}
           >
             <AddFiriendSearchIcon edit="w-4 h-4 fill-secondaryText" />

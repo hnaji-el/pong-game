@@ -4,10 +4,14 @@ import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://192.168.1.5:3001',
+    credentials: true,
+  });
   app.use(cookieParser());
   await app.listen(3000);
 }
+
 bootstrap();
 
 // import { PrismaClient } from '@prisma/client';

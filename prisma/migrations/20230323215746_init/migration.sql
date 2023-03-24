@@ -7,6 +7,7 @@ CREATE TABLE "User" (
     "nickname" TEXT NOT NULL,
     "pictureURL" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'offline',
+    "firstTimeLogged" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

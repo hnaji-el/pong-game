@@ -10,5 +10,5 @@ export const fortyTwoConstants = {
     'u-s4t2ud-44438b0e270107e4154d1eedd743b2ff55dc2d4d7be1d603f34d4ff991d44622',
   clientSecret:
     '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',
-  callbackURL: 'http://localhost:3000/auth/login/callback',
+  callbackURL: 'http://192.168.1.5:3000/auth/login/callback',
 };

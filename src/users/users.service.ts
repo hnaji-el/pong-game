@@ -43,7 +43,7 @@ export class UsersService {
     return entities;
   }
 
-  async getOneUser(userId: string): Promise<UserEntity> {
+  async getOneUser(loggedUser: any, userId: string): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { requester: true, addressee: true },
@@ -57,6 +57,8 @@ export class UsersService {
       nickname: user.nickname,
       pictureURL: user.pictureURL,
       status: user.status,
+      isFriendToLoggedUser: this.isFriend(loggedUser, user),
+      isBlockedByLoggedUser: this.isBlocked(loggedUser, user),
       friendsNumber: this.getNumberOfFriends(user),
       is_2FA_Enabled: false, // NOTE: ...
     };
@@ -181,6 +183,10 @@ export class UsersService {
     });
 
     if (!addresseeUser) throw new ForbiddenException('user is not exit');
+    if (this.isFriend(requesterUser, addresseeUser))
+      throw new ForbiddenException('user already friend');
+    if (!this.isBlocked(requesterUser, addresseeUser))
+      throw new ForbiddenException('user is not blocked');
     if (this.isBlocked(requesterUser, addresseeUser)) {
       await this.prisma.relationShip.deleteMany({
         where: {
@@ -194,6 +200,15 @@ export class UsersService {
   }
 
   // HELPER METHODS
+
+  async setFirstTimeLoggedToFalse(user: any) {
+    if (user.firstTimeLogged) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { firstTimeLogged: false },
+      });
+    }
+  }
 
   pushToEntities(entities: UserEntity[], user: any, FriendsNumber: number) {
     entities.push({

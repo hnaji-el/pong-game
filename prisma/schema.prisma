@@ -11,12 +11,13 @@ datasource db {
 }
 
 model User {
-  id         String         @id @default(uuid())
-  nickname   String         @unique
-  pictureURL String
-  status     String         @default("offline")
-  requester  RelationShip[] @relation("Requester")
-  addressee  RelationShip[] @relation("Addressee")
+  id              String         @id @default(uuid())
+  nickname        String         @unique
+  pictureURL      String
+  status          String         @default("offline")
+  firstTimeLogged Boolean        @default(true)
+  requester       RelationShip[] @relation("Requester")
+  addressee       RelationShip[] @relation("Addressee")
 }
 
 model RelationShip {

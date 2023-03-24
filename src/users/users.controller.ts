@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Param,
   Patch,
   Post,
@@ -31,6 +30,12 @@ export class UsersController {
     return await this.usersService.getAllUsers(req.user);
   }
 
+  @Get('/users/logged-user')
+  @UseGuards(JwtAuthGuard)
+  getLoggedUser(@Req() req) {
+    return req.user;
+  }
+
   @Patch('/users/update_nickname')
   @UseGuards(JwtAuthGuard)
   async updateNickname(@Req() req, @Body() body) {
@@ -39,8 +44,8 @@ export class UsersController {
 
   @Get('/users/:id')
   @UseGuards(JwtAuthGuard)
-  async getOneUser(@Param('id') id: string) {
-    return await this.usersService.getOneUser(id);
+  async getOneUser(@Req() req, @Param('id') id: string) {
+    return await this.usersService.getOneUser(req.user, id);
   }
 
   @Get('/users/friends/:id')
@@ -61,13 +66,13 @@ export class UsersController {
     await this.usersService.removeFriend(req.user, id);
   }
 
-  @Patch('users/block-user/:id')
+  @Patch('users/block-friend/:id')
   @UseGuards(JwtAuthGuard)
   async blockUser(@Req() req, @Param('id') id: string) {
     await this.usersService.blockUser(req.user, id);
   }
 
-  @Patch('users/unblock-user/:id')
+  @Patch('users/unblock-friend/:id')
   @UseGuards(JwtAuthGuard)
   async unblockUser(@Req() req, @Param('id') id: string) {
     await this.usersService.unblockUser(req.user, id);

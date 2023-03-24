@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -21,5 +22,16 @@ export class AuthService {
       pictureURL: user.pictureURL,
     };
     return this.jwtService.sign(payload);
+  }
+
+  loginRedirect(req: any, res: Response) {
+    res.cookie('jwt', this.generateJWT(req.user));
+    if (req.user.firstTimeLogged) res.redirect('http://192.168.1.5:3001/edit');
+    else res.redirect('http://192.168.1.5:3001/');
+  }
+
+  async logout(req: any, res: Response) {
+    res.clearCookie('jwt');
+    await this.usersService.setFirstTimeLoggedToFalse(req.user);
   }
 }

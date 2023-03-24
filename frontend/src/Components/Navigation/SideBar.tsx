@@ -7,10 +7,10 @@ import {
   ControllerIcon,
 } from "../Icons";
 import { Link } from "react-router-dom";
-import userPicture from "../../assets/user.jpg";
 import { ActiveHome } from "../Routes/Home";
 import { StateMssages } from "../Routes/Messages";
 import { ActiveProfile } from "../Routes/Profile";
+import { ActiveProfileUser } from "../Routes/ProfileUser";
 import logo from "../../assets/logo.svg";
 import ListFriendOnline from "../ListFriendOnline";
 
@@ -31,6 +31,13 @@ export default function SideBar({
   const messages = useContext(StateMssages);
   const profile = useContext(ActiveProfile);
 
+  let dataUserLogged = useContext(ActiveHome);
+  let dataUserLoggedProfile = useContext(ActiveProfile);
+  let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
+
+  if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
+  if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
+
   return (
     <>
       <section
@@ -40,7 +47,7 @@ export default function SideBar({
       >
         <div className=" hidden lg:flex items-center justify-center">
           <Link
-            to="/"
+            to="/Home"
             onClick={() => {
               setOpenSearch(false);
               setOpenSettings(false);
@@ -54,9 +61,9 @@ export default function SideBar({
           <ul className="flex justify-between items-center lg:items-start  lg:flex-col lg:gap-12">
             <li className="lg:w-full">
               <Link
-                to="/"
+                to="/Home"
                 className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
-                  home ? "lg:bg-shape lg:border-l-[6px] lg:border-primary" : ""
+                  home.value ? "lg:bg-shape lg:border-l-[6px] lg:border-primary" : ""
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
@@ -66,14 +73,14 @@ export default function SideBar({
               >
                 <HomeIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    home && !openSearch && !openSettings
+                    home.value && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm ${
-                    home && !openSearch && !openSettings
+                  className={`text-xs lg:text-primaryText lg:text-sm lg:relative lg:top-[.1rem] ${
+                    home.value && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -118,7 +125,7 @@ export default function SideBar({
               <Link
                 to="/Profile"
                 className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
-                  profile
+                  profile.value
                     ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
                     : ""
                 }`}
@@ -130,14 +137,14 @@ export default function SideBar({
               >
                 <UserIcon
                   edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 ${
-                    profile && !openSearch && !openSettings
+                    profile.value && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm ${
-                    profile && !openSearch && !openSettings
+                  className={`text-xs lg:text-primaryText lg:text-sm lg:relative lg:top-[.1rem] ${
+                    profile.value && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -178,7 +185,7 @@ export default function SideBar({
               >
                 <img
                   className="w-10 h-10 rounded-3xl"
-                  src={userPicture}
+                  src={dataUserLogged.settings.pictureURL}
                   alt="User profile"
                 />
               </button>

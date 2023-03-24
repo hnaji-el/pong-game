@@ -14,7 +14,7 @@ export function Modal({ children, edit }: TypeProps) {
   return (
     <div className="fixed left-0 top-0 flex justify-center items-center lg:items-start bg-black/30 w-full h-full backdrop-blur-sm z-[999]">
       <div
-        className={`bg-shape mt-0 lg:mt-8 rounded-lg flex flex-col pt-4 px-4 ${edit}`}
+        className={`bg-shape mt-0 lg:mt-8 rounded-lg flex flex-col p-4 ${edit}`}
       >
         {children}
       </div>
@@ -24,23 +24,27 @@ export function Modal({ children, edit }: TypeProps) {
 
 export function ModalHeader({ children, edit, setOpen }: TypeProps) {
   return (
-    <div
-      className={`flex items-center w-full justify-between border-secondaryText pb-5 ${edit}`}
-      style={{ borderBottom: "1px solid #81879C" }}
-    >
-      <div className="text-primaryText text-xl font-light">{children}</div>
-      <button
-        className="w-4 h-4 rounded-full"
-        onClick={() => {
-          if (setOpen) {
-            setOpen(false);
-            document.body.style.overflow = "auto";
-          }
-        }}
+    <>
+      <div
+        className={`flex items-center w-full justify-between border-secondaryText ${edit}`}
       >
-        <CloseIcon edit="w-full h-full fill-secondaryText" />
-      </button>
-    </div>
+        <div className="text-primaryText text-xl font-light">{children}</div>
+        <button
+          className="w-4 h-4 rounded-full"
+          onClick={() => {
+            if (setOpen) {
+              setOpen(false);
+              document.body.style.overflow = "auto";
+            }
+          }}
+        >
+          <CloseIcon edit="w-full h-full fill-secondaryText" />
+        </button>
+      </div>
+      <div className={`pt-5 ${edit}`}>
+        <div className={`h-[1px] w-full bg-secondaryText`}></div>
+      </div>
+    </>
   );
 }
 

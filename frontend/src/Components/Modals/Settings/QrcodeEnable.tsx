@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import { checkEnableCode } from "../../../helpers";
+import InputForm from "../../InputForm";
 
 interface TypeProps {
   setTfa: React.Dispatch<React.SetStateAction<boolean>>;
@@ -6,25 +8,25 @@ interface TypeProps {
 }
 
 export default function QrcodeEnable({ setTfa, setEnable }: TypeProps) {
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [value, setValue] = useState<string>("");
   return (
-    <div className="flex items-center">
+    <form className="flex items-center">
       <div className="flex gap-10 lg:gap-12 flex-col lg:flex-row items-center">
         <div className="h-32 w-32 rounded-lg bg-white p-1.5">
           <img src="" alt="Qr code" />
         </div>
         <div className="flex w-full gap-6 flex-col lg:w-64">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="Code" className="text-sm text-primaryText">
-              Code
-            </label>
-            <input
-              type="text"
-              className={`placeholder-secondary-text rounded-md bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light`}
-              placeholder="Enter code"
-            />
-          </div>
+          <InputForm
+            label="code"
+            value={value}
+            setValue={setValue}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+          />
           <div className="flex w-full items-center justify-end gap-3">
             <button
+              type="button"
               className="w-32 rounded-md bg-shape p-2 text-sm text-primaryText shadow"
               onClick={() => {
                 setTfa(false);
@@ -33,8 +35,16 @@ export default function QrcodeEnable({ setTfa, setEnable }: TypeProps) {
               Back
             </button>
             <button
+              type="submit"
               className="w-32 rounded-md bg-primary p-2 text-sm text-primaryText"
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                let errorMessage = checkEnableCode(value);
+
+                if (errorMessage.length) {
+                  setErrorMessage(errorMessage);
+                  return;
+                }
                 setEnable(true);
                 setTfa(false);
               }}
@@ -44,6 +54,6 @@ export default function QrcodeEnable({ setTfa, setEnable }: TypeProps) {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

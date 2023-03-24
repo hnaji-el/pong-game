@@ -11,12 +11,12 @@ export default function ModalSearch({ children, setOpenSearch }: TypeProps) {
     setWindowWidth(window.innerWidth);
   };
 
-  function checkEquale(e: HTMLButtonElement): boolean {
-    let buttonsModal = modalSearch.current?.querySelectorAll("button");
+  function checkEquale(e: HTMLElement, type: string): boolean {
+    let htmlElement = modalSearch.current?.querySelectorAll(type);
     let find = false;
 
-    buttonsModal?.forEach((button) => {
-      if (button === e) {
+    htmlElement?.forEach((element) => {
+      if (element === e) {
         find = true;
         return;
       }
@@ -30,9 +30,19 @@ export default function ModalSearch({ children, setOpenSearch }: TypeProps) {
     document.body.style.overflow = "hidden";
     window.addEventListener("resize", setWindowDimensions);
     let allButton = document.querySelectorAll("button");
+    let allInput = document.querySelectorAll("input");
 
     allButton.forEach((e: HTMLButtonElement) => {
-      if (checkEquale(e)) {
+      if (checkEquale(e, "button")) {
+        e.addEventListener("click", () => {
+          setOpenSearch(false);
+          document.body.style.overflow = "auto";
+        });
+      }
+    });
+
+    allInput.forEach((e: HTMLInputElement) => {
+      if (checkEquale(e, "input")) {
         e.addEventListener("click", () => {
           setOpenSearch(false);
           document.body.style.overflow = "auto";

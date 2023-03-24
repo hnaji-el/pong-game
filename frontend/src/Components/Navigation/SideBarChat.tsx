@@ -9,11 +9,13 @@ import { StateMssages } from "../Routes/Messages";
 interface TypeProps {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SideBarChat({
   setOpenSearch,
   setOpenSettings,
+  setCreateChannel
 }: TypeProps) {
   const stateMessage = useContext(StateMssages);
 
@@ -22,7 +24,7 @@ export default function SideBarChat({
       <section className={`${stateMessage.click?"hidden":"flex"} lg:fixed h-full 2xl:left-auto lg:z-[999] lg:flex flex-col w-full lg:w-60  lg:px-0 pt-7 pb-[12.95rem] lg:py-7 gap-12 lg:bg-sideBackground lg:top-0 lg:left-0`}>
         <div className=" flex items-center justify-center">
           <Link
-            to="/"
+            to="/Home"
             onClick={() => {
               setOpenSearch(false);
               setOpenSettings(false);
@@ -42,7 +44,7 @@ export default function SideBarChat({
               <Chats />
             </TabContent>
             <TabContent>
-              <Channels />
+              <Channels setCreateChannel={setCreateChannel} />
             </TabContent>
           </TabsPanels>
         </Tabs>

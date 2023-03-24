@@ -10,7 +10,7 @@ interface TypeProps {
 export default function ViewSettings({ setOpen }: TypeProps) {
   return (
     <>
-      <Link to="/" className="lg:hidden w-full flex justify-center">
+      <Link to="/Home" className="lg:hidden w-full flex justify-center">
         <img src={logo} alt="Pong logo" className="w-48" />
       </Link>
       <div className="w-full pt-10 flex flex-col gap-8 justify-center items-center text-primaryText text-md">

@@ -9,19 +9,30 @@ import SearchInput from "../SearchInput";
 import ModalSettings from "../Modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
 import { StateMssages } from "../Routes/Messages";
+import CreateChannel from "../Modals/CreateChannel";
+import AddMember from "../Modals/AddMember";
+import Members from "../Modals/Members";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
   const [openSearch, setOpenSearch] = useState<boolean>(false);
   const [openSettings, setOpenSettings] = useState<boolean>(false);
+  const [createChannel, setCreateChannel] = useState<boolean>(false);
+  const [addMember, setAddMember] = useState<boolean>(false);
+  const [members, setMembers] = useState<boolean>(false);
   const stateMessages = useContext(StateMssages);
 
   return (
     <>
-      <NavBarChat setOpen={setOpen} />
+      <NavBarChat
+        setOpen={setOpen}
+        setAddMember={setAddMember}
+        setMembers={setMembers}
+      />
       <SideBarChat
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
+        setCreateChannel={setCreateChannel}
       />
       {!stateMessages.click ? (
         <PhoneNav
@@ -48,6 +59,36 @@ export default function NavigationChat() {
         <ModalSettings setOpenSettings={setOpenSettings}>
           <ViewSettings setOpen={setOpen} />
         </ModalSettings>
+      ) : null}
+
+      {createChannel ? (
+        <Modal edit="w-[90%] h-[40rem] lg:w-[40rem] lg:h-[21.5rem]">
+          <ModalHeader setOpen={setCreateChannel}>Create channel</ModalHeader>
+          <ModalBody edit="justify-center">
+            <CreateChannel setCreateChannel={setCreateChannel} />
+          </ModalBody>
+        </Modal>
+      ) : null}
+      {addMember ? (
+        <Modal edit="h-auto w-[90%] lg:w-[40rem] px-0">
+          <ModalHeader setOpen={setAddMember} edit="px-4">
+            Add member
+          </ModalHeader>
+          <ModalBody edit="justify-center">
+            <AddMember />
+          </ModalBody>
+        </Modal>
+      ) : null}
+
+      {members ? (
+        <Modal edit="h-auto w-[90%] lg:w-[40rem] px-0">
+          <ModalHeader setOpen={setMembers} edit="px-4">
+            Members
+          </ModalHeader>
+          <ModalBody edit="justify-center">
+            <Members />
+          </ModalBody>
+        </Modal>
       ) : null}
     </>
   );

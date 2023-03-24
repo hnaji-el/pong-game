@@ -7,7 +7,6 @@ import {
   ControllerIcon,
 } from "../Icons";
 import { Link } from "react-router-dom";
-import userPicture from "../../assets/user.jpg";
 import { ActiveHome } from "../Routes/Home";
 import { StateMssages } from "../Routes/Messages";
 import { ActiveProfile } from "../Routes/Profile";
@@ -41,7 +40,7 @@ export default function PhoneNav({
           <ul className="flex justify-between items-center">
             <li>
               <Link
-                to="/"
+                to="/Home"
                 className="flex flex-col justify-center items-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);
@@ -51,14 +50,14 @@ export default function PhoneNav({
               >
                 <HomeIcon
                   edit={`w-6 h-6 ${
-                    home && !openSearch && !openSettings
+                    home.value && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    home && !openSearch && !openSettings
+                    home.value && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -107,14 +106,14 @@ export default function PhoneNav({
               >
                 <UserIcon
                   edit={`w-6 h-6 ${
-                    profile && !openSearch && !openSettings
+                    profile.value && !openSearch && !openSettings
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    profile && !openSearch && !openSettings
+                    profile.value && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -155,7 +154,7 @@ export default function PhoneNav({
               >
                 <img
                   className="w-10 h-10 rounded-3xl"
-                  src={userPicture}
+                  src={messages.settings.pictureURL}
                   alt="User profile"
                 />
               </button>

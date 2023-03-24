@@ -3,8 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 // import socket from "../socket";
 import { GameState } from ".../../../shared/types";
-import { log } from "console";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
@@ -14,14 +13,13 @@ export default function Game() {
   const loc = useLocation();
   // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
-  let socket: Socket;
+  const socket = io("http://192.168.1.2:3000");
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket = io("http://192.168.1.2:3000");
     if (roomId) {
-      gameLogic(roomId, undefined, -1, 'undefined', () => {
+      gameLogic(roomId, undefined, -1, "undefined", () => {
         navigate("/");
       });
       socket.emit("watchGame", roomId);
@@ -61,10 +59,85 @@ export default function Game() {
         waiting.innerText = `Waiting for ${mode} game...`;
       });
     }
+    function gameLogic(
+      roomId: string,
+      gameState: GameState | undefined,
+      playerId: number,
+      mode: string,
+      navigate: () => void
+    ) {
+      const button = document.getElementById("easy") as HTMLButtonElement;
+      button.style.display = "none";
+      const button2 = document.getElementById("hard") as HTMLButtonElement;
+      button2.style.display = "none";
+      const waiting = document.getElementById("waiting") as HTMLParagraphElement;
+      waiting.style.display = "none";
+  
+      // const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+      const canvas: HTMLCanvasElement = document.getElementById(
+        "canvas"
+      ) as HTMLCanvasElement;
+      canvas.style.display = "block";
+      const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
+      init(canvas, ctx);
+      if (gameState) paintGame(gameState, ctx);
+      if (playerId === 0) {
+        socket.emit("startingGame", {
+          roomId: roomId,
+          mode: mode,
+        });
+      }
+      socket.on("updateGameState", (gameState: GameState) => {
+        paintGame(gameState, ctx);
+      });
+      socket.on("gameOver", (gameState: GameState) => {
+        console.log("gameOver");
+        ctx.fillStyle = BG_COLOR;
+        ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
+        ctx.fillStyle = PLAYER_COLOR;
+        if (gameState.players[0].score > gameState.players[1].score) {
+          ctx.fillStyle = "white";
+          ctx.fillText("Player 1 wins!", 450, 200);
+          console.log("player 1 wins");
+        } else if (gameState.players[0].score < gameState.players[1].score) {
+          ctx.fillStyle = "white";
+          ctx.fillText("Player 2 wins!", 450, 200);
+          console.log("player 2 wins");
+        }
+        const button = document.createElement("button");
+        button.innerHTML = "Go back to main page";
+        button.style.backgroundColor = "white";
+        button.style.zIndex = "999";
+        button.onclick = function () {
+          // Navigate("/");
+          navigate();
+          // window.location.href = "mainpage.html";
+        };
+  
+        // document.body.appendChild(button);
+        // canvas.appendChild(button);
+        console.log(canvas);
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+          socket.emit("keyDown", {
+            arrow: "up",
+            roomId: roomId,
+            playerId: playerId,
+          });
+        } else if (e.key === "ArrowDown") {
+          socket.emit("keyDown", {
+            arrow: "down",
+            roomId: roomId,
+            playerId: playerId,
+          });
+        }
+      });
+    }
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [roomId, navigate, socket, playerIdRef]);
 
   function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = BG_COLOR;
@@ -105,82 +178,6 @@ export default function Game() {
     canvas.width = CANVA_WIDTH;
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-  function gameLogic(
-    roomId: string,
-    gameState: GameState | undefined,
-    playerId: number,
-    mode: string,
-    navigate: () => void
-  ) {
-    const button = document.getElementById("easy") as HTMLButtonElement;
-    button.style.display = "none";
-    const button2 = document.getElementById("hard") as HTMLButtonElement;
-    button2.style.display = "none";
-    const waiting = document.getElementById("waiting") as HTMLParagraphElement;
-    waiting.style.display = "none";
-
-    // const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-    const canvas: HTMLCanvasElement = document.getElementById(
-      "canvas"
-    ) as HTMLCanvasElement;
-    canvas.style.display = "block";
-    const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
-    init(canvas, ctx);
-    if (gameState)
-      paintGame(gameState, ctx);
-    if (playerId === 0) {
-      socket.emit("startingGame", {
-        roomId: roomId,
-        mode: mode,
-      });
-    }
-    socket.on("updateGameState", (gameState: GameState) => {
-      paintGame(gameState, ctx);
-    });
-    socket.on("gameOver", (gameState: GameState) => {
-      console.log("gameOver");
-      ctx.fillStyle = BG_COLOR;
-      ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
-      ctx.fillStyle = PLAYER_COLOR;
-      if (gameState.players[0].score > gameState.players[1].score) {
-        ctx.fillStyle = "white";
-        ctx.fillText("Player 1 wins!", 450, 200);
-        console.log("player 1 wins");
-      } else if (gameState.players[0].score < gameState.players[1].score) {
-        ctx.fillStyle = "white";
-        ctx.fillText("Player 2 wins!", 450, 200);
-        console.log("player 2 wins");
-      }
-      const button = document.createElement("button");
-      button.innerHTML = "Go back to main page";
-      button.style.backgroundColor = "white";
-      button.style.zIndex = "999";
-      button.onclick = function () {
-        // Navigate("/");
-        navigate();
-        // window.location.href = "mainpage.html";
-      };
-
-      // document.body.appendChild(button);
-      // canvas.appendChild(button);
-      console.log(canvas);
-    });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowUp") {
-        socket.emit("keyDown", {
-          arrow: "up",
-          roomId: roomId,
-          playerId: playerId,
-        });
-      } else if (e.key === "ArrowDown") {
-        socket.emit("keyDown", {
-          arrow: "down",
-          roomId: roomId,
-          playerId: playerId,
-        });
-      }
-    });
   }
   return (
     <>

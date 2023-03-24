@@ -4,8 +4,8 @@ import { CardSearchUser } from "./Cards";
 interface TypeProps {
   data: {
     id: number;
-    username: string;
-    picture: string;
+    nickname: string;
+    pictureURL: string;
     friend: boolean;
   }[];
 }

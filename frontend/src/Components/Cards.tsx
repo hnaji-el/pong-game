@@ -33,8 +33,8 @@ interface TypeMember {
 interface TypeSearch {
   data: {
     id: number;
-    username: string;
-    picture: string;
+    nickname: string;
+    pictureURL: string;
     friend: boolean;
   };
 }
@@ -448,12 +448,12 @@ export function CardSearchUser({ data }: TypeSearch) {
       <div className="flex items-center justify-between w-full">
         <Link to="/Profile" className="flex items-center gap-3 flex-1">
           <img
-            src={data.picture}
+            src={data.pictureURL}
             alt="users"
             className="w-12 h-12 rounded-full"
           />
           <span className="text-primaryText text-sm username-search capitalize">
-            {data.username}
+            {data.nickname}
           </span>
         </Link>
         {stateFriend ? (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { dataAllUser } from "../API";
+import {getDataUsers } from "../API";
 import { filterByName } from "../helpers";
 import { SearchIcon } from "./Icons";
 import SearchContainer from "./SearchContainer";
@@ -10,8 +10,8 @@ interface TypeProps {
 
 interface TypeData {
   id: number;
-  username: string;
-  picture: string;
+  nickname: string;
+  pictureURL: string;
   friend: boolean;
 }
 
@@ -19,9 +19,16 @@ export default function SearchInput({ modal }: TypeProps) {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const refDropDown = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<TypeData[]>([]);
+  const [dataAllUsers, setDataAllUsers] = useState<TypeData[]>([]);
   const [value, setValue] = useState<string>("");
   useEffect(() => {
-    if (dropdown) setData(dataAllUser);
+    if (dropdown) {
+      getDataUsers((res: TypeData[]) => {
+        setDataAllUsers(res);
+        setData(res)
+      });
+    }
+      
     document.addEventListener("click", (e) => {
       if (
         refDropDown.current &&
@@ -30,7 +37,7 @@ export default function SearchInput({ modal }: TypeProps) {
       )
         setDropdown(false);
     });
-  }, [dropdown]);
+  }, [dropdown,dataAllUsers]);
   return (
     <div
       className={`${!modal ? "hidden" : ""} lg:block flex-1 relative`}
@@ -47,7 +54,7 @@ export default function SearchInput({ modal }: TypeProps) {
           }}
           onChange={(e) => {
             setValue(e.currentTarget.value);
-            setData(filterByName(dataAllUser, e.currentTarget.value));
+            setData(filterByName(dataAllUsers, e.currentTarget.value));
           }}
         />
         <SearchIcon edit="w-4 fill-secondaryText" />

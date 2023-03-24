@@ -70,30 +70,33 @@ export default function Game() {
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
     ctx.fillStyle = PLAYER_COLOR;
-    ctx.fillRect(
+    ctx.beginPath();
+    ctx.roundRect(
       state.players[0].x,
       state.players[0].y,
       state.players[0].w,
-      state.players[0].h
+      state.players[0].h,
+      40
     );
-    ctx.fillRect(
+    ctx.fill();
+    ctx.roundRect(
       state.players[1].x,
       state.players[1].y,
       state.players[1].w,
-      state.players[1].h
+      state.players[1].h,
+      40
     );
-    ctx.fillStyle = "#7970B3";
-    ctx.beginPath();
-    ctx.roundRect(state.ball.x, state.ball.y, state.ball.w, state.ball.h, [40]);
     ctx.fill();
-
+    ctx.roundRect(state.ball.x, state.ball.y, state.ball.w, state.ball.h, 40);
+    ctx.fill();
+    ctx.font = "50px serif";
     ctx.fillText(
       "Player 1: " +
         state.players[0].score +
         " - " +
         "Player 2: " +
         state.players[1].score,
-      250,
+      400,
       100
     );
   }

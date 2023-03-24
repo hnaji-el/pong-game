@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { checkNickname } from "../helpers";
 import InputForm from "./InputForm";
-import userImg from "../assets/user.jpg";
 import { EditAvatarIcon } from "./Icons";
 
-export default function FormEdit() {
-  const [pictureUser, setPictureUser] = useState<string>(userImg);
+interface TypeProps {
+  data: {
+    id: number;
+    pictureURL: string;
+    nickname: string;
+  };
+}
+
+export default function FormEdit({ data }: TypeProps) {
+  const [pictureUser, setPictureUser] = useState<string>(data.pictureURL);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [value, setValue] = useState<string>("mouassit");
+  const [value, setValue] = useState<string>(data.nickname);
   return (
     <form className="flex items-center">
       <div className="flex gap-10 lg:gap-12 flex-col lg:flex-row items-center">

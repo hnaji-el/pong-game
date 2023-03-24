@@ -40,7 +40,7 @@ export default function SideBar({
       >
         <div className=" hidden lg:flex items-center justify-center">
           <Link
-            to="/"
+            to="/Home"
             onClick={() => {
               setOpenSearch(false);
               setOpenSettings(false);
@@ -54,7 +54,7 @@ export default function SideBar({
           <ul className="flex justify-between items-center lg:items-start  lg:flex-col lg:gap-12">
             <li className="lg:w-full">
               <Link
-                to="/"
+                to="/Home"
                 className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
                   home ? "lg:bg-shape lg:border-l-[6px] lg:border-primary" : ""
                 }`}

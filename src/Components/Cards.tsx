@@ -148,7 +148,7 @@ export function CardAchievments() {
 export function CardUser() {
   return (
     <div className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl">
-      <Link to="/" className="flex w-full gap-3 items-center">
+      <Link to="/Home" className="flex w-full gap-3 items-center">
         <img
           src={friendPicture}
           alt="Friend"

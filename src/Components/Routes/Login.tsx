@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { checkToken } from "../../API";
 import logo from "../../assets/logo.svg";
 import logo42 from "../../assets/logo42.svg";
 import {
@@ -40,7 +39,7 @@ export default function Login() {
             <button
               className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[10rem] rounded-md p-3"
               onClick={() => {
-                checkToken();
+                window.location.href="http://localhost:3000/auth/login"
               }}
             >
               <span>Sing in with</span>

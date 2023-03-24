@@ -16,7 +16,7 @@ export function Pong({edit}:TypeProps) {
         <filter id="Path_90">
           <feOffset dx="-10" dy="-10" />
           <feGaussianBlur stdDeviation="3" result="blur" />
-          <feFlood flood-opacity="0.4" result="color" />
+          <feFlood floodOpacity="0.4" result="color" />
           <feComposite operator="out" in="SourceGraphic" in2="blur" />
           <feComposite operator="in" in="color" />
           <feComposite operator="in" in2="SourceGraphic" />
@@ -24,7 +24,7 @@ export function Pong({edit}:TypeProps) {
         <filter id="Path_99">
           <feOffset dx="-10" dy="-10" />
           <feGaussianBlur stdDeviation="3" result="blur-2" />
-          <feFlood flood-opacity="0.4" result="color-2" />
+          <feFlood floodOpacity="0.4" result="color-2" />
           <feComposite operator="out" in="SourceGraphic" in2="blur-2" />
           <feComposite operator="in" in="color-2" />
           <feComposite operator="in" in2="SourceGraphic" />

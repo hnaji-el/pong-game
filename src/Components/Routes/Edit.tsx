@@ -12,14 +12,14 @@ import { getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
 
 interface TypeData {
-  id: number;
+  id: string;
   pictureURL: string;
   nickname: string;
 }
 
 export default function Edit() {
   const [dataLoggedUser, setDataLoggedUser] = useState<TypeData>({
-    id: 0,
+    id: "",
     pictureURL: "",
     nickname: "",
   });

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import pictureUser from "../../assets/user.jpg";
 import { CardChatChannel } from "../Cards";
 import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
@@ -34,8 +33,8 @@ export default function NavBarChat({
         <Dropdown>
           <DropdownBtn
             type="text"
-            title="mouassit"
-            imgTitle={pictureUser}
+            title={stateMessage.settings.nickname}
+            imgTitle={stateMessage.settings.pictureURL}
             arrow={true}
           />
           <DropdownList edit="top-12">

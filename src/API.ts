@@ -35,7 +35,7 @@ export const dataAllUser = [
 ]
 
 interface TypeDataLogged {
-  id: number;
+  id: string;
   pictureURL: string;
   nickname: string;
 }

@@ -1,21 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../../assets/logo.svg";
-import pictureUser from "../../assets/user.jpg";
 import { Link } from "react-router-dom";
-import {
-  ControllerIcon,
-  SettingsNavIcon,
-  LogoutIcon,
-} from "../Icons";
+import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
+import { ActiveHome } from "../Routes/Home";
+import { ActiveProfile } from "../Routes/Profile";
+import { ActiveProfileUser } from "../Routes/ProfileUser";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function NavBar({ setOpen }: TypeProps) {
+  let dataUserLogged = useContext(ActiveHome);
+  let dataUserLoggedProfile = useContext(ActiveProfile);
+  let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
+
+  if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
+  if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
+
   return (
     <section className="flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">
       <Link to="/Home" className="lg:hidden">
@@ -31,8 +36,8 @@ export default function NavBar({ setOpen }: TypeProps) {
         <Dropdown>
           <DropdownBtn
             type="text"
-            title="mouassit"
-            imgTitle={pictureUser}
+            title={dataUserLogged.settings.nickname}
+            imgTitle={dataUserLogged.settings.pictureURL}
             arrow={true}
           />
           <DropdownList edit="top-12">

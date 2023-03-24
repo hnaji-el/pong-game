@@ -5,7 +5,7 @@ import { EditAvatarIcon } from "./Icons";
 
 interface TypeProps {
   data: {
-    id: number;
+    id: string;
     pictureURL: string;
     nickname: string;
   };

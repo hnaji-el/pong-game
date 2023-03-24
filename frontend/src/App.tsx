@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "./Components/Routes/Login"
 import Tfa from "./Components/Routes/Tfa"
 import Edit from "./Components/Routes/Edit"
+import Game from "./Components/Routes/Game";
 import NotFound from "./Components/Routes/NotFound"
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/Messages" element={<Messages />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/ProfileUser" element={<ProfileUser />} />
+        <Route path="/Game" element={<Game />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

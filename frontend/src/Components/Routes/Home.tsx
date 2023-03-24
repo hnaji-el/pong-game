@@ -3,6 +3,7 @@ import Navigation from "../Navigation/Navigation";
 import fire from "../../assets/fire.png";
 import { getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
+import { Link } from "react-router-dom";
 
 interface TypeData {
   id: string;
@@ -23,6 +24,7 @@ export const ActiveHome = createContext<TypeContext>({
 });
 
 export default function Home() {
+  const [roomIds, setroomIds] = useState<string[]>([]);
   const [settings, setSettings] = useState<TypeData>({
     id: "",
     pictureURL: "",
@@ -31,6 +33,10 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "Pong - Home";
+    fetch("http://localhost:3000/game/liveGames")
+      .then((response) => response.json())
+      .then((data) => setroomIds(data))
+      .catch((error) => console.log(error));
     getDataUserLogged((res: TypeData) => {
       setSettings(res);
     });
@@ -48,7 +54,15 @@ export default function Home() {
               <span>Live Games</span>
               <img src={fire} alt="fire" className="w-4" />
             </h1>
-            <section className="flex flex-col gap-6 lg:flex-row lg:items-start"></section>
+            <section className="flex flex-col gap-6 lg:flex-row lg:items-start">
+            {roomIds.map((roomId: string) => (
+              <div key={roomId}>
+                <Link to="/Game" state={{ roomId: roomId }}>
+                  <button>{roomId}</button>
+                </Link>
+              </div>
+            ))}
+          </section>
           </div>
         </main>
       </ActiveHome.Provider>

@@ -28,11 +28,10 @@ export default function NavBar({ setOpen }: TypeProps) {
       </Link>
       <SearchInput />
       <div className="hidden lg:flex items-center gap-5">
-        <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">
+        <Link to="/Game" className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">
           <ControllerIcon edit="w-7" />
           <span>Play now</span>
-        </button>
-
+        </Link>
         <Dropdown>
           <DropdownBtn
             type="text"

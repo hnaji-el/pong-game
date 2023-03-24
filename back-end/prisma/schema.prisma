@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String         @id @default(uuid())
+  nickname        String         @unique
+  pictureURL      String
+  status          String         @default("offline")
+  firstTimeLogged Boolean        @default(true)
+  requester       RelationShip[] @relation("Requester")
+  addressee       RelationShip[] @relation("Addressee")
+}
+
+model RelationShip {
+  id          String @id @default(uuid())
+  requesterId String
+  addresseeId String
+  type        Status
+  requester   User   @relation(name: "Requester", fields: [requesterId], references: [id])
+  addressee   User   @relation(name: "Addressee", fields: [addresseeId], references: [id])
+}
+
+enum Status {
+  FRIENDSHIP
+  BLOCK
+}

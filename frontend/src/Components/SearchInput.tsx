@@ -12,7 +12,7 @@ interface TypeData {
   id: number;
   nickname: string;
   pictureURL: string;
-  friend: boolean;
+  isFriendToLoggedUser: boolean;
 }
 
 export default function SearchInput({ modal }: TypeProps) {
@@ -37,7 +37,7 @@ export default function SearchInput({ modal }: TypeProps) {
       )
         setDropdown(false);
     });
-  }, [dropdown,dataAllUsers]);
+  }, [dropdown]);
   return (
     <div
       className={`${!modal ? "hidden" : ""} lg:block flex-1 relative`}

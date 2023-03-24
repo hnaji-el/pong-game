@@ -10,7 +10,17 @@ interface TypeDataUesrs {
   id: number;
   nickname: string;
   pictureURL: string;
-  friend: boolean;
+  isFriendToLoggedUser: boolean;
+}
+
+interface TypeDataProfileUser {
+  friendsNumber: number;
+  id: string;
+  isBlockedByLoggedUser: boolean;
+  isFriendToLoggedUser: boolean;
+  nickname: string;
+  pictureURL: string;
+  status: string;
 }
 
 export function getDataUserLogged(getRes:(res:TypeDataLogged)=>void) {
@@ -37,17 +47,17 @@ export function getDataUsers(getRes:(res:TypeDataUesrs[])=>void) {
     .catch();
 }
 
-export function getOneUser() {
+export function getOneUser(getRes:(res:TypeDataProfileUser)=>void,id:string) {
   axios
     .get(
-      `http://localhost:3000/users/${"cacaff51-c8b7-4e52-920c-133ddfcc7422"}`,
+      `http://localhost:3000/users/${id}`,
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": "localhost:3000" },
       }
     )
     .then((res) => {
-      console.log(res);
+      getRes(res.data)
     })
     .catch();
 }

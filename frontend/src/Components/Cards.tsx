@@ -35,7 +35,19 @@ interface TypeSearch {
     id: number;
     nickname: string;
     pictureURL: string;
-    friend: boolean;
+    isFriendToLoggedUser: boolean;
+  };
+}
+
+interface TypeDataProfileUser {
+  data?: {
+    friendsNumber: number;
+    id: string;
+    isBlockedByLoggedUser: boolean;
+    isFriendToLoggedUser: boolean;
+    nickname: string;
+    pictureURL: string;
+    status: string;
   };
 }
 
@@ -101,21 +113,21 @@ export function CardProfile({ setOpen }: TypeCardProfile) {
   );
 }
 
-export function CardProfileUser() {
+export function CardProfileUser({data}:TypeDataProfileUser) {
   return (
     <div className={`flex items-center`}>
       <div className="flex items-center gap-2">
         <img
-          src={pictureUser}
+          src={data?.pictureURL}
           alt="Profile"
           className="w-20 h-20 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span
-              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
+              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
             >
-              {firstLetterCapital("mouassit")}
+              {data?.nickname}
             </span>
           </div>
 
@@ -442,11 +454,15 @@ export function CardMember({ role }: TypeMember) {
 }
 
 export function CardSearchUser({ data }: TypeSearch) {
-  const [stateFriend, setFriend] = useState<boolean>(data.friend);
+  const [stateFriend, setFriend] = useState<boolean>(data.isFriendToLoggedUser);
   return (
     <div className="hover:bg-backgroundHover px-4 py-2">
       <div className="flex items-center justify-between w-full">
-        <Link to="/Profile" className="flex items-center gap-3 flex-1">
+        <Link
+          to="/ProfileUser"
+          state={{ id: data.id }}
+          className="flex items-center gap-3 flex-1"
+        >
           <img
             src={data.pictureURL}
             alt="users"

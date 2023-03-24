@@ -2,7 +2,7 @@ interface TypeData {
   id: number;
   nickname: string;
   pictureURL: string;
-  friend: boolean;
+  isFriendToLoggedUser: boolean;
 }
 
 export function getIndexElement(

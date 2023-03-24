@@ -6,7 +6,7 @@ interface TypeProps {
     id: number;
     nickname: string;
     pictureURL: string;
-    friend: boolean;
+    isFriendToLoggedUser: boolean;
   }[];
 }
 

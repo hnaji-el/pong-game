@@ -1,23 +1,52 @@
-import { useEffect, useRef } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 // import socket from "../socket";
 import { GameState } from ".../../../shared/types";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import { getDataUserLogged } from "../../API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
+
+interface TypeData {
+  id: string;
+  pictureURL: string;
+  nickname: string;
+}
+
+interface TypeContext {
+  value: boolean;
+  settings: TypeData;
+  updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
+}
+export const GameContext = createContext<TypeContext>({
+  value: false,
+  settings: { id: "", pictureURL: "", nickname: "" },
+  updateSettings: () => {},
+});
+
 export default function Game() {
+  const [dataUser, setDataUser] = useState<TypeData>({
+    id: "",
+    pictureURL: "",
+    nickname: "",
+  });
+
   const loc = useLocation();
   // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
-  const socket = io("http://192.168.1.2:3000");
+  let socket: Socket;
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
 
   useEffect(() => {
+    getDataUserLogged((res: TypeData) => {
+      setDataUser(res);
+    });
+    socket = io("http://192.168.1.2:3000");
     if (roomId) {
       gameLogic(roomId, undefined, -1, "undefined", () => {
         navigate("/");
@@ -26,11 +55,11 @@ export default function Game() {
       console.log("joining game");
     } else {
       const button = document.getElementById("easy") as HTMLButtonElement;
-      button.addEventListener("click", () => {
+      button?.addEventListener("click", () => {
         socket.emit("queuing", "easy");
       });
       const button2 = document.getElementById("hard") as HTMLButtonElement;
-      button2.addEventListener("click", () => {
+      button2?.addEventListener("click", () => {
         socket.emit("queuing", "hard");
       });
 
@@ -70,9 +99,11 @@ export default function Game() {
       button.style.display = "none";
       const button2 = document.getElementById("hard") as HTMLButtonElement;
       button2.style.display = "none";
-      const waiting = document.getElementById("waiting") as HTMLParagraphElement;
+      const waiting = document.getElementById(
+        "waiting"
+      ) as HTMLParagraphElement;
       waiting.style.display = "none";
-  
+
       // const canvas = document.getElementById("canvas") as HTMLCanvasElement;
       const canvas: HTMLCanvasElement = document.getElementById(
         "canvas"
@@ -113,7 +144,7 @@ export default function Game() {
           navigate();
           // window.location.href = "mainpage.html";
         };
-  
+
         // document.body.appendChild(button);
         // canvas.appendChild(button);
         console.log(canvas);
@@ -137,7 +168,7 @@ export default function Game() {
     return () => {
       socket.disconnect();
     };
-  }, [roomId, navigate, socket, playerIdRef]);
+  }, []);
 
   function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = BG_COLOR;
@@ -179,8 +210,11 @@ export default function Game() {
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
+  // if (dataUser.nickname.length)
   return (
-    <>
+    <GameContext.Provider
+      value={{ value: true, settings: dataUser, updateSettings: setDataUser }}
+    >
       <Navigation />
       <main className="mx-3 pb-20 lg:pb-1 pt-10 lg:ml-64 lg:mr-4">
         <canvas id="canvas" className="hidden"></canvas>
@@ -200,6 +234,12 @@ export default function Game() {
           <p id="waiting" className="hidden"></p>
         </div>
       </main>
-    </>
+    </GameContext.Provider>
   );
+
+  // return (
+  //   <div className="mx-3 flex justify-center items-center h-full">
+  //     <Spinner />
+  //   </div>
+  // );
 }

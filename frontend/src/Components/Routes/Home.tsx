@@ -12,7 +12,7 @@ interface TypeData {
 }
 
 interface TypeContext {
-  value: boolean;
+  value: boolean; 
   settings: TypeData;
   updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
 }

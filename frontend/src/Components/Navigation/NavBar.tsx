@@ -8,6 +8,7 @@ import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
 import { ActiveHome } from "../Routes/Home";
 import { ActiveProfile } from "../Routes/Profile";
 import { ActiveProfileUser } from "../Routes/ProfileUser";
+import { GameContext } from "../Routes/Game";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,9 +18,11 @@ export default function NavBar({ setOpen }: TypeProps) {
   let dataUserLogged = useContext(ActiveHome);
   let dataUserLoggedProfile = useContext(ActiveProfile);
   let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
+  let dataGame = useContext(GameContext);
 
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
+  if (!dataUserLogged.value) dataUserLogged = dataGame;
 
   return (
     <section className="flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">

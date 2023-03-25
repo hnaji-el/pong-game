@@ -37,6 +37,8 @@ interface TypeSearch {
     pictureURL: string;
     isFriendToLoggedUser: boolean;
   };
+  setDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenSearch?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TypeDataProfileUser {
@@ -48,6 +50,14 @@ interface TypeDataProfileUser {
     nickname: string;
     pictureURL: string;
     status: string;
+  };
+}
+
+interface TypedataFriend {
+  data: {
+    id: string;
+    nickname: string;
+    pictureURL: string;
   };
 }
 
@@ -113,7 +123,7 @@ export function CardProfile({ setOpen }: TypeCardProfile) {
   );
 }
 
-export function CardProfileUser({data}:TypeDataProfileUser) {
+export function CardProfileUser({ data }: TypeDataProfileUser) {
   return (
     <div className={`flex items-center`}>
       <div className="flex items-center gap-2">
@@ -157,17 +167,17 @@ export function CardAchievments() {
   );
 }
 
-export function CardUser() {
+export function CardUser({data}:TypedataFriend) {
   return (
     <div className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl">
-      <Link to="/Home" className="flex w-full gap-3 items-center">
+      <Link to="/ProfileUser" state={{id:data.id}} className="flex w-full gap-3 items-center">
         <img
-          src={friendPicture}
+          src={data.pictureURL}
           alt="Friend"
           className="w-12 h-12 rounded-full"
         />
-        <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
-          {firstLetterCapital("mouassit")}
+        <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+          {data.nickname}
         </span>
       </Link>
       <Menu>
@@ -453,7 +463,11 @@ export function CardMember({ role }: TypeMember) {
   );
 }
 
-export function CardSearchUser({ data }: TypeSearch) {
+export function CardSearchUser({
+  setDropDown,
+  setOpenSearch,
+  data,
+}: TypeSearch) {
   const [stateFriend, setFriend] = useState<boolean>(data.isFriendToLoggedUser);
   return (
     <div className="hover:bg-backgroundHover px-4 py-2">
@@ -462,6 +476,10 @@ export function CardSearchUser({ data }: TypeSearch) {
           to="/ProfileUser"
           state={{ id: data.id }}
           className="flex items-center gap-3 flex-1"
+          onClick={() => {
+            setDropDown(false);
+            if (setOpenSearch) setOpenSearch(false);
+          }}
         >
           <img
             src={data.pictureURL}

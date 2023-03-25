@@ -23,6 +23,12 @@ interface TypeDataProfileUser {
   status: string;
 }
 
+interface TypedataFriend {
+  id: string;
+  nickname: string;
+  pictureURL: string;
+}
+
 export function getDataUserLogged(getRes:(res:TypeDataLogged)=>void) {
   axios
     .get(`http://localhost:3000/users/logged-user`, {
@@ -63,60 +69,54 @@ export function getOneUser(getRes:(res:TypeDataProfileUser)=>void,id:string) {
 }
 
 
-export function getFriendsOneUser() {
+export function getFriendsOneUser(getRes:(res:TypedataFriend[])=>void,id:string) {
   axios
     .get(
-      `http://localhost:3000/users/friends/${"ddb4904b-2cac-4c30-857a-a9d2cc340f6f"}`,
+      `http://localhost:3000/users/friends/${id}`,
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": "localhost:3000" },
       }
     )
     .then((res) => {
-      console.log(res);
-      
+      getRes(res.data)
     })
     .catch();
 }
 
-export function addFriend() {
+export function addFriend(id:string) {
   axios
     .post(
-      `http://localhost:3000/users/add-friend/${"ddb4904b-2cac-4c30-857a-a9d2cc340f6f"}`,{},
+      `http://localhost:3000/users/add-friend/${id}`,{},
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": "localhost:3000" },
       }
     )
     .then((res) => {
-      console.log(res);
     })
     .catch((error)=>{
-      console.log("error");
-      console.log(error);
-      
     });
 }
 
-export function unfriend() {
+export function unfriend(id:string) {
   axios
     .delete(
-      `http://localhost:3000/users/remove-friend/${"ddb4904b-2cac-4c30-857a-a9d2cc340f6f"}`,
+      `http://localhost:3000/users/remove-friend/${id}`,
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": "localhost:3000" },
       }
     )
     .then((res) => {
-      console.log(res);
     })
     .catch();
 }
 
-export function blockFriend() {
+export function blockFriend(id:string) {
   axios
     .patch(
-      `http://localhost:3000/users/block-friend/${"cacaff51-c8b7-4e52-920c-133ddfcc7422"}`,
+      `http://localhost:3000/users/block-friend/${id}`,
       {},
       {
         withCredentials: true,
@@ -124,15 +124,14 @@ export function blockFriend() {
       }
     )
     .then((res) => {
-      console.log(res);
     })
     .catch();
 }
 
-export function unBlockFriend() {
+export function unBlockFriend(id:string) {
   axios
     .patch(
-      `http://localhost:3000/users/unblock-friend/${"cacaff51-c8b7-4e52-920c-133ddfcc7422"}`,
+      `http://localhost:3000/users/unblock-friend/${id}`,
       {},
       {
         withCredentials: true,
@@ -140,9 +139,6 @@ export function unBlockFriend() {
       }
     )
     .then((res) => {
-      console.log("me");
-            
-      console.log(res);
     })
     .catch();
 }

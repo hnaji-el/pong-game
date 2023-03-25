@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import {getDataUsers } from "../API";
+import { getDataUsers } from "../API";
 import { filterByName } from "../helpers";
 import { SearchIcon } from "./Icons";
 import SearchContainer from "./SearchContainer";
 
 interface TypeProps {
   modal?: boolean;
+  setOpenSearch?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TypeData {
@@ -15,7 +16,7 @@ interface TypeData {
   isFriendToLoggedUser: boolean;
 }
 
-export default function SearchInput({ modal }: TypeProps) {
+export default function SearchInput({ setOpenSearch,modal }: TypeProps) {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const refDropDown = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<TypeData[]>([]);
@@ -25,10 +26,10 @@ export default function SearchInput({ modal }: TypeProps) {
     if (dropdown) {
       getDataUsers((res: TypeData[]) => {
         setDataAllUsers(res);
-        setData(res)
+        setData(res);
       });
     }
-      
+
     document.addEventListener("click", (e) => {
       if (
         refDropDown.current &&
@@ -59,7 +60,9 @@ export default function SearchInput({ modal }: TypeProps) {
         />
         <SearchIcon edit="w-4 fill-secondaryText" />
       </div>
-      {data.length && dropdown ? <SearchContainer data={data} /> : null}
+      {data.length && dropdown ? (
+        <SearchContainer setOpenSearch={setOpenSearch} setDropdown={setDropdown} data={data} />
+      ) : null}
     </div>
   );
 }

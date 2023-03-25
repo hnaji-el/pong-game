@@ -40,7 +40,7 @@ export default function Navigation() {
       ) : null}
       {openSearch ? (
         <ModalSearch setOpenSearch={setOpenSearch}>
-          <SearchInput modal={true} />
+          <SearchInput setOpenSearch={setOpenSearch} modal={true} />
         </ModalSearch>
       ) : null}
       {openSettings ? (

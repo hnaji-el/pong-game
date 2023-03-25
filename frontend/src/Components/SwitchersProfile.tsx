@@ -4,7 +4,11 @@ import Friends from "./Friends";
 import MatchHistory from "./MatchHistory";
 import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "./Tabs";
 
-export default function SwitchersProfile() {
+interface TypeProps{
+  id?:string
+}
+
+export default function SwitchersProfile({id}:TypeProps) {
   return (
     <Tabs edit="gap-0 lg:overflow-visible">
       <TabsList>
@@ -17,7 +21,7 @@ export default function SwitchersProfile() {
           <Achievements />
         </TabContent>
         <TabContent edit="overflow-visible">
-          <Friends />
+          <Friends id={id} />
         </TabContent>
         <TabContent edit="overflow-visible">
           <MatchHistory />

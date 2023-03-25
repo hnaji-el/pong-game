@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { getAllChannels, getDmUsers } from "../API";
 import { CardConversation } from "./Cards";
 import { SearchIcon } from "./Icons";
+import { MessagesContext } from "./Routes/Messages";
 
 export default function Chats() {
+  const conversations = useContext(MessagesContext);
+  useEffect(() => {
+    // getFriendChat();
+    //getDmUsers();
+  });
   return (
     <div className="flex h-full flex-col  gap-6">
       <div className="flex items-center rounded-md bg-shape pl-2 mx-3 lg:mx-2">
@@ -14,32 +21,9 @@ export default function Chats() {
         />
       </div>
       <div className="flex h-full relative flex-col overflow-auto">
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
-        <CardConversation />
+        {conversations.dataDm.map((e:any,index:number) => {
+          return <CardConversation data={e} key={index} index={index}/>;
+        })}
       </div>
     </div>
   );

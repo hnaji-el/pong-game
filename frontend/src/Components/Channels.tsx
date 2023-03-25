@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { getAllChannels, getChannelsDm } from "../API";
 import { CardChannelConversation } from "./Cards";
 import { PlusIcon, SearchIcon } from "./Icons";
 
@@ -6,7 +7,13 @@ interface TypeProps{
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Channels({setCreateChannel}:TypeProps) {
+export default function Channels({ setCreateChannel }: TypeProps) {
+  
+  useEffect(() => {
+    // getAllChannels();
+    getChannelsDm();
+  })
+
   return (
     <div className="flex h-full flex-col  gap-6">
       <div className="flex items-center gap-2 mx-3 lg:mx-2">

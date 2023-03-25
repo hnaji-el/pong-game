@@ -1,6 +1,11 @@
 import React from 'react'
 
-export default function BoxMessagesUser() {
+interface TypeProps {
+    message: string;
+    time?: string;
+  }
+
+export default function BoxMessagesUser({message,time}:TypeProps) {
     return (
         <div className='flex justify-end'>
         <div className='bg-primary max-w-[20rem] lg:max-w-lg p-5 pb-3 rounded-xl rounded-tr-none'>

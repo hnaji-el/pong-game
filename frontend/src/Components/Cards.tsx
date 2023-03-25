@@ -18,6 +18,7 @@ import PasswordChannel from "./PasswordChannel";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../Components/Routes/Profile";
 import { ActiveProfileUser } from "./Routes/ProfileUser";
+import { MessagesContext } from "./Routes/Messages";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -61,6 +62,15 @@ interface TypedataFriend {
     nickname: string;
     pictureURL: string;
   };
+}
+
+interface TypeChat {
+  data: any;
+}
+
+interface TypeConversation {
+  data: any;
+  index: number;
 }
 
 export function CardFriendOnline() {
@@ -220,31 +230,38 @@ export function CardUser({ data }: TypedataFriend) {
   );
 }
 
-export function CardConversation() {
+export function CardConversation({ data, index }: TypeConversation) {
   const stateMessages = useContext(StateMssages);
+  const messageData = useContext(MessagesContext);
   return (
-    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2">
+    <div
+      className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
+        index === messageData.indexDm ? "lg:bg-backgroundHover" : null
+      }`}
+    >
       <Link
         to=""
         className="flex flex-1 justify-between py-4"
         onClick={() => {
+          messageData.setIndexDm(index);
           stateMessages.setClick(true);
+          messageData.setDataChatBox(messageData.dataDm[index]);
         }}
       >
         <div className="flex items-center gap-2">
           <img
-            src={PictureFriend}
+            src={data.picture}
             alt="Friend"
             className="h-10 w-10 rounded-full"
           />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
-                {firstLetterCapital("mouassit")}
+              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText capitalize">
+                {data.username}
               </span>
             </div>
             <span className="text-left w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
-              hello
+              {data.latestMessage}
             </span>
           </div>
         </div>
@@ -311,7 +328,7 @@ export function CardChannelConversation() {
   );
 }
 
-export function CardChatFriend() {
+export function CardChatFriend({ data }: TypeChat) {
   const stateMessages = useContext(StateMssages);
   return (
     <div className="flex flex-1 items-center gap-4">
@@ -325,14 +342,14 @@ export function CardChatFriend() {
       </button>
       <div className="flex items-center gap-2">
         <img
-          src={PictureFriend}
+          src={data.picture}
           alt="Friend"
           className="h-14 w-14 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
-            <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap">
-              {firstLetterCapital("mouassit")}
+            <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+              {data.username}
             </span>
           </div>
           <div className="flex items-center gap-1.5">

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { CreateChannel } from "../API";
 import { checkChannelName } from "../helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
@@ -36,6 +37,7 @@ export default function PublicChannel({setCreateChannel}:TypeProps) {
               setErrorMessage(errorMessage);
               return;
             }
+            CreateChannel();
             setCreateChannel(false);
             document.body.style.overflow = "auto";
           }}

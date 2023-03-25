@@ -141,7 +141,7 @@ export default function ProfileUser() {
     );
 
   return (
-    <div className="mx-3 pb-20 lg:pb-0 lg:ml-64 lg:mr-4 flex justify-center items-center h-full">
+    <div className="mx-3 flex justify-center items-center h-full">
       <Spinner />
     </div>
   );

@@ -1,9 +1,10 @@
 interface TypeData {
-  id: number;
+  id: string;
   nickname: string;
   pictureURL: string;
   isFriendToLoggedUser: boolean;
 }
+
 
 export function getIndexElement(
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>

@@ -7,7 +7,7 @@ interface TypeDataLogged {
 }
 
 interface TypeDataUesrs {
-  id: number;
+  id: string;
   nickname: string;
   pictureURL: string;
   isFriendToLoggedUser: boolean;

@@ -10,7 +10,7 @@ interface TypeProps {
 }
 
 interface TypeData {
-  id: number;
+  id: string;
   nickname: string;
   pictureURL: string;
   isFriendToLoggedUser: boolean;

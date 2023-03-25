@@ -16,6 +16,9 @@ import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
 import PasswordChannel from "./PasswordChannel";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { ActiveProfile } from "../Components/Routes/Profile";
+import { ActiveProfileUser } from "./Routes/ProfileUser";
+import { addFriend } from "../API";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -32,7 +35,7 @@ interface TypeMember {
 
 interface TypeSearch {
   data: {
-    id: number;
+    id: string;
     nickname: string;
     pictureURL: string;
     isFriendToLoggedUser: boolean;
@@ -86,20 +89,22 @@ export function CardFriendOnline() {
 }
 
 export function CardProfile({ setOpen }: TypeCardProfile) {
+  let dataUser = useContext(ActiveProfile);
+
   return (
     <div className={`flex items-center`}>
       <div className="flex items-center gap-2">
         <img
-          src={pictureUser}
+          src={dataUser.settings.pictureURL}
           alt="Profile"
           className="w-20 h-20 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span
-              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
+              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
             >
-              {firstLetterCapital("mouassit")}
+              {dataUser.settings.nickname}
             </span>
             <button
               className="w-8 h-8 bg-shape flex justify-center items-center rounded-full"
@@ -167,29 +172,48 @@ export function CardAchievments() {
   );
 }
 
-export function CardUser({data}:TypedataFriend) {
+export function CardUser({ data }: TypedataFriend) {
+  const dataUser = useContext(ActiveProfileUser);
   return (
     <div className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl">
-      <Link to="/ProfileUser" state={{id:data.id}} className="flex w-full gap-3 items-center">
-        <img
-          src={data.pictureURL}
-          alt="Friend"
-          className="w-12 h-12 rounded-full"
-        />
-        <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap capitalize">
-          {data.nickname}
-        </span>
-      </Link>
+      {data.id === dataUser.settings.id ? (
+        <Link
+          to="/Profile"
+          state={{ id: data.id }}
+          className="flex w-full gap-3 items-center"
+        >
+          <img
+            src={data.pictureURL}
+            alt="Friend"
+            className="w-12 h-12 rounded-full"
+          />
+          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+            {data.nickname}
+          </span>
+        </Link>
+      ) : (
+        <Link
+          to="/ProfileUser"
+          state={{ id: data.id }}
+          className="flex w-full gap-3 items-center"
+        >
+          <img
+            src={data.pictureURL}
+            alt="Friend"
+            className="w-12 h-12 rounded-full"
+          />
+          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+            {data.nickname}
+          </span>
+        </Link>
+      )}
       <Menu>
         <MenuButton className="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover flex items-center justify-center rounded-full">
           <PointsIcon edit="w-2 h-2 fill-secondaryText" />
         </MenuButton>
         <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-            settings
-          </MenuItem>
-          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-            logout
+          <MenuItem className="flex gap-2 hover:bg-backgroundHover font-light justify-center items-center py-2 px-3">
+            Invite to play
           </MenuItem>
         </MenuList>
       </Menu>
@@ -508,6 +532,7 @@ export function CardSearchUser({
               e.preventDefault();
               e.stopPropagation();
               setFriend(true);
+              // addFriend(data.id);
             }}
           >
             <AddFiriendSearchIcon edit="w-4 h-4 fill-secondaryText" />

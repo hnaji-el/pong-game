@@ -3,6 +3,8 @@ import { CardConversation } from "./Cards";
 import { SearchIcon } from "./Icons";
 
 export default function Chats() {
+  //conversation dm
+
   return (
     <div className="flex h-full flex-col  gap-6">
       <div className="flex items-center rounded-md bg-shape pl-2 mx-3 lg:mx-2">

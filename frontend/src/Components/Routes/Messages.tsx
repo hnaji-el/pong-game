@@ -45,7 +45,7 @@ export default function Messages() {
       setSettings(res);
     });
   }, []);
-  if (settings.nickname.length)
+  // if (settings.nickname.length)
     return (
       <StateMssages.Provider
         value={{
@@ -86,9 +86,9 @@ export default function Messages() {
         </div>
       </StateMssages.Provider>
     );
-  return (
-    <div className="mx-3 pb-20 lg:pb-0 lg:ml-64 lg:mr-4 flex justify-center items-center h-full">
-      <Spinner />
-    </div>
-  );
+  // return (
+  //   <div className="mx-3 pb-20 lg:pb-0 lg:ml-64 lg:mr-4 flex justify-center items-center h-full">
+  //     <Spinner />
+  //   </div>
+  // );
 }

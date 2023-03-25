@@ -1,27 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
-import { dataAllUser } from "../API";
+import { getDataUsers } from "../API";
 import { filterByName } from "../helpers";
 import { SearchIcon } from "./Icons";
 import SearchContainer from "./SearchContainer";
 
 interface TypeProps {
   modal?: boolean;
+  setOpenSearch?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface TypeData {
   id: number;
-  username: string;
-  picture: string;
-  friend: boolean;
+  nickname: string;
+  pictureURL: string;
+  isFriendToLoggedUser: boolean;
 }
 
-export default function SearchInput({ modal }: TypeProps) {
+export default function SearchInput({ setOpenSearch,modal }: TypeProps) {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const refDropDown = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<TypeData[]>([]);
+  const [dataAllUsers, setDataAllUsers] = useState<TypeData[]>([]);
   const [value, setValue] = useState<string>("");
   useEffect(() => {
-    if (dropdown) setData(dataAllUser);
+    if (dropdown) {
+      getDataUsers((res: TypeData[]) => {
+        setDataAllUsers(res);
+        setData(res);
+      });
+    }
+
     document.addEventListener("click", (e) => {
       if (
         refDropDown.current &&
@@ -47,12 +55,14 @@ export default function SearchInput({ modal }: TypeProps) {
           }}
           onChange={(e) => {
             setValue(e.currentTarget.value);
-            setData(filterByName(dataAllUser, e.currentTarget.value));
+            setData(filterByName(dataAllUsers, e.currentTarget.value));
           }}
         />
         <SearchIcon edit="w-4 fill-secondaryText" />
       </div>
-      {data.length && dropdown ? <SearchContainer data={data} /> : null}
+      {data.length && dropdown ? (
+        <SearchContainer setOpenSearch={setOpenSearch} setDropdown={setDropdown} data={data} />
+      ) : null}
     </div>
   );
 }

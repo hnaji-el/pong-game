@@ -37,8 +37,8 @@ export default function Astro({ edit }: TypeProops) {
             transform="translate(482.071 18.015)"
             fill="none"
             stroke="#7970b3"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <circle
             id="craterBig"
@@ -48,8 +48,8 @@ export default function Astro({ edit }: TypeProops) {
             transform="translate(535.817 49.245)"
             fill="none"
             stroke="#7970b3"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <circle
             id="craterSmall"
@@ -59,26 +59,26 @@ export default function Astro({ edit }: TypeProops) {
             transform="translate(583.754 150.929)"
             fill="none"
             stroke="#7970b3"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <path
             id="ring"
             d="M476.562,101.461c-30.4,2.164-49.691,4.221-49.691,8.007,0,6.853,63.166,12.408,141.085,12.408s141.085-5.555,141.085-12.408c0-3.378-15.347-4.988-40.243-7.225"
             fill="none"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <path
             id="ringShadow"
             d="M483.985,127.43c23.462,1.531,52.515,2.436,83.972,2.436,36.069,0,68.978-1.19,93.922-3.149"
             fill="none"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
             opacity="0.5"
           />
         </g>
@@ -92,9 +92,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(518.07 245.375)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_2"
@@ -103,9 +103,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(508.129 255.978)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_2" data-name="Group 2">
@@ -116,9 +116,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(154.55 231.391)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_4"
@@ -127,9 +127,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(144.609 241.995)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_3" data-name="Group 3">
@@ -140,9 +140,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(320.135 132.746)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_6"
@@ -151,9 +151,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(310.194 143.349)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_4" data-name="Group 4">
@@ -164,9 +164,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(200.67 483.11)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_8"
@@ -175,9 +175,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(190.73 493.713)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
           </g>
@@ -190,9 +190,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(432.173 380.52)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_10"
@@ -201,9 +201,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(426.871 386.175)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_6" data-name="Group 6">
@@ -214,9 +214,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(489.555 299.765)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_12"
@@ -225,9 +225,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(485.636 303.945)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_7" data-name="Group 7">
@@ -238,9 +238,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(231.468 291.009)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_14"
@@ -249,9 +249,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(227.55 295.189)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_8" data-name="Group 8">
@@ -262,9 +262,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(244.032 547.539)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_16"
@@ -273,9 +273,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(240.113 551.719)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_9" data-name="Group 9">
@@ -286,9 +286,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(186.359 406.967)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_18"
@@ -297,9 +297,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(182.44 411.146)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
             <g id="Group_10" data-name="Group 10">
@@ -310,9 +310,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(480.296 406.967)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
               <line
                 id="Line_20"
@@ -321,9 +321,9 @@ export default function Astro({ edit }: TypeProops) {
                 transform="translate(476.378 411.146)"
                 fill="none"
                 stroke="#7970b3"
-                stroke-linecap="round"
-                stroke-miterlimit="10"
-                stroke-width="3"
+                strokeLinecap="round"
+                strokeMiterlimit="10"
+                strokeWidth="3"
               />
             </g>
           </g>
@@ -337,9 +337,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(581.025 248.026)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_3"
@@ -350,9 +350,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(442.114 312.307)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_4"
@@ -363,9 +363,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(160.351 345.801)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_5"
@@ -376,9 +376,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(421.57 193.233)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_6"
@@ -389,9 +389,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(192.718 168.361)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_7"
@@ -402,9 +402,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(125.391 469.062)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_8"
@@ -415,9 +415,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(275.569 560.081)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <circle
               id="Ellipse_9"
@@ -428,9 +428,9 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(405.666 474.435)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
           </g>
           <g id="circlesSmall">
@@ -505,10 +505,10 @@ export default function Astro({ edit }: TypeProops) {
           transform="translate(560 240)"
           fill="none"
           stroke="#7970b3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-miterlimit="10"
-          stroke-width="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
         />
         <path
           id="backpack"
@@ -516,10 +516,10 @@ export default function Astro({ edit }: TypeProops) {
           transform="translate(560 240)"
           fill="#20222b"
           stroke="#7970b3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-miterlimit="10"
-          stroke-width="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
         />
         <g id="antenna" transform="translate(560 240)">
           <line
@@ -530,10 +530,10 @@ export default function Astro({ edit }: TypeProops) {
             transform="translate(295.285 236.625)"
             fill="#fff"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <circle
             id="Ellipse_17"
@@ -544,10 +544,10 @@ export default function Astro({ edit }: TypeProops) {
             transform="translate(317.291 229.242)"
             fill="#20222b"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
         </g>
         <g id="armR" transform="translate(560 240)">
@@ -557,10 +557,10 @@ export default function Astro({ edit }: TypeProops) {
             d="M360.633,363.039a38.88,38.88,0,0,1,5.824,6.634l27.874,47.634a13.917,13.917,0,0,1-5.059,19.02h0a13.917,13.917,0,0,1-19.02-5.059l-5.6-9.663"
             fill="#20222b"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <path
             id="Path_2"
@@ -568,10 +568,10 @@ export default function Astro({ edit }: TypeProops) {
             d="M388.762,434.677a13.91,13.91,0,0,0,6.678-14.594,15.9,15.9,0,1,1-21.671,21.767c-1.754-3.021-2.817-5.818-2.484-9.046C375.625,437.355,383.087,437.973,388.762,434.677Z"
             fill="#20222b"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
         </g>
         <g id="armL" transform="translate(560 240)">
@@ -581,10 +581,10 @@ export default function Astro({ edit }: TypeProops) {
             d="M301.3,347.66a31.236,31.236,0,0,0-7.492,2.536l-47.965,27.3a13.916,13.916,0,0,0-5.134,19h0a13.916,13.916,0,0,0,19,5.134l9.685-5.564"
             fill="#20222b"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <path
             id="Path_4"
@@ -592,10 +592,10 @@ export default function Astro({ edit }: TypeProops) {
             d="M241.978,395.324a13.909,13.909,0,0,1,1.518-15.977,15.9,15.9,0,1,0,7.874,29.689c3.03-1.738,5.35-3.628,6.676-6.59C252.013,404.214,245.243,401.017,241.978,395.324Z"
             fill="#20222b"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
         </g>
         <g id="body" transform="translate(560 240)">
@@ -605,10 +605,10 @@ export default function Astro({ edit }: TypeProops) {
             d="M353.351,365.387a58.853,58.853,0,0,1-46.316-12.418,49.711,49.711,0,0,0-36.128,35.411l-1.374,5.123a49.713,49.713,0,0,0,35.13,60.9h0a49.713,49.713,0,0,0,60.883-35.158l1.374-5.123A49.709,49.709,0,0,0,353.351,365.387Z"
             fill="#20222b"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
           <path
             id="Path_6"
@@ -616,10 +616,10 @@ export default function Astro({ edit }: TypeProops) {
             d="M269.678,394.912h0c26.3,20.643,59.654,29.585,93.106,25.724l2.419-.114"
             fill="none"
             stroke="#7970b3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
         </g>
         <g id="legs" transform="translate(560 240)">
@@ -630,10 +630,10 @@ export default function Astro({ edit }: TypeProops) {
               d="M312.957,456.734l-14.315,53.395a13.254,13.254,0,0,0,9.37,16.234h0a13.254,13.254,0,0,0,16.234-9.37l17.838-66.534C333.451,455.886,323.526,457.387,312.957,456.734Z"
               fill="#20222b"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <line
               id="Line_22"
@@ -643,10 +643,10 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(304.883 486.849)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
           </g>
           <g id="legL">
@@ -656,10 +656,10 @@ export default function Astro({ edit }: TypeProops) {
               d="M296.315,452.273,282,505.667a13.255,13.255,0,0,1-16.234,9.37h0A13.255,13.255,0,0,1,256.4,498.8l17.838-66.534C278.993,441.286,286.836,447.55,296.315,452.273Z"
               fill="#20222b"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
             <line
               id="Line_23"
@@ -669,10 +669,10 @@ export default function Astro({ edit }: TypeProops) {
               transform="translate(262.638 475.522)"
               fill="none"
               stroke="#7970b3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-miterlimit="10"
-              stroke-width="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeMiterlimit="10"
+              strokeWidth="3"
             />
           </g>
         </g>
@@ -686,10 +686,10 @@ export default function Astro({ edit }: TypeProops) {
           transform="matrix(0.259, -0.966, 0.966, 0.259, 827.017, 599.449)"
           fill="#20222b"
           stroke="#7970b3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-miterlimit="10"
-          stroke-width="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
         />
         <path
           id="headStripe"
@@ -697,10 +697,10 @@ export default function Astro({ edit }: TypeProops) {
           transform="translate(560 240)"
           fill="none"
           stroke="#7970b3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-miterlimit="10"
-          stroke-width="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
         />
         <path
           id="Path_9"
@@ -709,24 +709,24 @@ export default function Astro({ edit }: TypeProops) {
           transform="translate(560 240)"
           fill="#20222b"
           stroke="#7970b3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-miterlimit="10"
-          stroke-width="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit="10"
+          strokeWidth="3"
         />
         <g
           id="Group_11"
           data-name="Group 11"
           transform="translate(560 240)"
-          clip-path="url(#clip-path)"
+          clipPath="url(#clip-path)"
         >
           <path
             id="glassShine"
             d="M278.436,375.6,383,264.076l-18.61-12.458-99.586,113.31Z"
             fill="none"
             stroke="#7970b3"
-            stroke-miterlimit="10"
-            stroke-width="3"
+            strokeMiterlimit="10"
+            strokeWidth="3"
           />
         </g>
       </g>

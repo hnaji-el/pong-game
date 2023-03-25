@@ -52,7 +52,7 @@ export default function Home() {
             <div className="flex gap-10">
               <span className="flex flex-col items-center">
                 <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
-                  10
+                  0
                 </span>
                 <span className="text-secondaryText text-sm">Friends</span>
               </span>
@@ -72,7 +72,7 @@ export default function Home() {
               </span>
             </div>
           </section>
-          <SwitchersProfile />
+          <SwitchersProfile id={settings.id} />
         </main>
         {open ? (
           <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
@@ -86,7 +86,7 @@ export default function Home() {
     );
 
   return (
-    <div className="mx-3 pb-20 lg:pb-0 lg:ml-64 lg:mr-4 flex justify-center items-center h-full">
+    <div className="mx-3 flex justify-center items-center h-full">
       <Spinner />
     </div>
   );

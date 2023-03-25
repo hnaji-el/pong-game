@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { checkNickname } from "../helpers";
 import InputForm from "./InputForm";
 import { EditAvatarIcon } from "./Icons";
+import { useNavigate } from "react-router-dom";
 
 interface TypeProps {
   data: {
@@ -15,6 +16,7 @@ export default function FormEdit({ data }: TypeProps) {
   const [pictureUser, setPictureUser] = useState<string>(data.pictureURL);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [value, setValue] = useState<string>(data.nickname);
+  let navigate = useNavigate();
   return (
     <form className="flex items-center">
       <div className="flex gap-10 lg:gap-12 flex-col lg:flex-row items-center">
@@ -84,6 +86,7 @@ export default function FormEdit({ data }: TypeProps) {
                   setErrorMessage(errorMessage);
                   return;
                 }
+                navigate("/Home");
               }}
             >
               Next

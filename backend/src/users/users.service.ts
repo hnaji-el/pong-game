@@ -79,6 +79,17 @@ export class UsersService {
     }
   }
 
+  async updateUserPictureURL(user: any, file: Express.Multer.File) {
+    const newPictureURL = `http://localhost:3000/users/profile-picture/${file.filename}`;
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { pictureURL: newPictureURL },
+    });
+
+    return { pictureURL: newPictureURL };
+  }
+
   async getFriends(userId: string): Promise<UserEntity[]> {
     const entities: UserEntity[] = [];
     const user = await this.prisma.user.findUnique({

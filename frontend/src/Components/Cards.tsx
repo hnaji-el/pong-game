@@ -18,7 +18,6 @@ import PasswordChannel from "./PasswordChannel";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../Components/Routes/Profile";
 import { ActiveProfileUser } from "./Routes/ProfileUser";
-import { addFriend } from "../API";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

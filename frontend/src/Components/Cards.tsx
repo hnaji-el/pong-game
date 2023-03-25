@@ -27,6 +27,7 @@ interface TypeCardProfile {
 interface TypePropsChannel {
   setAddMember: React.Dispatch<React.SetStateAction<boolean>>;
   setMembers: React.Dispatch<React.SetStateAction<boolean>>;
+  data: any;
 }
 
 interface TypeMember {
@@ -69,6 +70,11 @@ interface TypeChat {
 }
 
 interface TypeConversation {
+  data: any;
+  index: number;
+}
+
+interface TypeChannelConversation {
   data: any;
   index: number;
 }
@@ -246,6 +252,7 @@ export function CardConversation({ data, index }: TypeConversation) {
           messageData.setIndexDm(index);
           stateMessages.setClick(true);
           messageData.setDataChatBox(messageData.dataDm[index]);
+          messageData.setTypeDm("chat");
         }}
       >
         <div className="flex items-center gap-2">
@@ -285,26 +292,40 @@ export function CardConversation({ data, index }: TypeConversation) {
   );
 }
 
-export function CardChannelConversation() {
+export function CardChannelConversation({
+  index,
+  data,
+}: TypeChannelConversation) {
   const stateMessages = useContext(StateMssages);
+  const messageData = useContext(MessagesContext);
   return (
-    <div className="border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2">
+    <div
+      className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
+        messageData.indexDm === -1 && index === messageData.indexChannel
+          ? "lg:bg-backgroundHover"
+          : null
+      }`}
+    >
       <Link
         to=""
         className="flex flex-1 justify-between py-4"
         onClick={() => {
           stateMessages.setClick(true);
+          messageData.setIndexChannel(index);
+          messageData.setTypeDm("channel");
+          messageData.setIndexDm(-1);
+          messageData.setDataChatBox(messageData.channelDm[index]);
         }}
       >
         <div className="flex items-center gap-2">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
-                {firstLetterCapital("channel")}
+              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText capitalize">
+                {data.name}
               </span>
             </div>
             <span className="text-left w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
-              hello
+              {data.latestMessage}
             </span>
           </div>
         </div>
@@ -367,8 +388,11 @@ export function CardChatFriend({ data }: TypeChat) {
 export function CardChatChannel({
   setAddMember,
   setMembers,
+  data,
 }: TypePropsChannel) {
   const stateMessages = useContext(StateMssages);
+  console.log(data);
+  
   return (
     <div className="flex flex-1 items-center gap-4">
       <button
@@ -380,15 +404,13 @@ export function CardChatChannel({
         <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
       </button>
       <div className="flex items-center w-full gap-2">
-        <img
-          src={PictureFriend}
-          alt="Friend"
-          className="h-14 w-14 rounded-full"
-        />
         <div className="flex lg:gap-4 w-full justify-between lg:justify-start">
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-col gap-1">
             <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
-              channel 01
+              {data.name}
+            </span>
+            <span className="text-sm font-light text-secondaryText">
+              {data.members + " members"}
             </span>
           </div>
 

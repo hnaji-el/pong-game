@@ -28,7 +28,7 @@ export default function NavBarChat({
       {messageData.typeDm === "chat" ? (
         <CardChatFriend data={messageData.dataChatBox} />
       ) : (
-        <CardChatChannel setAddMember={setAddMember} setMembers={setMembers} />
+        <CardChatChannel data={messageData.dataChatBox} setAddMember={setAddMember} setMembers={setMembers} />
       )}
       <div className="hidden lg:flex items-center gap-5">
         <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">

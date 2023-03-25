@@ -5,6 +5,7 @@ import { SendIcon } from "../Icons";
 import { getDataUserLogged } from "../../API";
 import { dataChat } from "../../API";
 import Spinner from "../Spinner";
+import { dataChannel } from "../../API";
 
 interface TypeData {
   id: string;
@@ -39,8 +40,10 @@ export default function Messages() {
   const [firstClick, setFirstClick] = useState(true);
 
   const [dataDm, setDataDm] = useState<any>([]);
-  const [dataChatBox, setDataChatBox] = useState<any>([]);
+  const [channelDm, setChannelDm] = useState<any>([]);
   const [indexDm, setIndexDm] = useState<number>(0);
+  const [indexChannel, setIndexChannel] = useState<number>(0);
+  const [dataChatBox, setDataChatBox] = useState<any>([]);
   const [typeDm, setTypeDm] = useState<string>("chat");
 
   const [settings, setSettings] = useState<TypeData>({
@@ -48,6 +51,11 @@ export default function Messages() {
     pictureURL: "",
     nickname: "",
   });
+
+  useEffect(() => {
+    setChannelDm(dataChannel);
+  }, [channelDm]);
+
   useEffect(() => {
     document.title = "Pong - Messages";
     getDataUserLogged((res: TypeData) => {
@@ -69,7 +77,23 @@ export default function Messages() {
           updateSettings: setSettings,
         }}
       >
-        <MessagesContext.Provider value={{dataDm:dataDm,dataChatBox:dataChatBox,setDataChatBox:setDataChatBox,sesetDataDm:setDataDm,indexDm:indexDm,setIndexDm:setIndexDm,typeDm:typeDm,setTypeDm:setTypeDm}}>
+        <MessagesContext.Provider
+          value={{
+            dataDm: dataDm,
+            setDataDm: setDataDm,
+            channelDm: channelDm,
+            setChannelDm: setChannelDm,
+            dataChatBox: dataChatBox,
+            setDataChatBox: setDataChatBox,
+            sesetDataDm: setDataDm,
+            indexDm: indexDm,
+            setIndexDm: setIndexDm,
+            indexChannel: indexChannel,
+            setIndexChannel: setIndexChannel,
+            typeDm: typeDm,
+            setTypeDm: setTypeDm,
+          }}
+        >
           <NavigationChat />
           <main
             className={`${

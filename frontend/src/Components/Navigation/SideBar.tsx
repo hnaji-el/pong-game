@@ -192,7 +192,6 @@ export default function SideBar({
             </li>
           </ul>
         </nav>
-        <ListFriendOnline />
       </section>
       <button className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]">
         <ControllerIcon edit="w-8" />

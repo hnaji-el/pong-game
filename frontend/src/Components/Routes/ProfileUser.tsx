@@ -104,7 +104,6 @@ export default function ProfileUser() {
                   {typeUser === "friend" ? (
                     <>
                       <BtnFriend id={dataUser.id} setTypeUser={setTypeUser} />
-                      <BtnMessage />
                     </>
                   ) : (
                     <BtnAddFriend id={dataUser.id} setTypeUser={setTypeUser} />
@@ -133,7 +132,7 @@ export default function ProfileUser() {
                   </span>
                 </div>
               </section>
-                <SwitchersProfile id={dataUser.id}/>
+              <SwitchersProfile id={dataUser.id} />
             </>
           )}
         </main>

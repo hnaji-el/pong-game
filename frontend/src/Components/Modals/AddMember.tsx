@@ -23,8 +23,7 @@ export default function AddMember() {
     if (friend.length) {
       return (
         <AddMemberContext.Provider value={{setFriend:setFriend}}>
-          <div className="pt-6 w-full flex flex-col gap-6">
-            <InputSearchMembers placeholder="Search for friend" />
+          <div className="pt-5 w-full flex flex-col gap-6">
             <FriendMember data={friend} />
           </div>
         </AddMemberContext.Provider>

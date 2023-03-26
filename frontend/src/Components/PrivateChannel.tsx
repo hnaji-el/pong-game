@@ -35,7 +35,7 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
             e.preventDefault();
             let data = {
               name: value,
-              type: "public",
+              type: "private",
               password: "",
             };
 

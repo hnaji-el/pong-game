@@ -317,7 +317,6 @@ export function CardChannelConversation({
 }: TypeChannelConversation) {
   const stateMessages = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
-
   return (
     <div
       className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
@@ -328,7 +327,7 @@ export function CardChannelConversation({
     >
       <Link
         to=""
-        className="flex flex-1 justify-between py-4"
+        className="flex flex-1 justify-between items-start py-4"
         onClick={() => {
           stateMessages.setClick(true);
           messageData.setIndexChannel(index);
@@ -349,6 +348,11 @@ export function CardChannelConversation({
             </span>
           </div>
         </div>
+        {data.type === "private" ? (
+          <div className="bg-primary w-12 p-.6 text-primaryText rounded-full text-center relative top-[.3rem] z-[-1] right-2 text-[.6rem] font-light capitalize">
+            private
+          </div>
+        ) : null}
       </Link>
       <span className="flex justify-center items-center">
         <Menu>
@@ -359,9 +363,10 @@ export function CardChannelConversation({
             {data.role === "owner" ? (
               <MenuItem
                 className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-                onClick={() => {
-                  deleteRoom(data.name);
+                onClick={async () => {
+                 await deleteRoom(data.name);
                   getAllChannels((res: any) => {
+                    console.log("data channel:", res);
                     messageData.setChannelDm(res);
                   });
                 }}
@@ -440,25 +445,21 @@ export function CardChatChannel({
         <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
       </button>
       <div className="flex items-center w-full gap-2">
-        <div className="flex lg:gap-4 w-full justify-between lg:justify-start">
-          <div className="flex flex-col gap-1">
-            <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
-              {data.name}
-            </span>
-            <span className="text-sm font-light text-secondaryText">
-              {data.members + " members"}
-            </span>
-          </div>
-
+        <div className="flex lg:gap-4 w-full justify-between items-center lg:justify-start">
+          <span className="text-[1.1rem] text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+            {data.name}
+          </span>
           <div className="flex items-center gap-4">
-            <button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
-              onClick={() => {
-                setAddMember(true);
-              }}
-            >
-              <PlusIcon edit="fill-secondaryText w-4 h-4" />
-            </button>
+            {data.role !== "member" && data.type !== "protected" ? (
+              <button
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
+                onClick={() => {
+                  setAddMember(true);
+                }}
+              >
+                <PlusIcon edit="fill-secondaryText w-4 h-4" />
+              </button>
+            ) : null}
             <button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
               onClick={() => {
@@ -467,7 +468,6 @@ export function CardChatChannel({
             >
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
             </button>
-            <PasswordChannel />
           </div>
         </div>
       </div>
@@ -734,30 +734,6 @@ export function CardSearchUser({
             {data.nickname}
           </span>
         </Link>
-        {stateFriend ? (
-          <Menu>
-            <MenuButton className="p-1 h-7 w-7 bg-shape hover:bg-backgroundHover rounded-full">
-              <PointsIcon edit="w-[.7rem] h-[.7rem] fill-secondaryText mx-auto" />
-            </MenuButton>
-            <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-2 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-              <MenuItem className="flex gap-2 hover:bg-backgroundHover font-light justify-center items-center py-2 px-3">
-                Invite to play
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        ) : (
-          <button
-            className="w-7 h-7 rounded-full  flex justify-center items-center bg-shape hover:bg-backgroundHover"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setFriend(true);
-              // addFriend(data.id);
-            }}
-          >
-            <AddFiriendSearchIcon edit="w-4 h-4 fill-secondaryText" />
-          </button>
-        )}
       </div>
     </div>
   );

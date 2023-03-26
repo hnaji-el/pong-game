@@ -22,8 +22,7 @@ export default function Members() {
     if (members.length)
       return (
         <MembersContext.Provider value={{ setMembers: setMembers }}>
-          <div className="pt-6 w-full flex flex-col gap-6">
-            <InputSearchMembers placeholder="Search for member" />
+          <div className="pt-5 w-full flex flex-col gap-6">
             <MembersContainer data={members} />
           </div>
         </MembersContext.Provider>

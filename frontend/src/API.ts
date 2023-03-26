@@ -659,8 +659,8 @@ export function getChannelsDm(){
       }).catch()
 }
 
-export function CreateChannel(getRes:any,data:any) {
-    axios.post("http://localhost:3000/chat/create-room", { data }, { withCredentials: true }).then((res) => {
+export async function CreateChannel(getRes:any,data:any) {
+    await axios.post("http://localhost:3000/chat/create-room", { data }, { withCredentials: true }).then((res) => {
         getRes(res)
     }).catch((error) => {
       getRes("error")
@@ -713,7 +713,6 @@ export function leaveRoom(name:string){
     axios.post("http://localhost:3000/chat/quite-room",{name},{withCredentials: true}).then().catch()
   }
   
-export function deleteRoom(name: string) {
-      console.log(name);
-    axios.delete(`http://localhost:3000/chat/delete-room/${name}`,{withCredentials: true}).then().catch()
+export async function deleteRoom(name: string) {
+  await  axios.delete(`http://localhost:3000/chat/delete-room/${name}`,{withCredentials: true}).then().catch()
   }

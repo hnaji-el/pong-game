@@ -10,26 +10,18 @@ interface TypeProps {
 
 export default function Channels({ setCreateChannel }: TypeProps) {
   const messageData = useContext(MessagesContext);
-  console.log(messageData.channelDm);
-  
+
   return (
     <div className="flex h-full flex-col  gap-6">
       <div className="flex items-center gap-2 mx-3 lg:mx-2">
-        <div className="flex items-center rounded-md bg-shape pl-2 flex-1">
-          <SearchIcon edit="w-3 fill-secondaryText relative" />
-          <input
-            type="text"
-            placeholder="Search for channel"
-            className="placeholder-secondary-text flex-1 bg-transparent py-2.5 px-2 text-xs font-light text-primaryText placeholder:text-xs placeholder:font-light focus:outline-none"
-          />
-        </div>
         <button
-          className="flex h-6 w-6 items-center justify-center rounded-full bg-primary"
+          className="flex w-full items-center gap-2 p-2 rounded-[.3rem] justify-center bg-primary"
           onClick={() => {
             setCreateChannel(true);
           }}
         >
           <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
+          <span className="text-primaryText text-sm font-light">Add channel</span>
         </button>
       </div>
       {messageData.channelDm.length ? (

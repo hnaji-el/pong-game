@@ -6,6 +6,27 @@ import { UserEntity } from './entities/user.entity';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+  async setTwoFactorAuthSecret(userId: string, secret: string) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { twoFactorAuthSecret: secret },
+    });
+  }
+
+  async updateIsTwoFactorAuthValidated(userId: string, state: boolean) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { isTwoFactorAuthValidated: state },
+    });
+  }
+
+  async updateIsTwoFactorAuthEnabled(userId: string, state: boolean) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { isTwoFactorAuthEnabled: state },
+    });
+  }
+
   async create(_nickname: string, _pictureURL: string): Promise<any> {
     let user = await this.prisma.user.findUnique({
       where: { nickname: _nickname },

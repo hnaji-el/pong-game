@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../node_modules/.prisma/client"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -12,13 +12,16 @@ datasource db {
 }
 
 model User {
-  id              String         @id @default(uuid())
-  nickname        String         @unique
-  pictureURL      String
-  status          String         @default("offline")
-  firstTimeLogged Boolean        @default(true)
-  requester       RelationShip[] @relation("Requester")
-  addressee       RelationShip[] @relation("Addressee")
+  id                       String         @id @default(uuid())
+  nickname                 String         @unique
+  pictureURL               String
+  status                   String         @default("offline")
+  firstTimeLogged          Boolean        @default(true)
+  twoFactorAuthSecret      String?
+  isTwoFactorAuthEnabled   Boolean        @default(false)
+  isTwoFactorAuthValidated Boolean        @default(false)
+  requester                RelationShip[] @relation("Requester")
+  addressee                RelationShip[] @relation("Addressee")
 }
 
 model RelationShip {
@@ -34,7 +37,6 @@ enum Status {
   FRIENDSHIP
   BLOCK
 }
-
 
 model Room {
   id      String     @id @default(uuid())
@@ -55,6 +57,7 @@ model Muted {
   userLogin String
   room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
   time      String
+
   @@map("muted")
 }
 
@@ -64,5 +67,6 @@ model Messages {
   userLogin String
   room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
   data      String
+
   @@map("messages")
 }

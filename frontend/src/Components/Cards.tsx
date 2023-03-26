@@ -392,7 +392,9 @@ export function CardChannelConversation({
           </Menu>
         </span>
       ) : data.type === "protected" ? (
-        <LockIcon edit="w-4 h-4 fill-secondaryText" />
+        <div className="flex items-center justify-center">
+          <LockIcon edit="w-4 h-4 fill-secondaryText" />
+        </div>
       ) : null}
     </div>
   );

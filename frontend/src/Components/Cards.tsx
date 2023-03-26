@@ -19,7 +19,17 @@ import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../Components/Routes/Profile";
 import { ActiveProfileUser } from "./Routes/ProfileUser";
 import { MessagesContext } from "./Routes/Messages";
-import { addToRoom } from "../API";
+import { AddMemberContext } from "./Modals/AddMember";
+import { MembersContext } from "./Modals/Members";
+import {
+  addToRoom,
+  getFriendChannel,
+  getMembersChannel,
+  setAdmin,
+  setBlock,
+  setKick,
+  setMute,
+} from "../API";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -445,6 +455,7 @@ export function CardChatChannel({
 
 export function CardFriendMember({ data }: TypeFriendChannel) {
   const messageData = useContext(MessagesContext);
+  const addMemberData = useContext(AddMemberContext);
   return (
     <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
@@ -478,6 +489,9 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
             login: data.nickname,
           };
           addToRoom(obj);
+          getFriendChannel((res: any) => {
+            addMemberData.setFriend(res);
+          }, messageData.dataChatBox.name);
         }}
       >
         <PlusIcon edit="fill-secondaryText w-3 h-3" />
@@ -487,6 +501,8 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
 }
 
 export function CardMember({ data, role }: TypeMember) {
+  const messageData = useContext(MessagesContext);
+  const memberData = useContext(MembersContext);
   return (
     <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
@@ -529,14 +545,141 @@ export function CardMember({ data, role }: TypeMember) {
         <MenuButton className="p-1 h-7 w-7 bg-body flex items-center justify-center rounded-full">
           <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
         </MenuButton>
-        <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-            settings
-          </MenuItem>
-          <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-            logout
-          </MenuItem>
-        </MenuList>
+
+        {/* Owner */}
+        {messageData.dataChatBox.role === "owner" ? (
+          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light">
+              Invite to play
+            </MenuItem>
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              onClick={() => {
+                let obj = {
+                  name: messageData.dataChatBox.name,
+                  login: data.username,
+                };
+                setAdmin(obj);
+                getMembersChannel((res: any) => {
+                  memberData.setMembers(res);
+                }, messageData.dataChatBox.name);
+              }}
+            >
+              admin
+            </MenuItem>
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              onClick={() => {
+                let obj = {
+                  name: messageData.dataChatBox.name,
+                  login: data.username,
+                };
+                setBlock(obj);
+                getMembersChannel((res: any) => {
+                  memberData.setMembers(res);
+                }, messageData.dataChatBox.name);
+              }}
+            >
+              block
+            </MenuItem>
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              onClick={() => {
+                let obj = {
+                  name: messageData.dataChatBox.name,
+                  login: data.username,
+                };
+                setKick(obj);
+                getMembersChannel((res: any) => {
+                  memberData.setMembers(res);
+                }, messageData.dataChatBox.name);
+              }}
+            >
+              kick
+            </MenuItem>
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              onClick={() => {
+                let obj = {
+                  name: messageData.dataChatBox.name,
+                  login: data.username,
+                };
+                setMute(obj);
+                getMembersChannel((res: any) => {
+                  memberData.setMembers(res);
+                }, messageData.dataChatBox.name);
+              }}
+            >
+              mute
+            </MenuItem>
+          </MenuList>
+        ) : null}
+
+        {/* Admin */}
+        {messageData.dataChatBox.role === "admin" ? (
+          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light">
+              Invite to play
+            </MenuItem>
+            {role === "member" ? (
+              <>
+                <MenuItem
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  onClick={() => {
+                    let obj = {
+                      name: messageData.dataChatBox.name,
+                      login: data.username,
+                    };
+                    setBlock(obj);
+                    getMembersChannel((res: any) => {
+                      memberData.setMembers(res);
+                    }, messageData.dataChatBox.name);
+                  }}
+                >
+                  block
+                </MenuItem>
+                <MenuItem
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  onClick={() => {
+                    let obj = {
+                      name: messageData.dataChatBox.name,
+                      login: data.username,
+                    };
+                    setKick(obj);
+                    getMembersChannel((res: any) => {
+                      memberData.setMembers(res);
+                    }, messageData.dataChatBox.name);
+                  }}
+                >
+                  kick
+                </MenuItem>
+                <MenuItem
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  onClick={() => {
+                    let obj = {
+                      name: messageData.dataChatBox.name,
+                      login: data.username,
+                    };
+                    setMute(obj);
+                    getMembersChannel((res: any) => {
+                      memberData.setMembers(res);
+                    }, messageData.dataChatBox.name);
+                  }}
+                >
+                  mute
+                </MenuItem>
+              </>
+            ) : null}
+          </MenuList>
+        ) : null}
+        {/* Admin */}
+        {messageData.dataChatBox.role === "member" ? (
+          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light">
+              Invite to play
+            </MenuItem>
+          </MenuList>
+        ) : null}
       </Menu>
     </div>
   );

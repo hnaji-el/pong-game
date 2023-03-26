@@ -1,10 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState,createContext } from "react";
 import { getFriendChannel } from "../../API";
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
 import InputSearchMembers from "../InputSearchMembers";
 import { MessagesContext } from "../Routes/Messages";
 import Spinner from "../Spinner";
+
+
+export const AddMemberContext = createContext<any>({});
 
 export default function AddMember() {
   const messageData = useContext(MessagesContext);
@@ -15,14 +18,16 @@ export default function AddMember() {
       setFriend(res);
       setRender(true);
     }, messageData.dataChatBox.name);
-  }, []);
+  }, [friend]);
   if (render) {
     if (friend.length) {
       return (
-        <div className="pt-6 w-full flex flex-col gap-6">
-          <InputSearchMembers placeholder="Search for friend" />
-          <FriendMember data={friend} />
-        </div>
+        <AddMemberContext.Provider value={{setFriend:setFriend}}>
+          <div className="pt-6 w-full flex flex-col gap-6">
+            <InputSearchMembers placeholder="Search for friend" />
+            <FriendMember data={friend} />
+          </div>
+        </AddMemberContext.Provider>
       );
     }
     return (

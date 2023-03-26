@@ -629,8 +629,6 @@ export function getFriendChat(){
       withCredentials: true,
         headers :{'Access-Control-Allow-Origin': 'localhost:3000'}
   }).then((res: any) => {
-        console.log(res);
-        
       }).catch()
 }
 
@@ -692,4 +690,21 @@ export function getMembersChannel(getRes:any,nameChannel:string){
 export function addToRoom(data:any){
 
     axios.post("http://localhost:3000/chat/add-to-room",{data},{withCredentials: true}).then().catch()
+}
+  
+
+export function setAdmin(data: any) {
+    axios.post("http://localhost:3000/chat/set-admin",{data},{withCredentials: true}).then().catch()
+}
+  
+export function setBlock(data:any){
+    axios.patch("http://localhost:3000/chat/ban",{data},{withCredentials: true}).then().catch()
+}
+  
+export function setKick(data:any){
+    axios.patch("http://localhost:3000/chat/kick",{data},{withCredentials: true}).then().catch()
+}
+  
+export function setMute(data:any){
+    axios.patch("http://localhost:3000/chat/muted",{data},{withCredentials: true}).then().catch()
   }

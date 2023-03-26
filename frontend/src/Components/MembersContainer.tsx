@@ -6,12 +6,10 @@ interface TypeProps {
 }
 
 export default function MembersContainer({ data }: TypeProps) {
-  console.log(data);
-
   return (
     <div
       className={`flex flex-col ${
-        data.length > 3 ? "relative" : ""
+        data.length > 4 ? "relative" : ""
       } max-h-[34rem] overflow-auto`}
     >
       <div className="flex flex-col gap-6">

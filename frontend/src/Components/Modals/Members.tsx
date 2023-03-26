@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { getMembersChannel } from "../../API";
 import { ExclamationIcon } from "../Icons";
 import InputSearchMembers from "../InputSearchMembers";
@@ -6,6 +6,7 @@ import MembersContainer from "../MembersContainer";
 import { MessagesContext } from "../Routes/Messages";
 import Spinner from "../Spinner";
 
+export const MembersContext = createContext<any>({});
 export default function Members() {
   const messageData = useContext(MessagesContext);
   const [members, setMembers] = useState<any>([]);
@@ -16,14 +17,16 @@ export default function Members() {
       setMembers(res);
       setRender(true);
     }, messageData.dataChatBox.name);
-  }, []);
+  }, [members]);
   if (render) {
     if (members.length)
       return (
-        <div className="pt-6 w-full flex flex-col gap-6">
-          <InputSearchMembers placeholder="Search for member" />
-          <MembersContainer data={members} />
-        </div>
+        <MembersContext.Provider value={{ setMembers: setMembers }}>
+          <div className="pt-6 w-full flex flex-col gap-6">
+            <InputSearchMembers placeholder="Search for member" />
+            <MembersContainer data={members} />
+          </div>
+        </MembersContext.Provider>
       );
     return (
       <div className="p-8 pb-[1rem] w-full flex gap-1 text-sm text-secondaryText justify-center item-center">

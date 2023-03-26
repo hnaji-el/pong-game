@@ -406,14 +406,14 @@ export function CardChatFriend({ data }: TypeChat) {
       </button>
       <div className="flex items-center gap-2">
         <img
-          src={data.picture}
+          src={data?.picture}
           alt="Friend"
           className="h-14 w-14 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-1.5">
             <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
-              {data.username}
+              {data?.username}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -433,6 +433,7 @@ export function CardChatChannel({
   setMembers,
   data,
 }: TypePropsChannel) {
+  
   const stateMessages = useContext(StateMssages);
   return (
     <div className="flex flex-1 items-center gap-4">
@@ -447,10 +448,10 @@ export function CardChatChannel({
       <div className="flex items-center w-full gap-2">
         <div className="flex lg:gap-4 w-full justify-between items-center lg:justify-start">
           <span className="text-[1.1rem] text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
-            {data.name}
+            {data?.name}
           </span>
           <div className="flex items-center gap-4">
-            {data.role !== "member" && data.type !== "protected" ? (
+            {data?.role !== "member" && data?.type !== "protected" ? (
               <button
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
                 onClick={() => {
@@ -504,13 +505,13 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
       </div>
       <button
         className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center"
-        onClick={() => {
+        onClick={async () => {
           let obj = {
             name: messageData.dataChatBox.name,
             type: messageData.dataChatBox.type,
             login: data.nickname,
           };
-          addToRoom(obj);
+          await addToRoom(obj);
           getFriendChannel((res: any) => {
             addMemberData.setFriend(res);
           }, messageData.dataChatBox.name);
@@ -576,12 +577,12 @@ export function CardMember({ data, role }: TypeMember) {
             </MenuItem>
             <MenuItem
               className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={() => {
+              onClick={async() => {
                 let obj = {
                   name: messageData.dataChatBox.name,
                   login: data.username,
                 };
-                setAdmin(obj);
+                await setAdmin(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
                 }, messageData.dataChatBox.name);
@@ -591,12 +592,12 @@ export function CardMember({ data, role }: TypeMember) {
             </MenuItem>
             <MenuItem
               className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={() => {
+              onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
                   login: data.username,
                 };
-                setBlock(obj);
+                await setBlock(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
                 }, messageData.dataChatBox.name);
@@ -606,12 +607,12 @@ export function CardMember({ data, role }: TypeMember) {
             </MenuItem>
             <MenuItem
               className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={() => {
+              onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
                   login: data.username,
                 };
-                setKick(obj);
+                await setKick(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
                 }, messageData.dataChatBox.name);
@@ -621,12 +622,12 @@ export function CardMember({ data, role }: TypeMember) {
             </MenuItem>
             <MenuItem
               className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={() => {
+              onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
                   login: data.username,
                 };
-                setMute(obj);
+                await setMute(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
                 }, messageData.dataChatBox.name);
@@ -647,12 +648,12 @@ export function CardMember({ data, role }: TypeMember) {
               <>
                 <MenuItem
                   className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-                  onClick={() => {
+                  onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
                       login: data.username,
                     };
-                    setBlock(obj);
+                    await setBlock(obj);
                     getMembersChannel((res: any) => {
                       memberData.setMembers(res);
                     }, messageData.dataChatBox.name);
@@ -662,12 +663,12 @@ export function CardMember({ data, role }: TypeMember) {
                 </MenuItem>
                 <MenuItem
                   className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-                  onClick={() => {
+                  onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
                       login: data.username,
                     };
-                    setKick(obj);
+                    await setKick(obj);
                     getMembersChannel((res: any) => {
                       memberData.setMembers(res);
                     }, messageData.dataChatBox.name);
@@ -677,12 +678,12 @@ export function CardMember({ data, role }: TypeMember) {
                 </MenuItem>
                 <MenuItem
                   className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-                  onClick={() => {
+                  onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
                       login: data.username,
                     };
-                    setMute(obj);
+                    await setMute(obj);
                     getMembersChannel((res: any) => {
                       memberData.setMembers(res);
                     }, messageData.dataChatBox.name);

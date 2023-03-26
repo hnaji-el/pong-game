@@ -9,7 +9,7 @@ export const dataChat = [
       "username": "mustapha",
       "picture": "https://cdn.intra.42.fr/users/2cc53519ab737304bcdd74e4125c3e61/mouassit.jpg",
       "status" : "online",
-      "latestMessage": "welcome my friend",
+        "latestMessage": "welcome my friend",
       "conversation":[
           {
               "type":"friend",
@@ -632,11 +632,12 @@ export function getFriendChat(){
       }).catch()
 }
 
-export function getDmUsers(){
-  axios.get("http://localhost:3000/chat/DM", {
+export  function getDmUsers(getRes:any){
+   axios.get("http://localhost:3000/chat/DM-with-all-users", {
       withCredentials: true,
         headers :{'Access-Control-Allow-Origin': 'localhost:3000'}
   }).then((res) => {
+      getRes(res.data)
       }).catch()
 }
 
@@ -687,30 +688,30 @@ export function getMembersChannel(getRes:any,nameChannel:string){
         }).catch()
 }
   
-export function addToRoom(data:any){
+export async function addToRoom(data:any){
 
-    axios.post("http://localhost:3000/chat/add-to-room",{data},{withCredentials: true}).then().catch()
+    await axios.post("http://localhost:3000/chat/add-to-room",{data},{withCredentials: true}).then().catch()
 }
   
 
-export function setAdmin(data: any) {
-    axios.post("http://localhost:3000/chat/set-admin",{data},{withCredentials: true}).then().catch()
+export async function setAdmin(data: any) {
+    await axios.post("http://localhost:3000/chat/set-admin",{data},{withCredentials: true}).then().catch()
 }
   
-export function setBlock(data:any){
-    axios.patch("http://localhost:3000/chat/ban",{data},{withCredentials: true}).then().catch()
+export async function setBlock(data:any){
+   await axios.patch("http://localhost:3000/chat/ban",{data},{withCredentials: true}).then().catch()
 }
   
-export function setKick(data:any){
-    axios.patch("http://localhost:3000/chat/kick",{data},{withCredentials: true}).then().catch()
+export async function setKick(data:any){
+   await axios.patch("http://localhost:3000/chat/kick",{data},{withCredentials: true}).then().catch()
 }
   
-export function setMute(data:any){
-    axios.patch("http://localhost:3000/chat/muted",{data},{withCredentials: true}).then().catch()
+export async function setMute(data:any){
+   await axios.patch("http://localhost:3000/chat/muted",{data},{withCredentials: true}).then().catch()
 }
   
-export function leaveRoom(name:string){
-    axios.post("http://localhost:3000/chat/quite-room",{name},{withCredentials: true}).then().catch()
+export async function leaveRoom(name:string){
+   await axios.post("http://localhost:3000/chat/quite-room",{name},{withCredentials: true}).then().catch()
   }
   
 export async function deleteRoom(name: string) {

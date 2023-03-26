@@ -6,10 +6,6 @@ import { MessagesContext } from "./Routes/Messages";
 
 export default function Chats() {
   const conversations = useContext(MessagesContext);
-  useEffect(() => {
-    // getFriendChat();
-    //getDmUsers();
-  });
   return (
     <div className="flex h-full flex-col  gap-6">
       <div className="flex h-full relative flex-col overflow-auto">

@@ -2,7 +2,12 @@ import React, { useEffect, createContext, useState } from "react";
 import NavigationChat from "../Navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
-import { dataChannel, getAllChannels, getDataUserLogged } from "../../API";
+import {
+  dataChannel,
+  getAllChannels,
+  getDataUserLogged,
+  getDmUsers,
+} from "../../API";
 import { dataChat } from "../../API";
 import Spinner from "../Spinner";
 
@@ -54,19 +59,21 @@ export default function Messages() {
   useEffect(() => {
     getAllChannels((res: any) => {
       setChannelDm(res);
+      getDmUsers((res: any) => {
+        setDataDm(res);
+      });
     });
   }, []);
-  
 
   useEffect(() => {
     document.title = "Pong - Messages";
     getDataUserLogged((res: TypeData) => {
       setSettings(res);
     });
-    setDataDm(dataChat);
     setDataChatBox(dataDm[indexDm]);
   }, [dataDm]);
-  if (settings.nickname.length)
+
+  if (settings.nickname.length && dataDm.length && dataChannel.length)
     return (
       <StateMssages.Provider
         value={{
@@ -102,7 +109,7 @@ export default function Messages() {
               click ? "" : "absolute w-0 h-0"
             } lg:block lg:relative lg:w-auto lg:h-auto mx-3 lg:pb-1 pt-7 lg:ml-64 lg:mr-4 overflow-hidden mb-[4.85rem]`}
           >
-            <ChatBox data={dataChatBox.conversation} />
+            <ChatBox data={dataChatBox?.conversation} />
           </main>
           <div className="absolute w-full bottom-[0.9rem] px-3 lg:pl-64 lg:pr-4">
             <form

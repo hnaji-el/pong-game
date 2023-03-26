@@ -23,7 +23,7 @@ export default function ChatBox({ data }: TypeProps) {
 
   return (
     <div className="flex flex-col gap-10 h-full overflow-auto" ref={chatBox}>
-      {data.map((e: any, index: number) => {
+      {data?.map((e: any, index: number) => {
         if (messageData.typeDm === "chat") {
           if (e.type === "friend")
             return (

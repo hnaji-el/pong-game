@@ -66,7 +66,7 @@ export default function ProfileUser() {
 
     getOneUser((res: TypeDataProfileUser) => {
       setDataUser(res);
-      if (res.friendsNumber) setTypeUser("friend");
+      if (res.isFriendToLoggedUser) setTypeUser("friend");
       else if (res.isBlockedByLoggedUser) setTypeUser("blocked");
       else setTypeUser("notFriend");
     }, id);

@@ -643,12 +643,12 @@ export function getDmUsers(){
 }
 
 
-export function getAllChannels(){
-  axios.get("http://localhost:3000/chat/all-rooms", {
+export function getAllChannels(getRes:any){
+  axios.get("http://localhost:3000/chat/room-message", {
       withCredentials: true,
         headers :{'Access-Control-Allow-Origin': 'localhost:3000'}
   }).then((res: any) => {
-        
+        getRes(res.data)
       }).catch()
 }
 
@@ -661,14 +661,35 @@ export function getChannelsDm(){
       }).catch()
 }
 
-export function CreateChannel() {
-  
-  let data = {
-    name: "channel01",
-    type: "public",
-    password:""
-  }
-
-  axios.post("http://localhost:3000/chat/create-room", { data }, { withCredentials: true }).then().catch((error) => {
+export function CreateChannel(getRes:any,data:any) {
+    axios.post("http://localhost:3000/chat/create-room", { data }, { withCredentials: true }).then((res) => {
+        getRes(res)
+    }).catch((error) => {
+      getRes("error")
   })
 }
+
+export function getFriendChannel(getRes:any,nameChannel:string){
+
+    axios.get(`http://localhost:3000/chat/friends-in-room/${nameChannel}`, {
+        withCredentials: true,
+          headers :{'Access-Control-Allow-Origin': 'localhost:3000'}
+        }).then((res)=>{
+            getRes(res.data) 
+        }).catch()
+}
+  
+export function getMembersChannel(getRes:any,nameChannel:string){
+
+    axios.get(`http://localhost:3000/chat/users-in-room/${nameChannel}`, {
+        withCredentials: true,
+          headers :{'Access-Control-Allow-Origin': 'localhost:3000'}
+        }).then((res)=>{
+            getRes(res.data) 
+        }).catch()
+}
+  
+export function addToRoom(data:any){
+
+    axios.post("http://localhost:3000/chat/add-to-room",{data},{withCredentials: true}).then().catch()
+  }

@@ -2,10 +2,9 @@ import React, { useEffect, createContext, useState } from "react";
 import NavigationChat from "../Navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
-import { getDataUserLogged } from "../../API";
+import { getAllChannels, getDataUserLogged } from "../../API";
 import { dataChat } from "../../API";
 import Spinner from "../Spinner";
-import { dataChannel } from "../../API";
 
 interface TypeData {
   id: string;
@@ -53,8 +52,10 @@ export default function Messages() {
   });
 
   useEffect(() => {
-    setChannelDm(dataChannel);
-  }, [channelDm]);
+    getAllChannels((res: any) => {
+      setChannelDm(res);
+    });
+  }, []);
 
   useEffect(() => {
     document.title = "Pong - Messages";

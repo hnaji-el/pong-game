@@ -19,6 +19,7 @@ import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../Components/Routes/Profile";
 import { ActiveProfileUser } from "./Routes/ProfileUser";
 import { MessagesContext } from "./Routes/Messages";
+import { addToRoom } from "../API";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,6 +32,7 @@ interface TypePropsChannel {
 }
 
 interface TypeMember {
+  data: any;
   role?: string;
 }
 
@@ -77,6 +79,10 @@ interface TypeConversation {
 interface TypeChannelConversation {
   data: any;
   index: number;
+}
+
+interface TypeFriendChannel {
+  data: any;
 }
 
 export function CardFriendOnline() {
@@ -391,8 +397,6 @@ export function CardChatChannel({
   data,
 }: TypePropsChannel) {
   const stateMessages = useContext(StateMssages);
-  console.log(data);
-  
   return (
     <div className="flex flex-1 items-center gap-4">
       <button
@@ -439,12 +443,13 @@ export function CardChatChannel({
   );
 }
 
-export function CardFriendMember() {
+export function CardFriendMember({ data }: TypeFriendChannel) {
+  const messageData = useContext(MessagesContext);
   return (
     <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
         <img
-          src={pictureUser}
+          src={data.pictureURL}
           alt="Profile"
           className="w-12 h-12 rounded-full"
         />
@@ -453,7 +458,7 @@ export function CardFriendMember() {
             <span
               className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
             >
-              mouassit
+              {data.nickname}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -464,19 +469,29 @@ export function CardFriendMember() {
           </div>
         </div>
       </div>
-      <button className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center">
+      <button
+        className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center"
+        onClick={() => {
+          let obj = {
+            name: messageData.dataChatBox.name,
+            type: messageData.dataChatBox.type,
+            login: data.nickname,
+          };
+          addToRoom(obj);
+        }}
+      >
         <PlusIcon edit="fill-secondaryText w-3 h-3" />
       </button>
     </div>
   );
 }
 
-export function CardMember({ role }: TypeMember) {
+export function CardMember({ data, role }: TypeMember) {
   return (
     <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
         <img
-          src={pictureUser}
+          src={data.pictureLink}
           alt="Profile"
           className="w-12 h-12 rounded-full"
         />
@@ -485,19 +500,21 @@ export function CardMember({ role }: TypeMember) {
             <span
               className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
             >
-              mouassit
+              {data.username}
             </span>
-            <span
-              className={`w-16 rounded-sm ${
-                role === "owner"
-                  ? "bg-ownerBg text-ownerText"
-                  : role === "admin"
-                  ? "bg-adminBg text-adminText"
-                  : ""
-              } flex justify-center items-center text-xs capitalize`}
-            >
-              {role}
-            </span>
+            {role !== "member" ? (
+              <span
+                className={`w-16 rounded-sm ${
+                  role === "owner"
+                    ? "bg-ownerBg text-ownerText"
+                    : role === "admin"
+                    ? "bg-adminBg text-adminText"
+                    : ""
+                } flex justify-center items-center text-xs capitalize`}
+              >
+                {role}
+              </span>
+            ) : null}
           </div>
           <div className="flex items-center gap-1.5">
             <span className={`w-2 h-2 rounded-full bg-online`}></span>

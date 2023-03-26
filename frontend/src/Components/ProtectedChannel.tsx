@@ -37,16 +37,34 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
           className="w-80 lg:w-32 rounded-md bg-primary p-2.5 text-sm text-primaryText"
           onClick={(e) => {
             e.preventDefault();
-            let errorMessage = checkChannelName(channelName);
-            let errorPassword = checkPasswordChannel(password);
+            let data = {
+              name: channelName,
+              type: "protected",
+              password: password,
+            };
 
-            if (errorMessage.length || errorPassword.length) {
-              if (errorMessage.length) setErrorMessage(errorMessage);
-              if (errorPassword.length) setErrorPassowrd(errorPassword);
-              return;
+            let error = false;
+
+            if (!channelName.trim().length) {
+              setErrorMessage("Zone text empty");
+              error = true;
             }
-            setCreateChannel(false);
-            document.body.style.overflow = "auto";
+
+            if (!password.trim().length) {
+              error = true;
+              setErrorPassowrd("Zone text empty");
+            }
+
+            if (error) return;
+
+            checkChannelName((res: any) => {
+              if (res === "error") {
+                setErrorMessage("Name already exists");
+              } else {
+                setCreateChannel(false);
+                document.body.style.overflow = "auto";
+              }
+            }, data);
           }}
         >
           Create

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { getAllChannels, getChannelsDm } from "../API";
 import { CardChannelConversation } from "./Cards";
 import { PlusIcon, SearchIcon } from "./Icons";
-import {MessagesContext} from "./Routes/Messages"
+import { MessagesContext } from "./Routes/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,11 +30,19 @@ export default function Channels({ setCreateChannel }: TypeProps) {
           <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
         </button>
       </div>
-      <div className="flex h-full relative flex-col overflow-auto">
-        {messageData.channelDm.map((e: any, index: number) => {
-          return <CardChannelConversation data={e} key={index} index={index} />;
-        })}
-      </div>
+      {messageData.channelDm.length ? (
+        <div className="flex h-full relative flex-col overflow-auto">
+          {messageData.channelDm.map((e: any, index: number) => {
+            return (
+              <CardChannelConversation data={e} key={index} index={index} />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="h-full flex pb-[7.3rem] justify-center items-center text-primaryText text-sm">
+          No channels.
+        </div>
+      )}
     </div>
   );
 }

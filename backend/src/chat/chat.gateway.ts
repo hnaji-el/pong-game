@@ -9,13 +9,13 @@ import {
  } from '@nestjs/websockets';
  import { Socket, Server } from 'socket.io';
  import { PrismaService } from "src/prisma/prisma.service";
- import { ChatService } from "./chat.service";
+ import { ChatService } from "./chat.service"; 
  import * as moment from 'moment';
  import * as cookie from 'cookie';
 
- @WebSocketGateway({
+@WebSocketGateway(1337,{
    cors: {
-     origin: "http://"+process.env.DOMAIN+":3001",
+     origin: "http://localhost:3001",
      credentials: true,
      allowedHeaders : ["Cookie"]
    },
@@ -27,9 +27,11 @@ import {
   id : number = 0;
 
   @SubscribeMessage('msgServer')
- async handleMessage(@MessageBody() Body, @ConnectedSocket() client: any) {
+  async handleMessage(@MessageBody() Body, @ConnectedSocket() client: any) {
   const user1 = client.user;
-  this.id += 1;
+    this.id += 1;
+  console.log("msgServer, Body => ", Body);
+  
   let roomName = `<${client.user.nickname }_${this.id}>`
     if (Body.type.toString() == 'DM')
     {
@@ -51,7 +53,9 @@ import {
         }
       })
       if (room)
-      {
+      {        
+        console.log("room -----");
+        
         await this.prisma.messages.create({
           data: {
               roomName: (user_freind.nickname + user1.nickname),
@@ -70,6 +74,8 @@ import {
       }
       else
       {
+        console.log("else condition");
+
         const room_freind = await this.prisma.room.findUnique({
           where: {
             name: (user1.nickname + user_freind.nickname)
@@ -77,6 +83,8 @@ import {
         })
         if (room_freind)
         {
+          console.log("i was here room_friend");
+          
           const msg = await this.prisma.messages.create({
             data: {
                 roomName: (user1.nickname + user_freind.nickname),
@@ -178,21 +186,24 @@ import {
   }
 }
  
- async  handleConnection(@ConnectedSocket() client: any) {
-  const cookies :{ [key: string]: string } = cookie.parse(client.handshake.headers.cookie || "");
-  if (!cookies['jwt'])
-  {
-    client.emit('error', 'unauthorized');
-    return;
-  }
-  const jwttoken : string= cookies['jwt'];
-  if(!jwttoken)
-  {
+   async handleConnection(@ConnectedSocket() client: any) {
+   console.log("client connected to chat ", client.id);
+   
+   const cookies :{ [key: string]: string } = cookie.parse(client.handshake.headers.cookie || "");
+   if (!cookies['jwt'])
+   {
+     client.emit('error', 'unauthorized');
+     return;
+    }
+    const jwttoken : string= cookies['jwt'];
+    if(!jwttoken)
+    {
     client.emit('error', 'unauthorized');
     return;
   }
   try {
     const user = await this.roomservice.getUserFromAuthenticationToken(jwttoken);
+    console.log("chat gateway => ",user.nickname);
     if (!user)
     {
       return;

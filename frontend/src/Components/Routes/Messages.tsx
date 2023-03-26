@@ -2,14 +2,10 @@ import React, { useEffect, createContext, useState } from "react";
 import NavigationChat from "../Navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
-import {
-  dataChannel,
-  getAllChannels,
-  getDataUserLogged,
-  getDmUsers,
-} from "../../API";
+import { getAllChannels, getDataUserLogged, getDmUsers } from "../../API";
 import { dataChat } from "../../API";
 import Spinner from "../Spinner";
+import { io } from "socket.io-client";
 
 interface TypeData {
   id: string;
@@ -38,7 +34,10 @@ export const StateMssages = createContext<TypeContext>({
 });
 export const Click = createContext<boolean>(false);
 export const MessagesContext = createContext<any>({});
-
+const socket = io("http://localhost:1337", {
+  //autoConnect : false,
+  withCredentials: true,
+});
 export default function Messages() {
   const [click, setClick] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
@@ -49,12 +48,31 @@ export default function Messages() {
   const [indexChannel, setIndexChannel] = useState<number>(0);
   const [dataChatBox, setDataChatBox] = useState<any>([]);
   const [typeDm, setTypeDm] = useState<string>("chat");
+  const [message, setMessage] = useState<string>("");
 
   const [settings, setSettings] = useState<TypeData>({
     id: "",
     pictureURL: "",
     nickname: "",
   });
+
+  const dataChat = {
+    type: "DM",
+    data: message,
+    name: dataChatBox?.username,
+  };
+
+  const dataChannel = {
+    type: "RM",
+    data: message,
+    name: dataChatBox?.name,
+  };
+
+  const sendMessage = () => {
+    typeDm === "chat"
+      ? socket.emit("msgServer", dataChat)
+      : socket.emit("msgServer", dataChannel);
+  };
 
   useEffect(() => {
     getAllChannels((res: any) => {
@@ -66,6 +84,17 @@ export default function Messages() {
   }, []);
 
   useEffect(() => {
+    if (!socket.connected) socket.connect();
+    socket.on("msgFromServer", (data) => {
+      console.log(data);
+      setDataChatBox(data);
+    });
+    return () => {
+      socket.off("msgToClients");
+    };
+  }, []);
+
+  useEffect(() => {
     document.title = "Pong - Messages";
     getDataUserLogged((res: TypeData) => {
       setSettings(res);
@@ -73,7 +102,7 @@ export default function Messages() {
     setDataChatBox(dataDm[indexDm]);
   }, [dataDm]);
 
-  if (settings.nickname.length && dataDm.length && dataChannel.length)
+  if (settings.nickname.length && dataDm.length && dataDm.length)
     return (
       <StateMssages.Provider
         value={{
@@ -112,18 +141,24 @@ export default function Messages() {
             <ChatBox data={dataChatBox?.conversation} />
           </main>
           <div className="absolute w-full bottom-[0.9rem] px-3 lg:pl-64 lg:pr-4">
-            <form
-              action="#"
-              className="flex items-center rounded-md bg-shape pr-2"
-            >
+            <form className="flex items-center rounded-md bg-shape pr-2">
               <input
                 type="text"
                 placeholder="Type a message"
+                value={message}
                 className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
+                onChange={(e) => {
+                  setMessage(e.currentTarget.value);
+                }}
               />
               <button
                 type="submit"
                 className="flex h-8 w-8 items-center justify-center rounded-md bg-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMessage("");
+                  sendMessage();
+                }}
               >
                 <SendIcon edit="w-4 fill-white" />
               </button>

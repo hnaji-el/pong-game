@@ -6,6 +6,7 @@ import {
   AddFiriendSearchIcon,
   ArrowLeftIcon,
   GroupIcon,
+  LockIcon,
   PlusIcon,
   PointsIcon,
   SettingsIcon,
@@ -317,6 +318,8 @@ export function CardChannelConversation({
 }: TypeChannelConversation) {
   const stateMessages = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
+  console.log(data);
+
   return (
     <div
       className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
@@ -354,39 +357,43 @@ export function CardChannelConversation({
           </div>
         ) : null}
       </Link>
-      <span className="flex justify-center items-center">
-        <Menu>
-          <MenuButton className="p-0 flex items-center justify-center rounded-full group">
-            <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-          </MenuButton>
-          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            {data.role === "owner" ? (
+      {data.role.length ? (
+        <span className="flex justify-center items-center">
+          <Menu>
+            <MenuButton className="p-0 flex items-center justify-center rounded-full group">
+              <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+            </MenuButton>
+            <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+              {data.role === "owner" ? (
+                <MenuItem
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  onClick={async () => {
+                    await deleteRoom(data.name);
+                    getAllChannels((res: any) => {
+                      messageData.setChannelDm(res);
+                    });
+                  }}
+                >
+                  delete
+                </MenuItem>
+              ) : null}
               <MenuItem
                 className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
                 onClick={async () => {
-                  await deleteRoom(data.name);
+                  await leaveRoom(data.name);
                   getAllChannels((res: any) => {
                     messageData.setChannelDm(res);
                   });
                 }}
               >
-                delete
+                leave
               </MenuItem>
-            ) : null}
-            <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={async () => {
-                await leaveRoom(data.name);
-                getAllChannels((res: any) => {
-                  messageData.setChannelDm(res);
-                });
-              }}
-            >
-              leave
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </span>
+            </MenuList>
+          </Menu>
+        </span>
+      ) : data.type === "protected" ? (
+        <LockIcon edit="w-4 h-4 fill-secondaryText" />
+      ) : null}
     </div>
   );
 }

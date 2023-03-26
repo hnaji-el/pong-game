@@ -26,12 +26,12 @@ export class ChatService {
   ) {}
 
    async getUserFromAuthenticationToken(token: string) {
-    if (token) {
+     if (token) {       
       const payload = await this.jwt.verify(token, {
-          secret: this.config.get(jwtConstants.secret),
-      })
-
-      if (payload.login) {
+        secret: jwtConstants.secret,
+      })      
+      if (payload.nickname) {
+        
           const user =  await this.prisma.user.findUnique({
               where: {
                   nickname: payload.nickname

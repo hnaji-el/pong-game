@@ -12,16 +12,44 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 //import { usersObject } from '../../users/utils/usersObject';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { jwtConstants } from '../auth/constants';
 import * as moment from 'moment';
 // import { User, Room } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
+
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
   ) {}
+
+   async getUserFromAuthenticationToken(token: string) {
+    if (token) {
+      const payload = await this.jwt.verify(token, {
+          secret: this.config.get(jwtConstants.secret),
+      })
+
+      if (payload.login) {
+          const user =  await this.prisma.user.findUnique({
+              where: {
+                  nickname: payload.nickname
+              },
+              select: {
+                  id: true,
+                  nickname: true,
+                  pictureURL: true,
+                  status: true
+              }
+          });
+          if (!user)
+            return ;
+          return user;
+      }
+
+    }
+}
 
   async CreateRoom(userlogin: string, name: string, type: string) {
     const rooms = await this.prisma.room.findUnique({

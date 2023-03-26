@@ -5,6 +5,7 @@ import { getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
 
+
 interface TypeData {
   id: string;
   pictureURL: string;

@@ -18,7 +18,8 @@ export default function AddMember() {
       setFriend(res);
       setRender(true);
     }, messageData.dataChatBox.name);
-  }, [friend]);
+  }, []);
+  
   if (render) {
     if (friend.length) {
       return (

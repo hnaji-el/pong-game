@@ -17,7 +17,7 @@ export default function Members() {
       setMembers(res);
       setRender(true);
     }, messageData.dataChatBox.name);
-  }, [members]);
+  }, []);
   if (render) {
     if (members.length)
       return (

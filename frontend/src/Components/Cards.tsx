@@ -364,9 +364,8 @@ export function CardChannelConversation({
               <MenuItem
                 className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
                 onClick={async () => {
-                 await deleteRoom(data.name);
+                  await deleteRoom(data.name);
                   getAllChannels((res: any) => {
-                    console.log("data channel:", res);
                     messageData.setChannelDm(res);
                   });
                 }}
@@ -376,10 +375,10 @@ export function CardChannelConversation({
             ) : null}
             <MenuItem
               className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={() => {
+              onClick={async () => {
+                await leaveRoom(data.name);
                 getAllChannels((res: any) => {
                   messageData.setChannelDm(res);
-                  leaveRoom(data.name);
                 });
               }}
             >
@@ -433,7 +432,6 @@ export function CardChatChannel({
   setMembers,
   data,
 }: TypePropsChannel) {
-  
   const stateMessages = useContext(StateMssages);
   return (
     <div className="flex flex-1 items-center gap-4">
@@ -526,6 +524,7 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
 export function CardMember({ data, role }: TypeMember) {
   const messageData = useContext(MessagesContext);
   const memberData = useContext(MembersContext);
+
   return (
     <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
@@ -577,7 +576,7 @@ export function CardMember({ data, role }: TypeMember) {
             </MenuItem>
             <MenuItem
               className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
-              onClick={async() => {
+              onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
                   login: data.username,

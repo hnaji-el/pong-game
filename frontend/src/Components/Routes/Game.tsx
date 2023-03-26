@@ -5,7 +5,8 @@ import Navigation from "../Navigation/Navigation";
 import { GameState } from ".../../../shared/types";
 import { io, Socket } from "socket.io-client";
 import { getDataUserLogged } from "../../API";
-
+import { globalSocket } from "../../socket";
+import { popOutFunc } from "./eventListener";
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
@@ -34,25 +35,118 @@ export default function Game() {
     pictureURL: "",
     nickname: "",
   });
-
+  // let cookie = Object.fromEntries(
+  // document.cookie.split("; ").map((c) => c.split("="))
+  // get cookie using document.cookie to get the auth token
+  let cookies = Object.fromEntries(
+    document.cookie.split("; ").map((c) => {
+      const [key, ...v] = c.split("=");
+      return [key, v.join("=")];
+    })
+  );
+  // cookies["auth-token"] = cookies["auth-token"].replace(/"/g, "");
   const loc = useLocation();
   // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
-  let socket: Socket;
+  const privateQueue = loc.state ? loc.state.privateQueue : undefined;
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
 
+  console.log("dataUser: ", dataUser);
+  const socketRef = useRef<Socket | null>(null);
   useEffect(() => {
+    const socket = io("http://localhost:3000", {
+      withCredentials: true,
+      auth: {
+        token: cookies["jwt"],
+      },
+    });
+    socketRef.current = socket;
     getDataUserLogged((res: TypeData) => {
       setDataUser(res);
     });
-    socket = io("http://192.168.1.2:3000");
+    // globalSocket.off(
+    //   "invitePlayer",
+    //   (payload: {
+    //     sender: { id: string; nickname: string; pictureURL: string };
+    //     senderSocketId: string;
+    //   }) => {
+    //     console.log(
+    //       payload.sender.nickname,
+    //       "invited you to play a game. Do you accept?",
+    //       payload.senderSocketId
+    //     );
+
+    //     // Create pop-up container
+    //     const popupContainer = document.createElement("div");
+    //     popupContainer.classList.add("popup-container");
+    //     document.body.appendChild(popupContainer);
+
+    //     // Create pop-up dialog
+    //     const popupDialog = document.createElement("div");
+    //     popupDialog.classList.add("popup-dialog");
+    //     popupDialog.innerHTML = `
+    //   <p>${payload.sender.nickname} invited you to play a game. Do you accept?</p>
+    //   <button class="accept-button">Accept</button>
+    //   <button class="decline-button">Decline</button>`;
+    //     popupContainer.appendChild(popupDialog);
+
+    //     // Add click event listener for accept button
+    //     const acceptButton = popupDialog.querySelector(
+    //       ".accept-button"
+    //     ) as HTMLButtonElement;
+    //     acceptButton.addEventListener("click", () => {
+    //       console.log("Accept button clicked");
+    //       globalSocket.emit("inviteAccepted", {
+    //         senderSocketId: payload.senderSocketId,
+    //       });
+    //       popupContainer.removeChild(popupDialog);
+    //       document.body.removeChild(popupContainer);
+    //       // popupContainer.removeChild(popupDialog);
+    //       // Redirect to the AcceptInvite event
+    //       // ...
+    //       // Emit redirect
+    //       // ...
+    //     });
+
+    //     // Add click event listener for decline button
+    //     const declineButton = popupDialog.querySelector(
+    //       ".decline-button"
+    //     ) as HTMLButtonElement;
+    //     declineButton.addEventListener("click", () => {
+    //       console.log("Decline button clicked");
+    //       // Remove pop-up dialog
+    //       popupContainer.removeChild(popupDialog);
+    //       document.body.removeChild(popupContainer);
+    //       // Remove pop-up container
+    //     });
+    //   }
+    // );
+
     if (roomId) {
       gameLogic(roomId, undefined, -1, "undefined", () => {
         navigate("/");
       });
       socket.emit("watchGame", roomId);
       console.log("joining game");
+    } else if (privateQueue) {
+      console.log("GAME SOCKET", socket);
+
+      socket.emit("queuing", "private");
+      socket.on("setPlayerId", (Id: number) => {
+        playerIdRef.current = Id;
+
+        // emit to link playerId to
+        socket.emit("linkIdToUser", Id, dataUser);
+      });
+      socket.on(
+        "launchGame",
+        (roomId: string, gameState: GameState, mode: string) => {
+          gameLogic(roomId, gameState, playerIdRef.current, mode, () => {
+            navigate("/");
+          });
+        }
+      );
     } else {
       const button = document.getElementById("easy") as HTMLButtonElement;
       button?.addEventListener("click", () => {
@@ -65,6 +159,9 @@ export default function Game() {
 
       socket.on("setPlayerId", (Id: number) => {
         playerIdRef.current = Id;
+
+        // emit to link playerId to
+        socket.emit("linkIdToUser", Id, dataUser);
       });
       socket.on(
         "launchGame",
@@ -164,9 +261,15 @@ export default function Game() {
           });
         }
       });
+      // globalSocket.off("invitePlayer");
     }
+    globalSocket.on('invitePlayer', popOutFunc);
     return () => {
       socket.disconnect();
+      // has listener
+
+      globalSocket.off('invitePlayer', popOutFunc);
+        
     };
   }, []);
 
@@ -195,10 +298,12 @@ export default function Game() {
     ctx.fill();
     ctx.font = "50px serif";
     ctx.fillText(
-      "Player 1: " +
+      state.players[0].user.nickname +
+        " " +
         state.players[0].score +
         " - " +
-        "Player 2: " +
+        state.players[1].user.nickname +
+        " " +
         state.players[1].score,
       400,
       100

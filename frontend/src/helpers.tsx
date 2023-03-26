@@ -1,9 +1,10 @@
 interface TypeData {
-  id: number;
-  username: string;
-  picture: string;
-  friend: boolean;
+  id: string;
+  nickname: string;
+  pictureURL: string;
+  isFriendToLoggedUser: boolean;
 }
+
 
 export function getIndexElement(
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -65,7 +66,7 @@ export function filterByName(data: TypeData[], value: string): TypeData[] {
   let newData: TypeData[];
 
   newData = data.filter((e: TypeData) => {
-    if (e.username.toLowerCase().indexOf(value.toLowerCase()) !== -1) return e;
+    if (e.nickname.toLowerCase().indexOf(value.toLowerCase()) !== -1) return e;
     return false;
   });
   return newData;

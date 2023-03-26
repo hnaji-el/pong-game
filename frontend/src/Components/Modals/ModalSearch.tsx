@@ -56,7 +56,7 @@ export default function ModalSearch({ children, setOpenSearch }: TypeProps) {
 
   return (
     <div
-      className="fixed left-0 top-0 flex justify-center px-3 pt-7 lg:items-start bg-black/30 w-full h-screen backdrop-blur-sm lg:hidden"
+      className="fixed left-0 top-0 flex justify-center px-3 pt-7 lg:items-start bg-black/30 w-full h-screen backdrop-blur-sm lg:hidden z-[1]"
       ref={modalSearch}
     >
       {children}

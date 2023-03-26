@@ -5,13 +5,36 @@ import { GameState, Player, Ball } from 'shared/types';
 import { log } from 'console';
 // import { SocketGateway } from '../socket/socket.gateway';
 
+interface TypeData {
+  id: string;
+  pictureURL: string;
+  nickname: string;
+}
+interface UserToSocket {
+  socket: Socket;
+  user: {
+    id: string;
+    nickname: string;
+  };
+}
 @Injectable()
 export class GameService {
   private easyModeQueue: Socket[] = [];
   private hardModeQueue: Socket[] = [];
+  private privateModeQueue: Socket[] = [];
   // array for both queues with key easy and hard
   private clientIdToRoomId: Map<string, string> = new Map();
   private roomIdToGameState: Map<string, GameState> = new Map();
+  private userToSocket: UserToSocket[] = [];
+  addUserToSocket(client: Socket, payload: TypeData): void {
+    this.userToSocket.push({
+      socket: client,
+      user: {
+        id: payload.id,
+        nickname: payload.nickname,
+      },
+    });
+  }
 
   getLiveGames(): string[] {
     //  set dummy values
@@ -29,11 +52,15 @@ export class GameService {
     }
   }
 
-  removePlayer(player: Socket, server: Server): void {
+  removePlayer(player: Socket, server: Server): string {
     if (this.easyModeQueue.includes(player)) {
       this.easyModeQueue = this.easyModeQueue.filter((p) => p.id !== player.id);
     } else if (this.hardModeQueue.includes(player)) {
       this.hardModeQueue = this.hardModeQueue.filter((p) => p.id !== player.id);
+    } else if (this.privateModeQueue.includes(player)) {
+      this.privateModeQueue = this.privateModeQueue.filter(
+        (p) => p.id !== player.id,
+      );
     } else {
       const roomId = this.clientIdToRoomId.get(player.id);
       if (roomId) {
@@ -55,11 +82,18 @@ export class GameService {
           player.leave(roomId);
 
           this.roomIdToGameState.delete(roomId);
-          // finish game
-          // server.to(roomId).emit('finishGame');
         }
       }
     }
+    const userElement = this.userToSocket.find(
+      (u) => u.socket.id === player.id,
+    );
+
+    this.userToSocket = this.userToSocket.filter(
+      (entry) => entry.socket.id !== player.id,
+    );
+
+    return userElement?.user?.id;
   }
   createPlayer(x: number): Player {
     return {
@@ -71,13 +105,37 @@ export class GameService {
       x: x,
       y: 600 / 2 - 100 / 2,
       id: '',
+      user: {
+        nickname: '',
+      },
     };
   }
   moveBall(gameState: GameState): void {
     gameState.ball.x += gameState.ball.dx;
     gameState.ball.y += gameState.ball.dy;
   }
+  checkIfUserExists(userId: string): boolean {
+    const user = this.userToSocket.find((u) => u.user.id === userId);
+    if (user) {
+      return true;
+    }
+    return false;
+  }
 
+  sendEventToUserSockets(
+    userId: string,
+    eventName: string,
+    data: any,
+    server: Server,
+  ) {
+    const userEntries = this.userToSocket.filter(
+      (entry) => entry.user.id === userId,
+    );
+    userEntries.forEach((entry) => {
+      console.log('send event to user socket', eventName, entry.socket.id);
+      server.to(entry.socket.id).emit(eventName, data);
+    });
+  }
   setGame(server: Server, gameState: GameState, mode: string): void {
     let player1: Socket;
     let player2: Socket;
@@ -85,13 +143,16 @@ export class GameService {
     if (mode === 'easy') {
       player1 = this.easyModeQueue.shift();
       player2 = this.easyModeQueue.shift();
+    } else if (mode === 'private') {
+      player1 = this.privateModeQueue.shift();
+      player2 = this.privateModeQueue.shift();
     } else {
       player1 = this.hardModeQueue.shift();
       player2 = this.hardModeQueue.shift();
     }
+    console.log('SET GAME PLAYERS', player1.id, player2.id);
     if (player1 && player2) {
       const roomId = `game-${new Date().getTime()}`;
-      console.log('roomId', roomId);
       gameState.players[0].id = player1.id;
       gameState.players[1].id = player2.id;
       this.roomIdToGameState.set(roomId, gameState);
@@ -99,13 +160,34 @@ export class GameService {
       player2.join(roomId);
       this.clientIdToRoomId.set(player1.id, roomId);
       this.clientIdToRoomId.set(player2.id, roomId);
+      const player1Nickname = this.userToSocket.find(
+        (u) => u.socket.id === player1.id,
+      );
+      const player2Nickname = this.userToSocket.find(
+        (u) => u.socket.id === player2.id,
+      );
+      if (player1Nickname) {
+        gameState.players[0].user.nickname = player1Nickname.user.nickname;
+      }
+      if (player2Nickname) {
+        gameState.players[1].user.nickname = player2Nickname.user.nickname;
+      }
       player1.emit('setPlayerId', 0);
       player2.emit('setPlayerId', 1);
       server.to(roomId).emit('launchGame', roomId, gameState, mode);
     }
   }
+  inviteAccepted(client: Socket, senderSocketId: any, server: Server) {
+    console.log('senderSocketId', senderSocketId.senderSocketId);
+    console.log('client', client.id);
+
+    server
+      .to([senderSocketId.senderSocketId, client.id])
+      .emit('navigateToGame');
+    console.log('navigateToGame event sent successfully');
+  }
   addToQueue(player: Socket, server: Server, mode: string): void {
-    // console.log('addToQueue');
+    console.log('addToQueue', player.id);
     console.log('mode', mode);
     const gameState: GameState = {
       players: [this.createPlayer(20), this.createPlayer(1200 - 20 - 20)],
@@ -119,13 +201,25 @@ export class GameService {
       },
     };
     if (mode === 'easy') this.easyModeQueue.push(player);
+    else if (mode === 'private') this.privateModeQueue.push(player);
     else this.hardModeQueue.push(player);
 
     if (this.easyModeQueue.length >= 2) {
       this.setGame(server, gameState, 'easy');
+    } else if (this.privateModeQueue.length >= 2) {
+      console.log(
+        'GAME SERVICE PRIVATEMODEQUEUE 1',
+        this.privateModeQueue[0].id,
+      );
+      console.log(
+        'GAME SERVICE PRIVATEMODEQUEUE 2',
+        this.privateModeQueue[1].id,
+      );
+      this.setGame(server, gameState, 'private');
     } else if (this.hardModeQueue.length >= 2) {
       this.setGame(server, gameState, 'hard');
     } else {
+      console.log('waiting in queue', mode);
       player.emit('waitingInQueue', mode);
     }
   }
@@ -179,6 +273,23 @@ export class GameService {
     }
   }
 
+  inviteToPlay(
+    senderSocket: Socket,
+    senderPayload: TypeData,
+    receiverId: string,
+    server: Server,
+  ) {
+
+    this.sendEventToUserSockets(
+      receiverId,
+      'invitePlayer',
+      {
+        sender: senderPayload,
+        senderSocketId: senderSocket.id,
+      },
+      server,
+    );
+  }
   checkScore(gameState: GameState, roomId: string, server: Server, timer: any) {
     if (gameState.players[0].score === 5) {
       server.to(roomId).emit('gameOver', gameState);

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { getAllChannels } from "../API";
 import { checkChannelName } from "../helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
+import { MessagesContext } from "./Routes/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,6 +12,7 @@ interface TypeProps {
 export default function PublicChannel({ setCreateChannel }: TypeProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [value, setValue] = useState<string>("");
+  const messageData = useContext(MessagesContext);
 
   return (
     <form className="flex flex-col gap-1">
@@ -44,8 +47,11 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
               if (res === "error") {
                 setErrorMessage("Name already exists");
               } else {
-                setCreateChannel(false);
-                document.body.style.overflow = "auto";
+                getAllChannels((res: any) => {
+                  messageData.setChannelDm(res);
+                  setCreateChannel(false);
+                  document.body.style.overflow = "auto";
+                });
               }
             }, data);
           }}

@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { getAllChannels } from "../API";
 import { checkChannelName, checkPasswordChannel } from "../helpers";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
+import { MessagesContext } from "./Routes/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,6 +14,8 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
   const [channelName, setChannelName] = useState<string>("");
   const [errorPassword, setErrorPassowrd] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const messageData = useContext(MessagesContext);
+
   return (
     <form className="flex flex-col gap-5 lg:gap-5">
       <div className="flex flex-col lg:flex-row items-center lg:items-start gap-5">
@@ -61,8 +65,11 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
               if (res === "error") {
                 setErrorMessage("Name already exists");
               } else {
-                setCreateChannel(false);
-                document.body.style.overflow = "auto";
+                getAllChannels((res: any) => {
+                  messageData.setChannelDm(res);
+                  setCreateChannel(false);
+                  document.body.style.overflow = "auto";
+                });
               }
             }, data);
           }}

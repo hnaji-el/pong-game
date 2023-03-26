@@ -10,6 +10,8 @@ interface TypeProps {
 
 export default function Channels({ setCreateChannel }: TypeProps) {
   const messageData = useContext(MessagesContext);
+  console.log(messageData.channelDm);
+  
   return (
     <div className="flex h-full flex-col  gap-6">
       <div className="flex items-center gap-2 mx-3 lg:mx-2">

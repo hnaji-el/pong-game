@@ -707,4 +707,13 @@ export function setKick(data:any){
   
 export function setMute(data:any){
     axios.patch("http://localhost:3000/chat/muted",{data},{withCredentials: true}).then().catch()
+}
+  
+export function leaveRoom(name:string){
+    axios.post("http://localhost:3000/chat/quite-room",{name},{withCredentials: true}).then().catch()
+  }
+  
+export function deleteRoom(name: string) {
+      console.log(name);
+    axios.delete(`http://localhost:3000/chat/delete-room/${name}`,{withCredentials: true}).then().catch()
   }

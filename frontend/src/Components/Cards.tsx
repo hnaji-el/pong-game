@@ -23,8 +23,11 @@ import { AddMemberContext } from "./Modals/AddMember";
 import { MembersContext } from "./Modals/Members";
 import {
   addToRoom,
+  deleteRoom,
+  getAllChannels,
   getFriendChannel,
   getMembersChannel,
+  leaveRoom,
   setAdmin,
   setBlock,
   setKick,
@@ -314,6 +317,7 @@ export function CardChannelConversation({
 }: TypeChannelConversation) {
   const stateMessages = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
+
   return (
     <div
       className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
@@ -352,11 +356,29 @@ export function CardChannelConversation({
             <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </MenuButton>
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-              settings
-            </MenuItem>
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-              logout
+            {data.role === "owner" ? (
+              <MenuItem
+                className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                onClick={() => {
+                  deleteRoom(data.name);
+                  getAllChannels((res: any) => {
+                    messageData.setChannelDm(res);
+                  });
+                }}
+              >
+                delete
+              </MenuItem>
+            ) : null}
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              onClick={() => {
+                getAllChannels((res: any) => {
+                  messageData.setChannelDm(res);
+                  leaveRoom(data.name);
+                });
+              }}
+            >
+              leave
             </MenuItem>
           </MenuList>
         </Menu>

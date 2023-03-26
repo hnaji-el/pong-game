@@ -2,7 +2,7 @@ import React, { useEffect, createContext, useState } from "react";
 import NavigationChat from "../Navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
-import { getAllChannels, getDataUserLogged } from "../../API";
+import { dataChannel, getAllChannels, getDataUserLogged } from "../../API";
 import { dataChat } from "../../API";
 import Spinner from "../Spinner";
 
@@ -56,6 +56,7 @@ export default function Messages() {
       setChannelDm(res);
     });
   }, []);
+  
 
   useEffect(() => {
     document.title = "Pong - Messages";

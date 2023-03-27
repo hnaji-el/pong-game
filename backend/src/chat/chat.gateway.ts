@@ -63,12 +63,12 @@ import {
               userLogin: user_freind.nickname
           }
         })
-        this.server.to(roomName).emit("msgFromServer", await this.roomservice.emit_message(user1, room));
+        this.server.to(roomName).emit("msgFromServer", await this.roomservice.emit_message(user1, room, 'chat'));
         for (let index = 0; index < this.OnlineUser.length; index++)
         {
           if (this.OnlineUser[index].user.nickname == user1.nickname)
           {
-            client.emit("msgFromServer", await this.roomservice.emit_message(user_freind, room));
+            client.emit("msgFromServer", await this.roomservice.emit_message(user_freind, room, 'chat'));
           }
         }
       }
@@ -92,12 +92,12 @@ import {
                 userLogin: user_freind.nickname
               }
           })
-          this.server.to(roomName).emit("msgFromServer", await this.roomservice.emit_message(user1, room_freind));
+          this.server.to(roomName).emit("msgFromServer", await this.roomservice.emit_message(user1, room_freind, 'chat'));
           for (let index = 0; index < this.OnlineUser.length; index++)
           {
             if (this.OnlineUser[index].user.nickname == user1.nickname)
             {
-              client.emit("msgFromServer", await this.roomservice.emit_message(user_freind, room_freind));
+              client.emit("msgFromServer", await this.roomservice.emit_message(user_freind, room_freind, 'chat'));
             }
           }
         }

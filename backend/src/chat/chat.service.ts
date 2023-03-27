@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { jwtConstants } from '../auth/constants';
 import * as moment from 'moment';
+import { type } from 'os';
 // import { User, Room } from '@prisma/client';
 
 @Injectable()
@@ -135,7 +136,7 @@ export class ChatService {
       name: userUpdate.name,
       members: userUpdate.members.length,
       latestMessage: '',
-      role: 'members',
+      role: 'member',
       type: userUpdate.type,
       conversation: [],
     };
@@ -212,7 +213,7 @@ export class ChatService {
       name: userUpdate.name,
       members: userUpdate.members.length,
       latestMessage: '',
-      role: 'members',
+      role: 'member',
       type: userUpdate.type,
       conversation: [],
       status: 'valide',
@@ -680,6 +681,7 @@ export class ChatService {
           latestMessage: '',
           picture: user.pictureURL,
           conversation: [],
+          type: "non"
         };
         if (message_user) {
           person.latestMessage =
@@ -714,6 +716,7 @@ export class ChatService {
           latestMessage: '',
           picture: friend.pictureURL,
           conversation: [],
+          type: "non"
         };
         obj.push(person);
       }
@@ -735,6 +738,7 @@ export class ChatService {
           latestMessage: '',
           picture: friend.pictureURL,
           conversation: [],
+          type: "non"
         };
         obj.push(person);
       }
@@ -784,6 +788,7 @@ export class ChatService {
           latestMessage: '',
           picture: user.pictureURL,
           conversation: [],
+          type: "non"
         };
         if (message_user) {
           person.latestMessage =
@@ -999,7 +1004,7 @@ export class ChatService {
     return "deleted";
   }
 
-  async emit_message(user: any, room: any): Promise<typeObject> {
+  async emit_message(user: any, room: any, type: string): Promise<typeObject> {
     const allmessage = await this.prisma.room.findUnique({
       where: {
         name: room.name,
@@ -1015,6 +1020,7 @@ export class ChatService {
       latestMessage: '',
       picture: user.pictureURL,
       conversation: [],
+      type: type
     };
     person.latestMessage =
       allmessage.message[allmessage.message.length - 1].data;

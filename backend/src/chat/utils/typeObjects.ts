@@ -21,6 +21,7 @@ export interface typeObject {
   latestMessage: string | undefined;
   picture: string;
   conversation: typeobject[];
+  type: string
 }
 
 export interface chanel {

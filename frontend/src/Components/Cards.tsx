@@ -28,6 +28,7 @@ import {
   getAllChannels,
   getFriendChannel,
   getMembersChannel,
+  joinRoom,
   leaveRoom,
   setAdmin,
   setBlock,
@@ -287,9 +288,6 @@ export function CardConversation({ data, index }: TypeConversation) {
                 {data.username}
               </span>
             </div>
-            <span className="text-left w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
-              {data.latestMessage}
-            </span>
           </div>
         </div>
       </Link>
@@ -318,8 +316,6 @@ export function CardChannelConversation({
 }: TypeChannelConversation) {
   const stateMessages = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
-  console.log(data);
-
   return (
     <div
       className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
@@ -332,11 +328,35 @@ export function CardChannelConversation({
         to=""
         className="flex flex-1 justify-between items-start py-4"
         onClick={() => {
-          stateMessages.setClick(true);
-          messageData.setIndexChannel(index);
-          messageData.setTypeDm("channel");
-          messageData.setIndexDm(-1);
-          messageData.setDataChatBox(messageData.channelDm[index]);
+          if (!data.role.length && data.type === "public") {
+            let obj = {
+              name: data.name,
+              type: "public",
+            };
+
+            joinRoom((res: any) => {
+              stateMessages.setClick(true);
+              messageData.setIndexChannel(index);
+              messageData.setTypeDm("channel");
+              messageData.setIndexDm(-1);
+              console.log(res);
+              
+              messageData.setDataChatBox(res);
+              getAllChannels((response: any) => {
+                messageData.setChannelDm(response);
+              });
+            }, obj);
+          } else {
+            if (!data.role.length && data.type === "protected") {
+              console.log("protected");
+            } else {
+              stateMessages.setClick(true);
+              messageData.setIndexChannel(index);
+              messageData.setTypeDm("channel");
+              messageData.setIndexDm(-1);
+              messageData.setDataChatBox(messageData.channelDm[index]);
+            }
+          }
         }}
       >
         <div className="flex items-center gap-2">
@@ -346,13 +366,10 @@ export function CardChannelConversation({
                 {data.name}
               </span>
             </div>
-            <span className="text-left w-40 overflow-hidden text-ellipsis text-xs font-light text-secondaryText">
-              {data.latestMessage}
-            </span>
           </div>
         </div>
         {data.type === "private" ? (
-          <div className="bg-primary w-12 p-.6 text-primaryText rounded-full text-center relative top-[.3rem] z-[-1] right-2 text-[.6rem] font-light capitalize">
+          <div className="bg-primary w-12 p-.6 text-primaryText rounded-full text-center relative top-[.2rem] z-[-1] right-2 text-[.6rem] font-light capitalize">
             private
           </div>
         ) : null}

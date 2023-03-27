@@ -69,25 +69,37 @@ export default function Messages() {
   };
 
   const sendMessage = () => {
-    typeDm === "chat"
-      ? socket.emit("msgServer", dataChat)
-      : socket.emit("msgServer", dataChannel);
+    if (typeDm === "chat") {
+      socket.emit("msgServer", dataChat);
+      getDmUsers((res: any) => {
+        setDataDm(res);
+      });
+    } else {
+      socket.emit("msgServer", dataChannel);
+      getAllChannels((res: any) => {
+        setChannelDm(res);
+      });
+    }
   };
 
   useEffect(() => {
     getAllChannels((res: any) => {
       setChannelDm(res);
-      getDmUsers((res: any) => {
-        setDataDm(res);
-      });
+    });
+    getDmUsers((res: any) => {
+      setDataDm(res);
+      setDataChatBox(res[indexDm]);
     });
   }, []);
 
   useEffect(() => {
     if (!socket.connected) socket.connect();
     socket.on("msgFromServer", (data) => {
-      console.log(data);
-      setDataChatBox(data);
+      if (data.members)
+        setTypeDm("channel")
+      else
+        setTypeDm("chat")
+        setDataChatBox(data);
     });
     return () => {
       socket.off("msgToClients");
@@ -99,8 +111,7 @@ export default function Messages() {
     getDataUserLogged((res: TypeData) => {
       setSettings(res);
     });
-    setDataChatBox(dataDm[indexDm]);
-  }, [dataDm]);
+  }, []);
 
   if (settings.nickname.length && dataDm.length && dataDm.length)
     return (

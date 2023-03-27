@@ -716,4 +716,10 @@ export async function leaveRoom(name:string){
   
 export async function deleteRoom(name: string) {
   await  axios.delete(`http://localhost:3000/chat/delete-room/${name}`,{withCredentials: true}).then().catch()
+}
+  
+export function joinRoom(getRes:any,data:any){
+   axios.post("http://localhost:3000/chat/join-room",{data},{withCredentials: true}).then((res)=>{
+      getRes(res.data)
+    }).catch()
   }

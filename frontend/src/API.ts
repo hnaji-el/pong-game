@@ -5,7 +5,8 @@ interface TypeDataLogged {
   id: string;
   nickname: string;
   pictureURL: string;
-  isTwoFactorAuthEnabled:boolean
+  isTwoFactorAuthEnabled: boolean
+  status: string
 }
 
 export function CheckToken() {

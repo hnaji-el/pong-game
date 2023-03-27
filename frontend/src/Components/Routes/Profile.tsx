@@ -11,7 +11,8 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
-  isTwoFactorAuthEnabled:boolean
+  isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 interface TypeContext {
@@ -22,7 +23,13 @@ interface TypeContext {
 
 export const ActiveProfile = createContext<TypeContext>({
   value: false,
-  settings: { id: "", pictureURL: "", nickname: "",isTwoFactorAuthEnabled:false },
+  settings: {
+    id: "",
+    pictureURL: "",
+    nickname: "",
+    isTwoFactorAuthEnabled: false,
+    status: "",
+  },
   updateSettings: () => {},
 });
 
@@ -33,7 +40,8 @@ export default function Profile() {
     id: "",
     pictureURL: "",
     nickname: "",
-    isTwoFactorAuthEnabled:false
+    isTwoFactorAuthEnabled: false,
+    status: "",
   });
 
   useEffect(() => {

@@ -14,7 +14,8 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
-  isTwoFactorAuthEnabled:boolean
+  isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 interface TypeContext {
@@ -30,12 +31,18 @@ interface TypeDataProfileUser {
   isFriendToLoggedUser: boolean;
   nickname: string;
   pictureURL: string;
-  status: string;
+  status:string
 }
 
 export const ActiveProfileUser = createContext<TypeContext>({
   value: false,
-  settings: { id: "", pictureURL: "", nickname: "",isTwoFactorAuthEnabled:false },
+  settings: {
+    id: "",
+    pictureURL: "",
+    nickname: "",
+    isTwoFactorAuthEnabled: false,
+    status:""
+  },
   updateSettings: () => {},
 });
 
@@ -52,7 +59,8 @@ export default function ProfileUser() {
     id: "",
     pictureURL: "",
     nickname: "",
-    isTwoFactorAuthEnabled:false
+    isTwoFactorAuthEnabled: false,
+    status: "",
   });
   const [dataUser, setDataUser] = useState<TypeDataProfileUser>({
     friendsNumber: 0,
@@ -61,7 +69,7 @@ export default function ProfileUser() {
     isFriendToLoggedUser: false,
     nickname: "",
     pictureURL: "",
-    status: "",
+    status:""
   });
   useEffect(() => {
     document.title = "Pong - Profile";

@@ -13,6 +13,7 @@ interface TypeData {
   pictureURL: string;
   nickname: string;
   isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 interface TypeContext {
@@ -28,6 +29,7 @@ export const ActiveHome = createContext<TypeContext>({
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
+    status: "offline",
   },
   updateSettings: () => {},
 });
@@ -43,6 +45,7 @@ export default function Home() {
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
+    status: "offline",
   });
 
   useEffect(() => {

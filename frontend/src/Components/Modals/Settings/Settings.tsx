@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { editNickname, editPicture, getDataUserLogged, turnOffTfa, turOnTfa } from "../../../API";
+import {
+  editNickname,
+  editPicture,
+  getDataUserLogged,
+  turnOffTfa,
+  turOnTfa,
+} from "../../../API";
 import { checkNickname } from "../../../helpers";
 import { EditAvatarIcon } from "../../Icons";
 import InputForm from "../../InputForm";
@@ -24,6 +30,7 @@ interface TypeData {
   pictureURL: string;
   nickname: string;
   isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 export default function Settings({
@@ -145,7 +152,7 @@ export default function Settings({
                 else turnOffTfa();
 
                 getDataUserLogged((res: TypeData) => {
-                  dataUserLogged.updateSettings(res)
+                  dataUserLogged.updateSettings(res);
                   setOpen(false);
                   document.body.style.overflow = "auto";
                 });

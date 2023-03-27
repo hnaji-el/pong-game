@@ -5,6 +5,7 @@ CREATE TYPE "Status" AS ENUM ('FRIENDSHIP', 'BLOCK');
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "nickname" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "pictureURL" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'offline',
     "firstTimeLogged" BOOLEAN NOT NULL DEFAULT true,
@@ -72,6 +73,9 @@ CREATE TABLE "messages" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_nickname_key" ON "User"("nickname");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Room_name_key" ON "Room"("name");

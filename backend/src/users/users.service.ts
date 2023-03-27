@@ -32,15 +32,19 @@ export class UsersService {
     });
   }
 
-  async create(_nickname: string, _pictureURL: string): Promise<any> {
+  async create(
+    _nickname: string,
+    _email: string,
+    _pictureURL: string,
+  ): Promise<any> {
     let user = await this.prisma.user.findUnique({
-      where: { nickname: _nickname },
+      where: { email: _email },
       include: { requester: true, addressee: true },
     });
 
     if (!user) {
       user = await this.prisma.user.create({
-        data: { nickname: _nickname, pictureURL: _pictureURL },
+        data: { nickname: _nickname, email: _email, pictureURL: _pictureURL },
         include: { requester: true, addressee: true },
       });
     }

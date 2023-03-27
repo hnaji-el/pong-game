@@ -12,8 +12,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(_nickname: string, _pictureURL: string): Promise<any> {
-    const user = await this.usersService.create(_nickname, _pictureURL);
+  async validateUser(
+    _nickname: string,
+    _email: string,
+    _pictureURL: string,
+  ): Promise<any> {
+    const user = await this.usersService.create(_nickname, _email, _pictureURL);
     return user;
   }
 

@@ -49,6 +49,7 @@ export default function Messages() {
   const [dataChatBox, setDataChatBox] = useState<any>([]);
   const [typeDm, setTypeDm] = useState<string>("chat");
   const [message, setMessage] = useState<string>("");
+  const [passwordProtected, setpasswordProtected] = useState<boolean>(false);
 
   const [settings, setSettings] = useState<TypeData>({
     id: "",
@@ -95,11 +96,9 @@ export default function Messages() {
   useEffect(() => {
     if (!socket.connected) socket.connect();
     socket.on("msgFromServer", (data) => {
-      if (data.members)
-        setTypeDm("channel")
-      else
-        setTypeDm("chat")
-        setDataChatBox(data);
+      if (data.members) setTypeDm("channel");
+      else setTypeDm("chat");
+      setDataChatBox(data);
     });
     return () => {
       socket.off("msgToClients");
@@ -141,6 +140,8 @@ export default function Messages() {
             setIndexChannel: setIndexChannel,
             typeDm: typeDm,
             setTypeDm: setTypeDm,
+            passwordProtected:passwordProtected,
+            setpasswordProtected: setpasswordProtected,
           }}
         >
           <NavigationChat />

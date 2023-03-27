@@ -324,8 +324,7 @@ export function CardChannelConversation({
           : null
       }`}
     >
-      <Link
-        to=""
+      <button
         className="flex flex-1 justify-between items-start py-4"
         onClick={() => {
           if (!data.role.length && data.type === "public") {
@@ -340,7 +339,7 @@ export function CardChannelConversation({
               messageData.setTypeDm("channel");
               messageData.setIndexDm(-1);
               console.log(res);
-              
+
               messageData.setDataChatBox(res);
               getAllChannels((response: any) => {
                 messageData.setChannelDm(response);
@@ -348,7 +347,7 @@ export function CardChannelConversation({
             }, obj);
           } else {
             if (!data.role.length && data.type === "protected") {
-              console.log("protected");
+              messageData.setpasswordProtected(true);
             } else {
               stateMessages.setClick(true);
               messageData.setIndexChannel(index);
@@ -373,7 +372,7 @@ export function CardChannelConversation({
             private
           </div>
         ) : null}
-      </Link>
+      </button>
       {data.role.length ? (
         <span className="flex justify-center items-center">
           <Menu>

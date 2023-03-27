@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
+import { CheckToken } from "../../API";
 import Astro from "../Astro";
 
 export default function NotFound() {
+  CheckToken();
   useEffect(() => {
     document.title = "Pong - Not Found";
   }, []);

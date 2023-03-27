@@ -4,6 +4,7 @@ import { getIndexElement } from "../helpers";
 interface Props {
   children: JSX.Element | JSX.Element[] | string;
   edit?: string;
+  onClick?: any;
 }
 
 interface TypeContext {
@@ -30,11 +31,11 @@ export function Tabs({ children, edit }: Props) {
   );
 }
 
-export function TabsList({ children,edit }: Props) {
+export function TabsList({ children, edit }: Props) {
   return <div className={`text-sm flex items-center ${edit}`}>{children}</div>;
 }
 
-export function Tab({ children }: Props) {
+export function Tab({ children, onClick }: Props) {
   const tabs = useContext(indexTab);
 
   return (
@@ -47,6 +48,9 @@ export function Tab({ children }: Props) {
       onClick={(e) => {
         let index = getIndexElement(e);
         tabs.setState(index);
+        if (onClick) {
+          onClick();
+        }
       }}
     >
       {children}

@@ -10,18 +10,19 @@ interface TypeProps {
 }
 
 interface TypeData {
-  id: number;
+  id: string;
   nickname: string;
   pictureURL: string;
   isFriendToLoggedUser: boolean;
 }
 
-export default function SearchInput({ setOpenSearch,modal }: TypeProps) {
+export default function SearchInput({ setOpenSearch, modal }: TypeProps) {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const refDropDown = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<TypeData[]>([]);
   const [dataAllUsers, setDataAllUsers] = useState<TypeData[]>([]);
   const [value, setValue] = useState<string>("");
+
   useEffect(() => {
     if (dropdown) {
       getDataUsers((res: TypeData[]) => {
@@ -29,7 +30,6 @@ export default function SearchInput({ setOpenSearch,modal }: TypeProps) {
         setData(res);
       });
     }
-
     document.addEventListener("click", (e) => {
       if (
         refDropDown.current &&
@@ -39,6 +39,7 @@ export default function SearchInput({ setOpenSearch,modal }: TypeProps) {
         setDropdown(false);
     });
   }, [dropdown]);
+
   return (
     <div
       className={`${!modal ? "hidden" : ""} lg:block flex-1 relative`}
@@ -61,7 +62,11 @@ export default function SearchInput({ setOpenSearch,modal }: TypeProps) {
         <SearchIcon edit="w-4 fill-secondaryText" />
       </div>
       {data.length && dropdown ? (
-        <SearchContainer setOpenSearch={setOpenSearch} setDropdown={setDropdown} data={data} />
+        <SearchContainer
+          setOpenSearch={setOpenSearch}
+          setDropdown={setDropdown}
+          data={data}
+        />
       ) : null}
     </div>
   );

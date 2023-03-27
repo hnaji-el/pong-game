@@ -11,7 +11,7 @@ export class ChatController {
   constructor(private chatService: ChatService) {}
 
   @UseGuards(JwtAuthGuard)
-  @UseFilters(new HttpExceptionFilter())
+  // @UseFilters(new HttpExceptionFilter())
   @Post('create-room')
   async CreateRoom(@Req() req, @Body() room) {
     try {

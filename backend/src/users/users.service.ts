@@ -1,11 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ChatService } from 'src/chat/chat.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 import { GameEntity } from './entities/game.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private chatService: ChatService) {}
 
   async setTwoFactorAuthSecret(userId: string, secret: string) {
     await this.prisma.user.update({
@@ -230,6 +231,9 @@ export class UsersService {
         type: 'FRIENDSHIP',
       },
     });
+    await this.chatService.CreateRoom(requesterUser.nickname,addresseeUser.nickname + requesterUser.nickname, "personnel");
+    await this.chatService.joinroom(addresseeUser,addresseeUser.nickname + requesterUser.nickname);
+
   }
 
   async removeFriend(requesterUser: any, addresseeUserId: string) {

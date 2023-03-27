@@ -7,38 +7,114 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from 'src/auth/constants';
+// socket
 
+interface TypeData {
+  id: string;
+  pictureURL: string;
+  nickname: string;
+}
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'http://localhost:3001',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   },
 })
 export class GameGateway implements OnGatewayConnection {
-  constructor(@Inject(GameService) private readonly gameService: GameService) {}
+  constructor(
+    @Inject(GameService) private readonly gameService: GameService,
+    private jwtService: JwtService,
+  ) {}
 
+  // verify
+  // decode
+  // getUser
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
+    const token = client.handshake.auth.token;
+    if (!token) {
+      client.disconnect();
+      return;
+    }
+
+    // console.log(client.handshake.auth.token);
+    const payload = this.jwtService.verify(token, {
+      secret: jwtConstants.secret,
+    });
+    // console.log(payload);
+    // client.nickname = payload.nickname;
+    // client.pictureURL = payload.pictureURL;
+    payload.id = payload.sub;
+
+    // check if user was not in UserToSocket array
+    // user ID
+    // req DB -> USER -> Online
+    // if user doesnt exist in USertoSocket, add to DB
+    if (!this.gameService.checkIfUserExists(payload.sub)) {
+      // this.gameService.addUserToDB(payload.sub);
+      console.log('user', payload.sub, 'is online');
+    }
+
+    // pass only {id, pictureURL, nickname}
+    this.gameService.addUserToSocket(client, {
+      id: payload.sub,
+      pictureURL: payload.pictureURL,
+      nickname: payload.nickname,
+    });
+    // check if user was already in UserToSocket array
+    // if not make status online
+
+    // client.ids = payload.id;
+    // console.log(payload);
     console.log(`Client connected: ${client.id}`);
   }
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
-    this.gameService.removePlayer(client, this.server);
+
+    const userId = this.gameService.removePlayer(client, this.server);
+
+    // if user not anymore in UserToSocket array send to DB
+    if (userId) {
+      if (!this.gameService.checkIfUserExists(userId)) {
+        console.log('user', userId, 'is offline');
+        // this.gameService.removeUserFromDB(client.id);
+      }
+    }
   }
 
+  @SubscribeMessage('inviteToPlay')
+  handleInviteToPlay(
+    client: Socket,
+    payload: { sender: TypeData; receiverId: string },
+  ): void {
+    console.log('BACKEND INVITING', payload.sender, payload.receiverId);
+    this.gameService.inviteToPlay(
+      client,
+      payload.sender,
+      payload.receiverId,
+      this.server,
+    );
+  }
   @SubscribeMessage('watchGame')
   handleWatchGame(client: Socket, roomId: string): void {
     this.gameService.watchGame(client, roomId);
   }
-  @SubscribeMessage('sendMessage')
-  handleSendMessage(client: any, message: any): void {
-    console.log('Message received:', message);
+  @SubscribeMessage('inviteAccepted')
+  handleInviteAccepted(client: Socket, senderSocketId: any): void {
+    console.log('invite accepted', senderSocketId.senderSocketId, client.id);
+    this.server
+      .to([senderSocketId.senderSocketId, client.id])
+      .emit('navigateToGame');
+    // this.gameService.inviteAccepted(client, senderSocketId, this.server);
   }
 
   @SubscribeMessage('queuing')
   handleQueuing(client: Socket, mode: string): void {
+
     this.gameService.addToQueue(client, this.server, mode);
   }
   @SubscribeMessage('startingGame')

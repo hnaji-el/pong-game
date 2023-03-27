@@ -1,19 +1,21 @@
 import React from "react";
 import { CardMember } from "./Cards";
 
-export default function MembersContainer() {
+interface TypeProps {
+  data: any;
+}
+
+export default function MembersContainer({ data }: TypeProps) {
   return (
-    <div className="flex flex-col relative max-h-[34rem] overflow-auto">
+    <div
+      className={`flex flex-col ${
+        data.length > 4 ? "relative" : ""
+      } max-h-[34rem] overflow-auto`}
+    >
       <div className="flex flex-col gap-6">
-        <CardMember role="owner" />
-        <CardMember role="admin" />
-        <CardMember  />
-        <CardMember  />
-        <CardMember  />
-        <CardMember  />
-        <CardMember  />
-        <CardMember  />
-        <CardMember  />
+        {data.map((e: any, index: number) => {
+          return <CardMember data={e} role={e.role} key={index} />;
+        })}
       </div>
     </div>
   );

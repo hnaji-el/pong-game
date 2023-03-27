@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { QrcodeValidation } from "../API";
 import { checkDisableCode } from "../helpers";
 import { KeyIcon } from "./Icons";
 import InputForm from "./InputForm";
+import { useNavigate } from "react-router-dom";
 
 export default function FormTfa() {
+  const navigate = useNavigate();
+
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [value, setValue] = useState<string>("");
   return (
@@ -29,6 +33,13 @@ export default function FormTfa() {
               setErrorMessage(errorMessage);
               return;
             }
+
+            QrcodeValidation((res: any) => {
+              if (res === "invalide") setErrorMessage("Code incorect");
+              else {
+                navigate("/Home");
+              }
+            }, value);
           }}
         >
           Confirm

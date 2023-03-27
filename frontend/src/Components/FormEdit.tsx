@@ -15,9 +15,12 @@ interface TypeProps {
 
 export default function FormEdit({ data }: TypeProps) {
   const [pictureUser, setPictureUser] = useState<string>(data.pictureURL);
+  const olpictureUser = data.pictureURL;
+  const [tmpPicture, setTmpPicture] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [value, setValue] = useState<string>(data.nickname);
-  const [sendPicture,setSendPicture] = useState<{}>({});
+  const oldvalue = data.nickname;
+  const [sendPicture, setSendPicture] = useState<{}>({});
   let navigate = useNavigate();
   return (
     <form className="flex items-center">
@@ -54,9 +57,9 @@ export default function FormEdit({ data }: TypeProps) {
                     extention === "jpg" ||
                     extention === "JPG"
                   ) {
-                    
-                    setSendPicture(e.target.files[0])
+                    setSendPicture(e.target.files[0]);
                     setPictureUser(URL.createObjectURL(e.target.files[0]));
+                    setTmpPicture(URL.createObjectURL(e.target.files[0]));
                   }
                 }
               }}
@@ -76,13 +79,19 @@ export default function FormEdit({ data }: TypeProps) {
             <button
               type="button"
               className="w-full rounded-md bg-backgroundHover p-2 text-sm text-primaryText shadow"
+              onClick={() => {
+                setSendPicture({});
+                setTmpPicture("");
+                setPictureUser(olpictureUser);
+                setValue(oldvalue);
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
               className="w-full rounded-md bg-primary p-2 text-sm text-primaryText"
-              onClick={async(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
                 let errorMessage = checkNickname(value);
 
@@ -90,9 +99,12 @@ export default function FormEdit({ data }: TypeProps) {
                   setErrorMessage(errorMessage);
                   return;
                 }
-                await editPicture(sendPicture);
-                await editNickname(value);
-                navigate("/Home")
+                if (tmpPicture.length) await editPicture(sendPicture);
+                await editNickname((res: any) => {
+                  if (res === "invalid")
+                    setErrorMessage("Username already exists");
+                  else navigate("/Home");
+                }, value);
               }}
             >
               Next

@@ -37,6 +37,7 @@ import {
   setKick,
   setMute,
 } from "../API";
+import { globalSocket } from "../socket";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -245,16 +246,26 @@ export function CardUser({ data }: TypedataFriend) {
           </span>
         </Link>
       )}
-      <Menu>
-        <MenuButton className="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover flex items-center justify-center rounded-full">
-          <PointsIcon edit="w-2 h-2 fill-secondaryText" />
-        </MenuButton>
-        <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-          <MenuItem className="flex gap-2 hover:bg-backgroundHover font-light justify-center items-center py-2 px-3">
-            Invite to play
-          </MenuItem>
-        </MenuList>
-      </Menu>
+      {data.id !== dataUser.settings.id ? (
+        <Menu>
+          <MenuButton className="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover flex items-center justify-center rounded-full">
+            <PointsIcon edit="w-2 h-2 fill-secondaryText" />
+          </MenuButton>
+          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover font-light justify-center items-center py-2 px-3"
+              onClick={() => {
+                globalSocket.emit("inviteToPlay", {
+                  sender: dataUser.settings,
+                  receiverId: data.id,
+                });
+              }}
+            >
+              Invite to play
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      ) : null}
     </div>
   );
 }
@@ -262,6 +273,7 @@ export function CardUser({ data }: TypedataFriend) {
 export function CardConversation({ data, index }: TypeConversation) {
   const stateMessages = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
+  const dataUser = useContext(StateMssages);
   return (
     <div
       className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
@@ -299,7 +311,15 @@ export function CardConversation({ data, index }: TypeConversation) {
             <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </MenuButton>
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3">
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+              onClick={() => {
+                globalSocket.emit("inviteToPlay", {
+                  sender: dataUser.settings,
+                  receiverId: data.id,
+                });
+              }}
+            >
               Invite to play
             </MenuItem>
             <MenuItem
@@ -563,6 +583,7 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
 export function CardMember({ data, role }: TypeMember) {
   const messageData = useContext(MessagesContext);
   const memberData = useContext(MembersContext);
+  const dataUser = useContext(StateMssages);
 
   return (
     <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
@@ -610,7 +631,15 @@ export function CardMember({ data, role }: TypeMember) {
         {/* Owner */}
         {messageData.dataChatBox.role === "owner" ? (
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light">
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light"
+              onClick={() => {
+                globalSocket.emit("inviteToPlay", {
+                  sender: dataUser.settings,
+                  receiverId: data.id,
+                });
+              }}
+            >
               Invite to play
             </MenuItem>
             <MenuItem
@@ -679,7 +708,15 @@ export function CardMember({ data, role }: TypeMember) {
         {/* Admin */}
         {messageData.dataChatBox.role === "admin" ? (
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light">
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light"
+              onClick={() => {
+                globalSocket.emit("inviteToPlay", {
+                  sender: dataUser.settings,
+                  receiverId: data.id,
+                });
+              }}
+            >
               Invite to play
             </MenuItem>
             {role === "member" ? (
@@ -733,10 +770,18 @@ export function CardMember({ data, role }: TypeMember) {
             ) : null}
           </MenuList>
         ) : null}
-        {/* Admin */}
+        {/* Member */}
         {messageData.dataChatBox.role === "member" ? (
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light">
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light"
+              onClick={() => {
+                globalSocket.emit("inviteToPlay", {
+                  sender: dataUser.settings,
+                  receiverId: data.id,
+                });
+              }}
+            >
               Invite to play
             </MenuItem>
           </MenuList>

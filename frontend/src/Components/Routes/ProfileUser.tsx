@@ -14,6 +14,7 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
+  isTwoFactorAuthEnabled:boolean
 }
 
 interface TypeContext {
@@ -34,7 +35,7 @@ interface TypeDataProfileUser {
 
 export const ActiveProfileUser = createContext<TypeContext>({
   value: false,
-  settings: { id: "", pictureURL: "", nickname: "" },
+  settings: { id: "", pictureURL: "", nickname: "",isTwoFactorAuthEnabled:false },
   updateSettings: () => {},
 });
 
@@ -51,6 +52,7 @@ export default function ProfileUser() {
     id: "",
     pictureURL: "",
     nickname: "",
+    isTwoFactorAuthEnabled:false
   });
   const [dataUser, setDataUser] = useState<TypeDataProfileUser>({
     friendsNumber: 0,

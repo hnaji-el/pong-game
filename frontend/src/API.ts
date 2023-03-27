@@ -5,6 +5,7 @@ interface TypeDataLogged {
   id: string;
   nickname: string;
   pictureURL: string;
+  isTwoFactorAuthEnabled:boolean
 }
 
 export function CheckToken() {
@@ -361,7 +362,7 @@ export async function editPicture(file: any) {
     .catch();
 }
 
-export async function editNickname(nickname: string) {
+export async function editNickname(getRes:any,nickname: string) {
   let obj = {
     nickname: nickname,
   };
@@ -369,8 +370,12 @@ export async function editNickname(nickname: string) {
     .patch("http://localhost:3000/users/update_nickname", obj, {
       withCredentials: true,
     })
-    .then()
-    .catch();
+    .then(() => {
+      getRes("valid");
+    })
+    .catch(() => {
+      getRes("invalid");
+    });
 }
 
 export async function generateQrCode(getRes: any) {

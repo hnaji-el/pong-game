@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import fire from "../../assets/fire.png";
-import { CheckToken,  getDataUserLogged } from "../../API";
+import { CheckToken, getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
 import { Link, useNavigate } from "react-router-dom";
 // import { io } from "socket.io-client";
@@ -12,6 +12,7 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
+  isTwoFactorAuthEnabled: boolean;
 }
 
 interface TypeContext {
@@ -22,7 +23,12 @@ interface TypeContext {
 
 export const ActiveHome = createContext<TypeContext>({
   value: false,
-  settings: { id: "", pictureURL: "", nickname: "" },
+  settings: {
+    id: "",
+    pictureURL: "",
+    nickname: "",
+    isTwoFactorAuthEnabled: false,
+  },
   updateSettings: () => {},
 });
 
@@ -36,12 +42,10 @@ export default function Home() {
     id: "",
     pictureURL: "",
     nickname: "",
+    isTwoFactorAuthEnabled: false,
   });
 
-    
-
   useEffect(() => {
-
     // receiver
     // ...
 
@@ -67,12 +71,12 @@ export default function Home() {
     //         "invited you to play a game. Do you accept?",
     //         payload.senderSocketId
     //       );
-      
+
     //       // Create pop-up container
     //       const popupContainer = document.createElement("div");
     //       popupContainer.classList.add("popup-container");
     //       document.body.appendChild(popupContainer);
-      
+
     //       // Create pop-up dialog
     //       const popupDialog = document.createElement("div");
     //       popupDialog.classList.add("popup-dialog");
@@ -81,7 +85,7 @@ export default function Home() {
     //         <button class="accept-button">Accept</button>
     //         <button class="decline-button">Decline</button>`;
     //       popupContainer.appendChild(popupDialog);
-      
+
     //       // Add click event listener for accept button
     //       const acceptButton = popupDialog.querySelector(
     //         ".accept-button"
@@ -98,7 +102,7 @@ export default function Home() {
     //         // Emit redirect
     //         // ...
     //       });
-      
+
     //       // Add click event listener for decline button
     //       const declineButton = popupDialog.querySelector(
     //         ".decline-button"
@@ -113,13 +117,10 @@ export default function Home() {
     //     }
     //   );
     // }
-    
 
     // Add CSS for pop-up dialog
 
-
     // Add style element to head
-
 
     document.title = "Pong - Home";
     fetch("http://localhost:3000/game/liveGames")
@@ -143,17 +144,15 @@ export default function Home() {
               <span>Live Games</span>
               <img src={fire} alt="fire" className="w-4" />
             </h1>
-            {ArrayofPlayersAndroomId.map(
-                (element: any) => (
-                  <div key={element.players}>
-                    <Link to="/Game" state={{ roomId: element.roomId }}>
-                      <button className="bg-primary hover:bg-primaryHover text-white font-bold py-2 px-4 rounded">
-                        {element.players}
-                      </button>
-                    </Link>
-                  </div>
-                )
-              )}
+            {ArrayofPlayersAndroomId.map((element: any) => (
+              <div key={element.players}>
+                <Link to="/Game" state={{ roomId: element.roomId }}>
+                  <button className="bg-primary hover:bg-primaryHover text-white font-bold py-2 px-4 rounded">
+                    {element.players}
+                  </button>
+                </Link>
+              </div>
+            ))}
           </div>
         </main>
       </ActiveHome.Provider>

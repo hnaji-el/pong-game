@@ -10,6 +10,7 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
+  isTwoFactorAuthEnabled:boolean
 }
 
 interface TypeContext {
@@ -18,7 +19,7 @@ interface TypeContext {
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   firstClick: boolean;
   setFirstClick: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: TypeData;
+  settings: any;
   updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
 }
 
@@ -55,6 +56,7 @@ export default function Messages() {
     id: "",
     pictureURL: "",
     nickname: "",
+    isTwoFactorAuthEnabled:false
   });
 
   const dataChat = {

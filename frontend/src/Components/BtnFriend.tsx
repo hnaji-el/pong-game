@@ -1,6 +1,7 @@
-import React from "react";
-import { blockFriend, unfriend } from "../API";
+import React, { useContext } from "react";
+import { blockFriend, getOneUser, unfriend } from "../API";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
+import { UpdateDataProfileUser } from "./Routes/ProfileUser";
 
 interface TypeProps {
   id: string;
@@ -8,15 +9,19 @@ interface TypeProps {
 }
 
 export default function BtnFriend({ id, setTypeUser }: TypeProps) {
+  const update = useContext(UpdateDataProfileUser);
   return (
     <Dropdown>
       <DropdownBtn type="button" title="Friends" arrow={true} />
       <DropdownList edit="top-12 w-full">
         <DropdownItem
           edit="items-center py-2 px-3 capitalize"
-          onClick={() => {
+          onClick={async () => {
             setTypeUser("notFriend");
-            unfriend(id);
+            await unfriend(id);
+            getOneUser((res: any) => {
+              update.setDataUser(res);
+            }, id);
           }}
         >
           <span className="font-light">unfriend</span>
@@ -26,9 +31,12 @@ export default function BtnFriend({ id, setTypeUser }: TypeProps) {
         </DropdownItem>
         <DropdownItem
           edit="items-center py-2 px-3 capitalize"
-          onClick={() => {
+          onClick={async () => {
             setTypeUser("blocked");
-            blockFriend(id);
+            await blockFriend(id);
+            getOneUser((res: any) => {
+              update.setDataUser(res);
+            }, id);
           }}
         >
           <span className="font-light">Block</span>

@@ -563,8 +563,8 @@ export function getFriendsOneUser(getRes:(res:TypedataFriend[])=>void,id:string)
     .catch();
 }
 
-export function addFriend(id:string) {
-  axios
+export async function addFriend(id:string) {
+  await axios
     .post(
       `http://localhost:3000/users/add-friend/${id}`,{},
       {
@@ -578,8 +578,8 @@ export function addFriend(id:string) {
     });
 }
 
-export function unfriend(id:string) {
-  axios
+export async function unfriend(id:string) {
+  await axios
     .delete(
       `http://localhost:3000/users/remove-friend/${id}`,
       {

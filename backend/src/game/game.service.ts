@@ -292,7 +292,6 @@ export class GameService {
     receiverId: string,
     server: Server,
   ) {
-
     this.sendEventToUserSockets(
       receiverId,
       'invitePlayer',
@@ -351,21 +350,22 @@ export class GameService {
 
     if (gameState) {
       if (arrow === 'up')
-      if (gameState.players[playerId].y - gameState.players[playerId].dy < 0)
-        gameState.players[playerId].y = 0;
-      else gameState.players[playerId].y -= gameState.players[playerId].dy;
-    // if the move is going to surpass the top of the screen get it to the top
-    else {
-      // if the move is going to surpass the bottom of the screen get it to the bottom
-      if (
-        gameState.players[playerId].y + gameState.players[playerId].dy >
-        600 - gameState.players[playerId].h
-      ) {
-        gameState.players[playerId].y = 600 - gameState.players[playerId].h;
-      }
-      // else move the player
+        if (gameState.players[playerId].y - gameState.players[playerId].dy < 0)
+          gameState.players[playerId].y = 0;
+        else gameState.players[playerId].y -= gameState.players[playerId].dy;
+      // if the move is going to surpass the top of the screen get it to the top
       else {
-        gameState.players[playerId].y += gameState.players[playerId].dy;
+        // if the move is going to surpass the bottom of the screen get it to the bottom
+        if (
+          gameState.players[playerId].y + gameState.players[playerId].dy >
+          600 - gameState.players[playerId].h
+        ) {
+          gameState.players[playerId].y = 600 - gameState.players[playerId].h;
+        }
+        // else move the player
+        else {
+          gameState.players[playerId].y += gameState.players[playerId].dy;
+        }
       }
     }
   }

@@ -8,10 +8,8 @@ import {
 } from "../PongElements";
 import logo from "../../assets/logo.svg";
 import FormTfa from "../FormTfa";
-import { CheckToken } from "../../API";
 
 export default function Tfa() {
-  CheckToken();
   useEffect(() => {
     document.title = "Pong - Tfa";
   }, []);

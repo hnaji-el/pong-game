@@ -363,10 +363,59 @@ export async function editPicture(file: any) {
 
 export async function editNickname(nickname: string) {
   let obj = {
-    nickname:nickname
-  }
+    nickname: nickname,
+  };
   await axios
-    .patch("http://localhost:3000/users/update_nickname", obj , {
+    .patch("http://localhost:3000/users/update_nickname", obj, {
+      withCredentials: true,
+    })
+    .then()
+    .catch();
+}
+
+export async function generateQrCode(getRes: any) {
+  await axios
+    .post("http://localhost:3000/2fa/generate",{}, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      getRes(res.data);
+    })
+    .catch();
+}
+
+export async function QrcodeValidation(getRes:any,code:string){
+  let obj = {
+    twoFactorAuthCode:code
+  };
+    await axios
+      .post(
+        "http://localhost:3000/2fa/verification",
+        obj,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        getRes("valide");
+      })
+      .catch(() => {
+        getRes("invalide");
+      });
+}
+
+export async function turOnTfa() {
+  await axios
+    .post("http://localhost:3000/2fa/turn-on",{}, {
+      withCredentials: true,
+    })
+    .then()
+    .catch();
+}
+
+export async function turnOffTfa() {
+  await axios
+    .post("http://localhost:3000/2fa/turn-off",{}, {
       withCredentials: true,
     })
     .then()

@@ -6,7 +6,10 @@ import { GameEntity } from './entities/game.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService, private chatService: ChatService) {}
+  constructor(
+    private prisma: PrismaService,
+    private chatService: ChatService,
+  ) {}
 
   async setTwoFactorAuthSecret(userId: string, secret: string) {
     await this.prisma.user.update({
@@ -231,9 +234,15 @@ export class UsersService {
         type: 'FRIENDSHIP',
       },
     });
-    await this.chatService.CreateRoom(requesterUser.nickname,addresseeUser.nickname + requesterUser.nickname, "personnel");
-    await this.chatService.joinroom(addresseeUser,addresseeUser.nickname + requesterUser.nickname);
-
+    await this.chatService.CreateRoom(
+      requesterUser.nickname,
+      addresseeUser.nickname + requesterUser.nickname,
+      'personnel',
+    );
+    await this.chatService.joinroom(
+      addresseeUser,
+      addresseeUser.nickname + requesterUser.nickname,
+    );
   }
 
   async removeFriend(requesterUser: any, addresseeUserId: string) {

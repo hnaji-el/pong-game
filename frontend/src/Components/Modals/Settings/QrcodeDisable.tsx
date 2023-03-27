@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { QrcodeValidation } from "../../../API";
 import { checkDisableCode } from "../../../helpers";
 import InputForm from "../../InputForm";
 
@@ -42,8 +43,15 @@ export default function QrcodeDisable({ setTfa, setEnable }: TypeProps) {
                   setErrorMessage(errorMessage);
                   return;
                 }
+                
+                QrcodeValidation((res:any)=>{
+                  if(res === "invalide")
+                    setErrorMessage("Code incorect")
+                  else{
                 setEnable(false);
                 setTfa(false);
+                  }
+                },value)
               }}
             >
               Confirm

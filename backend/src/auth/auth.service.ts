@@ -3,7 +3,7 @@ import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { authenticator } from 'otplib';
-import { toFileStream } from 'qrcode';
+import * as qrcode from 'qrcode';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +34,7 @@ export class AuthService {
     }
 
     if (req.user.isTwoFactorAuthEnabled) {
-      res.redirect('http://localhost:3001/2fa');
+      res.redirect('http://localhost:3001/tfa');
     } else if (req.user.firstTimeLogged) {
       res.redirect('http://localhost:3001/edit');
     } else {
@@ -45,15 +45,15 @@ export class AuthService {
   async generateTwoFactorAuthSecret(user: any) {
     const secret = authenticator.generateSecret();
     const otpauthURL = authenticator.keyuri(user.nickname, 'Pong-App', secret);
-    await this.usersService.setTwoFactorAuthSecret(secret, user.id);
+    await this.usersService.setTwoFactorAuthSecret(user.id, secret);
     return {
       secret: secret,
       otpauthURL: otpauthURL,
     };
   }
 
-  async pipeQrCodeStream(stream: Response, otpauthURL: string) {
-    return toFileStream(stream, otpauthURL);
+  async generateQR(otpauth: string): Promise<string> {
+    return await qrcode.toDataURL(otpauth);
   }
 
   isTwoFactorAuthCodeValid(

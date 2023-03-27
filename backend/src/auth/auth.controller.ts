@@ -43,18 +43,18 @@ export class AuthController {
   // 2FA
   @Post('2fa/generate')
   @UseGuards(JwtAuthGuard)
-  async register(@Req() req: any, @Res() res: Response) {
+  async register(@Req() req) {
     const { otpauthURL } = await this.authService.generateTwoFactorAuthSecret(
       req.user,
     );
-    return this.authService.pipeQrCodeStream(res, otpauthURL);
+    return this.authService.generateQR(otpauthURL);
   }
 
   @Post('2fa/verification')
   @UseGuards(JwtAuthGuard)
   async twoFactorAuthCodeVerification(
     @Req() req,
-    @Body('2fa/twoFactorAuthCode') twoFactorAuthCode,
+    @Body('twoFactorAuthCode') twoFactorAuthCode,
   ) {
     const isCodeValid = this.authService.isTwoFactorAuthCodeValid(
       twoFactorAuthCode,

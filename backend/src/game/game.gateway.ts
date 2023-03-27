@@ -41,47 +41,34 @@ export class GameGateway implements OnGatewayConnection {
       return;
     }
 
-    // console.log(client.handshake.auth.token);
     const payload = this.jwtService.verify(token, {
       secret: jwtConstants.secret,
     });
-    // console.log(payload);
-    // client.nickname = payload.nickname;
-    // client.pictureURL = payload.pictureURL;
     payload.id = payload.sub;
-
-    // check if user was not in UserToSocket array
-    // user ID
-    // req DB -> USER -> Online
-    // if user doesnt exist in USertoSocket, add to DB
-    if (!this.gameService.checkIfUserExists(payload.sub)) {
-      // this.gameService.addUserToDB(payload.sub);
-      console.log('user', payload.sub, 'is online');
+    console.log('payload', payload);
+    if (payload) {
+      if (!this.gameService.checkIfUserExists(payload.sub)) {
+        console.log('user', payload.id, 'is online');
+        if (payload.id !== undefined)
+          this.gameService.updateUserStatus(payload.id, 'online');
+      }
     }
-
-    // pass only {id, pictureURL, nickname}
     this.gameService.addUserToSocket(client, {
       id: payload.sub,
       pictureURL: payload.pictureURL,
       nickname: payload.nickname,
     });
-    // check if user was already in UserToSocket array
-    // if not make status online
-
-    // client.ids = payload.id;
-    // console.log(payload);
     console.log(`Client connected: ${client.id}`);
   }
+
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
 
     const userId = this.gameService.removePlayer(client, this.server);
-
-    // if user not anymore in UserToSocket array send to DB
     if (userId) {
       if (!this.gameService.checkIfUserExists(userId)) {
         console.log('user', userId, 'is offline');
-        // this.gameService.removeUserFromDB(client.id);
+        this.gameService.updateUserStatus(userId, 'offline');
       }
     }
   }

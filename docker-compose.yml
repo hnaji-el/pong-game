@@ -7,9 +7,35 @@ services:
     restart: always
     ports:
       - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     env_file: .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
-      POSTGRES_HOST_AUTH_METHOD: trust
+  backend:
+    build: ./backend/.
+    image: backend
+    container_name: backend
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+      - 5555:5555
+    env_file:
+      - .env
+    depends_on:
+      - database
+  frontend:
+    build: ./frontend/.
+    image: frontend
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    depends_on:
+      - backend
+volumes:
+  pgdata:

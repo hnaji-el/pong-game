@@ -22,20 +22,27 @@ model User {
   isTwoFactorAuthValidated Boolean        @default(false)
   requester                RelationShip[] @relation("Requester")
   addressee                RelationShip[] @relation("Addressee")
+  winGames                 Game[]         @relation("winGames")
+  loseGames                Game[]         @relation("loseGames")
 }
 
 model RelationShip {
   id          String @id @default(uuid())
   requesterId String
   addresseeId String
-  type        Status
+  type        Status // FRIENDSHIP or BLOCK
   requester   User   @relation(name: "Requester", fields: [requesterId], references: [id])
   addressee   User   @relation(name: "Addressee", fields: [addresseeId], references: [id])
 }
 
-enum Status {
-  FRIENDSHIP
-  BLOCK
+model Game {
+  gameId     String @id @default(uuid())
+  winnerId   String
+  loserId    String
+  winScore   Int
+  loseScore  Int
+  winnerUser User   @relation(name: "winGames", fields: [winnerId], references: [id])
+  loserUser  User   @relation(name: "loseGames", fields: [loserId], references: [id])
 }
 
 model Room {
@@ -69,4 +76,9 @@ model Messages {
   data      String
 
   @@map("messages")
+}
+
+enum Status {
+  FRIENDSHIP
+  BLOCK
 }

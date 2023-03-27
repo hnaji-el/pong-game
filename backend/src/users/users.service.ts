@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
+import { GameEntity } from './entities/game.entity';
 
 @Injectable()
 export class UsersService {
@@ -42,6 +43,78 @@ export class UsersService {
     return user;
   }
 
+  // Game Services
+  ////////////////////////////////////////////////////////////////
+  async updateUserStatus(userId: string, status: string) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { status: status },
+    });
+  }
+
+  async storeGame(
+    winnerId: string,
+    loserId: string,
+    winScore: number,
+    loseScore: number,
+  ) {
+    await this.prisma.game.create({
+      data: {
+        winnerId: winnerId,
+        loserId: loserId,
+        winScore: winScore,
+        loseScore: loseScore,
+      },
+    });
+  }
+  ///////////////////////////////////////////////////////////////////////
+
+  async getMatchHistory(userId: string): Promise<GameEntity[]> {
+    const entities: GameEntity[] = [];
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { winGames: true, loseGames: true },
+    });
+
+    for (const x of user.winGames) {
+      const loser = await this.prisma.user.findUnique({
+        where: { id: x.loserId },
+      });
+      entities.push({
+        id: loser.id,
+        nickname: loser.nickname,
+        pictureURL: loser.pictureURL,
+        score: `${x.loseScore}-${x.winScore}`,
+        gameState: 'WIN',
+        winsNumber: user.winGames.length,
+        losesNumber: user.loseGames.length,
+      });
+    }
+    for (const x of user.loseGames) {
+      const winner = await this.prisma.user.findUnique({
+        where: { id: x.winnerId },
+      });
+      entities.push({
+        id: winner.id,
+        nickname: winner.nickname,
+        pictureURL: winner.pictureURL,
+        score: `${x.winScore}-${x.loseScore}`,
+        gameState: 'LOSE',
+        winsNumber: user.winGames.length,
+        losesNumber: user.loseGames.length,
+      });
+    }
+    return entities;
+  }
+
+  async getAchievement(userId: any): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { winGames: true },
+    });
+    return user.winGames.length >= 4 ? true : false;
+  }
+
   async getAllUsers(loggedUser: any): Promise<UserEntity[]> {
     const entities: UserEntity[] = [];
     const users = await this.prisma.user.findMany({
@@ -81,7 +154,7 @@ export class UsersService {
       isFriendToLoggedUser: this.isFriend(loggedUser, user),
       isBlockedByLoggedUser: this.isBlocked(loggedUser, user),
       friendsNumber: this.getNumberOfFriends(user),
-      is_2FA_Enabled: false, // NOTE: ...
+      is_2FA_Enabled: user.isTwoFactorAuthEnabled,
     };
     return entity;
   }

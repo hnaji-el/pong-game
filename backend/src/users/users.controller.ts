@@ -103,4 +103,16 @@ export class UsersController {
   async unblockUser(@Req() req, @Param('id') id: string) {
     await this.usersService.unblockUser(req.user, id);
   }
+
+  @Get('users/game/match-history/:id')
+  @UseGuards(JwtAuthGuard)
+  async getMatchHistory(@Param('id') id: string) {
+    return await this.usersService.getMatchHistory(id);
+  }
+
+  @Get('users/game/achievement/:id')
+  @UseGuards(JwtAuthGuard)
+  async getAchievement(@Param('id') id: string) {
+    return await this.usersService.getAchievement(id);
+  }
 }

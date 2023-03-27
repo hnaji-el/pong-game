@@ -338,8 +338,6 @@ export function CardChannelConversation({
               messageData.setIndexChannel(index);
               messageData.setTypeDm("channel");
               messageData.setIndexDm(-1);
-              console.log(res);
-
               messageData.setDataChatBox(res);
               getAllChannels((response: any) => {
                 messageData.setChannelDm(response);
@@ -347,6 +345,7 @@ export function CardChannelConversation({
             }, obj);
           } else {
             if (!data.role.length && data.type === "protected") {
+              messageData.setIndexChannel(index);
               messageData.setpasswordProtected(true);
             } else {
               stateMessages.setClick(true);

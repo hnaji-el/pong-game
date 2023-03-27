@@ -1,15 +1,17 @@
 import React, { useContext, useState } from "react";
-import { joinRoom } from "../API";
+import { getAllChannels, joinRoom } from "../API";
 import { checkDisableCode } from "../helpers";
 import { KeyIcon } from "./Icons";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
 import { MessagesContext } from "./Routes/Messages";
+import { StateMssages } from "./Routes/Messages";
 
 export default function FormProtected() {
   const [errorPassword, setErrorPassowrd] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const messageData = useContext(MessagesContext);
+  const stateMessages = useContext(StateMssages);
 
   return (
     <form className="flex flex-col justify-center items-center gap-16">
@@ -25,17 +27,9 @@ export default function FormProtected() {
           type="submit"
           className="w-full rounded-md bg-primary p-2 text-sm text-primaryText"
           onClick={(e) => {
-            // e.preventDefault();
-            // let errorMessage = checkDisableCode(password);
-
-            // if (errorMessage.length) {
-            //   setErrorMessage(errorMessage);
-            //   return;
-            // }
-
             e.preventDefault();
             let data = {
-              name: messageData.dataChatBox.name,
+              name: messageData.channelDm[messageData.indexChannel].name,
               type: "protected",
               password: password,
             };
@@ -44,17 +38,22 @@ export default function FormProtected() {
               setErrorPassowrd("Zone text empty");
               return;
             }
-            // joinRoom((res: any) => {
-            //   if (res === "invalide") {
-            //     setErrorPassowrd("Password incorrect");
-            //     //   } else {
-            //     //     getAllChannels((res: any) => {
-            //     //       messageData.setChannelDm(res);
-            //     //       setCreateChannel(false);
-            //     //       document.body.style.overflow = "auto";
-            //     //     });
-            //   }
-            // }, data);
+            joinRoom((res: any) => {
+              if (res.status === "invalide") {
+                setErrorPassowrd("Password incorrect");
+                return;
+              } else {
+                stateMessages.setClick(true);
+                messageData.setTypeDm("channel");
+                messageData.setIndexDm(-1);
+                messageData.setDataChatBox(res);
+                getAllChannels((response: any) => {
+                  messageData.setChannelDm(response);
+                  messageData.setpasswordProtected(false);
+                  document.body.style.overflow = "auto";
+                });
+              }
+            }, data);
           }}
         >
           Confirm

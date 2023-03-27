@@ -348,3 +348,27 @@ export function joinRoom(getRes: any, data: any) {
     })
     .catch();
 }
+
+export async function editPicture(file: any) {
+  let fd: FormData = new FormData();
+  fd.append("file", file);
+
+  await axios
+    .post("http://localhost:3000/users/upload-profile-picture", fd, {
+      withCredentials: true,
+    })
+    .then()
+    .catch();
+}
+
+export async function editNickname(nickname: string) {
+  let obj = {
+    nickname:nickname
+  }
+  await axios
+    .patch("http://localhost:3000/users/update_nickname", obj , {
+      withCredentials: true,
+    })
+    .then()
+    .catch();
+}

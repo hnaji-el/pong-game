@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import fire from "../../assets/fire.png";
-import { getDataUserLogged } from "../../API";
+import { CheckToken,  getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
 import { Link, useNavigate } from "react-router-dom";
 // import { io } from "socket.io-client";
@@ -27,9 +27,11 @@ export const ActiveHome = createContext<TypeContext>({
 });
 
 export default function Home() {
+  CheckToken();
   const [ArrayofPlayersAndroomId, setArrayofPlayersAndroomId] = useState<
     string[]
   >([]);
+  // const [roomIds, setroomIds] = useState<string[]>([]);
   const [settings, setSettings] = useState<TypeData>({
     id: "",
     pictureURL: "",

@@ -1,10 +1,11 @@
+import { CreateChannel } from "./API";
+
 interface TypeData {
   id: string;
   nickname: string;
   pictureURL: string;
   isFriendToLoggedUser: boolean;
 }
-
 
 export function getIndexElement(
   e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -32,10 +33,10 @@ export function checkNickname(value: string): string {
   return "";
 }
 
-export function checkChannelName(value: string): string {
-  if (!value.trim().length) return "Zone text empty";
-
-  return "";
+export function checkChannelName(getRes: any, data: any) {
+  CreateChannel((res: any) => {
+    getRes(res);
+  }, data);
 }
 
 export function checkPasswordChannel(value: string): string {

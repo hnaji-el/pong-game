@@ -1,6 +1,7 @@
-import React from "react";
-import { addFriend } from "../API";
+import React, { useContext } from "react";
+import { addFriend, getOneUser } from "../API";
 import { AddFriendIcon } from "./Icons";
+import { UpdateDataProfileUser } from "./Routes/ProfileUser";
 
 interface TypeProps {
   id: string;
@@ -8,12 +9,17 @@ interface TypeProps {
 }
 
 export default function BtnAddFriend({ id, setTypeUser }: TypeProps) {
+  const update = useContext(UpdateDataProfileUser);
+
   return (
     <button
       className="w-36 p-2 rounded-md bg-primary gap-2 flex items-center justify-center"
-      onClick={() => {
+      onClick={async () => {
         setTypeUser("friend");
-        addFriend(id);
+        await addFriend(id);
+        getOneUser((res: any) => {
+          update.setDataUser(res);
+        }, id);
       }}
     >
       <AddFriendIcon edit="w-5 fill-primaryText" />

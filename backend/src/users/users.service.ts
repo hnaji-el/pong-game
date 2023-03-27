@@ -1,10 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ChatService } from 'src/chat/chat.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private chatService: ChatService) {}
 
   async create(_nickname: string, _pictureURL: string): Promise<any> {
     let user = await this.prisma.user.findUnique({
@@ -125,6 +126,9 @@ export class UsersService {
         type: 'FRIENDSHIP',
       },
     });
+    await this.chatService.CreateRoom(requesterUser.nickname,addresseeUser.nickname + requesterUser.nickname, "personnel");
+    await this.chatService.joinroom(addresseeUser,addresseeUser.nickname + requesterUser.nickname);
+
   }
 
   async removeFriend(requesterUser: any, addresseeUserId: string) {

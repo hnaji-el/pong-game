@@ -7,6 +7,8 @@ import { io, Socket } from "socket.io-client";
 import { getDataUserLogged } from "../../API";
 import { globalSocket } from "../../socket";
 import { popOutFunc } from "./eventListener";
+import { CheckToken } from "../../API";
+
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
@@ -30,6 +32,7 @@ export const GameContext = createContext<TypeContext>({
 });
 
 export default function Game() {
+  CheckToken();
   const [dataUser, setDataUser] = useState<TypeData>({
     id: "",
     pictureURL: "",

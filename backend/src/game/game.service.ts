@@ -38,13 +38,9 @@ export class GameService {
 
   getLiveGames(): string[] {
     //  set dummy values
-
-    // this.roomIdToGameState.set('game-1', {
-    //   players: ['a1', 'a2']} as GameState);
+    // this.roomIdToGameState.set('game-1', {} as GameState);
     // this.roomIdToGameState.set('game-2', {} as GameState);
     // this.roomIdToGameState.set('game-3', {} as GameState);
-    // get array of strings that have player1 and player2
-    // get array of object that has roomID and string of player1 and player2
     const ArrayOfStringAndroomId = [];
     this.roomIdToGameState.forEach((gameState, roomId) => {
       const player1 = gameState.players[0];
@@ -185,11 +181,9 @@ export class GameService {
       );
       if (player1Nickname) {
         gameState.players[0].user.nickname = player1Nickname.user.nickname;
-        gameState.players[0].user.id = player1Nickname.user.id;
       }
       if (player2Nickname) {
         gameState.players[1].user.nickname = player2Nickname.user.nickname;
-        gameState.players[1].user.id = player2Nickname.user.id;
       }
       player1.emit('setPlayerId', 0);
       player2.emit('setPlayerId', 1);
@@ -298,6 +292,7 @@ export class GameService {
     receiverId: string,
     server: Server,
   ) {
+
     this.sendEventToUserSockets(
       receiverId,
       'invitePlayer',
@@ -315,7 +310,6 @@ export class GameService {
       this.roomIdToGameState.delete(roomId);
       this.clientIdToRoomId.delete(gameState.players[0].id);
       this.clientIdToRoomId.delete(gameState.players[1].id);
-      // log player 1.id player 2.id score player 1 score plyer 2
       console.log(
         'game over',
         gameState.players[0].user.id,
@@ -329,18 +323,6 @@ export class GameService {
       this.roomIdToGameState.delete(roomId);
       this.clientIdToRoomId.delete(gameState.players[0].id);
       this.clientIdToRoomId.delete(gameState.players[1].id);
-      // log player 1.id player 2.id score player 1 score plyer 2
-      console.log(
-        'game over',
-        gameState.players[1].user.id,
-        gameState.players[0].user.id,
-        gameState.players[1].score,
-        gameState.players[0].score,
-
-        // f29 hmaidi
-        // c0a ayafdel
-        //
-      );
     } else {
       server.to(roomId).emit('updateGameState', gameState);
     }
@@ -369,22 +351,21 @@ export class GameService {
 
     if (gameState) {
       if (arrow === 'up')
-        if (gameState.players[playerId].y - gameState.players[playerId].dy < 0)
-          gameState.players[playerId].y = 0;
-        else gameState.players[playerId].y -= gameState.players[playerId].dy;
-      // if the move is going to surpass the top of the screen get it to the top
+      if (gameState.players[playerId].y - gameState.players[playerId].dy < 0)
+        gameState.players[playerId].y = 0;
+      else gameState.players[playerId].y -= gameState.players[playerId].dy;
+    // if the move is going to surpass the top of the screen get it to the top
+    else {
+      // if the move is going to surpass the bottom of the screen get it to the bottom
+      if (
+        gameState.players[playerId].y + gameState.players[playerId].dy >
+        600 - gameState.players[playerId].h
+      ) {
+        gameState.players[playerId].y = 600 - gameState.players[playerId].h;
+      }
+      // else move the player
       else {
-        // if the move is going to surpass the bottom of the screen get it to the bottom
-        if (
-          gameState.players[playerId].y + gameState.players[playerId].dy >
-          600 - gameState.players[playerId].h
-        ) {
-          gameState.players[playerId].y = 600 - gameState.players[playerId].h;
-        }
-        // else move the player
-        else {
-          gameState.players[playerId].y += gameState.players[playerId].dy;
-        }
+        gameState.players[playerId].y += gameState.players[playerId].dy;
       }
     }
   }

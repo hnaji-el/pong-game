@@ -27,7 +27,10 @@ export default function NavBarChat({
       {/* <CardChatFriend /> */}
       <CardChatChannel setAddMember={setAddMember} setMembers={setMembers} />
       <div className="hidden lg:flex items-center gap-5">
-      <Link to="/Game" className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3">
+        <Link
+          to="/Game"
+          className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3"
+        >
           <ControllerIcon edit="w-7" />
           <span>Play now</span>
         </Link>

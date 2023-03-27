@@ -427,3 +427,27 @@ export async function turnOffTfa() {
     .then()
     .catch();
 }
+
+export function getAchievements(getRes: any, id: string) {
+  axios
+    .get(`http://localhost:3000/users/game/achievement/${id}`, {
+      withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+    })
+    .then((res) => {
+      getRes(res.data);
+    })
+    .catch();
+}
+
+export function getMatchHistory(getRes: any, id: string) {
+  axios
+    .get(`http://localhost:3000/users/game/match-history/${id}`, {
+      withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+    })
+    .then((res) => {
+      getRes(res.data);
+    })
+    .catch();
+}

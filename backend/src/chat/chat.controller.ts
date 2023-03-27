@@ -139,8 +139,7 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   @Get('room-message')
   async getRM(@Req() req) {
-    const data = await this.chatService.getRM(req.user);    
-    return data;
+    return await this.chatService.getRM(req.user);
   }
 
   @UseFilters(new HttpExceptionFilter())

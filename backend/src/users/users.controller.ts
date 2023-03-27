@@ -1,18 +1,13 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Redirect,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param } from '@nestjs/common';
+import { Patch, Post, Req, Res } from '@nestjs/common';
+import { UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UsersService } from './users.service';
 import { Request } from 'express';
+import { Express } from 'express';
+import { diskStorage } from 'multer';
+import { PictureValidatorPipe } from './picture-validator.pipe';
 
 @Controller()
 export class UsersController {
@@ -34,6 +29,43 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async updateNickname(@Req() req, @Body() body) {
     await this.usersService.updateNickname(req.user.id, body.nickname);
+  }
+
+  @Post('/users/upload-profile-picture')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: (req, file, cb) => {
+          cb(null, './src/users/profilePictures');
+        },
+        filename: (req, file, cb) => {
+          const uniquePictureName =
+            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const words = file.originalname.split('.');
+          const fileExtention = words[words.length - 1];
+          cb(null, `${uniquePictureName}.${fileExtention}`);
+        },
+      }),
+      fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/))
+          return cb(null, false);
+        cb(null, true);
+      },
+      limits: { fileSize: 1000000, files: 1 },
+    }),
+  )
+  async uploadPictureAndPassValidation(
+    @Req() req,
+    @UploadedFile(new PictureValidatorPipe()) file: Express.Multer.File,
+  ) {
+    return await this.usersService.updateUserPictureURL(req.user, file);
+  }
+
+  @Get('/users/profile-picture/:filename')
+  @UseGuards(JwtAuthGuard)
+  async getProfilePicture(@Res() res, @Param('filename') filename) {
+    res.sendFile(filename, { root: './src/users/profilePictures/' });
   }
 
   @Get('/users/:id')
@@ -70,5 +102,17 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async unblockUser(@Req() req, @Param('id') id: string) {
     await this.usersService.unblockUser(req.user, id);
+  }
+
+  @Get('users/game/match-history/:id')
+  @UseGuards(JwtAuthGuard)
+  async getMatchHistory(@Param('id') id: string) {
+    return await this.usersService.getMatchHistory(id);
+  }
+
+  @Get('users/game/achievement/:id')
+  @UseGuards(JwtAuthGuard)
+  async getAchievement(@Param('id') id: string) {
+    return await this.usersService.getAchievement(id);
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { turnOffTfa, turOnTfa } from "../../../API";
 import { checkNickname } from "../../../helpers";
 import { EditAvatarIcon } from "../../Icons";
 import InputForm from "../../InputForm";
@@ -116,6 +117,10 @@ export default function Settings({
               setErrorMessage(errorMessage);
               return;
             }
+            if(enable)
+              turOnTfa();
+            else
+              turnOffTfa();
             setOpen(false);
             document.body.style.overflow = "auto";
           }}

@@ -19,38 +19,34 @@ import { type } from 'os';
 
 @Injectable()
 export class ChatService {
-
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
     private config: ConfigService,
   ) {}
 
-   async getUserFromAuthenticationToken(token: string) {
-     if (token) {       
+  async getUserFromAuthenticationToken(token: string) {
+    if (token) {
       const payload = await this.jwt.verify(token, {
         secret: jwtConstants.secret,
-      })      
+      });
       if (payload.nickname) {
-        
-          const user =  await this.prisma.user.findUnique({
-              where: {
-                  nickname: payload.nickname
-              },
-              select: {
-                  id: true,
-                  nickname: true,
-                  pictureURL: true,
-                  status: true
-              }
-          });
-          if (!user)
-            return ;
-          return user;
+        const user = await this.prisma.user.findUnique({
+          where: {
+            nickname: payload.nickname,
+          },
+          select: {
+            id: true,
+            nickname: true,
+            pictureURL: true,
+            status: true,
+          },
+        });
+        if (!user) return;
+        return user;
       }
-
     }
-}
+  }
 
   async CreateRoom(userlogin: string, name: string, type: string) {
     const rooms = await this.prisma.room.findUnique({
@@ -681,7 +677,7 @@ export class ChatService {
           latestMessage: '',
           picture: user.pictureURL,
           conversation: [],
-          type: "non"
+          type: 'non',
         };
         if (message_user) {
           person.latestMessage =
@@ -716,7 +712,7 @@ export class ChatService {
           latestMessage: '',
           picture: friend.pictureURL,
           conversation: [],
-          type: "non"
+          type: 'non',
         };
         obj.push(person);
       }
@@ -738,7 +734,7 @@ export class ChatService {
           latestMessage: '',
           picture: friend.pictureURL,
           conversation: [],
-          type: "non"
+          type: 'non',
         };
         obj.push(person);
       }
@@ -788,7 +784,7 @@ export class ChatService {
           latestMessage: '',
           picture: user.pictureURL,
           conversation: [],
-          type: "non"
+          type: 'non',
         };
         if (message_user) {
           person.latestMessage =
@@ -995,13 +991,13 @@ export class ChatService {
     });
     // const id1 = testOwner.admins.find((login) => login === user.nickname);
     // if (!id1) throw new ForbiddenException('you are not admin');
-    
+
     const rom = await this.prisma.room.delete({
       where: {
         name: room.name,
       },
     });
-    return "deleted";
+    return 'deleted';
   }
 
   async emit_message(user: any, room: any, type: string): Promise<typeObject> {
@@ -1020,7 +1016,7 @@ export class ChatService {
       latestMessage: '',
       picture: user.pictureURL,
       conversation: [],
-      type: type
+      type: type,
     };
     person.latestMessage =
       allmessage.message[allmessage.message.length - 1].data;

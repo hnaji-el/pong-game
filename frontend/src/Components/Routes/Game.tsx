@@ -4,12 +4,14 @@ import Navigation from "../Navigation/Navigation";
 // import socket from "../socket";
 import { GameState } from ".../../../shared/types";
 import { io } from "socket.io-client";
+import { CheckToken } from "../../API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
 export default function Game() {
+  CheckToken();
   const loc = useLocation();
   // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
@@ -70,9 +72,11 @@ export default function Game() {
       button.style.display = "none";
       const button2 = document.getElementById("hard") as HTMLButtonElement;
       button2.style.display = "none";
-      const waiting = document.getElementById("waiting") as HTMLParagraphElement;
+      const waiting = document.getElementById(
+        "waiting"
+      ) as HTMLParagraphElement;
       waiting.style.display = "none";
-  
+
       // const canvas = document.getElementById("canvas") as HTMLCanvasElement;
       const canvas: HTMLCanvasElement = document.getElementById(
         "canvas"
@@ -113,7 +117,7 @@ export default function Game() {
           navigate();
           // window.location.href = "mainpage.html";
         };
-  
+
         // document.body.appendChild(button);
         // canvas.appendChild(button);
         console.log(canvas);

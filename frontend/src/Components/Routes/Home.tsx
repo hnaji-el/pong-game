@@ -1,10 +1,9 @@
 import React, { useEffect, createContext, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import fire from "../../assets/fire.png";
-import { getDataUserLogged } from "../../API";
+import { CheckToken,  getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
-
 
 interface TypeData {
   id: string;
@@ -25,6 +24,7 @@ export const ActiveHome = createContext<TypeContext>({
 });
 
 export default function Home() {
+  CheckToken();
   const [roomIds, setroomIds] = useState<string[]>([]);
   const [settings, setSettings] = useState<TypeData>({
     id: "",
@@ -56,14 +56,14 @@ export default function Home() {
               <img src={fire} alt="fire" className="w-4" />
             </h1>
             <section className="flex flex-col gap-6 lg:flex-row lg:items-start">
-            {roomIds.map((roomId: string) => (
-              <div key={roomId}>
-                <Link to="/Game" state={{ roomId: roomId }}>
-                  <button>{roomId}</button>
-                </Link>
-              </div>
-            ))}
-          </section>
+              {roomIds.map((roomId: string) => (
+                <div key={roomId}>
+                  <Link to="/Game" state={{ roomId: roomId }}>
+                    <button>{roomId}</button>
+                  </Link>
+                </div>
+              ))}
+            </section>
           </div>
         </main>
       </ActiveHome.Provider>

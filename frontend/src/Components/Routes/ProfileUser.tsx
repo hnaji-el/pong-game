@@ -4,7 +4,7 @@ import { CardProfileUser } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
 import { BtnMessage } from "../BtnMessage";
 import BtnAddFriend from "../BtnAddFriend";
-import { getDataUserLogged, getOneUser } from "../../API";
+import { CheckToken, getDataUserLogged, getOneUser } from "../../API";
 import Spinner from "../Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import BtnFriend from "../BtnFriend";
@@ -41,6 +41,7 @@ export const ActiveProfileUser = createContext<TypeContext>({
 export const UpdateDataProfileUser = createContext<any>({});
 
 export default function ProfileUser() {
+  CheckToken();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -90,7 +91,7 @@ export default function ProfileUser() {
           updateSettings: setSettings,
         }}
       >
-        <UpdateDataProfileUser.Provider value={{setDataUser:setDataUser}}>
+        <UpdateDataProfileUser.Provider value={{ setDataUser: setDataUser }}>
           <Navigation />
           <main className="mx-3 pt-10 lg:ml-64 lg:mr-4 flex flex-col gap-12 h-full pb-0">
             {typeUser === "blocked" ? (

@@ -307,7 +307,6 @@ export function CardConversation({ data, index }: TypeConversation) {
               onClick={async () => {
                 await blockFriend(data.id);
                 getDmUsers((res: any) => {
-                  console.log(res);
                   messageData.setDataDm(res);
                 });
               }}

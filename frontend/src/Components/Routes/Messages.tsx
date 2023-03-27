@@ -2,8 +2,7 @@ import React, { useEffect, createContext, useState } from "react";
 import NavigationChat from "../Navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
-import { getAllChannels, getDataUserLogged, getDmUsers } from "../../API";
-import { dataChat } from "../../API";
+import { CheckToken, getAllChannels, getDataUserLogged, getDmUsers } from "../../API";
 import Spinner from "../Spinner";
 import { io } from "socket.io-client";
 
@@ -39,6 +38,7 @@ const socket = io("http://localhost:1337", {
   withCredentials: true,
 });
 export default function Messages() {
+  CheckToken();
   const [click, setClick] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
 

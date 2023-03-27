@@ -5,7 +5,7 @@ import SwitchersProfile from "../SwitchersProfile";
 import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
 import SettingsBody from "../Modals/Settings/SettingsBody";
 import Spinner from "../Spinner";
-import { getDataUserLogged } from "../../API";
+import { CheckToken, getDataUserLogged } from "../../API";
 
 interface TypeData {
   id: string;
@@ -25,7 +25,8 @@ export const ActiveProfile = createContext<TypeContext>({
   updateSettings: () => {},
 });
 
-export default function Home() {
+export default function Profile() {
+  CheckToken();
   const [open, setOpen] = useState<boolean>(false);
   const [settings, setSettings] = useState<TypeData>({
     id: "",

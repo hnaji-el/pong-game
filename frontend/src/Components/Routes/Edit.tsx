@@ -8,7 +8,7 @@ import {
 } from "../PongElements";
 import logo from "../../assets/logo.svg";
 import FormEdit from "../FormEdit";
-import { getDataUserLogged } from "../../API";
+import { CheckToken, getDataUserLogged } from "../../API";
 import Spinner from "../Spinner";
 
 interface TypeData {
@@ -18,6 +18,7 @@ interface TypeData {
 }
 
 export default function Edit() {
+  CheckToken();
   const [dataLoggedUser, setDataLoggedUser] = useState<TypeData>({
     id: "",
     pictureURL: "",

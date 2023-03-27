@@ -12,6 +12,8 @@ import { StateMssages } from "../Routes/Messages";
 import CreateChannel from "../Modals/CreateChannel";
 import AddMember from "../Modals/AddMember";
 import Members from "../Modals/Members";
+import FormProtected from "../FormProtected";
+import { MessagesContext } from "../Routes/Messages";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);
@@ -21,6 +23,7 @@ export default function NavigationChat() {
   const [addMember, setAddMember] = useState<boolean>(false);
   const [members, setMembers] = useState<boolean>(false);
   const stateMessages = useContext(StateMssages);
+  const messageData = useContext(MessagesContext);
 
   return (
     <>
@@ -87,6 +90,14 @@ export default function NavigationChat() {
           </ModalHeader>
           <ModalBody edit="justify-center">
             <Members />
+          </ModalBody>
+        </Modal>
+      ) : null}
+      {messageData.passwordProtected ? (
+        <Modal edit="w-[90%] h-[15rem] lg:w-[40rem] lg:h-[15rem]">
+          <ModalHeader setOpen={messageData.setpasswordProtected}>Password</ModalHeader>
+          <ModalBody edit="justify-center">
+            <FormProtected />
           </ModalBody>
         </Modal>
       ) : null}

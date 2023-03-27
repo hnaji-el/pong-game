@@ -34,3 +34,35 @@ enum Status {
   FRIENDSHIP
   BLOCK
 }
+
+
+model Room {
+  id      String     @id @default(uuid())
+  name    String     @unique
+  owner   String
+  members String[]
+  blocked String[]
+  type    String     @default("private")
+  admins  String[]
+  muted   Muted[]
+  message Messages[]
+  hash    String?
+}
+
+model Muted {
+  id        String @id @default(uuid())
+  roomName  String
+  userLogin String
+  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
+  time      String
+  @@map("muted")
+}
+
+model Messages {
+  id        String @id @default(uuid())
+  roomName  String
+  userLogin String
+  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
+  data      String
+  @@map("messages")
+}

@@ -148,7 +148,12 @@ export class UsersService {
   async getOneUser(loggedUser: any, userId: string): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { requester: true, addressee: true },
+      include: {
+        requester: true,
+        addressee: true,
+        winGames: true,
+        loseGames: true,
+      },
     });
     if (!user) {
       throw new ForbiddenException();
@@ -159,9 +164,11 @@ export class UsersService {
       nickname: user.nickname,
       pictureURL: user.pictureURL,
       status: user.status,
+      friendsNumber: this.getNumberOfFriends(user),
+      winsNumber: user.winGames.length,
+      losesNumber: user.loseGames.length,
       isFriendToLoggedUser: this.isFriend(loggedUser, user),
       isBlockedByLoggedUser: this.isBlocked(loggedUser, user),
-      friendsNumber: this.getNumberOfFriends(user),
       is_2FA_Enabled: user.isTwoFactorAuthEnabled,
     };
     return entity;

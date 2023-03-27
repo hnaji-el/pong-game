@@ -761,7 +761,10 @@ export function CardSearchUser({
           className="flex items-center gap-3 flex-1"
           onClick={() => {
             setDropDown(false);
-            if (setOpenSearch) setOpenSearch(false);
+            if (setOpenSearch) {
+              setOpenSearch(false);
+              document.body.style.overflow = "auto";
+            }
           }}
         >
           <img

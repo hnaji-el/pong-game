@@ -29,9 +29,6 @@ export class GameGateway implements OnGatewayConnection {
     private jwtService: JwtService,
   ) {}
 
-  // verify
-  // decode
-  // getUser
   @WebSocketServer() server: Server;
 
   handleConnection(client: Socket) {
@@ -45,19 +42,18 @@ export class GameGateway implements OnGatewayConnection {
     const payload = this.jwtService.verify(token, {
       secret: jwtConstants.secret,
     });
-    // console.log(payload);
-    // client.nickname = payload.nickname;
-    // client.pictureURL = payload.pictureURL;
     payload.id = payload.sub;
 
-    // check if user was not in UserToSocket array
-    // user ID
-    // req DB -> USER -> Online
-    // if user doesnt exist in USertoSocket, add to DB
-    if (!this.gameService.checkIfUserExists(payload.sub)) {
+    console.log('payload', payload.id);
+    if (client.handshake.auth.context === 'game')
+      console.log('user', client.id, 'is in game');
+    else {
+      if (!this.gameService.checkIfUserExists(payload.sub))
+        console.log('user', client.id, 'is online');
       // this.gameService.addUserToDB(payload.sub);
-      console.log('user', payload.sub, 'is online');
     }
+    // if
+    // console.log(client.handshake.auth);
 
     // pass only {id, pictureURL, nickname}
     this.gameService.addUserToSocket(client, {
@@ -73,16 +69,21 @@ export class GameGateway implements OnGatewayConnection {
     console.log(`Client connected: ${client.id}`);
   }
   handleDisconnect(client: Socket) {
+    // console.log('QUERY', client.handshake.auth);
     console.log(`Client disconnected: ${client.id}`);
 
     const userId = this.gameService.removePlayer(client, this.server);
 
     // if user not anymore in UserToSocket array send to DB
     if (userId) {
+      if (client.handshake.auth.context === 'game')
+        console.log('user', client.id, 'is not in game anymore : online');
+      // else {
       if (!this.gameService.checkIfUserExists(userId)) {
-        console.log('user', userId, 'is offline');
-        // this.gameService.removeUserFromDB(client.id);
+        console.log('user', client.id, 'is offline');
       }
+      // this.gameService.removeUserFromDB(client.id);
+      // }
     }
   }
 
@@ -114,7 +115,6 @@ export class GameGateway implements OnGatewayConnection {
 
   @SubscribeMessage('queuing')
   handleQueuing(client: Socket, mode: string): void {
-
     this.gameService.addToQueue(client, this.server, mode);
   }
   @SubscribeMessage('startingGame')

@@ -1,7 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
-// import socket from "../socket";
 import { GameState } from ".../../../shared/types";
 import { io, Socket } from "socket.io-client";
 import { getDataUserLogged } from "../../API";
@@ -35,18 +34,13 @@ export default function Game() {
     pictureURL: "",
     nickname: "",
   });
-  // let cookie = Object.fromEntries(
-  // document.cookie.split("; ").map((c) => c.split("="))
-  // get cookie using document.cookie to get the auth token
   let cookies = Object.fromEntries(
     document.cookie.split("; ").map((c) => {
       const [key, ...v] = c.split("=");
       return [key, v.join("=")];
     })
   );
-  // cookies["auth-token"] = cookies["auth-token"].replace(/"/g, "");
   const loc = useLocation();
-  // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
   const privateQueue = loc.state ? loc.state.privateQueue : undefined;
   const playerIdRef = useRef<number>(-1);
@@ -59,70 +53,13 @@ export default function Game() {
       withCredentials: true,
       auth: {
         token: cookies["jwt"],
+        context: "game",
       },
     });
     socketRef.current = socket;
     getDataUserLogged((res: TypeData) => {
       setDataUser(res);
     });
-    // globalSocket.off(
-    //   "invitePlayer",
-    //   (payload: {
-    //     sender: { id: string; nickname: string; pictureURL: string };
-    //     senderSocketId: string;
-    //   }) => {
-    //     console.log(
-    //       payload.sender.nickname,
-    //       "invited you to play a game. Do you accept?",
-    //       payload.senderSocketId
-    //     );
-
-    //     // Create pop-up container
-    //     const popupContainer = document.createElement("div");
-    //     popupContainer.classList.add("popup-container");
-    //     document.body.appendChild(popupContainer);
-
-    //     // Create pop-up dialog
-    //     const popupDialog = document.createElement("div");
-    //     popupDialog.classList.add("popup-dialog");
-    //     popupDialog.innerHTML = `
-    //   <p>${payload.sender.nickname} invited you to play a game. Do you accept?</p>
-    //   <button class="accept-button">Accept</button>
-    //   <button class="decline-button">Decline</button>`;
-    //     popupContainer.appendChild(popupDialog);
-
-    //     // Add click event listener for accept button
-    //     const acceptButton = popupDialog.querySelector(
-    //       ".accept-button"
-    //     ) as HTMLButtonElement;
-    //     acceptButton.addEventListener("click", () => {
-    //       console.log("Accept button clicked");
-    //       globalSocket.emit("inviteAccepted", {
-    //         senderSocketId: payload.senderSocketId,
-    //       });
-    //       popupContainer.removeChild(popupDialog);
-    //       document.body.removeChild(popupContainer);
-    //       // popupContainer.removeChild(popupDialog);
-    //       // Redirect to the AcceptInvite event
-    //       // ...
-    //       // Emit redirect
-    //       // ...
-    //     });
-
-    //     // Add click event listener for decline button
-    //     const declineButton = popupDialog.querySelector(
-    //       ".decline-button"
-    //     ) as HTMLButtonElement;
-    //     declineButton.addEventListener("click", () => {
-    //       console.log("Decline button clicked");
-    //       // Remove pop-up dialog
-    //       popupContainer.removeChild(popupDialog);
-    //       document.body.removeChild(popupContainer);
-    //       // Remove pop-up container
-    //     });
-    //   }
-    // );
-
     if (roomId) {
       gameLogic(roomId, undefined, -1, "undefined", () => {
         navigate("/");
@@ -182,6 +119,12 @@ export default function Game() {
           "waiting"
         ) as HTMLParagraphElement;
         waiting.style.display = "block";
+        waiting.classList.add(
+          "text-4xl",
+          "animate-pulse",
+          "font-serif",
+          "text-white"
+        );
         waiting.innerText = `Waiting for ${mode} game...`;
       });
     }
@@ -224,13 +167,12 @@ export default function Game() {
         ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
         ctx.fillStyle = PLAYER_COLOR;
         if (gameState.players[0].score > gameState.players[1].score) {
-          ctx.fillStyle = "white";
-          ctx.fillText("Player 1 wins!", 450, 200);
-          console.log("player 1 wins");
+          ctx.fillStyle = PLAYER_COLOR;
+
+          ctx.fillText(gameState.players[0].user.nickname + " wins!", 450, 200);
         } else if (gameState.players[0].score < gameState.players[1].score) {
-          ctx.fillStyle = "white";
-          ctx.fillText("Player 2 wins!", 450, 200);
-          console.log("player 2 wins");
+          ctx.fillStyle = PLAYER_COLOR;
+          ctx.fillText(gameState.players[1].user.nickname + " wins!", 450, 200); // add more design
         }
         const button = document.createElement("button");
         button.innerHTML = "Go back to main page";
@@ -263,13 +205,10 @@ export default function Game() {
       });
       // globalSocket.off("invitePlayer");
     }
-    globalSocket.on('invitePlayer', popOutFunc);
+    globalSocket.on("invitePlayer", popOutFunc);
     return () => {
-      socket.disconnect();
-      // has listener
 
-      globalSocket.off('invitePlayer', popOutFunc);
-        
+      globalSocket.off("invitePlayer", popOutFunc);
     };
   }, []);
 
@@ -302,9 +241,10 @@ export default function Game() {
         " " +
         state.players[0].score +
         " - " +
-        state.players[1].user.nickname +
+        state.players[1].score +
         " " +
-        state.players[1].score,
+        state.players[1].user.nickname,
+
       400,
       100
     );
@@ -326,13 +266,13 @@ export default function Game() {
         <div className="flex gap-4">
           <button
             id="easy"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="bg-primary text-primaryText text-sm font-bold py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-300 ease-in-out"
           >
             Easy
           </button>
           <button
             id="hard"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="bg-primary text-primaryText text-sm font-bold py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-300 ease-in-out"
           >
             Hard
           </button>
@@ -341,10 +281,4 @@ export default function Game() {
       </main>
     </GameContext.Provider>
   );
-
-  // return (
-  //   <div className="mx-3 flex justify-center items-center h-full">
-  //     <Spinner />
-  //   </div>
-  // );
 }

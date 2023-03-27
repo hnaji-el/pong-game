@@ -212,9 +212,9 @@ export function CardAchievments() {
     <div className="flex items-center justify-center p-5 w-[26rem] shadow gap-5 bg-body rounded-xl">
       <CircleAchievements />
       <div className="flex flex-col gap-1">
-        <span className="text-primaryText text-4xl">10</span>
+        <span className="text-primaryText text-4xl">4</span>
         <span className="text-secondaryText text-sm">
-          Achievements completed
+          Achievement four wins
         </span>
       </div>
     </div>

@@ -54,8 +54,6 @@ export default function Game() {
   const privateQueue = loc.state ? loc.state.privateQueue : undefined;
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
-
-  console.log("dataUser: ", dataUser);
   const socketRef = useRef<Socket | null>(null);
   useEffect(() => {
     const socket = io("http://localhost:3000", {

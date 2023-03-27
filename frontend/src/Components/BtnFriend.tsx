@@ -32,10 +32,6 @@ export default function BtnFriend({ id, setTypeUser }: TypeProps) {
         <DropdownItem
           edit="items-center py-2 px-3"
           onClick={() => {
-            console.log("BTN INVITE TO PLAY", dataUserLogged.settings.id, id);
-            console.log("SENDER SOCKET ID", globalSocket.id);
-            // sender id  rec id
-            // request invite to play for rec
             globalSocket.emit("inviteToPlay", {
               sender: dataUserLogged.settings,
               receiverId: id,

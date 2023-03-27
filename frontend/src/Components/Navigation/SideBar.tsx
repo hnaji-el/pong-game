@@ -11,6 +11,7 @@ import { ActiveHome } from "../Routes/Home";
 import { StateMssages } from "../Routes/Messages";
 import { ActiveProfile } from "../Routes/Profile";
 import { ActiveProfileUser } from "../Routes/ProfileUser";
+import { GameContext } from "../Routes/Game";
 import logo from "../../assets/logo.svg";
 import ListFriendOnline from "../ListFriendOnline";
 
@@ -34,9 +35,11 @@ export default function SideBar({
   let dataUserLogged = useContext(ActiveHome);
   let dataUserLoggedProfile = useContext(ActiveProfile);
   let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
+  let game = useContext(GameContext);
 
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
+  if (!dataUserLogged.value) dataUserLogged = game;
 
   return (
     <>
@@ -63,7 +66,9 @@ export default function SideBar({
               <Link
                 to="/Home"
                 className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
-                  home.value ? "lg:bg-shape lg:border-l-[6px] lg:border-primary" : ""
+                  home.value
+                    ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
+                    : ""
                 }`}
                 onClick={() => {
                   setOpenSearch(false);
@@ -193,9 +198,12 @@ export default function SideBar({
           </ul>
         </nav>
       </section>
-      <button className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]">
+      <Link
+        to="/game"
+        className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]"
+      >
         <ControllerIcon edit="w-8" />
-      </button>
+      </Link>
     </>
   );
 }

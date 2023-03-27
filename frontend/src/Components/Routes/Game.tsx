@@ -1,43 +1,170 @@
-import { useEffect, useRef } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 // import socket from "../socket";
 import { GameState } from ".../../../shared/types";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
+import { getDataUserLogged } from "../../API";
+import { globalSocket } from "../../socket";
+import { popOutFunc } from "./eventListener";
 import { CheckToken } from "../../API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
+
+interface TypeData {
+  id: string;
+  pictureURL: string;
+  nickname: string;
+}
+
+interface TypeContext {
+  value: boolean;
+  settings: TypeData;
+  updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
+}
+export const GameContext = createContext<TypeContext>({
+  value: false,
+  settings: { id: "", pictureURL: "", nickname: "" },
+  updateSettings: () => {},
+});
+
 export default function Game() {
   CheckToken();
+  const [dataUser, setDataUser] = useState<TypeData>({
+    id: "",
+    pictureURL: "",
+    nickname: "",
+  });
+  // let cookie = Object.fromEntries(
+  // document.cookie.split("; ").map((c) => c.split("="))
+  // get cookie using document.cookie to get the auth token
+  let cookies = Object.fromEntries(
+    document.cookie.split("; ").map((c) => {
+      const [key, ...v] = c.split("=");
+      return [key, v.join("=")];
+    })
+  );
+  // cookies["auth-token"] = cookies["auth-token"].replace(/"/g, "");
   const loc = useLocation();
   // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
-  const socket = io("http://192.168.1.2:3000");
+  const privateQueue = loc.state ? loc.state.privateQueue : undefined;
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
 
+  console.log("dataUser: ", dataUser);
+  const socketRef = useRef<Socket | null>(null);
   useEffect(() => {
+    const socket = io("http://localhost:3000", {
+      withCredentials: true,
+      auth: {
+        token: cookies["jwt"],
+      },
+    });
+    socketRef.current = socket;
+    getDataUserLogged((res: TypeData) => {
+      setDataUser(res);
+    });
+    // globalSocket.off(
+    //   "invitePlayer",
+    //   (payload: {
+    //     sender: { id: string; nickname: string; pictureURL: string };
+    //     senderSocketId: string;
+    //   }) => {
+    //     console.log(
+    //       payload.sender.nickname,
+    //       "invited you to play a game. Do you accept?",
+    //       payload.senderSocketId
+    //     );
+
+    //     // Create pop-up container
+    //     const popupContainer = document.createElement("div");
+    //     popupContainer.classList.add("popup-container");
+    //     document.body.appendChild(popupContainer);
+
+    //     // Create pop-up dialog
+    //     const popupDialog = document.createElement("div");
+    //     popupDialog.classList.add("popup-dialog");
+    //     popupDialog.innerHTML = `
+    //   <p>${payload.sender.nickname} invited you to play a game. Do you accept?</p>
+    //   <button class="accept-button">Accept</button>
+    //   <button class="decline-button">Decline</button>`;
+    //     popupContainer.appendChild(popupDialog);
+
+    //     // Add click event listener for accept button
+    //     const acceptButton = popupDialog.querySelector(
+    //       ".accept-button"
+    //     ) as HTMLButtonElement;
+    //     acceptButton.addEventListener("click", () => {
+    //       console.log("Accept button clicked");
+    //       globalSocket.emit("inviteAccepted", {
+    //         senderSocketId: payload.senderSocketId,
+    //       });
+    //       popupContainer.removeChild(popupDialog);
+    //       document.body.removeChild(popupContainer);
+    //       // popupContainer.removeChild(popupDialog);
+    //       // Redirect to the AcceptInvite event
+    //       // ...
+    //       // Emit redirect
+    //       // ...
+    //     });
+
+    //     // Add click event listener for decline button
+    //     const declineButton = popupDialog.querySelector(
+    //       ".decline-button"
+    //     ) as HTMLButtonElement;
+    //     declineButton.addEventListener("click", () => {
+    //       console.log("Decline button clicked");
+    //       // Remove pop-up dialog
+    //       popupContainer.removeChild(popupDialog);
+    //       document.body.removeChild(popupContainer);
+    //       // Remove pop-up container
+    //     });
+    //   }
+    // );
+
     if (roomId) {
       gameLogic(roomId, undefined, -1, "undefined", () => {
         navigate("/");
       });
       socket.emit("watchGame", roomId);
       console.log("joining game");
+    } else if (privateQueue) {
+      console.log("GAME SOCKET", socket);
+
+      socket.emit("queuing", "private");
+      socket.on("setPlayerId", (Id: number) => {
+        playerIdRef.current = Id;
+
+        // emit to link playerId to
+        socket.emit("linkIdToUser", Id, dataUser);
+      });
+      socket.on(
+        "launchGame",
+        (roomId: string, gameState: GameState, mode: string) => {
+          gameLogic(roomId, gameState, playerIdRef.current, mode, () => {
+            navigate("/");
+          });
+        }
+      );
     } else {
       const button = document.getElementById("easy") as HTMLButtonElement;
-      button.addEventListener("click", () => {
+      button?.addEventListener("click", () => {
         socket.emit("queuing", "easy");
       });
       const button2 = document.getElementById("hard") as HTMLButtonElement;
-      button2.addEventListener("click", () => {
+      button2?.addEventListener("click", () => {
         socket.emit("queuing", "hard");
       });
 
       socket.on("setPlayerId", (Id: number) => {
         playerIdRef.current = Id;
+
+        // emit to link playerId to
+        socket.emit("linkIdToUser", Id, dataUser);
       });
       socket.on(
         "launchGame",
@@ -58,6 +185,12 @@ export default function Game() {
           "waiting"
         ) as HTMLParagraphElement;
         waiting.style.display = "block";
+        waiting.classList.add(
+          "text-4xl",
+          "animate-pulse",
+          "font-serif",
+          "text-white"
+        );
         waiting.innerText = `Waiting for ${mode} game...`;
       });
     }
@@ -100,13 +233,11 @@ export default function Game() {
         ctx.fillRect(0, 0, CANVA_WIDTH, CANVA_HEIGHT);
         ctx.fillStyle = PLAYER_COLOR;
         if (gameState.players[0].score > gameState.players[1].score) {
-          ctx.fillStyle = "white";
-          ctx.fillText("Player 1 wins!", 450, 200);
-          console.log("player 1 wins");
+          ctx.fillStyle = PLAYER_COLOR;
+          ctx.fillText(gameState.players[0].user.nickname + " wins!", 450, 200);
         } else if (gameState.players[0].score < gameState.players[1].score) {
-          ctx.fillStyle = "white";
-          ctx.fillText("Player 2 wins!", 450, 200);
-          console.log("player 2 wins");
+          ctx.fillStyle = PLAYER_COLOR;
+          ctx.fillText(gameState.players[1].user.nickname + " wins!", 450, 200);
         }
         const button = document.createElement("button");
         button.innerHTML = "Go back to main page";
@@ -137,11 +268,16 @@ export default function Game() {
           });
         }
       });
+      // globalSocket.off("invitePlayer");
     }
+    globalSocket.on("invitePlayer", popOutFunc);
     return () => {
       socket.disconnect();
+      // has listener
+
+      globalSocket.off("invitePlayer", popOutFunc);
     };
-  }, [roomId, navigate, socket, playerIdRef]);
+  }, []);
 
   function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = BG_COLOR;
@@ -168,11 +304,13 @@ export default function Game() {
     ctx.fill();
     ctx.font = "50px serif";
     ctx.fillText(
-      "Player 1: " +
+      state.players[0].user.nickname +
+        " " +
         state.players[0].score +
         " - " +
-        "Player 2: " +
-        state.players[1].score,
+        state.players[1].score +
+        " " +
+        state.players[1].user.nickname,
       400,
       100
     );
@@ -183,27 +321,36 @@ export default function Game() {
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
+  // if (dataUser.nickname.length)
   return (
-    <>
+    <GameContext.Provider
+      value={{ value: true, settings: dataUser, updateSettings: setDataUser }}
+    >
       <Navigation />
       <main className="mx-3 pb-20 lg:pb-1 pt-10 lg:ml-64 lg:mr-4">
         <canvas id="canvas" className="hidden"></canvas>
         <div className="flex gap-4">
           <button
             id="easy"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="bg-primary text-primaryText text-sm font-bold py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-300 ease-in-out"
           >
             Easy
           </button>
           <button
             id="hard"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            className="bg-primary text-primaryText text-sm font-bold py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-300 ease-in-out"
           >
             Hard
           </button>
           <p id="waiting" className="hidden"></p>
         </div>
       </main>
-    </>
+    </GameContext.Provider>
   );
+
+  // return (
+  //   <div className="mx-3 flex justify-center items-center h-full">
+  //     <Spinner />
+  //   </div>
+  // );
 }

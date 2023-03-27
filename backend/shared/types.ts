@@ -18,8 +18,11 @@ export type Ball = Shape & Pos & Velocity;
 
 export type Player = { score: number } & Shape &
   Pos &
-  Velocity & { id: string };
-
+  Velocity & { id: string } & { user?: User };
+export type User = {
+  id: string;
+  nickname: string;
+};
 export type GameState = {
   players: [Player, Player];
   ball: Ball;

@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { blockFriend, getOneUser, unfriend } from "../API";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
+import { ActiveProfileUser } from "./Routes/ProfileUser";
+import { globalSocket } from "../socket";
 import { UpdateDataProfileUser } from "./Routes/ProfileUser";
 
 interface TypeProps {
@@ -9,6 +11,7 @@ interface TypeProps {
 }
 
 export default function BtnFriend({ id, setTypeUser }: TypeProps) {
+  const dataUserLogged = useContext(ActiveProfileUser);
   const update = useContext(UpdateDataProfileUser);
   return (
     <Dropdown>
@@ -26,7 +29,19 @@ export default function BtnFriend({ id, setTypeUser }: TypeProps) {
         >
           <span className="font-light">unfriend</span>
         </DropdownItem>
-        <DropdownItem edit="items-center py-2 px-3">
+        <DropdownItem
+          edit="items-center py-2 px-3"
+          onClick={() => {
+            console.log("BTN INVITE TO PLAY", dataUserLogged.settings.id, id);
+            console.log("SENDER SOCKET ID", globalSocket.id);
+            // sender id  rec id
+            // request invite to play for rec
+            globalSocket.emit("inviteToPlay", {
+              sender: dataUserLogged.settings,
+              receiverId: id,
+            });
+          }}
+        >
           <span className="font-light">Invite to play</span>
         </DropdownItem>
         <DropdownItem

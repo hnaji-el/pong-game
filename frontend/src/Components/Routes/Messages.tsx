@@ -112,7 +112,7 @@ export default function Messages() {
     });
   }, []);
 
-  if (settings.nickname.length && dataDm.length && dataDm.length)
+  if (settings.nickname.length)
     return (
       <StateMssages.Provider
         value={{
@@ -140,42 +140,46 @@ export default function Messages() {
             setIndexChannel: setIndexChannel,
             typeDm: typeDm,
             setTypeDm: setTypeDm,
-            passwordProtected:passwordProtected,
+            passwordProtected: passwordProtected,
             setpasswordProtected: setpasswordProtected,
           }}
         >
           <NavigationChat />
-          <main
-            className={`${
-              click ? "" : "absolute w-0 h-0"
-            } lg:block lg:relative lg:w-auto lg:h-auto mx-3 lg:pb-1 pt-7 lg:ml-64 lg:mr-4 overflow-hidden mb-[4.85rem]`}
-          >
-            <ChatBox data={dataChatBox?.conversation} />
-          </main>
-          <div className="absolute w-full bottom-[0.9rem] px-3 lg:pl-64 lg:pr-4">
-            <form className="flex items-center rounded-md bg-shape pr-2">
-              <input
-                type="text"
-                placeholder="Type a message"
-                value={message}
-                className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
-                onChange={(e) => {
-                  setMessage(e.currentTarget.value);
-                }}
-              />
-              <button
-                type="submit"
-                className="flex h-8 w-8 items-center justify-center rounded-md bg-primary"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMessage("");
-                  sendMessage();
-                }}
+          {dataChatBox ? (
+            <>
+              <main
+                className={`${
+                  click ? "" : "absolute w-0 h-0"
+                } lg:block lg:relative lg:w-auto lg:h-auto mx-3 lg:pb-1 pt-7 lg:ml-64 lg:mr-4 overflow-hidden mb-[4.85rem]`}
               >
-                <SendIcon edit="w-4 fill-white" />
-              </button>
-            </form>
-          </div>
+                <ChatBox data={dataChatBox?.conversation} />
+              </main>
+              <div className="absolute w-full bottom-[0.9rem] px-3 lg:pl-64 lg:pr-4">
+                <form className="flex items-center rounded-md bg-shape pr-2">
+                  <input
+                    type="text"
+                    placeholder="Type a message"
+                    value={message}
+                    className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
+                    onChange={(e) => {
+                      setMessage(e.currentTarget.value);
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className="flex h-8 w-8 items-center justify-center rounded-md bg-primary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMessage("");
+                      sendMessage();
+                    }}
+                  >
+                    <SendIcon edit="w-4 fill-white" />
+                  </button>
+                </form>
+              </div>
+            </>
+          ) : null}
         </MessagesContext.Provider>
       </StateMssages.Provider>
     );

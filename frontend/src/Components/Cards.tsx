@@ -24,8 +24,10 @@ import { AddMemberContext } from "./Modals/AddMember";
 import { MembersContext } from "./Modals/Members";
 import {
   addToRoom,
+  blockFriend,
   deleteRoom,
   getAllChannels,
+  getDmUsers,
   getFriendChannel,
   getMembersChannel,
   joinRoom,
@@ -297,11 +299,20 @@ export function CardConversation({ data, index }: TypeConversation) {
             <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </MenuButton>
           <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-              settings
+            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3">
+              Invite to play
             </MenuItem>
-            <MenuItem className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize">
-              logout
+            <MenuItem
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              onClick={async () => {
+                await blockFriend(data.id);
+                getDmUsers((res: any) => {
+                  console.log(res);
+                  messageData.setDataDm(res);
+                });
+              }}
+            >
+              block
             </MenuItem>
           </MenuList>
         </Menu>
@@ -417,36 +428,41 @@ export function CardChannelConversation({
 
 export function CardChatFriend({ data }: TypeChat) {
   const stateMessages = useContext(StateMssages);
+  const messageData = useContext(MessagesContext);
   return (
     <div className="flex flex-1 items-center gap-4">
-      <button
-        className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape"
-        onClick={() => {
-          stateMessages.setClick(false);
-        }}
-      >
-        <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-      </button>
-      <div className="flex items-center gap-2">
-        <img
-          src={data?.picture}
-          alt="Friend"
-          className="h-14 w-14 rounded-full"
-        />
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-1.5">
-            <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
-              {data?.username}
-            </span>
+      {messageData.dataChatBox ? (
+        <>
+          <button
+            className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape"
+            onClick={() => {
+              stateMessages.setClick(false);
+            }}
+          >
+            <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+          </button>
+          <div className="flex items-center gap-2">
+            <img
+              src={data?.picture}
+              alt="Friend"
+              className="h-14 w-14 rounded-full"
+            />
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+                  {data?.username}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-online"></span>
+                <span className="text-sm font-light text-secondaryText">
+                  Online
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-online"></span>
-            <span className="text-sm font-light text-secondaryText">
-              Online
-            </span>
-          </div>
-        </div>
-      </div>
+        </>
+      ) : null}
     </div>
   );
 }

@@ -592,8 +592,8 @@ export function unfriend(id:string) {
     .catch();
 }
 
-export function blockFriend(id:string) {
-  axios
+export async function blockFriend(id:string) {
+  await axios
     .patch(
       `http://localhost:3000/users/block-friend/${id}`,
       {},

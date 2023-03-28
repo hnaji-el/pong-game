@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import logo from "../../assets/logo.svg";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
@@ -9,6 +9,8 @@ import { ActiveHome } from "../Routes/Home";
 import { ActiveProfile } from "../Routes/Profile";
 import { ActiveProfileUser } from "../Routes/ProfileUser";
 import { GameContext } from "../Routes/Game";
+import { logout } from "../../API";
+
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,6 +21,7 @@ export default function NavBar({ setOpen }: TypeProps) {
   let dataUserLoggedProfile = useContext(ActiveProfile);
   let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
   let dataGame = useContext(GameContext);
+  const navigate = useNavigate()
 
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
@@ -52,7 +55,10 @@ export default function NavBar({ setOpen }: TypeProps) {
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>
-            <DropdownItem edit="justify-center p-2">
+            <DropdownItem edit="justify-center p-2" onClick={async ()=>{
+          await logout();
+          navigate("/Login")
+        }}>
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />
               <span>Logout</span>
             </DropdownItem>

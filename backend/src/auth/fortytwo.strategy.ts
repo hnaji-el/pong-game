@@ -26,6 +26,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy) {
   ): Promise<any> {
     const user = await this.authService.validateUser(
       profile.nickname,
+      profile._json.email,
       profile.pictureURL,
     );
     done(null, user);

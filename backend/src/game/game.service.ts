@@ -20,7 +20,7 @@ interface UserToSocket {
 }
 @Injectable()
 export class GameService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) {}
   private easyModeQueue: Socket[] = [];
   private hardModeQueue: Socket[] = [];
   private privateModeQueue: Socket[] = [];
@@ -29,10 +29,12 @@ export class GameService {
   private roomIdToGameState: Map<string, GameState> = new Map();
   private userToSocket: UserToSocket[] = [];
   async updateUserStatus(userId: string, status: string) {
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { status: status },
-    });
+    try {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { status: status },
+      });
+    } catch (e) {}
   }
 
   async storeGame(

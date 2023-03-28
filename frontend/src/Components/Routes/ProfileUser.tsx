@@ -32,6 +32,8 @@ interface TypeDataProfileUser {
   nickname: string;
   pictureURL: string;
   status:string
+  winsNumber:number,
+  losesNumber:number,
 }
 
 export const ActiveProfileUser = createContext<TypeContext>({
@@ -69,7 +71,10 @@ export default function ProfileUser() {
     isFriendToLoggedUser: false,
     nickname: "",
     pictureURL: "",
-    status:""
+    status:"",
+    winsNumber:0,
+    losesNumber:0,
+
   });
   useEffect(() => {
     document.title = "Pong - Profile";
@@ -138,14 +143,14 @@ export default function ProfileUser() {
                     <span className="w-[1px] bg-shape"></span>
                     <span className="flex flex-col items-center">
                       <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
-                        0
+                        {dataUser.winsNumber}
                       </span>
                       <span className="text-secondaryText text-sm ">Wins</span>
                     </span>
                     <span className="w-[1px] bg-shape"></span>
                     <span className="flex flex-col items-center">
                       <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
-                        0
+                        {dataUser.losesNumber}
                       </span>
                       <span className="text-secondaryText text-sm ">
                         Losses

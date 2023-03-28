@@ -5,7 +5,7 @@ import SwitchersProfile from "../SwitchersProfile";
 import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
 import SettingsBody from "../Modals/Settings/SettingsBody";
 import Spinner from "../Spinner";
-import { CheckToken, getDataUserLogged } from "../../API";
+import { CheckToken, getDataUserLogged, getOneUser } from "../../API";
 
 interface TypeData {
   id: string;
@@ -36,6 +36,7 @@ export const ActiveProfile = createContext<TypeContext>({
 export default function Profile() {
   CheckToken();
   const [open, setOpen] = useState<boolean>(false);
+  const [dataGame,setDataGame] = useState<any>({})
   const [settings, setSettings] = useState<TypeData>({
     id: "",
     pictureURL: "",
@@ -48,7 +49,11 @@ export default function Profile() {
     document.title = "Pong - Profile";
     getDataUserLogged((res: TypeData) => {
       setSettings(res);
+          getOneUser((response: any) => {
+          setDataGame(response)
+    }, res.id);
     });
+
   }, []);
 
   if (settings.nickname.length)
@@ -63,21 +68,21 @@ export default function Profile() {
             <div className="flex gap-10">
               <span className="flex flex-col items-center">
                 <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
-                  0
+                  {dataGame.friendsNumber}
                 </span>
                 <span className="text-secondaryText text-sm">Friends</span>
               </span>
               <span className="w-[1px] bg-shape"></span>
               <span className="flex flex-col items-center">
                 <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
-                  0
+                  {dataGame.winsNumber}
                 </span>
                 <span className="text-secondaryText text-sm ">Wins</span>
               </span>
               <span className="w-[1px] bg-shape"></span>
               <span className="flex flex-col items-center">
                 <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
-                  0
+                  {dataGame.losesNumber}
                 </span>
                 <span className="text-secondaryText text-sm ">Losses</span>
               </span>

@@ -32,25 +32,24 @@ export class UsersService {
     });
   }
 
-  async create(_nickname: string, _pictureURL: string): Promise<any> {
+  async create(
+    _nickname: string,
+    _email: string,
+    _pictureURL: string,
+  ): Promise<any> {
     let user = await this.prisma.user.findUnique({
-      where: { nickname: _nickname },
+      where: { email: _email },
       include: { requester: true, addressee: true },
     });
 
     if (!user) {
       user = await this.prisma.user.create({
-        data: { nickname: _nickname, pictureURL: _pictureURL },
+        data: { nickname: _nickname, email: _email, pictureURL: _pictureURL },
         include: { requester: true, addressee: true },
       });
     }
     return user;
   }
-
-  // Game Services
-  ////////////////////////////////////////////////////////////////
-
-  ///////////////////////////////////////////////////////////////////////
 
   async getMatchHistory(userId: string): Promise<GameEntity[]> {
     const entities: GameEntity[] = [];
@@ -123,7 +122,12 @@ export class UsersService {
   async getOneUser(loggedUser: any, userId: string): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { requester: true, addressee: true },
+      include: {
+        requester: true,
+        addressee: true,
+        winGames: true,
+        loseGames: true,
+      },
     });
     if (!user) {
       throw new ForbiddenException();
@@ -134,9 +138,11 @@ export class UsersService {
       nickname: user.nickname,
       pictureURL: user.pictureURL,
       status: user.status,
+      friendsNumber: this.getNumberOfFriends(user),
+      winsNumber: user.winGames.length,
+      losesNumber: user.loseGames.length,
       isFriendToLoggedUser: this.isFriend(loggedUser, user),
       isBlockedByLoggedUser: this.isBlocked(loggedUser, user),
-      friendsNumber: this.getNumberOfFriends(user),
       is_2FA_Enabled: user.isTwoFactorAuthEnabled,
     };
     return entity;

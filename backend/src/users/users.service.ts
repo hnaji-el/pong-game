@@ -51,32 +51,6 @@ export class UsersService {
     return user;
   }
 
-  // Game Services
-  ////////////////////////////////////////////////////////////////
-  async updateUserStatus(userId: string, status: string) {
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: { status: status },
-    });
-  }
-
-  async storeGame(
-    winnerId: string,
-    loserId: string,
-    winScore: number,
-    loseScore: number,
-  ) {
-    await this.prisma.game.create({
-      data: {
-        winnerId: winnerId,
-        loserId: loserId,
-        winScore: winScore,
-        loseScore: loseScore,
-      },
-    });
-  }
-  ///////////////////////////////////////////////////////////////////////
-
   async getMatchHistory(userId: string): Promise<GameEntity[]> {
     const entities: GameEntity[] = [];
     const user = await this.prisma.user.findUnique({

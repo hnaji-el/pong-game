@@ -18,6 +18,8 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
+  isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 interface TypeContext {
@@ -27,7 +29,13 @@ interface TypeContext {
 }
 export const GameContext = createContext<TypeContext>({
   value: false,
-  settings: { id: "", pictureURL: "", nickname: "" },
+  settings: {
+    id: "",
+    pictureURL: "",
+    nickname: "",
+    isTwoFactorAuthEnabled: false,
+    status: "",
+  },
   updateSettings: () => {},
 });
 
@@ -37,6 +45,8 @@ export default function Game() {
     id: "",
     pictureURL: "",
     nickname: "",
+    isTwoFactorAuthEnabled: false,
+    status: "",
   });
   // let cookie = Object.fromEntries(
   // document.cookie.split("; ").map((c) => c.split("="))

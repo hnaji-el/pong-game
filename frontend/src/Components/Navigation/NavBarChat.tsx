@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+import { logout} from "../../API";
 import { CardChatChannel, CardChatFriend } from "../Cards";
 import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
@@ -19,7 +20,7 @@ export default function NavBarChat({
 }: TypeProps) {
   const stateMessage = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
-  
+  const navigate = useNavigate();
   return (
     <section
       className={`${
@@ -56,7 +57,10 @@ export default function NavBarChat({
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>
-            <DropdownItem edit="justify-center p-2">
+            <DropdownItem edit="justify-center p-2" onClick={async ()=>{
+          await logout();
+          navigate("/Login")
+        }}>
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />
               <span>Logout</span>
             </DropdownItem>

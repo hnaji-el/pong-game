@@ -156,9 +156,15 @@ export function CardProfile({ setOpen }: TypeCardProfile) {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full bg-online`}></span>
-            <span className="text-secondaryText font-light text-sm">
-              Online
+            <span
+              className={`w-2 h-2 rounded-full ${
+                dataUser.settings.status === "offline"
+                  ? "bg-offline"
+                  : "bg-online"
+              }`}
+            ></span>
+            <span className="text-secondaryText font-light text-sm capitalize">
+              {dataUser.settings.status === "offline" ? "offline" : "online"}
             </span>
           </div>
         </div>
@@ -186,9 +192,13 @@ export function CardProfileUser({ data }: TypeDataProfileUser) {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full bg-online`}></span>
-            <span className="text-secondaryText font-light text-sm">
-              Online
+            <span
+              className={`w-2 h-2 rounded-full ${
+                data?.status === "offline" ? "bg-offline" : "bg-online"
+              }`}
+            ></span>
+            <span className="text-secondaryText font-light text-sm capitalize">
+              {data?.status === "offline" ? "offline" : "online"}
             </span>
           </div>
         </div>
@@ -202,9 +212,9 @@ export function CardAchievments() {
     <div className="flex items-center justify-center p-5 w-[26rem] shadow gap-5 bg-body rounded-xl">
       <CircleAchievements />
       <div className="flex flex-col gap-1">
-        <span className="text-primaryText text-4xl">10</span>
+        <span className="text-primaryText text-4xl">4</span>
         <span className="text-secondaryText text-sm">
-          Achievements completed
+          Achievement four wins
         </span>
       </div>
     </div>
@@ -460,7 +470,7 @@ export function CardChatFriend({ data }: TypeChat) {
           >
             <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </button>
-          <div className="flex items-center gap-2">
+          <Link to="/ProfileUser" state={{id:data?.id}} className="flex items-center gap-2">
             <img
               src={data?.picture}
               alt="Friend"
@@ -473,13 +483,17 @@ export function CardChatFriend({ data }: TypeChat) {
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-online"></span>
-                <span className="text-sm font-light text-secondaryText">
-                  Online
+                <span
+                  className={`h-2 w-2 rounded-full ${
+                    data?.status === "offline" ? "bg-offline" : "bg-online"
+                  }`}
+                ></span>
+                <span className="text-sm font-light text-secondaryText capitalize">
+                  {data?.status === "offline" ? "offline" : "online"}
                 </span>
               </div>
             </div>
-          </div>
+          </Link>
         </>
       ) : null}
     </div>
@@ -553,9 +567,13 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full bg-online`}></span>
+            <span
+              className={`w-2 h-2 rounded-full ${
+                data?.status === "offline" ? "bg-offline" : "bg-online"
+              }`}
+            ></span>
             <span className="text-secondaryText font-light text-sm capitalize">
-              online
+              {data?.status === "offline" ? "offline" : "online"}
             </span>
           </div>
         </div>
@@ -615,9 +633,13 @@ export function CardMember({ data, role }: TypeMember) {
             ) : null}
           </div>
           <div className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full bg-online`}></span>
+            <span
+              className={`w-2 h-2 rounded-full ${
+                data?.status === "offline" ? "bg-offline" : "bg-online"
+              }`}
+            ></span>
             <span className="text-secondaryText font-light text-sm capitalize">
-              online
+              {data?.status === "offline" ? "offline" : "online"}
             </span>
           </div>
         </div>

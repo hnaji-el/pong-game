@@ -3,6 +3,7 @@ import { Socket } from 'socket.io';
 import { Server } from 'socket.io';
 import { GameState, Player, Ball } from 'shared/types';
 import { log } from 'console';
+import { PrismaService } from 'src/prisma/prisma.service';
 // import { SocketGateway } from '../socket/socket.gateway';
 
 interface TypeData {
@@ -19,6 +20,7 @@ interface UserToSocket {
 }
 @Injectable()
 export class GameService {
+  constructor(private prisma: PrismaService) {}
   private easyModeQueue: Socket[] = [];
   private hardModeQueue: Socket[] = [];
   private privateModeQueue: Socket[] = [];
@@ -26,6 +28,31 @@ export class GameService {
   private clientIdToRoomId: Map<string, string> = new Map();
   private roomIdToGameState: Map<string, GameState> = new Map();
   private userToSocket: UserToSocket[] = [];
+  async updateUserStatus(userId: string, status: string) {
+    try {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { status: status },
+      });
+    } catch (e) {}
+  }
+
+  async storeGame(
+    winnerId: string,
+    loserId: string,
+    winScore: number,
+    loseScore: number,
+  ) {
+    await this.prisma.game.create({
+      data: {
+        winnerId: winnerId,
+        loserId: loserId,
+        winScore: winScore,
+        loseScore: loseScore,
+      },
+    });
+  }
+
   addUserToSocket(client: Socket, payload: TypeData): void {
     this.userToSocket.push({
       socket: client,
@@ -181,9 +208,11 @@ export class GameService {
       );
       if (player1Nickname) {
         gameState.players[0].user.nickname = player1Nickname.user.nickname;
+        gameState.players[0].user.id = player1Nickname.user.id;
       }
       if (player2Nickname) {
         gameState.players[1].user.nickname = player2Nickname.user.nickname;
+        gameState.players[1].user.id = player2Nickname.user.id;
       }
       player1.emit('setPlayerId', 0);
       player2.emit('setPlayerId', 1);
@@ -306,22 +335,41 @@ export class GameService {
     if (gameState.players[0].score === 5) {
       server.to(roomId).emit('gameOver', gameState);
       clearInterval(timer);
-      this.roomIdToGameState.delete(roomId);
-      this.clientIdToRoomId.delete(gameState.players[0].id);
-      this.clientIdToRoomId.delete(gameState.players[1].id);
       console.log(
-        'game over',
+        'game over finally',
         gameState.players[0].user.id,
         gameState.players[1].user.id,
         gameState.players[0].score,
         gameState.players[1].score,
       );
-    } else if (gameState.players[1].score === 5) {
-      server.to(roomId).emit('gameOver', gameState);
-      clearInterval(timer);
+      this.storeGame(
+        gameState.players[0].user.id,
+        gameState.players[1].user.id,
+        gameState.players[0].score,
+        gameState.players[1].score,
+      );
       this.roomIdToGameState.delete(roomId);
       this.clientIdToRoomId.delete(gameState.players[0].id);
       this.clientIdToRoomId.delete(gameState.players[1].id);
+    } else if (gameState.players[1].score === 5) {
+      server.to(roomId).emit('gameOver', gameState);
+      clearInterval(timer);
+      console.log(
+        'game over finally',
+        gameState.players[1].user.id,
+        gameState.players[0].user.id,
+        gameState.players[1].score,
+        gameState.players[0].score,
+      );
+      this.storeGame(
+        gameState.players[1].user.id,
+        gameState.players[0].user.id,
+        gameState.players[1].score,
+        gameState.players[0].score,
+      );
+      this.roomIdToGameState.delete(roomId);
+      this.clientIdToRoomId.delete(gameState.players[1].id);
+      this.clientIdToRoomId.delete(gameState.players[0].id);
     } else {
       server.to(roomId).emit('updateGameState', gameState);
     }

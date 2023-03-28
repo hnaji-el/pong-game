@@ -29,6 +29,7 @@ export function firstLetterCapital(name: string) {
 
 export function checkNickname(value: string): string {
   if (!value.trim().length) return "Zone text empty";
+  if (value.length > 20) return "Maximum 20 characters";
 
   return "";
 }

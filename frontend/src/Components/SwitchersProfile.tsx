@@ -18,13 +18,13 @@ export default function SwitchersProfile({id}:TypeProps) {
       </TabsList>
       <TabsPanels edit="overflow-visible">
         <TabContent edit="overflow-visible">
-          <Achievements />
+          <Achievements id={id} />
         </TabContent>
         <TabContent edit="overflow-visible">
           <Friends id={id} />
         </TabContent>
         <TabContent edit="overflow-visible">
-          <MatchHistory />
+          <MatchHistory id={id} />
         </TabContent>
       </TabsPanels>
     </Tabs>

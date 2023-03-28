@@ -38,11 +38,11 @@ export class AuthService {
     }
 
     if (req.user.isTwoFactorAuthEnabled) {
-      res.redirect('http://localhost:3000/tfa');
+      res.redirect('http://localhost:3001/tfa');
     } else if (req.user.firstTimeLogged) {
-      res.redirect('http://localhost:3000/edit');
+      res.redirect('http://localhost:3001/edit');
     } else {
-      res.redirect('http://localhost:3000/');
+      res.redirect('http://localhost:3001/');
     }
   }
 

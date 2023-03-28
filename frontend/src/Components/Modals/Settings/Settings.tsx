@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { turnOffTfa, turOnTfa } from "../../../API";
+import {
+  editNickname,
+  editPicture,
+  getDataUserLogged,
+  turnOffTfa,
+  turOnTfa,
+} from "../../../API";
 import { checkNickname } from "../../../helpers";
 import { EditAvatarIcon } from "../../Icons";
 import InputForm from "../../InputForm";
@@ -9,9 +15,22 @@ interface TypeProps {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   pictureUser: string;
   setPictureUser: React.Dispatch<React.SetStateAction<string>>;
+  tmpPicture: string;
+  setTmpPicture: React.Dispatch<React.SetStateAction<string>>;
+  sendPicture: {};
+  setSendPicture: React.Dispatch<React.SetStateAction<{}>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTfa: React.Dispatch<React.SetStateAction<boolean>>;
   enable: boolean;
+  dataUserLogged: any;
+}
+
+interface TypeData {
+  id: string;
+  pictureURL: string;
+  nickname: string;
+  isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 export default function Settings({
@@ -19,9 +38,14 @@ export default function Settings({
   setValue,
   pictureUser,
   setPictureUser,
+  tmpPicture,
+  setTmpPicture,
+  sendPicture,
+  setSendPicture,
   setOpen,
   setTfa,
   enable,
+  dataUserLogged,
 }: TypeProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
   return (
@@ -60,7 +84,9 @@ export default function Settings({
                       extention === "jpg" ||
                       extention === "JPG"
                     ) {
+                      setSendPicture(e.target.files[0]);
                       setPictureUser(URL.createObjectURL(e.target.files[0]));
+                      setTmpPicture(URL.createObjectURL(e.target.files[0]));
                     }
                   }
                 }}
@@ -109,7 +135,7 @@ export default function Settings({
         <button
           type="submit"
           className="w-32 rounded-md bg-primary p-2 text-sm text-primaryText"
-          onClick={(e) => {
+          onClick={async (e) => {
             e.preventDefault();
             let errorMessage = checkNickname(value);
 
@@ -117,12 +143,21 @@ export default function Settings({
               setErrorMessage(errorMessage);
               return;
             }
-            if(enable)
-              turOnTfa();
-            else
-              turnOffTfa();
-            setOpen(false);
-            document.body.style.overflow = "auto";
+
+            if (tmpPicture.length) await editPicture(sendPicture);
+            await editNickname((res: any) => {
+              if (res === "invalid") setErrorMessage("Username already exists");
+              else {
+                if (enable) turOnTfa();
+                else turnOffTfa();
+
+                getDataUserLogged((res: TypeData) => {
+                  dataUserLogged.updateSettings(res);
+                  setOpen(false);
+                  document.body.style.overflow = "auto";
+                });
+              }
+            }, value);
           }}
         >
           Save

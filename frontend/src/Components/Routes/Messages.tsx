@@ -2,7 +2,12 @@ import React, { useEffect, createContext, useState } from "react";
 import NavigationChat from "../Navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
-import { CheckToken, getAllChannels, getDataUserLogged, getDmUsers } from "../../API";
+import {
+  CheckToken,
+  getAllChannels,
+  getDataUserLogged,
+  getDmUsers,
+} from "../../API";
 import Spinner from "../Spinner";
 import { io } from "socket.io-client";
 
@@ -10,6 +15,8 @@ interface TypeData {
   id: string;
   pictureURL: string;
   nickname: string;
+  isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 interface TypeContext {
@@ -18,7 +25,7 @@ interface TypeContext {
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   firstClick: boolean;
   setFirstClick: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: TypeData;
+  settings: any;
   updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
 }
 
@@ -55,6 +62,8 @@ export default function Messages() {
     id: "",
     pictureURL: "",
     nickname: "",
+    isTwoFactorAuthEnabled: false,
+    status:""
   });
 
   const dataChat = {

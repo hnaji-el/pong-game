@@ -5,6 +5,8 @@ interface TypeDataLogged {
   id: string;
   nickname: string;
   pictureURL: string;
+  isTwoFactorAuthEnabled: boolean;
+  status: string;
 }
 
 export function CheckToken() {
@@ -60,6 +62,8 @@ interface TypeDataProfileUser {
   nickname: string;
   pictureURL: string;
   status: string;
+  winsNumber: number;
+  losesNumber: number;
 }
 
 interface TypedataFriend {
@@ -361,7 +365,7 @@ export async function editPicture(file: any) {
     .catch();
 }
 
-export async function editNickname(nickname: string) {
+export async function editNickname(getRes: any, nickname: string) {
   let obj = {
     nickname: nickname,
   };
@@ -369,14 +373,76 @@ export async function editNickname(nickname: string) {
     .patch("http://localhost:3000/users/update_nickname", obj, {
       withCredentials: true,
     })
-    .then()
-    .catch();
+    .then(() => {
+      getRes("valid");
+    })
+    .catch(() => {
+      getRes("invalid");
+    });
 }
 
 export async function generateQrCode(getRes: any) {
   await axios
-    .post("http://localhost:3000/2fa/generate",{}, {
+    .post(
+      "http://localhost:3000/2fa/generate",
+      {},
+      {
+        withCredentials: true,
+      }
+    )
+    .then((res) => {
+      getRes(res.data);
+    })
+    .catch();
+}
+
+export async function QrcodeValidation(getRes: any, code: string) {
+  let obj = {
+    twoFactorAuthCode: code,
+  };
+  await axios
+    .post("http://localhost:3000/2fa/verification", obj, {
       withCredentials: true,
+    })
+    .then((res) => {
+      getRes("valide");
+    })
+    .catch(() => {
+      getRes("invalide");
+    });
+}
+
+export async function turOnTfa() {
+  await axios
+    .post(
+      "http://localhost:3000/2fa/turn-on",
+      {},
+      {
+        withCredentials: true,
+      }
+    )
+    .then()
+    .catch();
+}
+
+export async function turnOffTfa() {
+  await axios
+    .post(
+      "http://localhost:3000/2fa/turn-off",
+      {},
+      {
+        withCredentials: true,
+      }
+    )
+    .then()
+    .catch();
+}
+
+export function getAchievements(getRes: any, id: string) {
+  axios
+    .get(`http://localhost:3000/users/game/achievement/${id}`, {
+      withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
     })
     .then((res) => {
       getRes(res.data);
@@ -384,39 +450,23 @@ export async function generateQrCode(getRes: any) {
     .catch();
 }
 
-export async function QrcodeValidation(getRes:any,code:string){
-  let obj = {
-    twoFactorAuthCode:code
-  };
-    await axios
-      .post(
-        "http://localhost:3000/2fa/verification",
-        obj,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        getRes("valide");
-      })
-      .catch(() => {
-        getRes("invalide");
-      });
-}
-
-export async function turOnTfa() {
-  await axios
-    .post("http://localhost:3000/2fa/turn-on",{}, {
+export function getMatchHistory(getRes: any, id: string) {
+  axios
+    .get(`http://localhost:3000/users/game/match-history/${id}`, {
       withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
     })
-    .then()
+    .then((res) => {
+      getRes(res.data);
+    })
     .catch();
 }
 
-export async function turnOffTfa() {
-  await axios
-    .post("http://localhost:3000/2fa/turn-off",{}, {
+export async function logout() {
+ await axios
+    .get(`http://localhost:3000/auth/logout`, {
       withCredentials: true,
+      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
     })
     .then()
     .catch();

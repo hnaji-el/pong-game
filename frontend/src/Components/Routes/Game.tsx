@@ -13,7 +13,7 @@ const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
-
+const domain:any = process.env.REACT_APP_DOMAIN;
 interface TypeData {
   id: string;
   pictureURL: string;
@@ -66,7 +66,7 @@ export default function Game() {
   const navigate = useNavigate();
   const socketRef = useRef<Socket | null>(null);
   useEffect(() => {
-    const socket = io("http://localhost:3000", {
+    const socket = io(domain, {
       withCredentials: true,
       auth: {
         token: cookies["jwt"],

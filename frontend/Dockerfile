@@ -7,7 +7,7 @@ COPY --chown=node:node . ./
 
 COPY ./start.sh ./
 
-RUN npm install --prefix .
+RUN npm install --prefix ./
 
 EXPOSE 3000
 

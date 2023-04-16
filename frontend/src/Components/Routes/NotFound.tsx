@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { CheckToken } from "../../API";
 import Astro from "../Astro";
+import { Link } from "react-router-dom";
 
 export default function NotFound() {
   CheckToken();
@@ -22,9 +23,9 @@ export default function NotFound() {
               mystery. But you can click the button below to go back to the
               homepage.
             </p>
-            <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[8rem] rounded-md p-3">
+            <Link to="/" className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[8rem] rounded-md p-3">
               <span>Home</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

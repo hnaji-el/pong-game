@@ -12,7 +12,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 //import { usersObject } from '../../users/utils/usersObject';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { jwtConstants } from '../auth/constants';
 import * as moment from 'moment';
 import { type } from 'os';
 // import { User, Room } from '@prisma/client';
@@ -28,7 +27,7 @@ export class ChatService {
   async getUserFromAuthenticationToken(token: string) {
     if (token) {
       const payload = await this.jwt.verify(token, {
-        secret: jwtConstants.secret,
+        secret: process.env.SECRET,
       });
       if (payload.nickname) {
         const user = await this.prisma.user.findUnique({

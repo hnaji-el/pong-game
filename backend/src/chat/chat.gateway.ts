@@ -15,7 +15,7 @@ import * as cookie from 'cookie';
 
 @WebSocketGateway(1337, {
   cors: {
-    origin: 'http://localhost:3001',
+    origin: `${process.env.HOST_URL}:${process.env.PORT}`,
     credentials: true,
     allowedHeaders: ['Cookie'],
   },

@@ -1,5 +1,7 @@
 import { io } from "socket.io-client";
 
+const domain: any = process.env.REACT_APP_DOMAIN;
+
 let cookies = Object.fromEntries(
   document.cookie.split("; ").map((c) => {
     const [key, ...v] = c.split("=");
@@ -7,18 +9,10 @@ let cookies = Object.fromEntries(
   })
 );
 
-export const globalSocket = io("http://localhost:3000", {
+export const globalSocket = io(domain, {
   withCredentials: true,
   auth: {
     token: cookies["jwt"],
   },
 });
 
-//   const globalSocket = io('http://localhost:3001', {
-//     withCredentials: true,
-//     auth: {
-//       token: cookies["jwt"],
-//     },
-//   });
-//   console.log(globalSocket);
-  // Replace with your server URL

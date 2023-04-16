@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const domain = process.env.REACT_APP_DOMAIN;
+
 interface TypeDataLogged {
   id: string;
   nickname: string;
@@ -12,9 +14,9 @@ interface TypeDataLogged {
 export function CheckToken() {
   const navigate = useNavigate();
   axios
-    .get("http://localhost:3000/users/logged-user", {
+    .get(`${domain}/users/logged-user`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then()
     .catch((error) => {
@@ -27,9 +29,9 @@ export function CheckToken() {
 export function CheckTokenLogin(getRes: any) {
   const navigate = useNavigate();
   axios
-    .get("http://localhost:3000/users/logged-user", {
+    .get(`${domain}/users/logged-user`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then(() => {
       getRes("200");
@@ -74,9 +76,9 @@ interface TypedataFriend {
 
 export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
   axios
-    .get(`http://localhost:3000/users/logged-user`, {
+    .get(`${domain}/users/logged-user`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -86,9 +88,9 @@ export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
 
 export function getDataUsers(getRes: (res: TypeDataUesrs[]) => void) {
   axios
-    .get(`http://localhost:3000/users`, {
+    .get(`${domain}/users`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -101,9 +103,9 @@ export function getOneUser(
   id: string
 ) {
   axios
-    .get(`http://localhost:3000/users/${id}`, {
+    .get(`${domain}/users/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -116,9 +118,9 @@ export function getFriendsOneUser(
   id: string
 ) {
   axios
-    .get(`http://localhost:3000/users/friends/${id}`, {
+    .get(`${domain}/users/friends/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -129,11 +131,11 @@ export function getFriendsOneUser(
 export async function addFriend(id: string) {
   await axios
     .post(
-      `http://localhost:3000/users/add-friend/${id}`,
+      `${domain}/users/add-friend/${id}`,
       {},
       {
         withCredentials: true,
-        headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+        headers: { "Access-Control-Allow-Origin": `${domain}` },
       }
     )
     .then((res) => {})
@@ -142,9 +144,9 @@ export async function addFriend(id: string) {
 
 export async function unfriend(id: string) {
   await axios
-    .delete(`http://localhost:3000/users/remove-friend/${id}`, {
+    .delete(`${domain}/users/remove-friend/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {})
     .catch();
@@ -153,11 +155,11 @@ export async function unfriend(id: string) {
 export async function blockFriend(id: string) {
   await axios
     .patch(
-      `http://localhost:3000/users/block-friend/${id}`,
+      `${domain}/users/block-friend/${id}`,
       {},
       {
         withCredentials: true,
-        headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+        headers: { "Access-Control-Allow-Origin": `${domain}` },
       }
     )
     .then((res) => {})
@@ -167,11 +169,11 @@ export async function blockFriend(id: string) {
 export function unBlockFriend(id: string) {
   axios
     .patch(
-      `http://localhost:3000/users/unblock-friend/${id}`,
+      `${domain}/users/unblock-friend/${id}`,
       {},
       {
         withCredentials: true,
-        headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+        headers: { "Access-Control-Allow-Origin": `${domain}` },
       }
     )
     .then((res) => {})
@@ -182,9 +184,9 @@ export function unBlockFriend(id: string) {
 
 export function getFriendChat() {
   axios
-    .get("http://localhost:3000/chat/DM-with-all-users", {
+    .get(`${domain}/chat/DM-with-all-users`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res: any) => {})
     .catch();
@@ -192,9 +194,9 @@ export function getFriendChat() {
 
 export function getDmUsers(getRes: any) {
   axios
-    .get("http://localhost:3000/chat/DM-with-all-users", {
+    .get(`${domain}/chat/DM-with-all-users`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -204,9 +206,9 @@ export function getDmUsers(getRes: any) {
 
 export function getAllChannels(getRes: any) {
   axios
-    .get("http://localhost:3000/chat/room-message", {
+    .get(`${domain}/chat/room-message`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res: any) => {
       getRes(res.data);
@@ -216,9 +218,9 @@ export function getAllChannels(getRes: any) {
 
 export function getChannelsDm() {
   axios
-    .get("http://localhost:3000/chat/room-message", {
+    .get(`${domain}/chat/room-message`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {})
     .catch();
@@ -227,7 +229,7 @@ export function getChannelsDm() {
 export async function CreateChannel(getRes: any, data: any) {
   await axios
     .post(
-      "http://localhost:3000/chat/create-room",
+      `${domain}/chat/create-room`,
       { data },
       { withCredentials: true }
     )
@@ -241,9 +243,9 @@ export async function CreateChannel(getRes: any, data: any) {
 
 export function getFriendChannel(getRes: any, nameChannel: string) {
   axios
-    .get(`http://localhost:3000/chat/friends-in-room/${nameChannel}`, {
+    .get(`${domain}/chat/friends-in-room/${nameChannel}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -253,9 +255,9 @@ export function getFriendChannel(getRes: any, nameChannel: string) {
 
 export function getMembersChannel(getRes: any, nameChannel: string) {
   axios
-    .get(`http://localhost:3000/chat/users-in-room/${nameChannel}`, {
+    .get(`${domain}/chat/users-in-room/${nameChannel}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -266,7 +268,7 @@ export function getMembersChannel(getRes: any, nameChannel: string) {
 export async function addToRoom(data: any) {
   await axios
     .post(
-      "http://localhost:3000/chat/add-to-room",
+      `${domain}/chat/add-to-room`,
       { data },
       { withCredentials: true }
     )
@@ -277,7 +279,7 @@ export async function addToRoom(data: any) {
 export async function setAdmin(data: any) {
   await axios
     .post(
-      "http://localhost:3000/chat/set-admin",
+      `${domain}/chat/set-admin`,
       { data },
       { withCredentials: true }
     )
@@ -288,7 +290,7 @@ export async function setAdmin(data: any) {
 export async function setBlock(data: any) {
   await axios
     .patch(
-      "http://localhost:3000/chat/ban",
+      `${domain}/chat/ban`,
       { data },
       { withCredentials: true }
     )
@@ -299,7 +301,7 @@ export async function setBlock(data: any) {
 export async function setKick(data: any) {
   await axios
     .patch(
-      "http://localhost:3000/chat/kick",
+      `${domain}/chat/kick`,
       { data },
       { withCredentials: true }
     )
@@ -310,7 +312,7 @@ export async function setKick(data: any) {
 export async function setMute(data: any) {
   await axios
     .patch(
-      "http://localhost:3000/chat/muted",
+      `${domain}/chat/muted`,
       { data },
       { withCredentials: true }
     )
@@ -321,7 +323,7 @@ export async function setMute(data: any) {
 export async function leaveRoom(name: string) {
   await axios
     .post(
-      "http://localhost:3000/chat/quite-room",
+      `${domain}/chat/quite-room`,
       { name },
       { withCredentials: true }
     )
@@ -331,7 +333,7 @@ export async function leaveRoom(name: string) {
 
 export async function deleteRoom(name: string) {
   await axios
-    .delete(`http://localhost:3000/chat/delete-room/${name}`, {
+    .delete(`${domain}/chat/delete-room/${name}`, {
       withCredentials: true,
     })
     .then()
@@ -343,7 +345,7 @@ export function joinRoom(getRes: any, data: any) {
 
   axios
     .post(
-      "http://localhost:3000/chat/join-room",
+      `${domain}/chat/join-room`,
       { data },
       { withCredentials: true }
     )
@@ -358,7 +360,7 @@ export async function editPicture(file: any) {
   fd.append("file", file);
 
   await axios
-    .post("http://localhost:3000/users/upload-profile-picture", fd, {
+    .post(`${domain}/users/upload-profile-picture`, fd, {
       withCredentials: true,
     })
     .then()
@@ -370,7 +372,7 @@ export async function editNickname(getRes: any, nickname: string) {
     nickname: nickname,
   };
   await axios
-    .patch("http://localhost:3000/users/update_nickname", obj, {
+    .patch(`${domain}/users/update_nickname`, obj, {
       withCredentials: true,
     })
     .then(() => {
@@ -384,7 +386,7 @@ export async function editNickname(getRes: any, nickname: string) {
 export async function generateQrCode(getRes: any) {
   await axios
     .post(
-      "http://localhost:3000/2fa/generate",
+      `${domain}/2fa/generate`,
       {},
       {
         withCredentials: true,
@@ -401,7 +403,7 @@ export async function QrcodeValidation(getRes: any, code: string) {
     twoFactorAuthCode: code,
   };
   await axios
-    .post("http://localhost:3000/2fa/verification", obj, {
+    .post(`${domain}/2fa/verification`, obj, {
       withCredentials: true,
     })
     .then((res) => {
@@ -415,7 +417,7 @@ export async function QrcodeValidation(getRes: any, code: string) {
 export async function turOnTfa() {
   await axios
     .post(
-      "http://localhost:3000/2fa/turn-on",
+      `${domain}/2fa/turn-on`,
       {},
       {
         withCredentials: true,
@@ -428,7 +430,7 @@ export async function turOnTfa() {
 export async function turnOffTfa() {
   await axios
     .post(
-      "http://localhost:3000/2fa/turn-off",
+      `${domain}/2fa/turn-off`,
       {},
       {
         withCredentials: true,
@@ -440,9 +442,9 @@ export async function turnOffTfa() {
 
 export function getAchievements(getRes: any, id: string) {
   axios
-    .get(`http://localhost:3000/users/game/achievement/${id}`, {
+    .get(`${domain}/users/game/achievement/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -452,9 +454,9 @@ export function getAchievements(getRes: any, id: string) {
 
 export function getMatchHistory(getRes: any, id: string) {
   axios
-    .get(`http://localhost:3000/users/game/match-history/${id}`, {
+    .get(`${domain}/users/game/match-history/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -464,9 +466,9 @@ export function getMatchHistory(getRes: any, id: string) {
 
 export async function logout() {
  await axios
-    .get(`http://localhost:3000/auth/logout`, {
+    .get(`${domain}/auth/logout`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": "localhost:3000" },
+      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then()
     .catch();

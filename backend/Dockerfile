@@ -7,9 +7,9 @@ COPY --chown=node:node . ./
 
 COPY  ./start.sh ./
 
-RUN npm install --prefix .
+RUN npm install --prefix ./
 
-EXPOSE 3000
+EXPOSE 5000
 EXPOSE 5555
 
 CMD ["bash", "+x", "./start.sh"]

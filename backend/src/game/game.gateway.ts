@@ -8,7 +8,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from 'src/auth/constants';
 // socket
 
 interface TypeData {
@@ -18,7 +17,7 @@ interface TypeData {
 }
 @WebSocketGateway({
   cors: {
-    origin: 'http://localhost:3001',
+    origin: `${process.env.HOST_URL}:${process.env.PORT}`,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   },
@@ -42,7 +41,7 @@ export class GameGateway implements OnGatewayConnection {
     }
 
     const payload = this.jwtService.verify(token, {
-      secret: jwtConstants.secret,
+      secret: process.env.SECRET,
     });
     payload.id = payload.sub;
     console.log('payload', payload);
@@ -101,7 +100,6 @@ export class GameGateway implements OnGatewayConnection {
 
   @SubscribeMessage('queuing')
   handleQueuing(client: Socket, mode: string): void {
-
     this.gameService.addToQueue(client, this.server, mode);
   }
   @SubscribeMessage('startingGame')

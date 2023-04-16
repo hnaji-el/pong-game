@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import { io } from "socket.io-client";
 // import { globalSocket } from "../../App";
 // import { Socket } from "socket.io-client";
-
+const domain = process.env.REACT_APP_DOMAIN;
 interface TypeData {
   id: string;
   pictureURL: string;
@@ -126,7 +126,7 @@ export default function Home() {
     // Add style element to head
 
     document.title = "Pong - Home";
-    fetch("http://localhost:3000/game/liveGames")
+    fetch(`${domain}/game/liveGames`)
       .then((response) => response.json())
       .then((data) => setArrayofPlayersAndroomId(data))
       .catch((error) => console.log(error));

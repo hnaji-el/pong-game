@@ -7,6 +7,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const exectionContex = host.switchToHttp();
     const response: Response = exectionContex.getResponse<Response>();
-    response.redirect(301, 'http://localhost:3001/login');
+    response.redirect(301, `${process.env.HOST_URL}:${process.env.PORT}/login`);
   }
 }

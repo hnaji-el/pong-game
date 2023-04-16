@@ -12,6 +12,7 @@ import {
 } from "../PongElements";
 import Redirection from "./Redirection";
 
+const domain = process.env.REACT_APP_DOMAIN;
 export default function Login() {
   const [checkLogin, setCheckLogin] = useState<string>("");
   CheckTokenLogin((res: any) => {
@@ -46,7 +47,7 @@ export default function Login() {
               <button
                 className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[10rem] rounded-md p-3"
                 onClick={() => {
-                  window.location.href = "http://localhost:3000/auth/login";
+                  window.location.href = domain+"/auth/login";
                 }}
               >
                 <span>Sing in with</span>

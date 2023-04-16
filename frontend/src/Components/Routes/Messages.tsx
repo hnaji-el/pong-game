@@ -10,6 +10,7 @@ import {
 } from "../../API";
 import Spinner from "../Spinner";
 import { io } from "socket.io-client";
+const domain:any = process.env.REACT_APP_DOMAIN1;
 
 interface TypeData {
   id: string;
@@ -40,7 +41,7 @@ export const StateMssages = createContext<TypeContext>({
 });
 export const Click = createContext<boolean>(false);
 export const MessagesContext = createContext<any>({});
-const socket = io("http://localhost:1337", {
+const socket = io(domain, {
   //autoConnect : false,
   withCredentials: true,
 });

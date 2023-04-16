@@ -38,11 +38,11 @@ export class AuthService {
     }
 
     if (req.user.isTwoFactorAuthEnabled) {
-      res.redirect('http://localhost:3001/tfa');
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/tfa`);
     } else if (req.user.firstTimeLogged) {
-      res.redirect('http://localhost:3001/edit');
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/edit`);
     } else {
-      res.redirect('http://localhost:3001/');
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/`);
     }
   }
 

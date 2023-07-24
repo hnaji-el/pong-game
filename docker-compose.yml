@@ -3,39 +3,30 @@ version: '3.1'
 services:
   database:
     image: postgres:latest
-    container_name: postgres-db
+    container_name: database-service
     restart: always
     ports:
       - 5432:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    env_file: .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
   backend:
     build: ./backend/.
-    image: backend
-    container_name: backend
-    restart: unless-stopped
+    image: backend-image
+    container_name: backend-service
+    restart: always
     ports:
       - 5000:5000
       - 5555:5555
-    env_file:
-      - .env
     depends_on:
       - database
   frontend:
     build: ./frontend/.
-    image: frontend
-    container_name: frontend
-    restart: unless-stopped
+    image: frontend-image
+    container_name: frontend-service
+    restart: always
     ports:
       - 3000:3000
-    env_file:
-      - .env
     depends_on:
       - backend
-volumes:
-  pgdata:

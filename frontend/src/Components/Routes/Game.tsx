@@ -1,7 +1,6 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
-// import socket from "../socket";
 import { GameState } from ".../../../shared/types";
 import { io, Socket } from "socket.io-client";
 import { getDataUserLogged } from "../../API";
@@ -13,7 +12,7 @@ const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
-const domain:any = process.env.REACT_APP_DOMAIN;
+const domain: any = import.meta.env.VITE_BACKEND_URL;
 interface TypeData {
   id: string;
   pictureURL: string;
@@ -72,67 +71,11 @@ export default function Game() {
         token: cookies["jwt"],
       },
     });
+
     socketRef.current = socket;
     getDataUserLogged((res: TypeData) => {
       setDataUser(res);
     });
-    // globalSocket.off(
-    //   "invitePlayer",
-    //   (payload: {
-    //     sender: { id: string; nickname: string; pictureURL: string };
-    //     senderSocketId: string;
-    //   }) => {
-    //     console.log(
-    //       payload.sender.nickname,
-    //       "invited you to play a game. Do you accept?",
-    //       payload.senderSocketId
-    //     );
-
-    //     // Create pop-up container
-    //     const popupContainer = document.createElement("div");
-    //     popupContainer.classList.add("popup-container");
-    //     document.body.appendChild(popupContainer);
-
-    //     // Create pop-up dialog
-    //     const popupDialog = document.createElement("div");
-    //     popupDialog.classList.add("popup-dialog");
-    //     popupDialog.innerHTML = `
-    //   <p>${payload.sender.nickname} invited you to play a game. Do you accept?</p>
-    //   <button class="accept-button">Accept</button>
-    //   <button class="decline-button">Decline</button>`;
-    //     popupContainer.appendChild(popupDialog);
-
-    //     // Add click event listener for accept button
-    //     const acceptButton = popupDialog.querySelector(
-    //       ".accept-button"
-    //     ) as HTMLButtonElement;
-    //     acceptButton.addEventListener("click", () => {
-    //       console.log("Accept button clicked");
-    //       globalSocket.emit("inviteAccepted", {
-    //         senderSocketId: payload.senderSocketId,
-    //       });
-    //       popupContainer.removeChild(popupDialog);
-    //       document.body.removeChild(popupContainer);
-    //       // popupContainer.removeChild(popupDialog);
-    //       // Redirect to the AcceptInvite event
-    //       // ...
-    //       // Emit redirect
-    //       // ...
-    //     });
-
-    //     // Add click event listener for decline button
-    //     const declineButton = popupDialog.querySelector(
-    //       ".decline-button"
-    //     ) as HTMLButtonElement;
-    //     declineButton.addEventListener("click", () => {
-    //       console.log("Decline button clicked");
-    //       // Remove pop-up dialog
-    //       popupContainer.removeChild(popupDialog);
-    //       document.body.removeChild(popupContainer);
-    //       // Remove pop-up container
-    //     });
-    //   }
-    // );
 
     if (roomId) {
       gameLogic(roomId, undefined, -1, "undefined", () => {
@@ -355,10 +298,4 @@ export default function Game() {
       </main>
     </GameContext.Provider>
   );
-
-  // return (
-  //   <div className="mx-3 flex justify-center items-center h-full">
-  //     <Spinner />
-  //   </div>
-  // );
 }

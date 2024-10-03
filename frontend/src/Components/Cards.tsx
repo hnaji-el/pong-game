@@ -1,9 +1,7 @@
 import React, { useContext, useState } from "react";
 import friendPicture from "../assets/friend.jpg";
-import pictureUser from "../assets/user.jpg";
 import { Link } from "react-router-dom";
 import {
-  AddFiriendSearchIcon,
   ArrowLeftIcon,
   GroupIcon,
   LockIcon,
@@ -12,10 +10,7 @@ import {
   SettingsIcon,
 } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
-import { firstLetterCapital } from "../helpers";
-import PictureFriend from "../assets/friend.jpg";
 import { StateMssages } from "./Routes/Messages";
-import PasswordChannel from "./PasswordChannel";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../Components/Routes/Profile";
 import { ActiveProfileUser } from "./Routes/ProfileUser";

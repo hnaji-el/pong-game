@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 services:
   database:
@@ -19,6 +19,7 @@ services:
     ports:
       - 5000:5000
       - 5555:5555
+      - 1337:1337
     depends_on:
       - database
   frontend:

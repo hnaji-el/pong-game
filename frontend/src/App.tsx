@@ -1,19 +1,16 @@
 import React, { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { globalSocket } from "./socket";
 import "./App.css";
 import Home from "./Components/Routes/Home";
 import Messages from "./Components/Routes/Messages";
 import Profile from "./Components/Routes/Profile";
 import ProfileUser from "./Components/Routes/ProfileUser";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./Components/Routes/Login";
 import Tfa from "./Components/Routes/Tfa";
 import Edit from "./Components/Routes/Edit";
 import Game from "./Components/Routes/Game";
 import NotFound from "./Components/Routes/NotFound";
-import { io } from "socket.io-client";
-// import { io } from "socket.io-client";
-
-import { globalSocket } from "./socket";
 import { popOutFunc } from "./Components/Routes/eventListener";
 
 function App() {
@@ -48,18 +45,18 @@ function App() {
   }, []);
 
   return (
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Edit" element={<Edit />} />
-        <Route path="/Tfa" element={<Tfa />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/Messages" element={<Messages />} />
-        <Route path="/Profile" element={<Profile />} />
-        <Route path="/ProfileUser" element={<ProfileUser />} />
-        <Route path="/Game" element={<Game />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/Login" element={<Login />} />
+      <Route path="/Edit" element={<Edit />} />
+      <Route path="/Tfa" element={<Tfa />} />
+      <Route path="/Home" element={<Home />} />
+      <Route path="/Messages" element={<Messages />} />
+      <Route path="/Profile" element={<Profile />} />
+      <Route path="/ProfileUser" element={<ProfileUser />} />
+      <Route path="/Game" element={<Game />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

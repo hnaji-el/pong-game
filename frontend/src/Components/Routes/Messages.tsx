@@ -10,7 +10,8 @@ import {
 } from "../../API";
 import Spinner from "../Spinner";
 import { io } from "socket.io-client";
-const domain:any = process.env.REACT_APP_DOMAIN1;
+
+const domain: any = import.meta.env.VITE_BACKEND_SOCKET_URL;
 
 interface TypeData {
   id: string;
@@ -42,7 +43,6 @@ export const StateMssages = createContext<TypeContext>({
 export const Click = createContext<boolean>(false);
 export const MessagesContext = createContext<any>({});
 const socket = io(domain, {
-  //autoConnect : false,
   withCredentials: true,
 });
 export default function Messages() {
@@ -64,7 +64,7 @@ export default function Messages() {
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
-    status:""
+    status: "",
   });
 
   const dataChat = {

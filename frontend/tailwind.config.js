@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-
-module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+export default {
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -26,16 +23,15 @@ module.exports = {
         adminBg: "#F6E791",
         adminText: "#D98824",
         unblock: "#BC4A58",
-        error: "#FF6174"
-
+        error: "#FF6174",
       },
       fontFamily: {
-        poppins: ['Poppins'],
+        poppins: ["Poppins"],
       },
       screens: {
-        '1xl': '1186px'
-      }
+        "1xl": "1186px",
+      },
     },
   },
   plugins: [],
-}
+};

@@ -11,5 +11,6 @@ RUN npm install --prefix ./
 
 EXPOSE 5000
 EXPOSE 5555
+EXPOSE 1337 
 
 CMD ["bash", "+x", "./start.sh"]

@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const domain: any = process.env.REACT_APP_DOMAIN;
+const domain: any = import.meta.env.VITE_BACKEND_URL;
 
 let cookies = Object.fromEntries(
   document.cookie.split("; ").map((c) => {
@@ -15,4 +15,3 @@ export const globalSocket = io(domain, {
     token: cookies["jwt"],
   },
 });
-

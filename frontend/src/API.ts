@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const domain = process.env.REACT_APP_DOMAIN;
+const domain = import.meta.env.VITE_BACKEND_URL;
 
 interface TypeDataLogged {
   id: string;
@@ -228,11 +228,7 @@ export function getChannelsDm() {
 
 export async function CreateChannel(getRes: any, data: any) {
   await axios
-    .post(
-      `${domain}/chat/create-room`,
-      { data },
-      { withCredentials: true }
-    )
+    .post(`${domain}/chat/create-room`, { data }, { withCredentials: true })
     .then((res) => {
       getRes(res);
     })
@@ -267,66 +263,42 @@ export function getMembersChannel(getRes: any, nameChannel: string) {
 
 export async function addToRoom(data: any) {
   await axios
-    .post(
-      `${domain}/chat/add-to-room`,
-      { data },
-      { withCredentials: true }
-    )
+    .post(`${domain}/chat/add-to-room`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setAdmin(data: any) {
   await axios
-    .post(
-      `${domain}/chat/set-admin`,
-      { data },
-      { withCredentials: true }
-    )
+    .post(`${domain}/chat/set-admin`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setBlock(data: any) {
   await axios
-    .patch(
-      `${domain}/chat/ban`,
-      { data },
-      { withCredentials: true }
-    )
+    .patch(`${domain}/chat/ban`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setKick(data: any) {
   await axios
-    .patch(
-      `${domain}/chat/kick`,
-      { data },
-      { withCredentials: true }
-    )
+    .patch(`${domain}/chat/kick`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setMute(data: any) {
   await axios
-    .patch(
-      `${domain}/chat/muted`,
-      { data },
-      { withCredentials: true }
-    )
+    .patch(`${domain}/chat/muted`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function leaveRoom(name: string) {
   await axios
-    .post(
-      `${domain}/chat/quite-room`,
-      { name },
-      { withCredentials: true }
-    )
+    .post(`${domain}/chat/quite-room`, { name }, { withCredentials: true })
     .then()
     .catch();
 }
@@ -344,11 +316,7 @@ export function joinRoom(getRes: any, data: any) {
   console.log("data: ", data);
 
   axios
-    .post(
-      `${domain}/chat/join-room`,
-      { data },
-      { withCredentials: true }
-    )
+    .post(`${domain}/chat/join-room`, { data }, { withCredentials: true })
     .then((res) => {
       getRes(res.data);
     })
@@ -465,7 +433,7 @@ export function getMatchHistory(getRes: any, id: string) {
 }
 
 export async function logout() {
- await axios
+  await axios
     .get(`${domain}/auth/logout`, {
       withCredentials: true,
       headers: { "Access-Control-Allow-Origin": `${domain}` },

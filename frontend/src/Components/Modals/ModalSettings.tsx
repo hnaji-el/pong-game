@@ -4,7 +4,10 @@ interface TypeProps {
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ModalSettings({ children, setOpenSettings }: TypeProps) {
+export default function ModalSettings({
+  children,
+  setOpenSettings,
+}: TypeProps) {
   const modalSettings = useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const setWindowDimensions = () => {

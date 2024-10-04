@@ -95,7 +95,9 @@ export default function NavigationChat() {
       ) : null}
       {messageData.passwordProtected ? (
         <Modal edit="w-[90%] h-[15rem] lg:w-[40rem] lg:h-[15rem]">
-          <ModalHeader setOpen={messageData.setpasswordProtected}>Password</ModalHeader>
+          <ModalHeader setOpen={messageData.setpasswordProtected}>
+            Password
+          </ModalHeader>
           <ModalBody edit="justify-center">
             <FormProtected />
           </ModalBody>

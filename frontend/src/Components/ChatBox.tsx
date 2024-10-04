@@ -13,7 +13,7 @@ export default function ChatBox({ data }: TypeProps) {
   const chatBox = useRef<HTMLDivElement>(null);
   const messageData = useContext(MessagesContext);
   const stateMessage = useContext(StateMssages);
-  
+
   useEffect(() => {
     if (chatBox.current) {
       chatBox.current.scrollTop = chatBox.current.scrollHeight;
@@ -22,7 +22,7 @@ export default function ChatBox({ data }: TypeProps) {
       if (hasVerticalScrollbar) chatBox.current.classList.add("pr-4");
       else chatBox.current.classList.remove("pr-4");
     }
-  }, [messageData.indexDm, messageData.indexChannel,messageData.dataChatBox]);
+  }, [messageData.indexDm, messageData.indexChannel, messageData.dataChatBox]);
 
   return (
     <div className="flex flex-col gap-10 h-full overflow-auto" ref={chatBox}>
@@ -41,7 +41,6 @@ export default function ChatBox({ data }: TypeProps) {
               <BoxMessagesUser message={e.message} time={e.time} key={index} />
             );
         } else {
-          
           if (e.login !== stateMessage.settings.nickname)
             return (
               <BoxMessagesMember

@@ -100,7 +100,7 @@ export function getDataUsers(getRes: (res: TypeDataUesrs[]) => void) {
 
 export function getOneUser(
   getRes: (res: TypeDataProfileUser) => void,
-  id: string
+  id: string,
 ) {
   axios
     .get(`${domain}/users/${id}`, {
@@ -115,7 +115,7 @@ export function getOneUser(
 
 export function getFriendsOneUser(
   getRes: (res: TypedataFriend[]) => void,
-  id: string
+  id: string,
 ) {
   axios
     .get(`${domain}/users/friends/${id}`, {
@@ -136,7 +136,7 @@ export async function addFriend(id: string) {
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": `${domain}` },
-      }
+      },
     )
     .then((res) => {})
     .catch((error) => {});
@@ -160,7 +160,7 @@ export async function blockFriend(id: string) {
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": `${domain}` },
-      }
+      },
     )
     .then((res) => {})
     .catch();
@@ -174,7 +174,7 @@ export function unBlockFriend(id: string) {
       {
         withCredentials: true,
         headers: { "Access-Control-Allow-Origin": `${domain}` },
-      }
+      },
     )
     .then((res) => {})
     .catch();
@@ -358,7 +358,7 @@ export async function generateQrCode(getRes: any) {
       {},
       {
         withCredentials: true,
-      }
+      },
     )
     .then((res) => {
       getRes(res.data);
@@ -389,7 +389,7 @@ export async function turOnTfa() {
       {},
       {
         withCredentials: true,
-      }
+      },
     )
     .then()
     .catch();
@@ -402,7 +402,7 @@ export async function turnOffTfa() {
       {},
       {
         withCredentials: true,
-      }
+      },
     )
     .then()
     .catch();

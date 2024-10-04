@@ -81,7 +81,7 @@ body {
   font-size: 1rem;
   font-weight: bold;
   color: white;
-  background-color: #7970b3;;
+  background-color: #7970b3;
   padding: 0.5rem 1rem;
   border-radius: 0.25rem;
   border: none;
@@ -93,10 +93,9 @@ body {
   background-color: rgb(0, 0, 22);
 }
 
-
-
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -114,5 +113,5 @@ body {
 }
 
 .text-red-500 {
-  color: #EF4444;
+  color: #ef4444;
 }

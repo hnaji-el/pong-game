@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState,createContext } from "react";
+import React, { useContext, useEffect, useState, createContext } from "react";
 import { getFriendChannel } from "../../API";
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
 import InputSearchMembers from "../InputSearchMembers";
 import { MessagesContext } from "../Routes/Messages";
 import Spinner from "../Spinner";
-
 
 export const AddMemberContext = createContext<any>({});
 
@@ -19,11 +18,11 @@ export default function AddMember() {
       setRender(true);
     }, messageData.dataChatBox.name);
   }, []);
-  
+
   if (render) {
     if (friend.length) {
       return (
-        <AddMemberContext.Provider value={{setFriend:setFriend}}>
+        <AddMemberContext.Provider value={{ setFriend: setFriend }}>
           <div className="pt-5 w-full flex flex-col gap-6">
             <FriendMember data={friend} />
           </div>

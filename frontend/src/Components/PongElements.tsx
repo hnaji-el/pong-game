@@ -4,7 +4,7 @@ interface TypeProps {
   edit?: string;
 }
 
-export function Pong({edit}:TypeProps) {
+export function Pong({ edit }: TypeProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

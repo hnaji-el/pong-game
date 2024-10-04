@@ -31,9 +31,9 @@ interface TypeDataProfileUser {
   isFriendToLoggedUser: boolean;
   nickname: string;
   pictureURL: string;
-  status:string
-  winsNumber:number,
-  losesNumber:number,
+  status: string;
+  winsNumber: number;
+  losesNumber: number;
 }
 
 export const ActiveProfileUser = createContext<TypeContext>({
@@ -43,7 +43,7 @@ export const ActiveProfileUser = createContext<TypeContext>({
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
-    status:""
+    status: "",
   },
   updateSettings: () => {},
 });
@@ -71,10 +71,9 @@ export default function ProfileUser() {
     isFriendToLoggedUser: false,
     nickname: "",
     pictureURL: "",
-    status:"",
-    winsNumber:0,
-    losesNumber:0,
-
+    status: "",
+    winsNumber: 0,
+    losesNumber: 0,
   });
   useEffect(() => {
     document.title = "Pong - Profile";

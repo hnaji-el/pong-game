@@ -36,7 +36,7 @@ export const ActiveProfile = createContext<TypeContext>({
 export default function Profile() {
   CheckToken();
   const [open, setOpen] = useState<boolean>(false);
-  const [dataGame,setDataGame] = useState<any>({})
+  const [dataGame, setDataGame] = useState<any>({});
   const [settings, setSettings] = useState<TypeData>({
     id: "",
     pictureURL: "",
@@ -49,11 +49,10 @@ export default function Profile() {
     document.title = "Pong - Profile";
     getDataUserLogged((res: TypeData) => {
       setSettings(res);
-          getOneUser((response: any) => {
-          setDataGame(response)
-    }, res.id);
+      getOneUser((response: any) => {
+        setDataGame(response);
+      }, res.id);
     });
-
   }, []);
 
   if (settings.nickname.length)

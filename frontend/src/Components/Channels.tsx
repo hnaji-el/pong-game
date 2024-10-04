@@ -21,7 +21,9 @@ export default function Channels({ setCreateChannel }: TypeProps) {
           }}
         >
           <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
-          <span className="text-primaryText text-sm font-light">Add channel</span>
+          <span className="text-primaryText text-sm font-light">
+            Add channel
+          </span>
         </button>
       </div>
       {messageData.channelDm.length ? (

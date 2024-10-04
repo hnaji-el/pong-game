@@ -43,15 +43,14 @@ export default function QrcodeDisable({ setTfa, setEnable }: TypeProps) {
                   setErrorMessage(errorMessage);
                   return;
                 }
-                
-                QrcodeValidation((res:any)=>{
-                  if(res === "invalide")
-                    setErrorMessage("Code incorect")
-                  else{
-                setEnable(false);
-                setTfa(false);
+
+                QrcodeValidation((res: any) => {
+                  if (res === "invalide") setErrorMessage("Code incorect");
+                  else {
+                    setEnable(false);
+                    setTfa(false);
                   }
-                },value)
+                }, value);
               }}
             >
               Confirm

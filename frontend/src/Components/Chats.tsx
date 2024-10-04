@@ -27,10 +27,10 @@ export default function Chats() {
         </div>
       </div>
     );
-else
-  return (
-    <div className="h-full flex pb-[7.3rem] justify-center items-center text-primaryText">
-      <Spinner edit="w-9 h-9" />
-    </div>
-  );
+  else
+    return (
+      <div className="h-full flex pb-[7.3rem] justify-center items-center text-primaryText">
+        <Spinner edit="w-9 h-9" />
+      </div>
+    );
 }

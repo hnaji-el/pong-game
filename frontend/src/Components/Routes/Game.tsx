@@ -54,7 +54,7 @@ export default function Game() {
     document.cookie.split("; ").map((c) => {
       const [key, ...v] = c.split("=");
       return [key, v.join("=")];
-    })
+    }),
   );
   // cookies["auth-token"] = cookies["auth-token"].replace(/"/g, "");
   const loc = useLocation();
@@ -99,7 +99,7 @@ export default function Game() {
           gameLogic(roomId, gameState, playerIdRef.current, mode, () => {
             navigate("/");
           });
-        }
+        },
       );
     } else {
       const button = document.getElementById("easy") as HTMLButtonElement;
@@ -123,7 +123,7 @@ export default function Game() {
           gameLogic(roomId, gameState, playerIdRef.current, mode, () => {
             navigate("/");
           });
-        }
+        },
       );
       socket.on("waitingInQueue", (mode: string) => {
         // hide buttons and show waiting message
@@ -133,14 +133,14 @@ export default function Game() {
         const button2 = document.getElementById("hard") as HTMLButtonElement;
         button2.style.display = "none";
         const waiting = document.getElementById(
-          "waiting"
+          "waiting",
         ) as HTMLParagraphElement;
         waiting.style.display = "block";
         waiting.classList.add(
           "text-4xl",
           "animate-pulse",
           "font-serif",
-          "text-white"
+          "text-white",
         );
         waiting.innerText = `Waiting for ${mode} game...`;
       });
@@ -150,20 +150,20 @@ export default function Game() {
       gameState: GameState | undefined,
       playerId: number,
       mode: string,
-      navigate: () => void
+      navigate: () => void,
     ) {
       const button = document.getElementById("easy") as HTMLButtonElement;
       button.style.display = "none";
       const button2 = document.getElementById("hard") as HTMLButtonElement;
       button2.style.display = "none";
       const waiting = document.getElementById(
-        "waiting"
+        "waiting",
       ) as HTMLParagraphElement;
       waiting.style.display = "none";
 
       // const canvas = document.getElementById("canvas") as HTMLCanvasElement;
       const canvas: HTMLCanvasElement = document.getElementById(
-        "canvas"
+        "canvas",
       ) as HTMLCanvasElement;
       canvas.style.display = "block";
       const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
@@ -240,7 +240,7 @@ export default function Game() {
       state.players[0].y,
       state.players[0].w,
       state.players[0].h,
-      40
+      40,
     );
     ctx.fill();
     ctx.roundRect(
@@ -248,7 +248,7 @@ export default function Game() {
       state.players[1].y,
       state.players[1].w,
       state.players[1].h,
-      40
+      40,
     );
     ctx.fill();
     ctx.roundRect(state.ball.x, state.ball.y, state.ball.w, state.ball.h, 40);
@@ -263,7 +263,7 @@ export default function Game() {
         " " +
         state.players[1].user.nickname,
       400,
-      100
+      100,
     );
   }
   function init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {

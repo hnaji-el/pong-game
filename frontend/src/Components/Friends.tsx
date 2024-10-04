@@ -37,36 +37,35 @@ function Friends({ id }: TypeProps) {
       }, id);
   }, [id]);
 
-  if (render)
-  {
+  if (render) {
     if (dataFriend.length)
-    return (
-      <div className="flex pt-5 pb-[7.6rem] lg:pb-[2.7rem] flex-col gap-12">
-        {dataFriend.map((e: TypedataFriend[], index: number) => {
-          return (
-            <div
-              className="flex w-full flex-col md:flex-row gap-12"
-              key={index}
-            >
-              {e.map((element: TypedataFriend, index: number) => {
-                return <CardUser data={element} key={index} />;
-              })}
-            </div>
-          );
-        })}
-      </div>
-    );
-  else
-    return (
-      <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText text-md">
-        No friends.
-      </div>
-    );
+      return (
+        <div className="flex pt-5 pb-[7.6rem] lg:pb-[2.7rem] flex-col gap-12">
+          {dataFriend.map((e: TypedataFriend[], index: number) => {
+            return (
+              <div
+                className="flex w-full flex-col md:flex-row gap-12"
+                key={index}
+              >
+                {e.map((element: TypedataFriend, index: number) => {
+                  return <CardUser data={element} key={index} />;
+                })}
+              </div>
+            );
+          })}
+        </div>
+      );
+    else
+      return (
+        <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText text-md">
+          No friends.
+        </div>
+      );
   }
   return (
-      <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText">
-        <Spinner edit="w-9 h-9"/>
-      </div>
+    <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText">
+      <Spinner edit="w-9 h-9" />
+    </div>
   );
 }
 

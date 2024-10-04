@@ -12,12 +12,23 @@ interface TypeProps {
   setOpenSearch?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function SearchContainer({ data, setDropdown, setOpenSearch }: TypeProps) {
+export default function SearchContainer({
+  data,
+  setDropdown,
+  setOpenSearch,
+}: TypeProps) {
   if (data.length > 1)
     return (
       <div className="bg-body absolute w-full top-14 rounded-lg shadow flex flex-col gap-4 py-4 max-h-[30rem] overflow-auto z-[999]">
         {data.map((e, index: number) => {
-          return <CardSearchUser setOpenSearch={setOpenSearch} setDropDown={setDropdown} data={e} key={index} />;
+          return (
+            <CardSearchUser
+              setOpenSearch={setOpenSearch}
+              setDropDown={setDropdown}
+              data={e}
+              key={index}
+            />
+          );
         })}
       </div>
     );
@@ -26,7 +37,14 @@ export default function SearchContainer({ data, setDropdown, setOpenSearch }: Ty
       <div className="absolute w-full top-14 z-[1]">
         <div className="bg-body rounded-lg shadow flex flex-col gap-4 py-4 max-h-[30rem] overflow-auto">
           {data.map((e, index: number) => {
-            return <CardSearchUser setOpenSearch={setOpenSearch} setDropDown={setDropdown}  data={e} key={index} />;
+            return (
+              <CardSearchUser
+                setOpenSearch={setOpenSearch}
+                setDropDown={setDropdown}
+                data={e}
+                key={index}
+              />
+            );
           })}
         </div>
       </div>

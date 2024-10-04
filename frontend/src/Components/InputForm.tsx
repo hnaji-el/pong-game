@@ -9,7 +9,7 @@ interface TypeProps {
   label: string;
   errorMessage: string;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  backgroundColor?:string
+  backgroundColor?: string;
 }
 
 export default function InputForm({
@@ -20,7 +20,7 @@ export default function InputForm({
   label,
   errorMessage,
   setErrorMessage,
-  backgroundColor
+  backgroundColor,
 }: TypeProps) {
   return (
     <div className={`flex flex-col gap-1.5 ${edit}`}>

@@ -12,9 +12,9 @@ export default function Achievements({ id }: TypeProps) {
   const [render, setRender] = useState<boolean>(false);
   useEffect(() => {
     if (id)
-    getAchievements((res: any) => {
-      setRender(true);
-      setAchievements(res);
+      getAchievements((res: any) => {
+        setRender(true);
+        setAchievements(res);
       }, id);
   }, []);
 

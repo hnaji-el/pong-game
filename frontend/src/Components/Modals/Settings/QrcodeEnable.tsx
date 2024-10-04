@@ -9,14 +9,13 @@ interface TypeProps {
 }
 
 export default function QrcodeEnable({ setTfa, setEnable }: TypeProps) {
+  const [Qrcode, setQrCode] = useState<string>();
 
-  const [Qrcode,setQrCode] = useState<string>();
-
-  useEffect(()=>{
-    generateQrCode((res:any)=>{
-      setQrCode(res)
+  useEffect(() => {
+    generateQrCode((res: any) => {
+      setQrCode(res);
     });
-  },[])
+  }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [value, setValue] = useState<string>("");
   return (
@@ -55,14 +54,13 @@ export default function QrcodeEnable({ setTfa, setEnable }: TypeProps) {
                   return;
                 }
 
-                QrcodeValidation((res:any)=>{
-                  if(res === "invalide")
-                    setErrorMessage("Code incorect")
-                  else{
+                QrcodeValidation((res: any) => {
+                  if (res === "invalide") setErrorMessage("Code incorect");
+                  else {
                     setEnable(true);
                     setTfa(false);
                   }
-                },value)
+                }, value);
               }}
             >
               Confirm

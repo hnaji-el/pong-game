@@ -465,7 +465,11 @@ export function CardChatFriend({ data }: TypeChat) {
           >
             <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </button>
-          <Link to="/ProfileUser" state={{id:data?.id}} className="flex items-center gap-2">
+          <Link
+            to="/ProfileUser"
+            state={{ id: data?.id }}
+            className="flex items-center gap-2"
+          >
             <img
               src={data?.picture}
               alt="Friend"
@@ -619,8 +623,8 @@ export function CardMember({ data, role }: TypeMember) {
                   role === "owner"
                     ? "bg-ownerBg text-ownerText"
                     : role === "admin"
-                    ? "bg-adminBg text-adminText"
-                    : ""
+                      ? "bg-adminBg text-adminText"
+                      : ""
                 } flex justify-center items-center text-xs capitalize`}
               >
                 {role}

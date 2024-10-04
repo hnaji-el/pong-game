@@ -28,7 +28,6 @@ export default function PhoneNav({
   const home = useContext(ActiveHome);
   const messages = useContext(StateMssages);
   const profile = useContext(ActiveProfile);
-  
 
   return (
     <>
@@ -164,7 +163,10 @@ export default function PhoneNav({
         </nav>
         <ListFriendOnline />
       </section>
-      <Link to='/game' className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]">
+      <Link
+        to="/game"
+        className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]"
+      >
         <ControllerIcon edit="w-8" />
       </Link>
     </>

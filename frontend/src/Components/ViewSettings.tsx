@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../API";
 import logo from "../assets/logo.svg";
 import { LogoutIcon, SettingsNavIcon } from "./Icons";
@@ -25,10 +25,13 @@ export default function ViewSettings({ setOpen }: TypeProps) {
           <SettingsNavIcon edit="w-7 h-7 fill-primaryText" />
           <span>Settings</span>
         </button>
-        <button className="flex gap-2 p-2" onClick={async ()=>{
-          await logout();
-          navigate("/Login")
-        }}>
+        <button
+          className="flex gap-2 p-2"
+          onClick={async () => {
+            await logout();
+            navigate("/Login");
+          }}
+        >
           <LogoutIcon edit="w-7 h-7 fill-primaryText" />
           <span>Logout</span>
         </button>

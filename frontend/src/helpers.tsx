@@ -8,7 +8,7 @@ interface TypeData {
 }
 
 export function getIndexElement(
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 ): number {
   let listChild: NodeListOf<ChildNode> | undefined =
     e.currentTarget.parentNode?.childNodes;

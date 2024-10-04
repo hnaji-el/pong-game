@@ -37,7 +37,7 @@ export function CheckTokenLogin(getRes: any) {
       getRes("200");
       navigate("/Home");
     })
-    .catch((error) => {
+    .catch(() => {
       getRes("error");
     });
 }
@@ -138,8 +138,8 @@ export async function addFriend(id: string) {
         headers: { "Access-Control-Allow-Origin": `${domain}` },
       },
     )
-    .then((res) => {})
-    .catch((error) => {});
+    .then(() => {})
+    .catch(() => {});
 }
 
 export async function unfriend(id: string) {
@@ -148,7 +148,7 @@ export async function unfriend(id: string) {
       withCredentials: true,
       headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
-    .then((res) => {})
+    .then(() => {})
     .catch();
 }
 
@@ -162,7 +162,7 @@ export async function blockFriend(id: string) {
         headers: { "Access-Control-Allow-Origin": `${domain}` },
       },
     )
-    .then((res) => {})
+    .then(() => {})
     .catch();
 }
 
@@ -176,7 +176,7 @@ export function unBlockFriend(id: string) {
         headers: { "Access-Control-Allow-Origin": `${domain}` },
       },
     )
-    .then((res) => {})
+    .then(() => {})
     .catch();
 }
 
@@ -188,7 +188,7 @@ export function getFriendChat() {
       withCredentials: true,
       headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
-    .then((res: any) => {})
+    .then(() => {})
     .catch();
 }
 

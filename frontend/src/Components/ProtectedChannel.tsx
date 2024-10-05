@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { getAllChannels } from "../API";
-import { checkChannelName, checkPasswordChannel } from "../helpers";
+import { getAllChannels } from "../API/API";
+import { checkChannelName, checkPasswordChannel } from "../helpers/helpers";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
 import { MessagesContext } from "./Routes/Messages";

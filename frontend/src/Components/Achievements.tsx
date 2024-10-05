@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAchievements } from "../API";
+import { getAchievements } from "../API/API";
 import { CardAchievments } from "./Cards";
 import Spinner from "./Spinner";
 

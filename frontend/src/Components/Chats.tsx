@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getAllChannels, getDmUsers } from "../API";
+import { getAllChannels, getDmUsers } from "../API/API";
 import { CardConversation } from "./Cards";
 import { SearchIcon } from "./Icons";
 import { MessagesContext } from "./Routes/Messages";

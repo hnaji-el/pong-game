@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { CheckTokenLogin } from "../../API";
+import { CheckTokenLogin } from "../../API/API";
 import logo from "../../assets/logo.svg";
 import logo42 from "../../assets/logo42.svg";
 import {

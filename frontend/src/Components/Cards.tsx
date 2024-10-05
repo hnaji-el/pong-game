@@ -31,8 +31,8 @@ import {
   setBlock,
   setKick,
   setMute,
-} from "../API";
-import { globalSocket } from "../socket";
+} from "../API/API";
+import { globalSocket } from "../helpers/socket";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

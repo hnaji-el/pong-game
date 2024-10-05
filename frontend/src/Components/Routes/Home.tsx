@@ -1,7 +1,7 @@
 import React, { useEffect, createContext, useState } from "react";
 import Navigation from "../Navigation/Navigation";
 import fire from "../../assets/fire.png";
-import { CheckToken, getDataUserLogged } from "../../API";
+import { CheckToken, getDataUserLogged } from "../../API/API";
 import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
 const domain = import.meta.env.VITE_BACKEND_URL;

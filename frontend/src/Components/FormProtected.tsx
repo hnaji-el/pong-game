@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { getAllChannels, joinRoom } from "../API";
-import { checkDisableCode } from "../helpers";
+import { getAllChannels, joinRoom } from "../API/API";
+import { checkDisableCode } from "../helpers/helpers";
 import { KeyIcon } from "./Icons";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";

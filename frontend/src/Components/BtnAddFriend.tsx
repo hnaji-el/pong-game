@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { addFriend, getOneUser } from "../API";
+import { addFriend, getOneUser } from "../API/API";
 import { AddFriendIcon } from "./Icons";
 import { UpdateDataProfileUser } from "./Routes/ProfileUser";
 

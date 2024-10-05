@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import { getAllChannels } from "../API";
-import { checkChannelName } from "../helpers";
+import { getAllChannels } from "../API/API";
+import { checkChannelName } from "../helpers/helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
 import { MessagesContext } from "./Routes/Messages";

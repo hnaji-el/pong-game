@@ -5,7 +5,7 @@ import SwitchersProfile from "../SwitchersProfile";
 import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
 import SettingsBody from "../Modals/Settings/SettingsBody";
 import Spinner from "../Spinner";
-import { CheckToken, getDataUserLogged, getOneUser } from "../../API";
+import { CheckToken, getDataUserLogged, getOneUser } from "../../API/API";
 
 interface TypeData {
   id: string;

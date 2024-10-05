@@ -1,6 +1,6 @@
 import React from "react";
 import pictureFriend from "../assets/friend.jpg";
-import { firstLetterCapital } from "../helpers";
+import { firstLetterCapital } from "../helpers/helpers";
 
 interface TypdProps {
   data: any;

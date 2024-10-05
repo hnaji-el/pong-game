@@ -6,7 +6,7 @@ import Chats from "../Chats";
 import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "../Tabs";
 import { StateMssages } from "../Routes/Messages";
 import { MessagesContext } from "../Routes/Messages";
-import { getAllChannels, getDmUsers } from "../../API";
+import { getAllChannels, getDmUsers } from "../../API/API";
 
 interface TypeProps {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;

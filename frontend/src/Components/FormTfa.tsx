@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { QrcodeValidation } from "../API";
-import { checkDisableCode } from "../helpers";
+import { QrcodeValidation } from "../API/API";
+import { checkDisableCode } from "../helpers/helpers";
 import { KeyIcon } from "./Icons";
 import InputForm from "./InputForm";
 import { useNavigate } from "react-router-dom";

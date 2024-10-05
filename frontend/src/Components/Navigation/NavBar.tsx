@@ -9,7 +9,7 @@ import { ActiveHome } from "../Routes/Home";
 import { ActiveProfile } from "../Routes/Profile";
 import { ActiveProfileUser } from "../Routes/ProfileUser";
 import { GameContext } from "../Routes/Game";
-import { logout } from "../../API";
+import { logout } from "../../API/API";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

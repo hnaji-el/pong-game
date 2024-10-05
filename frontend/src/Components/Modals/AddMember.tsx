@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, createContext } from "react";
-import { getFriendChannel } from "../../API";
+import { getFriendChannel } from "../../API/API";
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
 import InputSearchMembers from "../InputSearchMembers";

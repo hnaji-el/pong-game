@@ -7,7 +7,7 @@ import {
   getAllChannels,
   getDataUserLogged,
   getDmUsers,
-} from "../../API";
+} from "../../API/API";
 import Spinner from "../Spinner";
 import { io } from "socket.io-client";
 

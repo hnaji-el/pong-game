@@ -5,7 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { firstLetterCapital } from "../helpers";
+import { firstLetterCapital } from "../helpers/helpers";
 import { ArrowDownIcon, ArrowUpIcon, FriendIcon } from "./Icons";
 
 interface PropsDropdown {

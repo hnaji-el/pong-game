@@ -1,4 +1,4 @@
-import { globalSocket } from "../../socket";
+import { globalSocket } from "../../helpers/socket";
 
 export function popOutFunc(payload: {
   sender: { id: string; nickname: string; pictureURL: string };

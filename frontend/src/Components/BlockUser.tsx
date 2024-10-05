@@ -1,5 +1,5 @@
 import React from "react";
-import { unBlockFriend } from "../API";
+import { unBlockFriend } from "../API/API";
 import { CardProfileUser } from "./Cards";
 import { UnblockIcon } from "./Icons";
 

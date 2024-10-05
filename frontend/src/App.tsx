@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { globalSocket } from "./socket";
-import "./App.css";
+import { globalSocket } from "./helpers/socket";
 import Home from "./Components/Routes/Home";
 import Messages from "./Components/Routes/Messages";
 import Profile from "./Components/Routes/Profile";

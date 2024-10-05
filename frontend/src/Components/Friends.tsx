@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getFriendsOneUser } from "../API";
+import { getFriendsOneUser } from "../API/API";
 import { CardUser } from "./Cards";
 import Spinner from "./Spinner";
 

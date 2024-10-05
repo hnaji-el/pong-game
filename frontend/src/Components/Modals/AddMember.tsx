@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState, createContext } from "react";
-import { getFriendChannel } from "../../API/API";
+import { getFriendChannel } from "../../api/API";
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
-import InputSearchMembers from "../InputSearchMembers";
-import { MessagesContext } from "../Routes/Messages";
+import { MessagesContext } from "../routes/Messages";
 import Spinner from "../Spinner";
 
 export const AddMemberContext = createContext<any>({});

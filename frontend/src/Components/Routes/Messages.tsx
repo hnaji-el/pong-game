@@ -1,5 +1,5 @@
 import React, { useEffect, createContext, useState } from "react";
-import NavigationChat from "../Navigation/NavigationChat";
+import NavigationChat from "../navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
 import {
@@ -7,7 +7,7 @@ import {
   getAllChannels,
   getDataUserLogged,
   getDmUsers,
-} from "../../API/API";
+} from "../../api/API";
 import Spinner from "../Spinner";
 import { io } from "socket.io-client";
 

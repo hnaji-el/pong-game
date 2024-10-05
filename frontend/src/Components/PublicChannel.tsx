@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-import { CreateChannel, getAllChannels } from "../API/API";
-import { checkChannelName } from "../helpers/helpers";
+import { CreateChannel, getAllChannels } from "../api/API";
+import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
-import { MessagesContext } from "./Routes/Messages";
+import { MessagesContext } from "./routes/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

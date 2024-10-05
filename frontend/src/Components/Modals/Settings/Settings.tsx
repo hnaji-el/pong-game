@@ -5,8 +5,8 @@ import {
   getDataUserLogged,
   turnOffTfa,
   turOnTfa,
-} from "../../../API/API";
-import { checkNickname } from "../../../helpers/helpers";
+} from "../../../api/API";
+import { checkNickname } from "../../../utilities/helpers";
 import { EditAvatarIcon } from "../../Icons";
 import InputForm from "../../InputForm";
 

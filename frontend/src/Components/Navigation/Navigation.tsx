@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
 import NavBar from "./NavBar";
 import SideBar from "./SideBar";
-import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
-import ModalSearch from "../Modals/ModalSearch";
-import ModalSettings from "../Modals/ModalSettings";
-import SettingsBody from "../Modals/Settings/SettingsBody";
+import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
+import ModalSearch from "../modals/ModalSearch";
+import ModalSettings from "../modals/ModalSettings";
+import SettingsBody from "../modals/settings/SettingsBody";
 import SearchInput from "../SearchInput";
 import ViewSettings from "../ViewSettings";
-import { ActiveHome } from "../Routes/Home";
-import { ActiveProfile } from "../Routes/Profile";
-import { ActiveProfileUser } from "../Routes/ProfileUser";
+import { ActiveHome } from "../routes/Home";
+import { ActiveProfile } from "../routes/Profile";
+import { ActiveProfileUser } from "../routes/ProfileUser";
 
 export default function Navigation() {
   const [open, setOpen] = useState<boolean>(false);

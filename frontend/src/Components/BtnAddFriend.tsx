@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { addFriend, getOneUser } from "../API/API";
+import { addFriend, getOneUser } from "../api/API";
 import { AddFriendIcon } from "./Icons";
-import { UpdateDataProfileUser } from "./Routes/ProfileUser";
+import { UpdateDataProfileUser } from "./routes/ProfileUser";
 
 interface TypeProps {
   id: string;

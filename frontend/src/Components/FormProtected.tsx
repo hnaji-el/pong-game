@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { getAllChannels, joinRoom } from "../API/API";
-import { checkDisableCode } from "../helpers/helpers";
+import { getAllChannels, joinRoom } from "../api/API";
+import { checkDisableCode } from "../utilities/helpers";
 import { KeyIcon } from "./Icons";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
-import { MessagesContext } from "./Routes/Messages";
-import { StateMssages } from "./Routes/Messages";
+import { MessagesContext } from "./routes/Messages";
+import { StateMssages } from "./routes/Messages";
 
 export default function FormProtected() {
   const [errorPassword, setErrorPassowrd] = useState<string>("");

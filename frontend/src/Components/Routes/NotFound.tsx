@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CheckToken } from "../../API/API";
+import { CheckToken } from "../../api/API";
 import Astro from "../Astro";
 import { Link } from "react-router-dom";
 

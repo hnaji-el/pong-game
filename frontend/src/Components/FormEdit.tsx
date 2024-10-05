@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { checkNickname } from "../helpers/helpers";
+import { checkNickname } from "../utilities/helpers";
 import InputForm from "./InputForm";
 import { EditAvatarIcon } from "./Icons";
 import { useNavigate } from "react-router-dom";
-import { editNickname, editPicture } from "../API/API";
+import { editNickname, editPicture } from "../api/API";
 
 interface TypeProps {
   data: {

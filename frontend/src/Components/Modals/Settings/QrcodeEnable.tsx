@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { generateQrCode, QrcodeValidation } from "../../../API/API";
-import { checkEnableCode } from "../../../helpers/helpers";
+import { generateQrCode, QrcodeValidation } from "../../../api/API";
+import { checkEnableCode } from "../../../utilities/helpers";
 import InputForm from "../../InputForm";
 
 interface TypeProps {

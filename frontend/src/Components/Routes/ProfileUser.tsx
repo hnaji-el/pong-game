@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useState } from "react";
-import Navigation from "../Navigation/Navigation";
+import Navigation from "../navigation/Navigation";
 import { CardProfileUser } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
 import { BtnMessage } from "../BtnMessage";
 import BtnAddFriend from "../BtnAddFriend";
-import { CheckToken, getDataUserLogged, getOneUser } from "../../API/API";
+import { CheckToken, getDataUserLogged, getOneUser } from "../../api/API";
 import Spinner from "../Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import BtnFriend from "../BtnFriend";

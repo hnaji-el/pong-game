@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getAllChannels, getDmUsers } from "../API/API";
+import { getAllChannels, getDmUsers } from "../api/API";
 import { CardConversation } from "./Cards";
 import { SearchIcon } from "./Icons";
-import { MessagesContext } from "./Routes/Messages";
+import { MessagesContext } from "./routes/Messages";
 import Spinner from "./Spinner";
 
 export default function Chats() {

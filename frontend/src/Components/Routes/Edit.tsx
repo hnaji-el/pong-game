@@ -8,7 +8,7 @@ import {
 } from "../PongElements";
 import logo from "../../assets/logo.svg";
 import FormEdit from "../FormEdit";
-import { CheckToken, getDataUserLogged } from "../../API/API";
+import { CheckToken, getDataUserLogged } from "../../api/API";
 import Spinner from "../Spinner";
 
 interface TypeData {

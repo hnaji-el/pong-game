@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getAllChannels, getChannelsDm } from "../API/API";
+import { getAllChannels, getChannelsDm } from "../api/API";
 import { CardChannelConversation } from "./Cards";
 import { PlusIcon, SearchIcon } from "./Icons";
-import { MessagesContext } from "./Routes/Messages";
+import { MessagesContext } from "./routes/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

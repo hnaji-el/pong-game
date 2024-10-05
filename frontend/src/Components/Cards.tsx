@@ -10,13 +10,13 @@ import {
   SettingsIcon,
 } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
-import { StateMssages } from "./Routes/Messages";
+import { StateMssages } from "./routes/Messages";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-import { ActiveProfile } from "../Components/Routes/Profile";
-import { ActiveProfileUser } from "./Routes/ProfileUser";
-import { MessagesContext } from "./Routes/Messages";
-import { AddMemberContext } from "./Modals/AddMember";
-import { MembersContext } from "./Modals/Members";
+import { ActiveProfile } from "./routes/Profile";
+import { ActiveProfileUser } from "./routes/ProfileUser";
+import { MessagesContext } from "./routes/Messages";
+import { AddMemberContext } from "./modals/AddMember";
+import { MembersContext } from "./modals/Members";
 import {
   addToRoom,
   blockFriend,
@@ -31,8 +31,8 @@ import {
   setBlock,
   setKick,
   setMute,
-} from "../API/API";
-import { globalSocket } from "../helpers/socket";
+} from "../api/API";
+import { globalSocket } from "../utilities/socket";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;

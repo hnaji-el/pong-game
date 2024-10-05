@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getDataUsers } from "../API/API";
-import { filterByName } from "../helpers/helpers";
+import { getDataUsers } from "../api/API";
+import { filterByName } from "../utilities/helpers";
 import { SearchIcon } from "./Icons";
 import SearchContainer from "./SearchContainer";
 

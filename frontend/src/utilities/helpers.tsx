@@ -1,4 +1,4 @@
-import { CreateChannel } from "../API/API";
+import { CreateChannel } from "../api/API";
 
 interface TypeData {
   id: string;

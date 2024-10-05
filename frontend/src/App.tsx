@@ -1,40 +1,39 @@
 import React, { useEffect } from "react";
+
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { globalSocket } from "./helpers/socket";
-import Home from "./Components/Routes/Home";
-import Messages from "./Components/Routes/Messages";
-import Profile from "./Components/Routes/Profile";
-import ProfileUser from "./Components/Routes/ProfileUser";
-import Login from "./Components/Routes/Login";
-import Tfa from "./Components/Routes/Tfa";
-import Edit from "./Components/Routes/Edit";
-import Game from "./Components/Routes/Game";
-import NotFound from "./Components/Routes/NotFound";
-import { popOutFunc } from "./Components/Routes/eventListener";
+
+import { globalSocket } from "./utilities/socket";
+import { popOutFunc } from "./components/routes/eventListener";
+
+import Login from "./components/routes/Login";
+import Edit from "./components/routes/Edit";
+import Home from "./components/routes/Home";
+import Messages from "./components/routes/Messages";
+import Profile from "./components/routes/Profile";
+import ProfileUser from "./components/routes/ProfileUser";
+import Game from "./components/routes/Game";
+import Tfa from "./components/routes/Tfa";
+import NotFound from "./components/routes/NotFound";
 
 function App() {
   const navigate = useNavigate();
+
   useEffect(() => {
-    globalSocket.on("connect", () => {
-      console.log("Connected to server", globalSocket.id);
-    });
-    globalSocket.on("disconnect", () => {
-      console.log("Disconnected from server");
-    });
+    globalSocket.on("connect", () => {});
+    globalSocket.on("disconnect", () => {});
+
     // has listener
     if (!globalSocket.hasListeners("invitePlayer")) {
-      console.log("does not have listener", globalSocket.id);
       globalSocket.on("invitePlayer", popOutFunc);
-    } else {
-      console.log("already has listener", globalSocket.id);
     }
+
     // has listener
     if (!globalSocket.hasListeners("navigateToGame")) {
       globalSocket.on("navigateToGame", () => {
-        console.log("navigateToGame", globalSocket.id);
         navigate("/game", { state: { privateQueue: true } });
       });
     }
+
     return () => {
       globalSocket.off("connect");
       globalSocket.off("disconnect");

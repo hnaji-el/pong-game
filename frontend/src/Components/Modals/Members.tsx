@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getMembersChannel } from "../../API/API";
+import { getMembersChannel } from "../../api/API";
 import { ExclamationIcon } from "../Icons";
 import InputSearchMembers from "../InputSearchMembers";
 import MembersContainer from "../MembersContainer";
-import { MessagesContext } from "../Routes/Messages";
+import { MessagesContext } from "../routes/Messages";
 import Spinner from "../Spinner";
 
 export const MembersContext = createContext<any>({});

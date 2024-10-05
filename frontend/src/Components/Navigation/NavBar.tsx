@@ -5,11 +5,11 @@ import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
-import { ActiveHome } from "../Routes/Home";
-import { ActiveProfile } from "../Routes/Profile";
-import { ActiveProfileUser } from "../Routes/ProfileUser";
-import { GameContext } from "../Routes/Game";
-import { logout } from "../../API/API";
+import { ActiveHome } from "../routes/Home";
+import { ActiveProfile } from "../routes/Profile";
+import { ActiveProfileUser } from "../routes/ProfileUser";
+import { GameContext } from "../routes/Game";
+import { logout } from "../../api/API";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

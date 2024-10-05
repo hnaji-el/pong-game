@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, Children } from "react";
-import { getIndexElement } from "../helpers/helpers";
+import { getIndexElement } from "../utilities/helpers";
 
 interface Props {
   children: JSX.Element | JSX.Element[] | string;

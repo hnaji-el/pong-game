@@ -1,19 +1,19 @@
 import React, { useContext, useState } from "react";
-import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
-import SettingsBody from "../Modals/Settings/SettingsBody";
+import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
+import SettingsBody from "../modals/settings/SettingsBody";
 import PhoneNav from "./PhoneNav";
 import NavBarChat from "./NavBarChat";
 import SideBarChat from "./SideBarChat";
-import ModalSearch from "../Modals/ModalSearch";
+import ModalSearch from "../modals/ModalSearch";
 import SearchInput from "../SearchInput";
-import ModalSettings from "../Modals/ModalSettings";
+import ModalSettings from "../modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
-import { StateMssages } from "../Routes/Messages";
-import CreateChannel from "../Modals/CreateChannel";
-import AddMember from "../Modals/AddMember";
-import Members from "../Modals/Members";
+import { StateMssages } from "../routes/Messages";
+import CreateChannel from "../modals/CreateChannel";
+import AddMember from "../modals/AddMember";
+import Members from "../modals/Members";
 import FormProtected from "../FormProtected";
-import { MessagesContext } from "../Routes/Messages";
+import { MessagesContext } from "../routes/Messages";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);

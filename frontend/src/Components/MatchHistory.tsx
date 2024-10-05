@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getMatchHistory } from "../API/API";
+import { getMatchHistory } from "../api/API";
 import MatchHistoryUser from "./MatchHistoryUser";
 import Spinner from "./Spinner";
 

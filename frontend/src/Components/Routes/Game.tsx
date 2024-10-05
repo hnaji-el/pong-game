@@ -1,12 +1,12 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Navigation from "../Navigation/Navigation";
-import { GameState } from ".../../../shared/types";
+import Navigation from "../navigation/Navigation";
+import { GameState } from "../../utilities/types";
 import { io, Socket } from "socket.io-client";
-import { getDataUserLogged } from "../../API/API";
-import { globalSocket } from "../../helpers/socket";
+import { getDataUserLogged } from "../../api/API";
+import { globalSocket } from "../../utilities/socket";
 import { popOutFunc } from "./eventListener";
-import { CheckToken } from "../../API/API";
+import { CheckToken } from "../../api/API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;

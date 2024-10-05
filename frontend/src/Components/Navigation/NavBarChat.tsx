@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../../API/API";
+import { logout } from "../../api/API";
 import { CardChatChannel, CardChatFriend } from "../Cards";
 import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
-import { StateMssages } from "../Routes/Messages";
-import { MessagesContext } from "../Routes/Messages";
+import { StateMssages } from "../routes/Messages";
+import { MessagesContext } from "../routes/Messages";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

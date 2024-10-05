@@ -1,11 +1,11 @@
 import React, { useEffect, useState, createContext } from "react";
-import Navigation from "../Navigation/Navigation";
+import Navigation from "../navigation/Navigation";
 import { CardProfile } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
-import { Modal, ModalBody, ModalHeader } from "../Modals/Modals";
-import SettingsBody from "../Modals/Settings/SettingsBody";
+import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
+import SettingsBody from "../modals/settings/SettingsBody";
 import Spinner from "../Spinner";
-import { CheckToken, getDataUserLogged, getOneUser } from "../../API/API";
+import { CheckToken, getDataUserLogged, getOneUser } from "../../api/API";
 
 interface TypeData {
   id: string;

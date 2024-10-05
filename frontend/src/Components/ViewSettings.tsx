@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../API/API";
+import { logout } from "../api/API";
 import logo from "../assets/logo.svg";
 import { LogoutIcon, SettingsNavIcon } from "./Icons";
 

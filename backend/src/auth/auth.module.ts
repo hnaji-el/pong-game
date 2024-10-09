@@ -7,6 +7,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { FortyTwoStrategy } from './fortytwo.strategy';
 import { AuthController } from './auth.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { GoogleStrategy } from './google.strategy';
 
 @Module({
   imports: [
@@ -14,11 +15,17 @@ import { PrismaService } from 'src/prisma/prisma.service';
     PassportModule,
     JwtModule.register({
       secret: process.env.SECRET,
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '365d' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, FortyTwoStrategy, PrismaService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    FortyTwoStrategy,
+    GoogleStrategy,
+    PrismaService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

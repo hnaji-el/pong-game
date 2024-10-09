@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import { FcGoogle } from "react-icons/fc";
 import { CheckTokenLogin } from "../../api/API";
 import logo from "../../assets/logo.svg";
-import logo42 from "../../assets/logo42.svg";
 import {
   ArrowLeft,
   ArrowRight,
@@ -45,19 +46,12 @@ export default function Login() {
                 Platform for playing pong games with your friends and stream
                 your matches.
               </p>
-              <button
-                className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[10rem] rounded-md p-3"
-                onClick={() => {
-                  window.location.href = domain + "/auth/login";
-                }}
-              >
-                <span>Sing in with</span>
-                <img
-                  src={logo42}
-                  alt="logo school 42"
-                  className="w-6 relative top-[.1rem]"
-                />
-              </button>
+              <Link to={domain + "/auth/google"}>
+                <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[10rem] rounded-md p-3">
+                  <span>Sign in with</span>
+                  <FcGoogle size={30} />
+                </button>
+              </Link>
             </div>
             <Pong edit="hidden lg:block" />
           </div>

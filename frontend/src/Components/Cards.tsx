@@ -136,7 +136,7 @@ export function CardProfile({ setOpen }: TypeCardProfile) {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span
-              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
+              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
             >
               {dataUser.settings.nickname}
             </span>
@@ -180,7 +180,7 @@ export function CardProfileUser({ data }: TypeDataProfileUser) {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span
-              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
+              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
             >
               {data?.nickname}
             </span>
@@ -231,7 +231,7 @@ export function CardUser({ data }: TypedataFriend) {
             alt="Friend"
             className="w-12 h-12 rounded-full"
           />
-          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
             {data.nickname}
           </span>
         </Link>
@@ -246,7 +246,7 @@ export function CardUser({ data }: TypedataFriend) {
             alt="Friend"
             className="w-12 h-12 rounded-full"
           />
-          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
             {data.nickname}
           </span>
         </Link>
@@ -303,7 +303,7 @@ export function CardConversation({ data, index }: TypeConversation) {
           />
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText capitalize">
+              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
                 {data.username}
               </span>
             </div>
@@ -477,7 +477,7 @@ export function CardChatFriend({ data }: TypeChat) {
             />
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
-                <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+                <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap">
                   {data?.username}
                 </span>
               </div>
@@ -613,7 +613,7 @@ export function CardMember({ data, role }: TypeMember) {
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-3">
             <span
-              className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
+              className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap`}
             >
               {data.username}
             </span>
@@ -664,7 +664,7 @@ export function CardMember({ data, role }: TypeMember) {
               Invite to play
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -679,7 +679,7 @@ export function CardMember({ data, role }: TypeMember) {
               admin
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -694,7 +694,7 @@ export function CardMember({ data, role }: TypeMember) {
               block
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -709,7 +709,7 @@ export function CardMember({ data, role }: TypeMember) {
               kick
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -743,7 +743,7 @@ export function CardMember({ data, role }: TypeMember) {
             {role === "member" ? (
               <>
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
                   onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
@@ -758,7 +758,7 @@ export function CardMember({ data, role }: TypeMember) {
                   block
                 </MenuItem>
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
                   onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
@@ -773,7 +773,7 @@ export function CardMember({ data, role }: TypeMember) {
                   kick
                 </MenuItem>
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
                   onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
@@ -838,7 +838,7 @@ export function CardSearchUser({
             alt="users"
             className="w-12 h-12 rounded-full"
           />
-          <span className="text-primaryText text-sm username-search capitalize">
+          <span className="text-primaryText text-sm username-search">
             {data.nickname}
           </span>
         </Link>

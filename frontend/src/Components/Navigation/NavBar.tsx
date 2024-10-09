@@ -38,7 +38,7 @@ export default function NavBar({ setOpen }: TypeProps) {
           className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3"
         >
           <ControllerIcon edit="w-7" />
-          <span>Play now</span>
+          <span>Play Now</span>
         </Link>
         <Dropdown>
           <DropdownBtn

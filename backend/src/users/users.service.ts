@@ -11,6 +11,25 @@ export class UsersService {
     private chatService: ChatService,
   ) {}
 
+  async create(
+    _nickname: string,
+    _email: string,
+    _pictureURL: string,
+  ): Promise<any> {
+    let user = await this.prisma.user.findUnique({
+      where: { email: _email },
+      include: { requester: true, addressee: true },
+    });
+
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: { nickname: _nickname, email: _email, pictureURL: _pictureURL },
+        include: { requester: true, addressee: true },
+      });
+    }
+    return user;
+  }
+
   async setTwoFactorAuthSecret(userId: string, secret: string) {
     await this.prisma.user.update({
       where: { id: userId },
@@ -30,25 +49,6 @@ export class UsersService {
       where: { id: userId },
       data: { isTwoFactorAuthEnabled: state },
     });
-  }
-
-  async create(
-    _nickname: string,
-    _email: string,
-    _pictureURL: string,
-  ): Promise<any> {
-    let user = await this.prisma.user.findUnique({
-      where: { email: _email },
-      include: { requester: true, addressee: true },
-    });
-
-    if (!user) {
-      user = await this.prisma.user.create({
-        data: { nickname: _nickname, email: _email, pictureURL: _pictureURL },
-        include: { requester: true, addressee: true },
-      });
-    }
-    return user;
   }
 
   async getMatchHistory(userId: string): Promise<GameEntity[]> {

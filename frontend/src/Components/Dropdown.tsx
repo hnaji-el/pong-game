@@ -5,7 +5,6 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { firstLetterCapital } from "../utilities/helpers";
 import { ArrowDownIcon, ArrowUpIcon, FriendIcon } from "./Icons";
 
 interface PropsDropdown {
@@ -86,7 +85,7 @@ export function DropdownBtn({
             <img src={imgTitle} alt="User" className="w-10 h-10 rounded-full" />
           ) : null}
           <span className="max-w-[9.6rem] overflow-hidden text-ellipsis	whitespace-nowrap">
-            {title ? firstLetterCapital(title) : null}
+            {title ? title : null}
           </span>
         </div>
         {arrow ? (

@@ -5,9 +5,12 @@ import {
 import { Post, Get, Req, Res, UseInterceptors } from '@nestjs/common';
 import { UseFilters, UseGuards, Controller, Body } from '@nestjs/common';
 import { Response } from 'express';
-import { UsersService } from 'src/users/users.service';
+
 import { AuthService } from './auth.service';
+import { UsersService } from 'src/users/users.service';
+
 import { FortyTwoAuthGuard } from './fortytwo-auth.guard';
+import { GoogleAuthGuard } from './google-auth.guard';
 import { HttpExceptionFilter } from './http-exception.filter';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
@@ -20,20 +23,31 @@ export class AuthController {
     private readonly usersService: UsersService,
   ) {}
 
-  // OAuth
-  @Get('auth/login')
-  @UseGuards(FortyTwoAuthGuard)
-  login() {
-    return;
+  // Google OAuth system
+  @Get('auth/google')
+  @UseGuards(GoogleAuthGuard)
+  googleAuth() {}
+
+  @Get('auth/google/callback')
+  @UseGuards(GoogleAuthGuard)
+  @UseFilters(new HttpExceptionFilter())
+  googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
+    this.authService.login(req, res);
   }
 
-  @Get('auth/login/callback')
+  // 42 OAuth system
+  @Get('auth/42')
+  @UseGuards(FortyTwoAuthGuard)
+  fortyTwoAuth() {}
+
+  @Get('auth/42/callback')
   @UseGuards(FortyTwoAuthGuard)
   @UseFilters(new HttpExceptionFilter())
-  loginRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
-    this.authService.loginRedirect(req, res);
+  fortyTwoAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
+    this.authService.login(req, res);
   }
 
+  // Logout
   @Get('auth/logout')
   @UseGuards(JwtAuthGuard)
   async logout(@Req() req, @Res({ passthrough: true }) res: Response) {

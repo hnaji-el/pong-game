@@ -30,7 +30,7 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  loginRedirect(req: any, res: Response) {
+  login(req: any, res: Response) {
     if (!req.user.isTwoFactorAuthEnabled) {
       res.cookie('jwt', this.generateJWT(req.user, true));
     } else if (req.user.isTwoFactorAuthEnabled) {
@@ -38,12 +38,20 @@ export class AuthService {
     }
 
     if (req.user.isTwoFactorAuthEnabled) {
-      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/tfa`);
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/Tfa`);
     } else if (req.user.firstTimeLogged) {
-      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/edit`);
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/Edit`);
     } else {
-      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/`);
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/Home`);
     }
+  }
+
+  getUsername(firstName: string, lastName: string): string {
+    const username = (firstName.charAt(0) + lastName.split(' ').join('-'))
+      .slice(0, 8)
+      .toLowerCase();
+
+    return username;
   }
 
   async generateTwoFactorAuthSecret(user: any) {

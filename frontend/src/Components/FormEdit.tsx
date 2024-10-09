@@ -103,7 +103,7 @@ export default function FormEdit({ data }: TypeProps) {
                 await editNickname((res: any) => {
                   if (res === "invalid")
                     setErrorMessage("Username already exists");
-                  else navigate("/Home");
+                  else navigate("/home");
                 }, value);
               }}
             >

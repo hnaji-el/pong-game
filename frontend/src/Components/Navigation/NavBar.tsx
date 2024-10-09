@@ -28,13 +28,13 @@ export default function NavBar({ setOpen }: TypeProps) {
 
   return (
     <section className="flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">
-      <Link to="/Home" className="lg:hidden">
+      <Link to="/home" className="lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
       </Link>
       <SearchInput />
       <div className="hidden lg:flex items-center gap-5">
         <Link
-          to="/Game"
+          to="/game"
           className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3"
         >
           <ControllerIcon edit="w-7" />
@@ -61,7 +61,7 @@ export default function NavBar({ setOpen }: TypeProps) {
               edit="justify-center p-2"
               onClick={async () => {
                 await logout();
-                navigate("/Login");
+                navigate("/login");
               }}
             >
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />

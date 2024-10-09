@@ -70,7 +70,7 @@ export default function Home() {
             </h1>
             {ArrayofPlayersAndroomId.map((element: any) => (
               <div key={element.players}>
-                <Link to="/Game" state={{ roomId: element.roomId }}>
+                <Link to="/game" state={{ roomId: element.roomId }}>
                   <button className="bg-primary hover:bg-primaryHover text-white font-bold py-2 px-4 rounded">
                     {element.players}
                   </button>

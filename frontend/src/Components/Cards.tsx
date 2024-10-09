@@ -101,7 +101,7 @@ interface TypeFriendChannel {
 export function CardFriendOnline() {
   return (
     <Link
-      to="/Messages"
+      to="/messages"
       className="flex items-center justify-between hover:bg-backgroundHover p-2"
     >
       <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ export function CardUser({ data }: TypedataFriend) {
     <div className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl">
       {data.id === dataUser.settings.id ? (
         <Link
-          to="/Profile"
+          to="/profile"
           state={{ id: data.id }}
           className="flex w-full gap-3 items-center"
         >
@@ -237,7 +237,7 @@ export function CardUser({ data }: TypedataFriend) {
         </Link>
       ) : (
         <Link
-          to="/ProfileUser"
+          to="/profile-user"
           state={{ id: data.id }}
           className="flex w-full gap-3 items-center"
         >
@@ -466,7 +466,7 @@ export function CardChatFriend({ data }: TypeChat) {
             <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </button>
           <Link
-            to="/ProfileUser"
+            to="/profile-user"
             state={{ id: data?.id }}
             className="flex items-center gap-2"
           >
@@ -822,7 +822,7 @@ export function CardSearchUser({
     <div className="hover:bg-backgroundHover px-4 py-2">
       <div className="flex items-center justify-between w-full">
         <Link
-          to="/ProfileUser"
+          to="/profile-user"
           state={{ id: data.id }}
           className="flex items-center gap-3 flex-1"
           onClick={() => {

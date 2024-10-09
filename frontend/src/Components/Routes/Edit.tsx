@@ -35,7 +35,7 @@ export default function Edit() {
     return (
       <div className="flex flex-col gap-10 h-full">
         <header className="p-10 flex justify-center lg:justify-start">
-          <Link to="/Login">
+          <Link to="/login">
             <img src={logo} alt="Pong logo" className="w-48" />
           </Link>
         </header>

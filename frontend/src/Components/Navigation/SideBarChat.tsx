@@ -31,7 +31,7 @@ export default function SideBarChat({
       >
         <div className=" flex items-center justify-center">
           <Link
-            to="/Home"
+            to="/home"
             onClick={() => {
               setOpenSearch(false);
               setOpenSettings(false);

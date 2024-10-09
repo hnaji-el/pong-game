@@ -27,7 +27,7 @@ export default function Login() {
     return (
       <div className="flex flex-col gap-10 h-full">
         <header className="p-10 flex justify-center lg:justify-start">
-          <Link to="/Login">
+          <Link to="/login">
             <img src={logo} alt="Pong logo" className="w-48" />
           </Link>
         </header>
@@ -46,7 +46,7 @@ export default function Login() {
                 Platform for playing pong games with your friends and stream
                 your matches.
               </p>
-              <Link to={domain + "/auth/google"}>
+              <Link to={domain + "/oauth2/google"}>
                 <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[10rem] rounded-md p-3">
                   <span>Sign in with</span>
                   <FcGoogle size={30} />

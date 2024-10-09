@@ -40,7 +40,7 @@ export default function PhoneNav({
           <ul className="flex justify-between items-center">
             <li>
               <Link
-                to="/Home"
+                to="/home"
                 className="flex flex-col justify-center items-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);
@@ -68,7 +68,7 @@ export default function PhoneNav({
             </li>
             <li>
               <Link
-                to="/Messages"
+                to="/messages"
                 className="flex flex-col justify-center items-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);
@@ -96,7 +96,7 @@ export default function PhoneNav({
             </li>
             <li>
               <Link
-                to="/Profile"
+                to="/profile"
                 className="flex flex-col justify-center items-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);

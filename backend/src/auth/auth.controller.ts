@@ -24,11 +24,11 @@ export class AuthController {
   ) {}
 
   // Google OAuth system
-  @Get('auth/google')
+  @Get('oauth2/google')
   @UseGuards(GoogleAuthGuard)
   googleAuth() {}
 
-  @Get('auth/google/callback')
+  @Get('oauth2/google/callback')
   @UseGuards(GoogleAuthGuard)
   @UseFilters(new HttpExceptionFilter())
   googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {
@@ -36,11 +36,11 @@ export class AuthController {
   }
 
   // 42 OAuth system
-  @Get('auth/42')
+  @Get('oauth2/42')
   @UseGuards(FortyTwoAuthGuard)
   fortyTwoAuth() {}
 
-  @Get('auth/42/callback')
+  @Get('oauth2/42/callback')
   @UseGuards(FortyTwoAuthGuard)
   @UseFilters(new HttpExceptionFilter())
   fortyTwoAuthRedirect(@Req() req, @Res({ passthrough: true }) res: Response) {

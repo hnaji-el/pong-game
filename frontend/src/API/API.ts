@@ -21,7 +21,7 @@ export function CheckToken() {
     .then()
     .catch((error) => {
       if (error.response.data.statusCode === 401) {
-        navigate("/Login");
+        navigate("/login");
       }
     });
 }
@@ -35,7 +35,7 @@ export function CheckTokenLogin(getRes: any) {
     })
     .then(() => {
       getRes("200");
-      navigate("/Home");
+      navigate("/home");
     })
     .catch(() => {
       getRes("error");

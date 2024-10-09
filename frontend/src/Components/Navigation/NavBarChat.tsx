@@ -38,7 +38,7 @@ export default function NavBarChat({
       )}
       <div className="hidden lg:flex items-center gap-5">
         <Link
-          to="/Game"
+          to="/game"
           className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3"
         >
           <ControllerIcon edit="w-7" />
@@ -65,7 +65,7 @@ export default function NavBarChat({
               edit="justify-center p-2"
               onClick={async () => {
                 await logout();
-                navigate("/Login");
+                navigate("/login");
               }}
             >
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />

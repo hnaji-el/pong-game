@@ -37,7 +37,7 @@ export default function FormTfa() {
             QrcodeValidation((res: any) => {
               if (res === "invalide") setErrorMessage("Code incorect");
               else {
-                navigate("/Home");
+                navigate("/home");
               }
             }, value);
           }}

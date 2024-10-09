@@ -45,14 +45,14 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/Login" element={<Login />} caseSensitive />
-      <Route path="/Edit" element={<Edit />} caseSensitive />
-      <Route path="/Tfa" element={<Tfa />} caseSensitive />
-      <Route path="/Home" element={<Home />} caseSensitive />
-      <Route path="/Messages" element={<Messages />} caseSensitive />
-      <Route path="/Profile" element={<Profile />} caseSensitive />
-      <Route path="/ProfileUser" element={<ProfileUser />} caseSensitive />
-      <Route path="/Game" element={<Game />} caseSensitive />
+      <Route path="/login" element={<Login />} caseSensitive />
+      <Route path="/edit" element={<Edit />} caseSensitive />
+      <Route path="/tfa" element={<Tfa />} caseSensitive />
+      <Route path="/home" element={<Home />} caseSensitive />
+      <Route path="/messages" element={<Messages />} caseSensitive />
+      <Route path="/profile" element={<Profile />} caseSensitive />
+      <Route path="/profile-user" element={<ProfileUser />} caseSensitive />
+      <Route path="/game" element={<Game />} caseSensitive />
       <Route path="*" element={<NotFound />} caseSensitive />
     </Routes>
   );

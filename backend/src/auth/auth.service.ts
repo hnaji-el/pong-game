@@ -38,11 +38,11 @@ export class AuthService {
     }
 
     if (req.user.isTwoFactorAuthEnabled) {
-      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/Tfa`);
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/tfa`);
     } else if (req.user.firstTimeLogged) {
-      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/Edit`);
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/edit`);
     } else {
-      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/Home`);
+      res.redirect(`${process.env.HOST_URL}:${process.env.PORT}/home`);
     }
   }
 

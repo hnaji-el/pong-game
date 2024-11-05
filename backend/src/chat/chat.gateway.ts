@@ -7,15 +7,15 @@ import {
   MessageBody,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
+import { Server } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
 import * as moment from 'moment';
 import * as cookie from 'cookie';
 
-@WebSocketGateway(1337, {
+@WebSocketGateway(+process.env.BACKEND_CHAT_PORT, {
   cors: {
-    origin: `${process.env.HOST_URL}:${process.env.PORT}`,
+    origin: `${process.env.FRONTEND_HOST}:${process.env.FRONTEND_PORT}`,
     credentials: true,
     allowedHeaders: ['Cookie'],
   },

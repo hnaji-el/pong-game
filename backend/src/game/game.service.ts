@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { Server } from 'socket.io';
-import { GameState, Player, Ball } from 'shared/types';
-import { log } from 'console';
+import { GameState, Player } from 'shared/types';
 import { PrismaService } from 'src/prisma/prisma.service';
-// import { SocketGateway } from '../socket/socket.gateway';
 
 interface TypeData {
   id: string;

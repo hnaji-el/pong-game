@@ -1,10 +1,13 @@
 import React, { useEffect, createContext, useState } from "react";
+
 import Navigation from "../navigation/Navigation";
 import fire from "../../assets/fire.png";
 import { CheckToken, getDataUserLogged } from "../../api/API";
 import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
-const domain = import.meta.env.VITE_BACKEND_URL;
+
+const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+
 interface TypeData {
   id: string;
   pictureURL: string;

@@ -1,14 +1,11 @@
-FROM node:18.14.0-buster
+FROM node:18-buster
 
-USER node
-WORKDIR /home/node/frontend
+WORKDIR /app
 
-COPY --chown=node:node . ./
+COPY . .
 
-COPY ./start.sh ./
-
-RUN npm install --prefix ./
+RUN npm install
 
 EXPOSE 3000
 
-CMD ["bash", "+x", "./start.sh"]
+CMD ["npm", "run", "dev"]

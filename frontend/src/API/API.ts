@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const domain = import.meta.env.VITE_BACKEND_URL;
+const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
 
 interface TypeDataLogged {
   id: string;

@@ -4,9 +4,12 @@ import { Response } from 'express';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(host: ArgumentsHost) {
     const exectionContex = host.switchToHttp();
     const response: Response = exectionContex.getResponse<Response>();
-    response.redirect(301, `${process.env.HOST_URL}:${process.env.PORT}/login`);
+    response.redirect(
+      301,
+      `${process.env.FRONTEND_HOST}:${process.env.FRONTEND_PORT}/login`,
+    );
   }
 }

@@ -1,16 +1,13 @@
-FROM node:18.14.0-buster
+FROM node:18-buster
 
-USER node
-WORKDIR /home/node/backend
+WORKDIR /app
 
-COPY --chown=node:node . ./
+COPY . .
 
-COPY  ./start.sh ./
-
-RUN npm install --prefix ./
+RUN npm install
 
 EXPOSE 5000
-EXPOSE 5555
 EXPOSE 1337 
+EXPOSE 5555
 
-CMD ["bash", "+x", "./start.sh"]
+CMD ["sh", "-c", "npm run migrate:dev ; npm run start:dev"]

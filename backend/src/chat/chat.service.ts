@@ -9,20 +9,12 @@ import {
   chanelprotected,
 } from './utils/typeObjects';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-//import { usersObject } from '../../users/utils/usersObject';
 import { UserEntity } from 'src/users/entities/user.entity';
 import * as moment from 'moment';
-import { type } from 'os';
-// import { User, Room } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
-  constructor(
-    private prisma: PrismaService,
-    private jwt: JwtService,
-    private config: ConfigService,
-  ) {}
+  constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
   async getUserFromAuthenticationToken(token: string) {
     if (token) {
@@ -57,8 +49,8 @@ export class ChatService {
     await this.prisma.room.create({
       data: {
         name: name,
-        admins: userlogin,
-        members: userlogin,
+        admins: [userlogin],
+        members: [userlogin],
         owner: userlogin,
         type: type,
       },
@@ -82,8 +74,8 @@ export class ChatService {
     await this.prisma.room.create({
       data: {
         name: name,
-        admins: userlogin,
-        members: userlogin,
+        admins: [userlogin],
+        members: [userlogin],
         owner: userlogin,
         type: type,
         hash: rawPassword,

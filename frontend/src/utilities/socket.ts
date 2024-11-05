@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const domain: any = import.meta.env.VITE_BACKEND_URL;
+const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
 
 let cookies = Object.fromEntries(
   document.cookie.split("; ").map((c) => {

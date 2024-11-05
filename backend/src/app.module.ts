@@ -6,9 +6,19 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { GameModule } from './game/game.module';
 import { ChatModule } from './chat/chat.module';
+// import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, GameModule, ChatModule],
+  imports: [
+    // ConfigModule.forRoot({
+    //   envFilePath: `../.env.${process.env.NODE_ENV || 'development'}`,
+    // }),
+    AuthModule,
+    UsersModule,
+    PrismaModule,
+    GameModule,
+    ChatModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

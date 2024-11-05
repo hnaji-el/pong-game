@@ -4,10 +4,9 @@ import { UsersController } from './users.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from 'src/chat/chat.service';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 
 @Module({
-  providers: [UsersService, PrismaService, ChatService, JwtService, ConfigService],
+  providers: [UsersService, PrismaService, ChatService, JwtService],
   controllers: [UsersController],
   exports: [UsersService],
 })

@@ -1,5 +1,7 @@
-import { createContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
+
 import Navigation from "../navigation/Navigation";
 import { GameState } from "../../utilities/types";
 import { io, Socket } from "socket.io-client";
@@ -12,7 +14,9 @@ const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
-const domain: any = import.meta.env.VITE_BACKEND_URL;
+
+const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+
 interface TypeData {
   id: string;
   pictureURL: string;
@@ -26,6 +30,7 @@ interface TypeContext {
   settings: TypeData;
   updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
 }
+
 export const GameContext = createContext<TypeContext>({
   value: false,
   settings: {
@@ -64,6 +69,7 @@ export default function Game() {
   const playerIdRef = useRef<number>(-1);
   const navigate = useNavigate();
   const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
     const socket = io(domain, {
       withCredentials: true,
@@ -82,10 +88,7 @@ export default function Game() {
         navigate("/");
       });
       socket.emit("watchGame", roomId);
-      console.log("joining game");
     } else if (privateQueue) {
-      console.log("GAME SOCKET", socket);
-
       socket.emit("queuing", "private");
       socket.on("setPlayerId", (Id: number) => {
         playerIdRef.current = Id;

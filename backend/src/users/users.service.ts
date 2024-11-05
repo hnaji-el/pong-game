@@ -163,7 +163,7 @@ export class UsersService {
   }
 
   async updateUserPictureURL(user: any, file: Express.Multer.File) {
-    const newPictureURL = `${process.env.HOST_URL}:5000/users/profile-picture/${file.filename}`;
+    const newPictureURL = `${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}/users/profile-picture/${file.filename}`;
 
     await this.prisma.user.update({
       where: { id: user.id },

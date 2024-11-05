@@ -1,4 +1,7 @@
 import React, { useEffect, createContext, useState } from "react";
+
+import { io } from "socket.io-client";
+
 import NavigationChat from "../navigation/NavigationChat";
 import ChatBox from "../ChatBox";
 import { SendIcon } from "../Icons";
@@ -9,9 +12,8 @@ import {
   getDmUsers,
 } from "../../api/API";
 import Spinner from "../Spinner";
-import { io } from "socket.io-client";
 
-const domain: any = import.meta.env.VITE_BACKEND_SOCKET_URL;
+const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_CHAT_PORT}`;
 
 interface TypeData {
   id: string;
@@ -42,9 +44,11 @@ export const StateMssages = createContext<TypeContext>({
 });
 export const Click = createContext<boolean>(false);
 export const MessagesContext = createContext<any>({});
+
 const socket = io(domain, {
   withCredentials: true,
 });
+
 export default function Messages() {
   CheckToken();
   const [click, setClick] = useState(false);

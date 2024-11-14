@@ -6,7 +6,10 @@ import { CheckToken, getDataUserLogged } from "../../api/API";
 import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
 
-const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+const BACKEND_ORIGIN =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_BACKEND_ORIGIN
+    : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
 interface TypeData {
   id: string;
@@ -36,6 +39,7 @@ export const ActiveHome = createContext<TypeContext>({
 
 export default function Home() {
   CheckToken();
+
   const [ArrayofPlayersAndroomId, setArrayofPlayersAndroomId] = useState<
     string[]
   >([]);
@@ -50,7 +54,7 @@ export default function Home() {
 
   useEffect(() => {
     document.title = "Pong - Home";
-    fetch(`${domain}/game/liveGames`)
+    fetch(`${BACKEND_ORIGIN}/game/liveGames`)
       .then((response) => response.json())
       .then((data) => setArrayofPlayersAndroomId(data))
       .catch((error) => console.log(error));

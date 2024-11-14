@@ -13,7 +13,8 @@ import {
 } from "../../api/API";
 import Spinner from "../Spinner";
 
-const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_CHAT_PORT}`;
+const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
+const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
 interface TypeData {
   id: string;
@@ -45,7 +46,8 @@ export const StateMssages = createContext<TypeContext>({
 export const Click = createContext<boolean>(false);
 export const MessagesContext = createContext<any>({});
 
-const socket = io(domain, {
+const socket = io(DOMAIN, {
+  path: SOCKET_CHAT_PATH,
   withCredentials: true,
 });
 

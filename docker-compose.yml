@@ -2,7 +2,7 @@ version: "3.1"
 
 services:
   database:
-    image: postgres:latest
+    image: postgres:17-alpine3.20
     container_name: database-service
     restart: always
     env_file: "./.env"
@@ -16,6 +16,8 @@ services:
       - 5000:5000
       - 5555:5555
       - 1337:1337
+    volumes:
+      - ./backend:/app
     depends_on:
       - database
 
@@ -26,5 +28,7 @@ services:
     restart: always
     ports:
       - 3000:3000
+    volumes:
+      - ./frontend:/app
     depends_on:
       - backend

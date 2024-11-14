@@ -10,7 +10,7 @@
     "start:dev": "dotenv -e .env.development -- nest start --watch",
     "start:debug": "dotenv -e .env.development -- nest start --debug --watch",
     "build": "nest build",
-    "start:prod": "dotenv -e .env.production -- node dist/main",
+    "start:prod": "dotenv -e .env.production -- node dist/src/main.js",
     "migrate:dev": "dotenv -e .env.development -- prisma migrate dev --name init",
     "migrate:prod": "dotenv -e .env.production -- prisma migrate deploy",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",

@@ -15,7 +15,7 @@ import * as cookie from 'cookie';
 
 @WebSocketGateway(+process.env.BACKEND_CHAT_PORT, {
   cors: {
-    origin: `${process.env.FRONTEND_HOST}:${process.env.FRONTEND_PORT}`,
+    origin: process.env.ALLOWED_ORIGIN,
     credentials: true,
     allowedHeaders: ['Cookie'],
   },

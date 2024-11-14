@@ -15,7 +15,8 @@ const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
 const PLAYER_COLOR = "#7970B3";
 
-const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
+const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 
 interface TypeData {
   id: string;
@@ -71,7 +72,8 @@ export default function Game() {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const socket = io(domain, {
+    const socket = io(DOMAIN, {
+      path: SOCKET_PATH,
       withCredentials: true,
       auth: {
         token: cookies["jwt"],

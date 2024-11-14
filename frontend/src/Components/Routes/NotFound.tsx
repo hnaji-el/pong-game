@@ -5,9 +5,11 @@ import { Link } from "react-router-dom";
 
 export default function NotFound() {
   CheckToken();
+
   useEffect(() => {
     document.title = "Pong - Not Found";
   }, []);
+
   return (
     <main className="h-full flex justify-center items-center">
       <div className="flex items-center flex-col lg:flex-row lg:gap-20">

@@ -7,7 +7,7 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
   app.enableCors({
-    origin: `${process.env.FRONTEND_HOST}:${process.env.FRONTEND_PORT}`,
+    origin: process.env.ALLOWED_ORIGIN,
     credentials: true,
   });
   app.use(cookieParser());

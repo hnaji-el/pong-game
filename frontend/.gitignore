@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+Dockerfile.dev
+Dockerfile.prod
+
+
 # testing
 /coverage
 

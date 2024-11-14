@@ -13,16 +13,22 @@ import {
 } from "../PongElements";
 import Redirection from "./Redirection";
 
-const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+const BACKEND_ORIGIN =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_BACKEND_ORIGIN
+    : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
 export default function Login() {
   const [checkLogin, setCheckLogin] = useState<string>("");
+
   CheckTokenLogin((res: any) => {
     setCheckLogin(res);
   });
+
   useEffect(() => {
     document.title = "Pong - Login";
   }, []);
+
   if (checkLogin.length)
     return (
       <div className="flex flex-col gap-10 h-full">
@@ -46,12 +52,12 @@ export default function Login() {
                 Platform for playing pong games with your friends and stream
                 your matches.
               </p>
-              <Link to={domain + "/oauth2/google"}>
+              <a href={BACKEND_ORIGIN + "/oauth2/google"}>
                 <button className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-[12rem] lg:w-[10rem] rounded-md p-3">
                   <span>Sign in with</span>
                   <FcGoogle size={30} />
                 </button>
-              </Link>
+              </a>
             </div>
             <Pong edit="hidden lg:block" />
           </div>

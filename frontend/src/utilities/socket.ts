@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 
-const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
+const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 
 let cookies = Object.fromEntries(
   document.cookie.split("; ").map((c) => {
@@ -9,7 +10,8 @@ let cookies = Object.fromEntries(
   }),
 );
 
-export const globalSocket = io(domain, {
+export const globalSocket = io(DOMAIN, {
+  path: SOCKET_PATH,
   withCredentials: true,
   auth: {
     token: cookies["jwt"],

@@ -1,7 +1,10 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const domain = `${import.meta.env.VITE_BACKEND_HOST}:${import.meta.env.VITE_BACKEND_PORT}`;
+const BACKEND_ORIGIN =
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_BACKEND_ORIGIN
+    : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
 interface TypeDataLogged {
   id: string;
@@ -14,9 +17,8 @@ interface TypeDataLogged {
 export function CheckToken() {
   const navigate = useNavigate();
   axios
-    .get(`${domain}/users/logged-user`, {
+    .get(`${BACKEND_ORIGIN}/users/logged-user`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then()
     .catch((error) => {
@@ -29,9 +31,8 @@ export function CheckToken() {
 export function CheckTokenLogin(getRes: any) {
   const navigate = useNavigate();
   axios
-    .get(`${domain}/users/logged-user`, {
+    .get(`${BACKEND_ORIGIN}/users/logged-user`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then(() => {
       getRes("200");
@@ -76,9 +77,8 @@ interface TypedataFriend {
 
 export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
   axios
-    .get(`${domain}/users/logged-user`, {
+    .get(`${BACKEND_ORIGIN}/users/logged-user`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -88,9 +88,8 @@ export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
 
 export function getDataUsers(getRes: (res: TypeDataUesrs[]) => void) {
   axios
-    .get(`${domain}/users`, {
+    .get(`${BACKEND_ORIGIN}/users`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -103,9 +102,8 @@ export function getOneUser(
   id: string,
 ) {
   axios
-    .get(`${domain}/users/${id}`, {
+    .get(`${BACKEND_ORIGIN}/users/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -118,9 +116,8 @@ export function getFriendsOneUser(
   id: string,
 ) {
   axios
-    .get(`${domain}/users/friends/${id}`, {
+    .get(`${BACKEND_ORIGIN}/users/friends/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -131,11 +128,10 @@ export function getFriendsOneUser(
 export async function addFriend(id: string) {
   await axios
     .post(
-      `${domain}/users/add-friend/${id}`,
+      `${BACKEND_ORIGIN}/users/add-friend/${id}`,
       {},
       {
         withCredentials: true,
-        headers: { "Access-Control-Allow-Origin": `${domain}` },
       },
     )
     .then(() => {})
@@ -144,9 +140,8 @@ export async function addFriend(id: string) {
 
 export async function unfriend(id: string) {
   await axios
-    .delete(`${domain}/users/remove-friend/${id}`, {
+    .delete(`${BACKEND_ORIGIN}/users/remove-friend/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then(() => {})
     .catch();
@@ -155,11 +150,10 @@ export async function unfriend(id: string) {
 export async function blockFriend(id: string) {
   await axios
     .patch(
-      `${domain}/users/block-friend/${id}`,
+      `${BACKEND_ORIGIN}/users/block-friend/${id}`,
       {},
       {
         withCredentials: true,
-        headers: { "Access-Control-Allow-Origin": `${domain}` },
       },
     )
     .then(() => {})
@@ -169,11 +163,10 @@ export async function blockFriend(id: string) {
 export function unBlockFriend(id: string) {
   axios
     .patch(
-      `${domain}/users/unblock-friend/${id}`,
+      `${BACKEND_ORIGIN}/users/unblock-friend/${id}`,
       {},
       {
         withCredentials: true,
-        headers: { "Access-Control-Allow-Origin": `${domain}` },
       },
     )
     .then(() => {})
@@ -184,9 +177,8 @@ export function unBlockFriend(id: string) {
 
 export function getFriendChat() {
   axios
-    .get(`${domain}/chat/DM-with-all-users`, {
+    .get(`${BACKEND_ORIGIN}/chat/DM-with-all-users`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then(() => {})
     .catch();
@@ -194,9 +186,8 @@ export function getFriendChat() {
 
 export function getDmUsers(getRes: any) {
   axios
-    .get(`${domain}/chat/DM-with-all-users`, {
+    .get(`${BACKEND_ORIGIN}/chat/DM-with-all-users`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -206,9 +197,8 @@ export function getDmUsers(getRes: any) {
 
 export function getAllChannels(getRes: any) {
   axios
-    .get(`${domain}/chat/room-message`, {
+    .get(`${BACKEND_ORIGIN}/chat/room-message`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res: any) => {
       getRes(res.data);
@@ -218,9 +208,8 @@ export function getAllChannels(getRes: any) {
 
 export function getChannelsDm() {
   axios
-    .get(`${domain}/chat/room-message`, {
+    .get(`${BACKEND_ORIGIN}/chat/room-message`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {})
     .catch();
@@ -228,7 +217,7 @@ export function getChannelsDm() {
 
 export async function CreateChannel(getRes: any, data: any) {
   await axios
-    .post(`${domain}/chat/create-room`, { data }, { withCredentials: true })
+    .post(`${BACKEND_ORIGIN}/chat/create-room`, { data }, { withCredentials: true })
     .then((res) => {
       getRes(res);
     })
@@ -239,9 +228,8 @@ export async function CreateChannel(getRes: any, data: any) {
 
 export function getFriendChannel(getRes: any, nameChannel: string) {
   axios
-    .get(`${domain}/chat/friends-in-room/${nameChannel}`, {
+    .get(`${BACKEND_ORIGIN}/chat/friends-in-room/${nameChannel}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -251,9 +239,8 @@ export function getFriendChannel(getRes: any, nameChannel: string) {
 
 export function getMembersChannel(getRes: any, nameChannel: string) {
   axios
-    .get(`${domain}/chat/users-in-room/${nameChannel}`, {
+    .get(`${BACKEND_ORIGIN}/chat/users-in-room/${nameChannel}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -263,49 +250,49 @@ export function getMembersChannel(getRes: any, nameChannel: string) {
 
 export async function addToRoom(data: any) {
   await axios
-    .post(`${domain}/chat/add-to-room`, { data }, { withCredentials: true })
+    .post(`${BACKEND_ORIGIN}/chat/add-to-room`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setAdmin(data: any) {
   await axios
-    .post(`${domain}/chat/set-admin`, { data }, { withCredentials: true })
+    .post(`${BACKEND_ORIGIN}/chat/set-admin`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setBlock(data: any) {
   await axios
-    .patch(`${domain}/chat/ban`, { data }, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/ban`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setKick(data: any) {
   await axios
-    .patch(`${domain}/chat/kick`, { data }, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/kick`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function setMute(data: any) {
   await axios
-    .patch(`${domain}/chat/muted`, { data }, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/muted`, { data }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function leaveRoom(name: string) {
   await axios
-    .post(`${domain}/chat/quite-room`, { name }, { withCredentials: true })
+    .post(`${BACKEND_ORIGIN}/chat/quite-room`, { name }, { withCredentials: true })
     .then()
     .catch();
 }
 
 export async function deleteRoom(name: string) {
   await axios
-    .delete(`${domain}/chat/delete-room/${name}`, {
+    .delete(`${BACKEND_ORIGIN}/chat/delete-room/${name}`, {
       withCredentials: true,
     })
     .then()
@@ -316,7 +303,7 @@ export function joinRoom(getRes: any, data: any) {
   console.log("data: ", data);
 
   axios
-    .post(`${domain}/chat/join-room`, { data }, { withCredentials: true })
+    .post(`${BACKEND_ORIGIN}/chat/join-room`, { data }, { withCredentials: true })
     .then((res) => {
       getRes(res.data);
     })
@@ -328,7 +315,7 @@ export async function editPicture(file: any) {
   fd.append("file", file);
 
   await axios
-    .post(`${domain}/users/upload-profile-picture`, fd, {
+    .post(`${BACKEND_ORIGIN}/users/upload-profile-picture`, fd, {
       withCredentials: true,
     })
     .then()
@@ -340,7 +327,7 @@ export async function editNickname(getRes: any, nickname: string) {
     nickname: nickname,
   };
   await axios
-    .patch(`${domain}/users/update_nickname`, obj, {
+    .patch(`${BACKEND_ORIGIN}/users/update_nickname`, obj, {
       withCredentials: true,
     })
     .then(() => {
@@ -354,7 +341,7 @@ export async function editNickname(getRes: any, nickname: string) {
 export async function generateQrCode(getRes: any) {
   await axios
     .post(
-      `${domain}/2fa/generate`,
+      `${BACKEND_ORIGIN}/2fa/generate`,
       {},
       {
         withCredentials: true,
@@ -371,7 +358,7 @@ export async function QrcodeValidation(getRes: any, code: string) {
     twoFactorAuthCode: code,
   };
   await axios
-    .post(`${domain}/2fa/verification`, obj, {
+    .post(`${BACKEND_ORIGIN}/2fa/verification`, obj, {
       withCredentials: true,
     })
     .then((res) => {
@@ -385,7 +372,7 @@ export async function QrcodeValidation(getRes: any, code: string) {
 export async function turOnTfa() {
   await axios
     .post(
-      `${domain}/2fa/turn-on`,
+      `${BACKEND_ORIGIN}/2fa/turn-on`,
       {},
       {
         withCredentials: true,
@@ -398,7 +385,7 @@ export async function turOnTfa() {
 export async function turnOffTfa() {
   await axios
     .post(
-      `${domain}/2fa/turn-off`,
+      `${BACKEND_ORIGIN}/2fa/turn-off`,
       {},
       {
         withCredentials: true,
@@ -410,9 +397,8 @@ export async function turnOffTfa() {
 
 export function getAchievements(getRes: any, id: string) {
   axios
-    .get(`${domain}/users/game/achievement/${id}`, {
+    .get(`${BACKEND_ORIGIN}/users/game/achievement/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -422,9 +408,8 @@ export function getAchievements(getRes: any, id: string) {
 
 export function getMatchHistory(getRes: any, id: string) {
   axios
-    .get(`${domain}/users/game/match-history/${id}`, {
+    .get(`${BACKEND_ORIGIN}/users/game/match-history/${id}`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then((res) => {
       getRes(res.data);
@@ -434,9 +419,8 @@ export function getMatchHistory(getRes: any, id: string) {
 
 export async function logout() {
   await axios
-    .get(`${domain}/auth/logout`, {
+    .get(`${BACKEND_ORIGIN}/auth/logout`, {
       withCredentials: true,
-      headers: { "Access-Control-Allow-Origin": `${domain}` },
     })
     .then()
     .catch();

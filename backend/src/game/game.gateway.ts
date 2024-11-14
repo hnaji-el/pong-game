@@ -17,7 +17,7 @@ interface TypeData {
 }
 @WebSocketGateway({
   cors: {
-    origin: process.env.ALLOWED_ORIGIN,
+    origin: process.env.FRONTEND_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   },

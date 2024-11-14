@@ -9,7 +9,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response: Response = exectionContex.getResponse<Response>();
     response.redirect(
       301,
-      `${process.env.FRONTEND_HOST}:${process.env.FRONTEND_PORT}/login`,
+      `${process.env.FRONTEND_ORIGIN}/login`,
     );
   }
 }

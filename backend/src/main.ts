@@ -1,3 +1,8 @@
+import { config } from 'dotenv';
+import { expand } from 'dotenv-expand';
+
+expand(config({ path: `.env.${process.env.NODE_ENV || 'development'}` }));
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';

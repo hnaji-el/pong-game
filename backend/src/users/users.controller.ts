@@ -31,6 +31,7 @@ export class UsersController {
     await this.usersService.updateNickname(req.user.id, body.nickname);
   }
 
+  // TODO: review the upload picture logic from both sides (frontend & backend)
   @Post('/users/upload-profile-picture')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(

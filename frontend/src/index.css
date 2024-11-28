@@ -20,16 +20,16 @@ code {
 
 ::-webkit-scrollbar {
   background-color: rgba(0, 0, 0, 0.163);
-  @apply w-[.4rem] h-[.4rem];
+  @apply h-[.4rem] w-[.4rem];
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-shape rounded-full;
+  @apply rounded-full bg-shape;
 }
 
 body,
 html {
-  height: 100vh;
+  height: 100%;
   width: 100%;
 }
 
@@ -37,7 +37,7 @@ body {
   @apply bg-body;
 }
 #root {
-  @apply relative h-full flex flex-col 2xl:mx-auto 2xl:container font-poppins;
+  @apply relative flex h-full flex-col font-poppins 2xl:container 2xl:mx-auto;
 }
 
 .shadow {

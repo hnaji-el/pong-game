@@ -33,9 +33,9 @@ export default function Login() {
   if (checkLogin.length)
     return (
       <div className="flex h-full flex-col">
-        <header className="flex justify-center p-10 lg:justify-start">
+        <header className="flex justify-start px-3 pt-5 pb-10 sm:pt-10 md:px-10">
           <Link to="/login">
-            <img src={logo} alt="pong logo" className="w-48" />
+            <img src={logo} alt="pong logo" className="w-36 sm:w-48" />
           </Link>
         </header>
         <main className="relative mx-3 mb-3 h-full md:mx-10 md:mb-10">

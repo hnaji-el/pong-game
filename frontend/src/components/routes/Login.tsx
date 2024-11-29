@@ -33,7 +33,7 @@ export default function Login() {
   if (checkLogin.length)
     return (
       <div className="flex h-full flex-col">
-        <header className="flex justify-start px-3 pt-5 pb-10 sm:pt-10 md:px-10">
+        <header className="flex justify-start px-3 pb-10 pt-5 sm:pt-10 md:px-10">
           <Link to="/login">
             <img src={logo} alt="pong logo" className="w-36 sm:w-48" />
           </Link>
@@ -45,7 +45,7 @@ export default function Login() {
           <ArrowLeft edit="absolute top-0 right-0 w-9 lg:w-[2.5rem]" />
 
           <div className="flex h-full w-full items-center justify-center gap-60 lg:relative lg:bottom-5">
-            <div className="flex h-full w-full flex-col items-center gap-9 pt-[90px] sm:h-auto sm:items-start sm:pt-0">
+            <div className="flex w-full flex-col items-center gap-9 sm:items-start">
               <span className="font-test text-center text-[32px] font-extrabold text-primaryText sm:text-start sm:text-[40px]">
                 Real-Time Multiplayer Ping-Pong: Challenge Friends, Smash
                 Records!

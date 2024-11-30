@@ -11,7 +11,6 @@ import { Server } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
 import * as moment from 'moment';
-import * as cookie from 'cookie';
 
 @WebSocketGateway(+process.env.BACKEND_CHAT_PORT, {
   cors: {
@@ -23,59 +22,72 @@ import * as cookie from 'cookie';
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
-    private roomservice: ChatService,
+    private chatService: ChatService,
   ) {}
+
   @WebSocketServer() server: Server;
-  OnlineUser: any[] = [];
-  id: number = 0;
+  onlineClients = [];
+  id = 0;
 
   @SubscribeMessage('msgServer')
-  async handleMessage(@MessageBody() Body, @ConnectedSocket() client: any) {
-    const user1 = client.user;
+  async handleMessage(
+    @ConnectedSocket() client: any,
+    @MessageBody() Body: any,
+  ) {
+    const user = client.user;
     this.id += 1;
-    console.log('msgServer, Body => ', Body);
+    let roomName = `<${user.nickname}_${this.id}>`;
 
-    let roomName = `<${client.user.nickname}_${this.id}>`;
-    if (Body.type.toString() == 'DM') {
-      const user_freind = await this.prisma.user.findUnique({
+    if (Body.type === 'DM') {
+      const friendUser = await this.prisma.user.findUnique({
         where: {
           nickname: Body.name,
         },
       });
-      for (let index = 0; index < this.OnlineUser.length; index++) {
-        if (
-          this.OnlineUser[index].user.nickname == user_freind.nickname ||
-          this.OnlineUser[index].user.nickname == user1.nickname
-        ) {
-          this.OnlineUser[index].join(roomName);
+      // for (let index = 0; index < this.onlineClients.length; index++) {
+      //   if (
+      //     this.onlineClients[index].user.nickname == friendUser.nickname ||
+      //     this.onlineClients[index].user.nickname == user.nickname
+      //   ) {
+      //     this.onlineClients[index].join(roomName);
+      //   }
+      // }
+      /*
+        room: {
+          id: 'd1a2a15f-84c5-4bec-82a4-f7643b37ca97',
+          name: 'hamidnajielidrissihamidnaji981',
+          owner: 'hamidnaji981',
+          members: [ 'hamidnaji981', 'hamidnajielidrissi' ],
+          blocked: [],
+          type: 'personnel',
+          admins: [ 'hamidnaji981' ],
+          hash: null
         }
-      }
+        */
       const room = await this.prisma.room.findUnique({
         where: {
-          name: user_freind.nickname + user1.nickname,
+          name: friendUser.nickname + user.nickname,
         },
       });
       if (room) {
-        console.log('room -----');
-
         await this.prisma.messages.create({
           data: {
-            roomName: user_freind.nickname + user1.nickname,
+            roomName: friendUser.nickname + user.nickname,
             data: Body.data,
-            userLogin: user_freind.nickname,
+            userLogin: friendUser.nickname,
           },
         });
         this.server
           .to(roomName)
           .emit(
             'msgFromServer',
-            await this.roomservice.emit_message(user1, room, 'chat'),
+            await this.chatService.emit_message(user, room, 'chat'),
           );
-        for (let index = 0; index < this.OnlineUser.length; index++) {
-          if (this.OnlineUser[index].user.nickname == user1.nickname) {
+        for (let index = 0; index < this.onlineClients.length; index++) {
+          if (this.onlineClients[index].user.nickname == user.nickname) {
             client.emit(
               'msgFromServer',
-              await this.roomservice.emit_message(user_freind, room, 'chat'),
+              await this.chatService.emit_message(friendUser, room, 'chat'),
             );
           }
         }
@@ -84,7 +96,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
         const room_freind = await this.prisma.room.findUnique({
           where: {
-            name: user1.nickname + user_freind.nickname,
+            name: user.nickname + friendUser.nickname,
           },
         });
         if (room_freind) {
@@ -92,23 +104,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
           const msg = await this.prisma.messages.create({
             data: {
-              roomName: user1.nickname + user_freind.nickname,
+              roomName: user.nickname + friendUser.nickname,
               data: Body.data,
-              userLogin: user_freind.nickname,
+              userLogin: friendUser.nickname,
             },
           });
           this.server
             .to(roomName)
             .emit(
               'msgFromServer',
-              await this.roomservice.emit_message(user1, room_freind, 'chat'),
+              await this.chatService.emit_message(user, room_freind, 'chat'),
             );
-          for (let index = 0; index < this.OnlineUser.length; index++) {
-            if (this.OnlineUser[index].user.nickname == user1.nickname) {
+          for (let index = 0; index < this.onlineClients.length; index++) {
+            if (this.onlineClients[index].user.nickname == user.nickname) {
               client.emit(
                 'msgFromServer',
-                await this.roomservice.emit_message(
-                  user_freind,
+                await this.chatService.emit_message(
+                  friendUser,
                   room_freind,
                   'chat',
                 ),
@@ -125,118 +137,115 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
       const user2 = await this.prisma.muted.findMany({
         where: {
-          userLogin: user1.nickname,
+          userLogin: user.nickname,
           roomName: Body.name,
         },
       });
       if (user2[0]) {
         if (user2[0].time < moment().format('YYYY-MM-DD hh:mm:ss')) {
-          this.roomservice.unmuted(user1, Body);
+          this.chatService.unmuted(user, Body);
         } else return;
       }
       if (rom) {
-        for (let i = 0; i < this.OnlineUser.length; i++) {
+        for (let i = 0; i < this.onlineClients.length; i++) {
           const login = rom.members.find(
-            (login) => login == this.OnlineUser[i].user.nickname,
+            (login) => login == this.onlineClients[i].user.nickname,
           );
-          if (login) this.OnlineUser[i].join(roomName);
+          if (login) this.onlineClients[i].join(roomName);
         }
         const msg = await this.prisma.messages.create({
           data: {
             roomName: Body.name,
             data: Body.data,
-            userLogin: user1.nickname,
+            userLogin: user.nickname,
           },
         });
         this.server
           .to(roomName)
           .emit(
             'msgFromServer',
-            await this.roomservice.emit_messagetoRoom(user1, rom),
+            await this.chatService.emit_messagetoRoom(user, rom),
           );
       }
     }
   }
 
   async handleDisconnect(@ConnectedSocket() client: any) {
-    for (let index = 0; index < this.OnlineUser.length; index++) {
-      if (this.OnlineUser[index].id == client.id) {
-        this.OnlineUser.splice(index, 1);
+    const jwtToken = this.chatService.getJwtTokenFromClient(client);
+    const user = await this.chatService.getUserFromJwtToken(jwtToken);
+
+    // Clean up the client
+    for (let index = 0; index < this.onlineClients.length; index++) {
+      if (this.onlineClients[index].id === client.id) {
+        this.onlineClients.splice(index, 1);
         break;
       }
     }
-    const cookies: { [key: string]: string } = cookie.parse(
-      client.handshake.headers.cookie || '',
-    );
-    if (!cookies['accessToken']) {
-      client.emit('error', 'unauthorized');
+
+    if (!user) {
+      console.warn(
+        `[Chat]: Unauthorized disconnection happend from client: ${client.id}`,
+      );
       return;
     }
-    const jwttoken: string = cookies['accessToken'];
-    if (!jwttoken) {
-      client.emit('error', 'unauthorized');
-      return;
-    }
+
     try {
-      const user = await this.roomservice.getUserFromAuthenticationToken(
-        jwttoken,
-      );
-      const test = this.OnlineUser.find(
-        (client) => client.user.login === user.nickname,
-      );
-      if (!test) {
+      if (user.status === 'online') {
         await this.prisma.user.update({
           where: {
-            nickname: client.user.nickname,
+            id: user.id,
           },
           data: {
-            status: 'of',
+            status: 'offline',
           },
         });
       }
+      console.log(
+        `[Chat]: Client disconnected: ${client.id} (user: ${user.id})`,
+      );
     } catch (error) {
-      client.emit('error', 'unauthorized');
+      console.error(
+        `[Chat]: Error during disconnection handling for client ${client.id} (user: ${user.id}):`,
+        error,
+      );
     }
   }
 
   async handleConnection(@ConnectedSocket() client: any) {
-    console.log('client connected to chat ', client.id);
+    const jwtToken = this.chatService.getJwtTokenFromClient(client);
+    const user = await this.chatService.getUserFromJwtToken(jwtToken);
 
-    const cookies: { [key: string]: string } = cookie.parse(
-      client.handshake.headers.cookie || '',
-    );
-    if (!cookies['jwt']) {
+    if (!user) {
       client.emit('error', 'unauthorized');
-      return;
-    }
-    const jwttoken: string = cookies['jwt'];
-    if (!jwttoken) {
-      client.emit('error', 'unauthorized');
-      return;
-    }
-    try {
-      const user = await this.roomservice.getUserFromAuthenticationToken(
-        jwttoken,
+      client.disconnect();
+      console.warn(
+        `[Chat]: Unauthorized connection attempt from client: ${client.id}`,
       );
-      console.log('chat gateway => ', user.nickname);
-      if (!user) {
-        return;
-      }
-      client.user = user;
-      if (user.status == 'of') {
-        const user1 = await this.prisma.user.update({
+      return;
+    }
+
+    client.user = user;
+
+    try {
+      if (user.status === 'offline') {
+        await this.prisma.user.update({
           where: {
-            nickname: user.nickname,
+            id: user.id,
           },
           data: {
-            status: 'on',
+            status: 'online',
           },
         });
       }
-      this.OnlineUser.push(client);
+      this.onlineClients.push(client); // TODO: This line needs further checkes...
+      console.log(`[Chat]: Client connected: ${client.id} (user: ${user.id})`);
     } catch (error) {
       client.emit('error', 'unauthorized');
       client.disconnect();
+      console.error(
+        `[Chat]: Error during connection handling for client ${client.id} (user: ${user.id}):`,
+        error,
+      );
     }
   }
 }

@@ -9,34 +9,50 @@ import {
   chanelprotected,
 } from './utils/typeObjects';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from 'src/users/entities/user.entity';
 import * as moment from 'moment';
+import * as cookie from 'cookie';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { UserChatEntity } from './entities/user.chat.entity';
 
 @Injectable()
 export class ChatService {
   constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-  async getUserFromAuthenticationToken(token: string) {
-    if (token) {
-      const payload = await this.jwt.verify(token, {
+  getJwtTokenFromClient(client: any) {
+    const cookies: { [key: string]: string } = cookie.parse(
+      client.handshake.headers.cookie || '',
+    );
+
+    return cookies.jwt;
+  }
+
+  async getUserFromJwtToken(
+    jwtToken: string | undefined,
+  ): Promise<UserChatEntity | undefined> {
+    if (!jwtToken) return;
+    let user: UserChatEntity | undefined;
+
+    try {
+      const payload = this.jwt.verify(jwtToken, {
         secret: process.env.SECRET,
       });
-      if (payload.nickname) {
-        const user = await this.prisma.user.findUnique({
-          where: {
-            nickname: payload.nickname,
-          },
-          select: {
-            id: true,
-            nickname: true,
-            pictureURL: true,
-            status: true,
-          },
-        });
-        if (!user) return;
-        return user;
-      }
+
+      user = await this.prisma.user.findUniqueOrThrow({
+        where: {
+          id: payload.sub,
+        },
+        select: {
+          id: true,
+          nickname: true,
+          pictureURL: true,
+          status: true,
+        },
+      });
+    } catch {
+      return;
     }
+
+    return user;
   }
 
   async CreateRoom(userlogin: string, name: string, type: string) {
@@ -626,17 +642,18 @@ export class ChatService {
   }
 
   async getDMWithAllUsers(type: string, user1: any): Promise<typeObject[]> {
+    const obj: typeObject[] = [];
     const rooms = await this.prisma.room.findMany({
       where: {
         type: type,
       },
     });
-    const obj: typeObject[] = [];
+
     for (let index = 0; index < rooms.length; index++) {
-      // let person : typeObject = {÷};
       const id1 = rooms[index].members.find(
         (login) => login === user1.nickname,
       );
+
       if (id1) {
         let login: string;
         if (rooms[index].name === user1.nickname + rooms[index].members[0]) {
@@ -686,6 +703,7 @@ export class ChatService {
         obj.push(person);
       }
     }
+
     for (const x of user1.requester) {
       if (x.type !== 'FRIENDSHIP') continue;
       const friend = await this.prisma.user.findUnique({
@@ -708,6 +726,7 @@ export class ChatService {
         obj.push(person);
       }
     }
+
     for (const x of user1.addressee) {
       if (x.type !== 'FRIENDSHIP') continue;
       const friend = await this.prisma.user.findUnique({
@@ -730,6 +749,7 @@ export class ChatService {
         obj.push(person);
       }
     }
+
     return obj;
   }
 

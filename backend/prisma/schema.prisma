@@ -50,13 +50,13 @@ model Room {
   id      String     @id @default(uuid())
   name    String     @unique
   owner   String
-  members String[]
-  blocked String[]
   type    String     @default("private")
   admins  String[]
+  members String[]
+  blocked String[]
+  hash    String?
   muted   Muted[]
   message Messages[]
-  hash    String?
 }
 
 model Muted {
@@ -73,8 +73,8 @@ model Messages {
   id        String @id @default(uuid())
   roomName  String
   userLogin String
-  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
   data      String
+  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
 
   @@map("messages")
 }

@@ -27,6 +27,7 @@ export class AuthService {
       nickname: user.nickname,
       isValid: state,
     };
+
     return this.jwtService.sign(payload);
   }
 

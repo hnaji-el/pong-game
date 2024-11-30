@@ -27,6 +27,7 @@ export class UsersService {
         include: { requester: true, addressee: true },
       });
     }
+
     return user;
   }
 

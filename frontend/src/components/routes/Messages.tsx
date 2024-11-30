@@ -4,14 +4,15 @@ import { io } from "socket.io-client";
 
 import NavigationChat from "../navigation/NavigationChat";
 import ChatBox from "../ChatBox";
+import Spinner from "../Spinner";
 import { SendIcon } from "../Icons";
+
 import {
   CheckToken,
   getAllChannels,
   getDataUserLogged,
   getDmUsers,
 } from "../../api/API";
-import Spinner from "../Spinner";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
@@ -53,9 +54,9 @@ const socket = io(DOMAIN, {
 
 export default function Messages() {
   CheckToken();
+
   const [click, setClick] = useState(false);
   const [firstClick, setFirstClick] = useState(true);
-
   const [dataDm, setDataDm] = useState<any>([]);
   const [channelDm, setChannelDm] = useState<any>([]);
   const [indexDm, setIndexDm] = useState<number>(0);
@@ -165,12 +166,12 @@ export default function Messages() {
             <>
               <main
                 className={`${
-                  click ? "" : "absolute w-0 h-0"
-                } lg:block lg:relative lg:w-auto lg:h-auto mx-3 lg:pb-1 pt-7 lg:ml-64 lg:mr-4 overflow-hidden mb-[4.85rem]`}
+                  click ? "" : "absolute h-0 w-0"
+                } mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1`}
               >
                 <ChatBox data={dataChatBox?.conversation} />
               </main>
-              <div className="absolute w-full bottom-[0.9rem] px-3 lg:pl-64 lg:pr-4">
+              <div className="absolute bottom-[0.9rem] w-full px-3 lg:pl-64 lg:pr-4">
                 <form className="flex items-center rounded-md bg-shape pr-2">
                   <input
                     type="text"
@@ -200,7 +201,7 @@ export default function Messages() {
       </StateMssages.Provider>
     );
   return (
-    <div className="mx-3 flex justify-center items-center h-full">
+    <div className="mx-3 flex h-full items-center justify-center">
       <Spinner />
     </div>
   );

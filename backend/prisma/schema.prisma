@@ -50,23 +50,13 @@ model Room {
   id      String     @id @default(uuid())
   name    String     @unique
   owner   String
-  type    String     @default("private")
   admins  String[]
   members String[]
   blocked String[]
+  type    String     @default("private")
   hash    String?
   muted   Muted[]
   message Messages[]
-}
-
-model Muted {
-  id        String @id @default(uuid())
-  roomName  String
-  userLogin String
-  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
-  time      String
-
-  @@map("muted")
 }
 
 model Messages {
@@ -77,6 +67,16 @@ model Messages {
   room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
 
   @@map("messages")
+}
+
+model Muted {
+  id        String @id @default(uuid())
+  roomName  String
+  userLogin String
+  time      String
+  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
+
+  @@map("muted")
 }
 
 enum Status {

@@ -1,6 +1,14 @@
-export interface typeobject {
+export interface RoomMsgsType {
+  id: string;
+  username: string;
+  status: string;
+  picture: string;
   type: string;
-  message: string;
+  latestMessage: string | undefined;
+  conversation: {
+    type: string;
+    message: string;
+  }[];
 }
 
 export interface objectChannel {
@@ -14,16 +22,6 @@ export interface converssession_channel {
   message: string;
   picture: string;
 }
-export interface typeObject {
-  id: string;
-  username: string;
-  status: string;
-  latestMessage: string | undefined;
-  picture: string;
-  conversation: typeobject[];
-  type: string;
-}
-
 export interface chanel {
   id: string;
   name: string;

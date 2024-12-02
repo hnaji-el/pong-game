@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { comparepassword, hashPassword } from './utils/bcrypt';
 import {
   chanel,
-  typeObject,
+  RoomMsgsType,
   userchanel,
   Searchchanel,
   chanelprotected,
@@ -12,7 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as moment from 'moment';
 import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { UserChatEntity } from './entities/user.chat.entity';
+import { Room } from '@prisma/client';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
@@ -28,9 +29,10 @@ export class ChatService {
 
   async getUserFromJwtToken(
     jwtToken: string | undefined,
-  ): Promise<UserChatEntity | undefined> {
+  ): Promise<User | undefined> {
     if (!jwtToken) return;
-    let user: UserChatEntity | undefined;
+
+    let user: User | undefined;
 
     try {
       const payload = this.jwt.verify(jwtToken, {
@@ -41,18 +43,98 @@ export class ChatService {
         where: {
           id: payload.sub,
         },
-        select: {
-          id: true,
-          nickname: true,
-          pictureURL: true,
-          status: true,
-        },
       });
     } catch {
       return;
     }
 
     return user;
+  }
+
+  async getRoomMsgs(
+    user: User,
+    room: Room,
+    type: string,
+  ): Promise<RoomMsgsType> {
+    const roomMsgs = await this.prisma.room.findUnique({
+      where: {
+        name: room.name,
+      },
+      select: {
+        message: true,
+      },
+    });
+
+    // TODO: what's if roomMsgs is null
+
+    return {
+      id: user.id,
+      username: user.nickname,
+      status: user.status,
+      picture: user.pictureURL,
+      type: type,
+      latestMessage: roomMsgs.message[roomMsgs.message.length - 1].data,
+      conversation: roomMsgs.message.map((msg) => ({
+        type: msg.userLogin === user.nickname ? 'user' : 'friend',
+        message: msg.data,
+      })),
+    };
+  }
+
+  async emit_messagetoRoom(user: any, room: any): Promise<chanel> {
+    const allmessage = await this.prisma.room.findUnique({
+      where: {
+        name: room.name,
+      },
+      select: {
+        message: true,
+      },
+    });
+    let role;
+    if (room.owner === user.nickname) role = 'owner';
+    else {
+      const admin = room.admins.find((login) => login === user.nickname);
+      if (admin) role = 'admins';
+      else role = 'members';
+    }
+    const person: chanel = {
+      id: room.id,
+      name: room.name,
+      members: room.members.length,
+      latestMessage: '',
+      role: role,
+      type: room.type,
+      conversation: [],
+    };
+    person.conversation = allmessage.message.map(() => ({
+      login: '',
+      message: '',
+      picture: '',
+    }));
+    const message_user = await this.prisma.messages.findFirst({
+      where: {
+        roomName: room.name,
+      },
+    });
+    if (message_user) {
+      person.latestMessage =
+        allmessage.message[allmessage.message.length - 1].data;
+      person.conversation = allmessage.message.map((x) => ({
+        login: '',
+        message: x.data,
+        picture: '',
+      }));
+      for (let i = allmessage.message.length - 1; i >= 0; i--) {
+        const user_chanel = await this.prisma.user.findUnique({
+          where: {
+            nickname: allmessage.message[i].userLogin,
+          },
+        });
+        person.conversation[i].login = user_chanel.nickname;
+        person.conversation[i].picture = user_chanel.pictureURL;
+      }
+    }
+    return person;
   }
 
   async CreateRoom(userlogin: string, name: string, type: string) {
@@ -641,8 +723,8 @@ export class ChatService {
     return allmessage.message[v - 1];
   }
 
-  async getDMWithAllUsers(type: string, user1: any): Promise<typeObject[]> {
-    const obj: typeObject[] = [];
+  async getDMWithAllUsers(type: string, user1: any): Promise<RoomMsgsType[]> {
+    const obj: RoomMsgsType[] = [];
     const rooms = await this.prisma.room.findMany({
       where: {
         type: type,
@@ -678,7 +760,7 @@ export class ChatService {
           },
         });
         if (!message_user) continue;
-        const person: typeObject = {
+        const person: RoomMsgsType = {
           id: user.id,
           username: user.nickname,
           status: user.status,
@@ -714,7 +796,7 @@ export class ChatService {
         if (friend.nickname === obj[index].username) break;
       }
       if (index === obj.length && friend.nickname !== user1.nickname) {
-        const person: typeObject = {
+        const person: RoomMsgsType = {
           id: friend.id,
           username: friend.nickname,
           status: friend.status,
@@ -737,7 +819,7 @@ export class ChatService {
         if (friend.nickname === obj[index].username) break;
       }
       if (index === obj.length && friend.nickname !== user1.nickname) {
-        const person: typeObject = {
+        const person: RoomMsgsType = {
           id: friend.id,
           username: friend.nickname,
           status: friend.status,
@@ -753,8 +835,8 @@ export class ChatService {
     return obj;
   }
 
-  async getDM(type: string, user1: any): Promise<typeObject[]> {
-    const obj: typeObject[] = [];
+  async getDM(type: string, user1: any): Promise<RoomMsgsType[]> {
+    const obj: RoomMsgsType[] = [];
     const rooms = await this.prisma.room.findMany({
       where: {
         type: type,
@@ -788,7 +870,7 @@ export class ChatService {
           },
         });
         if (!message_user) continue;
-        const person: typeObject = {
+        const person: RoomMsgsType = {
           id: user.id,
           username: user.nickname,
           status: user.status,
@@ -1009,93 +1091,5 @@ export class ChatService {
       },
     });
     return 'deleted';
-  }
-
-  async emit_message(user: any, room: any, type: string): Promise<typeObject> {
-    const allmessage = await this.prisma.room.findUnique({
-      where: {
-        name: room.name,
-      },
-      select: {
-        message: true,
-      },
-    });
-    const person: typeObject = {
-      id: user.id,
-      username: user.nickname,
-      status: user.status,
-      latestMessage: '',
-      picture: user.pictureURL,
-      conversation: [],
-      type: type,
-    };
-    person.latestMessage =
-      allmessage.message[allmessage.message.length - 1].data;
-    person.conversation = allmessage.message.map((x) => ({
-      type: '',
-      message: x.data,
-    }));
-    for (let i = allmessage.message.length - 1; i >= 0; i--) {
-      if (user.nickname === allmessage.message[i].userLogin)
-        person.conversation[i].type = 'user';
-      else person.conversation[i].type = 'friend';
-    }
-    return person;
-  }
-
-  async emit_messagetoRoom(user: any, room: any): Promise<chanel> {
-    const allmessage = await this.prisma.room.findUnique({
-      where: {
-        name: room.name,
-      },
-      select: {
-        message: true,
-      },
-    });
-    let role;
-    if (room.owner === user.nickname) role = 'owner';
-    else {
-      const admin = room.admins.find((login) => login === user.nickname);
-      if (admin) role = 'admins';
-      else role = 'members';
-    }
-    const person: chanel = {
-      id: room.id,
-      name: room.name,
-      members: room.members.length,
-      latestMessage: '',
-      role: role,
-      type: room.type,
-      conversation: [],
-    };
-    person.conversation = allmessage.message.map(() => ({
-      login: '',
-      message: '',
-      picture: '',
-    }));
-    const message_user = await this.prisma.messages.findFirst({
-      where: {
-        roomName: room.name,
-      },
-    });
-    if (message_user) {
-      person.latestMessage =
-        allmessage.message[allmessage.message.length - 1].data;
-      person.conversation = allmessage.message.map((x) => ({
-        login: '',
-        message: x.data,
-        picture: '',
-      }));
-      for (let i = allmessage.message.length - 1; i >= 0; i--) {
-        const user_chanel = await this.prisma.user.findUnique({
-          where: {
-            nickname: allmessage.message[i].userLogin,
-          },
-        });
-        person.conversation[i].login = user_chanel.nickname;
-        person.conversation[i].picture = user_chanel.pictureURL;
-      }
-    }
-    return person;
   }
 }

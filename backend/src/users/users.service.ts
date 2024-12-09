@@ -207,11 +207,11 @@ export class UsersService {
       include: { requester: true, addressee: true },
     });
 
-    if (!addresseeUser) throw new ForbiddenException('user is not exit');
+    if (!addresseeUser) throw new ForbiddenException('User does not exit');
     if (this.isFriend(requesterUser, addresseeUser))
-      throw new ForbiddenException('user already friend');
+      throw new ForbiddenException('User is already a friend');
     if (this.isBlocked(requesterUser, addresseeUser))
-      throw new ForbiddenException('user is blocked');
+      throw new ForbiddenException('User is blocked');
 
     await this.prisma.relationShip.create({
       data: {
@@ -220,14 +220,16 @@ export class UsersService {
         type: 'FRIENDSHIP',
       },
     });
-    await this.chatService.CreateRoom(
+
+    await this.chatService.createRoom(
+      requesterUser.nickname + addresseeUser.nickname,
       requesterUser.nickname,
-      addresseeUser.nickname + requesterUser.nickname,
-      'personnel',
+      'DIRECTMESSAGE',
     );
-    await this.chatService.joinroom(
+
+    await this.chatService.joinRoom(
       addresseeUser,
-      addresseeUser.nickname + requesterUser.nickname,
+      requesterUser.nickname + addresseeUser.nickname,
     );
   }
 
@@ -237,11 +239,11 @@ export class UsersService {
       include: { requester: true, addressee: true },
     });
 
-    if (!addresseeUser) throw new ForbiddenException('user is not exit');
+    if (!addresseeUser) throw new ForbiddenException('User does not exit');
     if (this.isBlocked(requesterUser, addresseeUser))
-      throw new ForbiddenException('user is blocked');
+      throw new ForbiddenException('User is blocked');
     if (!this.isFriend(requesterUser, addresseeUser))
-      throw new ForbiddenException('user without any relationship');
+      throw new ForbiddenException('User without any relationship');
 
     await this.prisma.relationShip.deleteMany({
       where: {

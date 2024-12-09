@@ -11,53 +11,43 @@ export class ChatController {
   constructor(private chatService: ChatService) {}
 
   @UseGuards(JwtAuthGuard)
-  // @UseFilters(new HttpExceptionFilter())
+  @UseFilters(new HttpExceptionFilter())
   @Post('create-room')
-  async CreateRoom(@Req() req, @Body() room) {
-    try {
-      if (room.data.type === 'public' || room.data.type === 'private')
-        await this.chatService.CreateRoom(
-          req.user.nickname,
-          room.data.name,
-          room.data.type,
-        );
-      else
-        await this.chatService.CreateRoomprotected(
-          req.user.nickname,
-          room.data.name,
-          room.data.type,
-          room.data.password,
-        );
-    } catch (error) {
-      throw new ForbiddenException('name existe');
-    }
+  async createRoom(@Req() req, @Body() room) {
+    await this.chatService.createRoom(
+      room.data.name,
+      req.user.nickname,
+      room.data.type,
+      room.data.password,
+    );
   }
 
-  @UseFilters(new HttpExceptionFilter())
   @UseGuards(JwtAuthGuard)
+  @UseFilters(new HttpExceptionFilter())
   @Post('/join-room')
-  async joinroom(@Req() req, @Body() room) {
+  async joinRoom(@Req() req, @Body() room) {
     try {
-      if (room.data.type === 'public')
-        return await this.chatService.joinroom(req.user, room.data.name);
-      else if (room.data.type === 'protected')
-        return await this.chatService.joinroomprotected(req.user, room);
-    } catch (error) {}
+      if (room.data.type === 'PUBLIC') {
+        return await this.chatService.joinRoom(req.user, room.data.name);
+      } else if (room.data.type === 'PROTECTED') {
+        return await this.chatService.joinProtectedRoom(req.user, room);
+      }
+    } catch {}
   }
 
-  @UseFilters(new HttpExceptionFilter())
   @UseGuards(JwtAuthGuard)
+  @UseFilters(new HttpExceptionFilter())
   @Post('/add-to-room')
   async addtoroom(@Req() req, @Body() room) {
     try {
-      if (room.data.type === 'public')
+      if (room.data.type === 'PUBLIC')
         await this.chatService.addtoroom(req.user, room);
       else await this.chatService.addtoroomNopublic(req.user, room);
     } catch (error) {}
   }
 
-  @UseFilters(new HttpExceptionFilter())
   @UseGuards(JwtAuthGuard)
+  @UseFilters(new HttpExceptionFilter())
   @Get('/friends-in-room/:name')
   async getfriendNotjoinRoom(@Req() req, @Param('name') name: string) {
     return await this.chatService.getfriendNotjoinRoom(req.user, name);
@@ -125,14 +115,14 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   @Get('DM')
   async getDM(@Req() req) {
-    return await this.chatService.getDM('personnel', req.user);
+    return await this.chatService.getDM('DIRECTMESSAGE', req.user);
   }
 
   @UseFilters(new HttpExceptionFilter())
   @UseGuards(JwtAuthGuard)
   @Get('DM-with-all-users')
   async getDMWithAllUsers(@Req() req) {
-    return await this.chatService.getDMWithAllUsers('personnel', req.user);
+    return await this.chatService.getDMWithAllUsers('DIRECTMESSAGE', req.user);
   }
 
   @UseFilters(new HttpExceptionFilter())

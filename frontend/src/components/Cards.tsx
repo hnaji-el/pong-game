@@ -102,22 +102,22 @@ export function CardFriendOnline() {
   return (
     <Link
       to="/messages"
-      className="flex items-center justify-between hover:bg-backgroundHover p-2"
+      className="flex items-center justify-between p-2 hover:bg-backgroundHover"
     >
       <div className="flex items-center gap-2">
         <img
           src={friendPicture}
           alt="Friend"
-          className="w-10 h-10 rounded-full"
+          className="h-10 w-10 rounded-full"
         />
         <div className="flex flex-col gap-1">
-          <span className="text-primaryText text-sm w-36 overflow-hidden text-ellipsis whitespace-nowrap">
+          <span className="w-36 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
             Username
           </span>
-          <span className="text-secondaryText font-light text-xs">Online</span>
+          <span className="text-xs font-light text-secondaryText">Online</span>
         </div>
       </div>
-      <span className="w-1.5 h-1.5 bg-online rounded-full"></span>
+      <span className="h-1.5 w-1.5 rounded-full bg-online"></span>
     </Link>
   );
 }
@@ -131,17 +131,17 @@ export function CardProfile({ setOpen }: TypeCardProfile) {
         <img
           src={dataUser.settings.pictureURL}
           alt="Profile"
-          className="w-20 h-20 rounded-full"
+          className="h-20 w-20 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span
-              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
+              className={`text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap text-primaryText`}
             >
               {dataUser.settings.nickname}
             </span>
             <button
-              className="w-8 h-8 bg-shape flex justify-center items-center rounded-full"
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-shape"
               onClick={() => {
                 if (setOpen) setOpen(true);
               }}
@@ -152,13 +152,13 @@ export function CardProfile({ setOpen }: TypeCardProfile) {
 
           <div className="flex items-center gap-1.5">
             <span
-              className={`w-2 h-2 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 dataUser.settings.status === "offline"
                   ? "bg-offline"
                   : "bg-online"
               }`}
             ></span>
-            <span className="text-secondaryText font-light text-sm capitalize">
+            <span className="text-sm font-light capitalize text-secondaryText">
               {dataUser.settings.status === "offline" ? "offline" : "online"}
             </span>
           </div>
@@ -175,12 +175,12 @@ export function CardProfileUser({ data }: TypeDataProfileUser) {
         <img
           src={data?.pictureURL}
           alt="Profile"
-          className="w-20 h-20 rounded-full"
+          className="h-20 w-20 rounded-full"
         />
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <span
-              className={`text-primaryText text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap`}
+              className={`text-md max-w-xs overflow-hidden text-ellipsis whitespace-nowrap text-primaryText`}
             >
               {data?.nickname}
             </span>
@@ -188,11 +188,11 @@ export function CardProfileUser({ data }: TypeDataProfileUser) {
 
           <div className="flex items-center gap-1.5">
             <span
-              className={`w-2 h-2 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 data?.status === "offline" ? "bg-offline" : "bg-online"
               }`}
             ></span>
-            <span className="text-secondaryText font-light text-sm capitalize">
+            <span className="text-sm font-light capitalize text-secondaryText">
               {data?.status === "offline" ? "offline" : "online"}
             </span>
           </div>
@@ -204,11 +204,11 @@ export function CardProfileUser({ data }: TypeDataProfileUser) {
 
 export function CardAchievments() {
   return (
-    <div className="flex items-center justify-center p-5 w-[26rem] shadow gap-5 bg-body rounded-xl">
+    <div className="flex w-[26rem] items-center justify-center gap-5 rounded-xl bg-body p-5 shadow">
       <CircleAchievements />
       <div className="flex flex-col gap-1">
-        <span className="text-primaryText text-4xl">4</span>
-        <span className="text-secondaryText text-sm">
+        <span className="text-4xl text-primaryText">4</span>
+        <span className="text-sm text-secondaryText">
           Achievement four wins
         </span>
       </div>
@@ -219,19 +219,19 @@ export function CardAchievments() {
 export function CardUser({ data }: TypedataFriend) {
   const dataUser = useContext(ActiveProfileUser);
   return (
-    <div className="flex items-center p-4 w-full  lg:w-[30.8%] shadow justify-between bg-body rounded-xl">
+    <div className="flex w-full items-center justify-between rounded-xl bg-body p-4 shadow lg:w-[30.8%]">
       {data.id === dataUser.settings.id ? (
         <Link
           to="/profile"
           state={{ id: data.id }}
-          className="flex w-full gap-3 items-center"
+          className="flex w-full items-center gap-3"
         >
           <img
             src={data.pictureURL}
             alt="Friend"
-            className="w-12 h-12 rounded-full"
+            className="h-12 w-12 rounded-full"
           />
-          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
+          <span className="w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
             {data.nickname}
           </span>
         </Link>
@@ -239,26 +239,26 @@ export function CardUser({ data }: TypedataFriend) {
         <Link
           to="/profile-user"
           state={{ id: data.id }}
-          className="flex w-full gap-3 items-center"
+          className="flex w-full items-center gap-3"
         >
           <img
             src={data.pictureURL}
             alt="Friend"
-            className="w-12 h-12 rounded-full"
+            className="h-12 w-12 rounded-full"
           />
-          <span className="text-sm text-primaryText w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap">
+          <span className="w-[6.4rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
             {data.nickname}
           </span>
         </Link>
       )}
       {data.id !== dataUser.settings.id ? (
         <Menu>
-          <MenuButton className="p-1 h-4 w-4 bg-shape hover:bg-backgroundHover flex items-center justify-center rounded-full">
+          <MenuButton className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover">
             <PointsIcon edit="w-2 h-2 fill-secondaryText" />
           </MenuButton>
-          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover font-light justify-center items-center py-2 px-3"
+              className="flex items-center justify-center gap-2 px-3 py-2 font-light hover:bg-backgroundHover"
               onClick={() => {
                 globalSocket.emit("inviteToPlay", {
                   sender: dataUser.settings,
@@ -281,7 +281,7 @@ export function CardConversation({ data, index }: TypeConversation) {
   const dataUser = useContext(StateMssages);
   return (
     <div
-      className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
+      className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
         index === messageData.indexDm ? "lg:bg-backgroundHover" : null
       }`}
     >
@@ -310,14 +310,14 @@ export function CardConversation({ data, index }: TypeConversation) {
           </div>
         </div>
       </Link>
-      <span className="flex justify-center items-center">
+      <span className="flex items-center justify-center">
         <Menu>
-          <MenuButton className="p-0 flex items-center justify-center rounded-full group">
+          <MenuButton className="group flex items-center justify-center rounded-full p-0">
             <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </MenuButton>
-          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={() => {
                 globalSocket.emit("inviteToPlay", {
                   sender: dataUser.settings,
@@ -328,7 +328,7 @@ export function CardConversation({ data, index }: TypeConversation) {
               Invite to play
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+              className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
               onClick={async () => {
                 await blockFriend(data.id);
                 getDmUsers((res: any) => {
@@ -353,19 +353,19 @@ export function CardChannelConversation({
   const messageData = useContext(MessagesContext);
   return (
     <div
-      className={`border-b-[1px] border-b-backgroundHover last:border-b-0 flex hover:bg-backgroundHover px-3 lg:px-2 ${
+      className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
         messageData.indexDm === -1 && index === messageData.indexChannel
           ? "lg:bg-backgroundHover"
           : null
       }`}
     >
       <button
-        className="flex flex-1 justify-between items-start py-4"
+        className="flex flex-1 items-start justify-between py-4"
         onClick={() => {
-          if (!data.role.length && data.type === "public") {
+          if (!data.role.length && data.type === "PUBLIC") {
             let obj = {
               name: data.name,
-              type: "public",
+              type: "PUBLIC",
             };
 
             joinRoom((res: any) => {
@@ -379,7 +379,7 @@ export function CardChannelConversation({
               });
             }, obj);
           } else {
-            if (!data.role.length && data.type === "protected") {
+            if (!data.role.length && data.type === "PROTECTED") {
               messageData.setIndexChannel(index);
               messageData.setpasswordProtected(true);
             } else {
@@ -395,28 +395,28 @@ export function CardChannelConversation({
         <div className="flex items-center gap-2">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText capitalize">
+              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-primaryText">
                 {data.name}
               </span>
             </div>
           </div>
         </div>
-        {data.type === "private" ? (
-          <div className="bg-primary w-12 p-.6 text-primaryText rounded-full text-center relative top-[.2rem] z-[-1] right-2 text-[.6rem] font-light capitalize">
+        {data.type === "PRIVATE" ? (
+          <div className="p-.6 relative right-2 top-[.2rem] z-[-1] w-12 rounded-full bg-primary text-center text-[.6rem] font-light capitalize text-primaryText">
             private
           </div>
         ) : null}
       </button>
       {data.role.length ? (
-        <span className="flex justify-center items-center">
+        <span className="flex items-center justify-center">
           <Menu>
-            <MenuButton className="p-0 flex items-center justify-center rounded-full group">
+            <MenuButton className="group flex items-center justify-center rounded-full p-0">
               <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
             </MenuButton>
-            <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+            <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
               {data.role === "owner" ? (
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                  className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
                   onClick={async () => {
                     await deleteRoom(data.name);
                     getAllChannels((res: any) => {
@@ -428,7 +428,7 @@ export function CardChannelConversation({
                 </MenuItem>
               ) : null}
               <MenuItem
-                className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize"
+                className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
                 onClick={async () => {
                   await leaveRoom(data.name);
                   getAllChannels((res: any) => {
@@ -441,7 +441,7 @@ export function CardChannelConversation({
             </MenuList>
           </Menu>
         </span>
-      ) : data.type === "protected" ? (
+      ) : data.type === "PROTECTED" ? (
         <div className="flex items-center justify-center">
           <LockIcon edit="w-4 h-4 fill-secondaryText" />
         </div>
@@ -458,7 +458,7 @@ export function CardChatFriend({ data }: TypeChat) {
       {messageData.dataChatBox ? (
         <>
           <button
-            className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape"
+            className="flex h-6 w-6 items-center justify-center rounded-full bg-shape lg:hidden"
             onClick={() => {
               stateMessages.setClick(false);
             }}
@@ -477,7 +477,7 @@ export function CardChatFriend({ data }: TypeChat) {
             />
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-1.5">
-                <span className="text-md text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap">
+                <span className="text-md max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-primaryText">
                   {data?.username}
                 </span>
               </div>
@@ -487,7 +487,7 @@ export function CardChatFriend({ data }: TypeChat) {
                     data?.status === "offline" ? "bg-offline" : "bg-online"
                   }`}
                 ></span>
-                <span className="text-sm font-light text-secondaryText capitalize">
+                <span className="text-sm font-light capitalize text-secondaryText">
                   {data?.status === "offline" ? "offline" : "online"}
                 </span>
               </div>
@@ -508,20 +508,20 @@ export function CardChatChannel({
   return (
     <div className="flex flex-1 items-center gap-4">
       <button
-        className="w-6 h-6 rounded-full flex lg:hidden justify-center items-center bg-shape hover:bg-backgroundHover"
+        className="flex h-6 w-6 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover lg:hidden"
         onClick={() => {
           stateMessages.setClick(false);
         }}
       >
         <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
       </button>
-      <div className="flex items-center w-full gap-2">
-        <div className="flex lg:gap-4 w-full justify-between items-center lg:justify-start">
-          <span className="text-[1.1rem] text-primaryText max-w-sm overflow-hidden text-ellipsis whitespace-nowrap capitalize">
+      <div className="flex w-full items-center gap-2">
+        <div className="flex w-full items-center justify-between lg:justify-start lg:gap-4">
+          <span className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-[1.1rem] capitalize text-primaryText">
             {data?.name}
           </span>
           <div className="flex items-center gap-4">
-            {data?.role !== "member" && data?.type !== "protected" ? (
+            {data?.role !== "member" && data?.type !== "PROTECTED" ? (
               <button
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
                 onClick={() => {
@@ -550,35 +550,35 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
   const messageData = useContext(MessagesContext);
   const addMemberData = useContext(AddMemberContext);
   return (
-    <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
+    <div className={`flex flex-1 items-center justify-between gap-0.5 px-4`}>
       <div className="flex items-center gap-2">
         <img
           src={data.pictureURL}
           alt="Profile"
-          className="w-12 h-12 rounded-full"
+          className="h-12 w-12 rounded-full"
         />
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-3">
             <span
-              className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize`}
+              className={`text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize text-primaryText`}
             >
               {data.nickname}
             </span>
           </div>
           <div className="flex items-center gap-1.5">
             <span
-              className={`w-2 h-2 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 data?.status === "offline" ? "bg-offline" : "bg-online"
               }`}
             ></span>
-            <span className="text-secondaryText font-light text-sm capitalize">
+            <span className="text-sm font-light capitalize text-secondaryText">
               {data?.status === "offline" ? "offline" : "online"}
             </span>
           </div>
         </div>
       </div>
       <button
-        className="w-7 h-7 bg-body p-1 rounded-full flex justify-center items-center"
+        className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1"
         onClick={async () => {
           let obj = {
             name: messageData.dataChatBox.name,
@@ -603,17 +603,17 @@ export function CardMember({ data, role }: TypeMember) {
   const dataUser = useContext(StateMssages);
 
   return (
-    <div className={`flex flex-1 items-center px-4 justify-between gap-0.5`}>
+    <div className={`flex flex-1 items-center justify-between gap-0.5 px-4`}>
       <div className="flex items-center gap-2">
         <img
           src={data.pictureLink}
           alt="Profile"
-          className="w-12 h-12 rounded-full"
+          className="h-12 w-12 rounded-full"
         />
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-3">
             <span
-              className={`text-primaryText text-md name-member overflow-hidden text-ellipsis whitespace-nowrap`}
+              className={`text-md name-member overflow-hidden text-ellipsis whitespace-nowrap text-primaryText`}
             >
               {data.username}
             </span>
@@ -625,7 +625,7 @@ export function CardMember({ data, role }: TypeMember) {
                     : role === "admin"
                       ? "bg-adminBg text-adminText"
                       : ""
-                } flex justify-center items-center text-xs capitalize`}
+                } flex items-center justify-center text-xs capitalize`}
               >
                 {role}
               </span>
@@ -633,11 +633,11 @@ export function CardMember({ data, role }: TypeMember) {
           </div>
           <div className="flex items-center gap-1.5">
             <span
-              className={`w-2 h-2 rounded-full ${
+              className={`h-2 w-2 rounded-full ${
                 data?.status === "offline" ? "bg-offline" : "bg-online"
               }`}
             ></span>
-            <span className="text-secondaryText font-light text-sm capitalize">
+            <span className="text-sm font-light capitalize text-secondaryText">
               {data?.status === "offline" ? "offline" : "online"}
             </span>
           </div>
@@ -645,15 +645,15 @@ export function CardMember({ data, role }: TypeMember) {
       </div>
 
       <Menu>
-        <MenuButton className="p-1 h-7 w-7 bg-body flex items-center justify-center rounded-full">
+        <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1">
           <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
         </MenuButton>
 
         {/* Owner */}
         {messageData.dataChatBox.role === "owner" ? (
-          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light"
+              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
               onClick={() => {
                 globalSocket.emit("inviteToPlay", {
                   sender: dataUser.settings,
@@ -664,7 +664,7 @@ export function CardMember({ data, role }: TypeMember) {
               Invite to play
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -679,7 +679,7 @@ export function CardMember({ data, role }: TypeMember) {
               admin
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -694,7 +694,7 @@ export function CardMember({ data, role }: TypeMember) {
               block
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -709,7 +709,7 @@ export function CardMember({ data, role }: TypeMember) {
               kick
             </MenuItem>
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
                   name: messageData.dataChatBox.name,
@@ -728,9 +728,9 @@ export function CardMember({ data, role }: TypeMember) {
 
         {/* Admin */}
         {messageData.dataChatBox.role === "admin" ? (
-          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light"
+              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
               onClick={() => {
                 globalSocket.emit("inviteToPlay", {
                   sender: dataUser.settings,
@@ -743,7 +743,7 @@ export function CardMember({ data, role }: TypeMember) {
             {role === "member" ? (
               <>
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
                   onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
@@ -758,7 +758,7 @@ export function CardMember({ data, role }: TypeMember) {
                   block
                 </MenuItem>
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
                   onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
@@ -773,7 +773,7 @@ export function CardMember({ data, role }: TypeMember) {
                   kick
                 </MenuItem>
                 <MenuItem
-                  className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3"
+                  className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
                   onClick={async () => {
                     let obj = {
                       name: messageData.dataChatBox.name,
@@ -793,9 +793,9 @@ export function CardMember({ data, role }: TypeMember) {
         ) : null}
         {/* Member */}
         {messageData.dataChatBox.role === "member" ? (
-          <MenuList className="bg-body rounded-md shadow right-0 w-36 flex flex-col py-5 gap-2 list-dropdown cursor-default text-primaryText text-sm">
+          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
-              className="flex gap-2 hover:bg-backgroundHover items-center py-2 px-3 capitalize font-light"
+              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
               onClick={() => {
                 globalSocket.emit("inviteToPlay", {
                   sender: dataUser.settings,
@@ -819,12 +819,12 @@ export function CardSearchUser({
 }: TypeSearch) {
   const [stateFriend, setFriend] = useState<boolean>(data.isFriendToLoggedUser);
   return (
-    <div className="hover:bg-backgroundHover px-4 py-2">
-      <div className="flex items-center justify-between w-full">
+    <div className="px-4 py-2 hover:bg-backgroundHover">
+      <div className="flex w-full items-center justify-between">
         <Link
           to="/profile-user"
           state={{ id: data.id }}
-          className="flex items-center gap-3 flex-1"
+          className="flex flex-1 items-center gap-3"
           onClick={() => {
             setDropDown(false);
             if (setOpenSearch) {
@@ -836,9 +836,9 @@ export function CardSearchUser({
           <img
             src={data.pictureURL}
             alt="users"
-            className="w-12 h-12 rounded-full"
+            className="h-12 w-12 rounded-full"
           />
-          <span className="text-primaryText text-sm username-search">
+          <span className="username-search text-sm text-primaryText">
             {data.nickname}
           </span>
         </Link>

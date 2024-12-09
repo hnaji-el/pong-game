@@ -42,7 +42,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (Body.type === 'DM') {
       const receiverUser = await this.prisma.user.findUnique({
         where: {
-          nickname: Body.name,
+          nickname: Body.name, // TODO: use the `id` instead of `nickname` ...
         },
       });
 
@@ -55,6 +55,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       });
 
+      // room: receiverUser.nickname + senderUser.nickname
       const room = await this.prisma.room.findUnique({
         where: {
           name: receiverUser.nickname + senderUser.nickname,
@@ -65,8 +66,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         await this.prisma.messages.create({
           data: {
             roomName: receiverUser.nickname + senderUser.nickname,
-            data: Body.data,
             userLogin: receiverUser.nickname,
+            data: Body.data,
           },
         });
 
@@ -86,40 +87,39 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
         }
       } else {
-        const room_freind = await this.prisma.room.findUnique({
+        const roomFriend = await this.prisma.room.findUnique({
           where: {
             name: senderUser.nickname + receiverUser.nickname,
           },
         });
-        if (room_freind) {
-          console.log('i was here room_friend');
 
+        if (roomFriend) {
           await this.prisma.messages.create({
             data: {
               roomName: senderUser.nickname + receiverUser.nickname,
-              data: Body.data,
               userLogin: receiverUser.nickname,
+              data: Body.data,
             },
           });
+
           this.server
             .to(wsRoomName)
             .emit(
               'msgFromServer',
               await this.chatService.getRoomMsgs(
                 senderUser,
-                room_freind,
+                roomFriend,
                 'chat',
               ),
             );
-          for (let index = 0; index < this.connectedClients.length; index++) {
-            if (
-              this.connectedClients[index].user.nickname == senderUser.nickname
-            ) {
+
+          for (const client of this.connectedClients) {
+            if (client.user.nickname === senderUser.nickname) {
               client.emit(
                 'msgFromServer',
                 await this.chatService.getRoomMsgs(
                   receiverUser,
-                  room_freind,
+                  roomFriend,
                   'chat',
                 ),
               );

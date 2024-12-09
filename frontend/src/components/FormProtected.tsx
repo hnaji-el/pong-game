@@ -1,8 +1,5 @@
 import React, { useContext, useState } from "react";
 import { getAllChannels, joinRoom } from "../api/API";
-import { checkDisableCode } from "../utilities/helpers";
-import { KeyIcon } from "./Icons";
-import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
 import { MessagesContext } from "./routes/Messages";
 import { StateMssages } from "./routes/Messages";
@@ -14,8 +11,8 @@ export default function FormProtected() {
   const stateMessages = useContext(StateMssages);
 
   return (
-    <form className="flex flex-col justify-center items-center gap-16">
-      <div className="w-80 flex flex-col gap-5">
+    <form className="flex flex-col items-center justify-center gap-16">
+      <div className="flex w-80 flex-col gap-5">
         <InputPasswordForm
           password={password}
           setPassword={setPassword}
@@ -30,7 +27,7 @@ export default function FormProtected() {
             e.preventDefault();
             let data = {
               name: messageData.channelDm[messageData.indexChannel].name,
-              type: "protected",
+              type: "PROTECTED",
               password: password,
             };
 

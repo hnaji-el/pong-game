@@ -16,8 +16,8 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
 
   return (
     <form className="flex flex-col gap-1">
-      <div className="flex flex-col lg:flex-row items-center lg:items-end gap-3 ">
-        <div className="flex flex-col gap-1.5 w-80 lg:w-full">
+      <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-end">
+        <div className="flex w-80 flex-col gap-1.5 lg:w-full">
           <InputForm
             edit="w-full"
             editError="lg:hidden"
@@ -30,12 +30,12 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
         </div>
         <button
           type="submit"
-          className="w-80 lg:w-32 rounded-md bg-primary p-2.5 text-sm text-primaryText"
+          className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32"
           onClick={(e) => {
             e.preventDefault();
             let data = {
               name: value,
-              type: "public",
+              type: "PUBLIC",
               password: "",
             };
 
@@ -61,7 +61,7 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
       </div>
       {errorMessage.length ? (
         <div
-          className={`text-error text-xs font-medium fill-error hidden mt-1 lg:flex gap-1.5`}
+          className={`mt-1 hidden gap-1.5 fill-error text-xs font-medium text-error lg:flex`}
         >
           <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
           <span>{errorMessage}</span>

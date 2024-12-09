@@ -37,7 +37,7 @@ model RelationShip {
 }
 
 model Game {
-  gameId     String @id @default(uuid())
+  id         String @id @default(uuid())
   winnerId   String
   loserId    String
   winScore   Int
@@ -47,16 +47,16 @@ model Game {
 }
 
 model Room {
-  id      String     @id @default(uuid())
-  name    String     @unique
-  owner   String
-  admins  String[]
-  members String[]
-  blocked String[]
-  type    String     @default("private")
-  hash    String?
-  muted   Muted[]
-  message Messages[]
+  id              String     @id @default(uuid())
+  name            String     @unique
+  owner           String
+  admins          String[]
+  members         String[]
+  blocked         String[]
+  type            String // DIRECTMESSAGE | PUBLIC | PROTECTED | PRIVATE
+  hashedPassword  String?
+  messages        Messages[]
+  muted           Muted[]
 }
 
 model Messages {

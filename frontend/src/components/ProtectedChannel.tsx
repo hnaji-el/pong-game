@@ -18,7 +18,7 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
 
   return (
     <form className="flex flex-col gap-5 lg:gap-5">
-      <div className="flex flex-col lg:flex-row items-center lg:items-start gap-5">
+      <div className="flex flex-col items-center gap-5 lg:flex-row lg:items-start">
         <InputForm
           edit="w-80 lg:w-full"
           value={channelName}
@@ -38,12 +38,12 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
       <div className="flex justify-center lg:justify-end">
         <button
           type="submit"
-          className="w-80 lg:w-32 rounded-md bg-primary p-2.5 text-sm text-primaryText"
+          className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32"
           onClick={(e) => {
             e.preventDefault();
             let data = {
               name: channelName,
-              type: "protected",
+              type: "PROTECTED",
               password: password,
             };
 

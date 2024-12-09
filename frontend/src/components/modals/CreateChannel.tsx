@@ -9,73 +9,73 @@ interface TypeProps {
 }
 
 export default function CreateChannel({ setCreateChannel }: TypeProps) {
-  const [type, setType] = useState("public");
+  const [type, setType] = useState("PUBLIC");
   return (
-    <div className="flex items-center w-full">
-      <div className="flex flex-col gap-11 w-full">
-        <div className="flex flex-col lg:flex-row gap-8 items-center justify-between lg:gap-0">
+    <div className="flex w-full items-center">
+      <div className="flex w-full flex-col gap-11">
+        <div className="flex flex-col items-center justify-between gap-8 lg:flex-row lg:gap-0">
           <button
-            className="bg-body flex items-center gap-3 w-80 lg:w-40 p-2.5 rounded-md"
+            className="flex w-80 items-center gap-3 rounded-md bg-body p-2.5 lg:w-40"
             onClick={() => {
-              setType("public");
+              setType("PUBLIC");
             }}
           >
             <span
               aria-label="Check"
               className={`${
-                type === "public" ? "bg-primary" : "border-2 border-primary"
-              } w-7 h-7 flex justify-center items-center rounded-full`}
+                type === "PUBLIC" ? "bg-primary" : "border-2 border-primary"
+              } flex h-7 w-7 items-center justify-center rounded-full`}
             >
-              {type === "public" ? (
+              {type === "PUBLIC" ? (
                 <CheckIcon edit="w-4 h-4 fill-primaryText" />
               ) : null}
             </span>
-            <span className="text-primaryText text-md font-light">Public</span>
+            <span className="text-md font-light text-primaryText">Public</span>
           </button>
           <button
-            className="bg-body flex items-center gap-3 w-80 lg:w-40 p-2.5 rounded-md"
+            className="flex w-80 items-center gap-3 rounded-md bg-body p-2.5 lg:w-40"
             onClick={() => {
-              setType("private");
+              setType("PRIVATE");
             }}
           >
             <span
               aria-label="Check"
               className={`${
-                type === "private" ? "bg-primary" : "border-2 border-primary"
-              } w-7 h-7 flex justify-center items-center rounded-full`}
+                type === "PRIVATE" ? "bg-primary" : "border-2 border-primary"
+              } flex h-7 w-7 items-center justify-center rounded-full`}
             >
-              {type === "private" ? (
+              {type === "PRIVATE" ? (
                 <CheckIcon edit="w-4 h-4 fill-primaryText" />
               ) : null}
             </span>
-            <span className="text-primaryText text-md font-light">Private</span>
+            <span className="text-md font-light text-primaryText">Private</span>
           </button>
           <button
-            className="bg-body flex items-center gap-3 w-80 lg:w-40 p-2.5 rounded-md"
+            className="flex w-80 items-center gap-3 rounded-md bg-body p-2.5 lg:w-40"
             onClick={() => {
-              setType("protected");
+              setType("PROTECTED");
             }}
           >
             <span
               aria-label="Check"
               className={`${
-                type === "protected" ? "bg-primary" : "border-2 border-primary"
-              } w-7 h-7 flex justify-center items-center rounded-full`}
+                type === "PROTECTED" ? "bg-primary" : "border-2 border-primary"
+              } flex h-7 w-7 items-center justify-center rounded-full`}
             >
-              {type === "protected" ? (
+              {type === "PROTECTED" ? (
                 <CheckIcon edit="w-4 h-4 fill-primaryText" />
               ) : null}
             </span>
-            <span className="text-primaryText text-md font-light">
+            <span className="text-md font-light text-primaryText">
               Protected
             </span>
           </button>
         </div>
-        {type === "public" ? (
+        {type === "PUBLIC" ? (
           <PublicChannel setCreateChannel={setCreateChannel} />
-        ) : type === "private" ? (
+        ) : type === "PRIVATE" ? (
           <PrivateChannel setCreateChannel={setCreateChannel} />
-        ) : type === "protected" ? (
+        ) : type === "PROTECTED" ? (
           <ProtectedChannel setCreateChannel={setCreateChannel} />
         ) : null}
       </div>

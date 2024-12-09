@@ -1,6 +1,10 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { comparepassword, hashPassword } from './utils/bcrypt';
+import * as bcrypt from 'bcrypt';
 import {
   chanel,
   RoomMsgsType,
@@ -12,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as moment from 'moment';
 import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { Room } from '@prisma/client';
+import { Prisma, Room } from '@prisma/client';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -61,7 +65,7 @@ export class ChatService {
         name: room.name,
       },
       select: {
-        message: true,
+        messages: true,
       },
     });
 
@@ -73,8 +77,8 @@ export class ChatService {
       status: user.status,
       picture: user.pictureURL,
       type: type,
-      latestMessage: roomMsgs.message[roomMsgs.message.length - 1].data,
-      conversation: roomMsgs.message.map((msg) => ({
+      latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1].data,
+      conversation: roomMsgs.messages.map((msg) => ({
         type: msg.userLogin === user.nickname ? 'user' : 'friend',
         message: msg.data,
       })),
@@ -87,7 +91,7 @@ export class ChatService {
         name: room.name,
       },
       select: {
-        message: true,
+        messages: true,
       },
     });
     let role;
@@ -106,7 +110,7 @@ export class ChatService {
       type: room.type,
       conversation: [],
     };
-    person.conversation = allmessage.message.map(() => ({
+    person.conversation = allmessage.messages.map(() => ({
       login: '',
       message: '',
       picture: '',
@@ -118,16 +122,16 @@ export class ChatService {
     });
     if (message_user) {
       person.latestMessage =
-        allmessage.message[allmessage.message.length - 1].data;
-      person.conversation = allmessage.message.map((x) => ({
+        allmessage.messages[allmessage.messages.length - 1].data;
+      person.conversation = allmessage.messages.map((x) => ({
         login: '',
         message: x.data,
         picture: '',
       }));
-      for (let i = allmessage.message.length - 1; i >= 0; i--) {
+      for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.message[i].userLogin,
+            nickname: allmessage.messages[i].userLogin,
           },
         });
         person.conversation[i].login = user_chanel.nickname;
@@ -137,62 +141,70 @@ export class ChatService {
     return person;
   }
 
-  async CreateRoom(userlogin: string, name: string, type: string) {
-    const rooms = await this.prisma.room.findUnique({
-      where: {
-        name: name,
-      },
-    });
-    if (rooms) throw new ForbiddenException('name existe');
-    await this.prisma.room.create({
-      data: {
-        name: name,
-        admins: [userlogin],
-        members: [userlogin],
-        owner: userlogin,
-        type: type,
-      },
-    });
+  async createRoom(
+    name: string,
+    owner: string,
+    type: string,
+    password?: string,
+  ) {
+    if (type === 'PROTECTED' && !password) {
+      throw new ForbiddenException('Password is required for protected rooms.');
+    }
+
+    try {
+      await this.prisma.room.create({
+        data: {
+          name: name,
+          owner: owner,
+          admins: [owner],
+          members: [owner],
+          type: type,
+          ...(type === 'PROTECTED' && password
+            ? {
+                hashedPassword: bcrypt.hashSync(password, bcrypt.genSaltSync()),
+              }
+            : {}),
+        },
+      });
+    } catch (error) {
+      // handle unique constraint violation error
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ForbiddenException(
+          'A room with this name already exists. Please choose a different name.',
+        );
+      }
+
+      // handle database connection error or other unexpected error
+      console.error(
+        'Database connection error or other unexpected error:',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(
+        'An unexpected error occurred. Please try again later.',
+      );
+    }
   }
 
-  async CreateRoomprotected(
-    userlogin: string,
-    name: string,
-    type: string,
-    password: string,
-  ) {
-    if (!password) throw new ForbiddenException('entrez password');
-    const rooms = await this.prisma.room.findUnique({
+  async joinRoom(user: any, name: string) {
+    const room = await this.prisma.room.findUnique({
       where: {
         name: name,
       },
     });
-    if (rooms) throw new ForbiddenException('name existe');
-    const rawPassword = hashPassword(password);
-    await this.prisma.room.create({
-      data: {
-        name: name,
-        admins: [userlogin],
-        members: [userlogin],
-        owner: userlogin,
-        type: type,
-        hash: rawPassword,
-      },
-    });
-  }
-  async joinroom(user: any, name: string) {
-    const rooms = await this.prisma.room.findUnique({
-      where: {
-        name: name,
-      },
-    });
-    if (!rooms) return;
-    if (rooms.blocked) {
-      const id_ban = rooms.blocked.find((login) => login === user.nickname);
+
+    if (!room) return;
+    if (room.blocked) {
+      const id_ban = room.blocked.find((login) => login === user.nickname);
       if (id_ban) throw new ForbiddenException('you are  banned');
     }
-    const id1 = rooms.members.find((login) => login === user.nickname);
+
+    const id1 = room.members.find((login) => login === user.nickname);
     if (id1) throw new ForbiddenException('already members');
+
     const userUpdate = await this.prisma.room.update({
       where: {
         name: name,
@@ -203,12 +215,13 @@ export class ChatService {
         },
       },
     });
+
     const allmessage = await this.prisma.room.findUnique({
       where: {
         name: name,
       },
       select: {
-        message: true,
+        messages: true,
       },
     });
     const message_user = await this.prisma.messages.findFirst({
@@ -216,6 +229,7 @@ export class ChatService {
         roomName: name,
       },
     });
+
     const person: chanel = {
       id: userUpdate.id,
       name: userUpdate.name,
@@ -227,16 +241,16 @@ export class ChatService {
     };
     if (message_user) {
       person.latestMessage =
-        allmessage.message[allmessage.message.length - 1].data;
-      person.conversation = allmessage.message.map((x) => ({
+        allmessage.messages[allmessage.messages.length - 1].data;
+      person.conversation = allmessage.messages.map((x) => ({
         login: '',
         message: x.data,
         picture: '',
       }));
-      for (let i = allmessage.message.length - 1; i >= 0; i--) {
+      for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.message[i].userLogin,
+            nickname: allmessage.messages[i].userLogin,
           },
         });
         person.conversation[i].login = user_chanel.nickname;
@@ -246,13 +260,17 @@ export class ChatService {
     return person;
   }
 
-  async joinroomprotected(user: any, room: any) {
+  async joinProtectedRoom(user: any, room: any) {
     const rooms = await this.prisma.room.findUnique({
       where: {
         name: room.data.name,
       },
     });
-    const matched = comparepassword(room.data.password, rooms.hash);
+
+    const matched = bcrypt.compareSync(
+      room.data.password,
+      rooms.hashedPassword,
+    );
     if (!matched) {
       const person: chanelprotected = {
         id: '',
@@ -285,7 +303,7 @@ export class ChatService {
         name: room.data.name,
       },
       select: {
-        message: true,
+        messages: true,
       },
     });
     const message_user = await this.prisma.messages.findFirst({
@@ -305,19 +323,19 @@ export class ChatService {
     };
     if (message_user) {
       person.latestMessage =
-        allmessage.message[allmessage.message.length - 1].data;
-      person.conversation = allmessage.message.map((x) => ({
+        allmessage.messages[allmessage.messages.length - 1].data;
+      person.conversation = allmessage.messages.map((x) => ({
         type: '',
         message: x.data,
         picture: '',
       }));
-      for (let i = allmessage.message.length - 1; i >= 0; i--) {
+      for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.message[i].userLogin,
+            nickname: allmessage.messages[i].userLogin,
           },
         });
-        if (user.nickname === allmessage.message[i].userLogin)
+        if (user.nickname === allmessage.messages[i].userLogin)
           person.conversation[i].type = 'user';
         else {
           person.conversation[i].type = 'member';
@@ -513,7 +531,7 @@ export class ChatService {
       };
       if (
         !id &&
-        (obj.type === 'public' || obj.type === 'protected') &&
+        (obj.type === 'PUBLIC' || obj.type === 'PROTECTED') &&
         !user_block
       )
         allRooms.push(room);
@@ -716,11 +734,11 @@ export class ChatService {
         name: name,
       },
       select: {
-        message: true,
+        messages: true,
       },
     });
-    const v = allmessage.message.length;
-    return allmessage.message[v - 1];
+    const v = allmessage.messages.length;
+    return allmessage.messages[v - 1];
   }
 
   async getDMWithAllUsers(type: string, user1: any): Promise<RoomMsgsType[]> {
@@ -751,7 +769,7 @@ export class ChatService {
             name: rooms[index].name,
           },
           select: {
-            message: true,
+            messages: true,
           },
         });
         const message_user = await this.prisma.messages.findFirst({
@@ -771,14 +789,14 @@ export class ChatService {
         };
         if (message_user) {
           person.latestMessage =
-            allmessage.message[allmessage.message.length - 1].data;
-          person.conversation = allmessage.message.map((x) => ({
+            allmessage.messages[allmessage.messages.length - 1].data;
+          person.conversation = allmessage.messages.map((x) => ({
             type: '',
             message: x.data,
           }));
         }
-        for (let i = allmessage.message.length - 1; i >= 0; i--) {
-          if (user1.nickname === allmessage.message[i].userLogin)
+        for (let i = allmessage.messages.length - 1; i >= 0; i--) {
+          if (user1.nickname === allmessage.messages[i].userLogin)
             person.conversation[i].type = 'friend';
           else person.conversation[i].type = 'user';
         }
@@ -861,7 +879,7 @@ export class ChatService {
             name: rooms[index].name,
           },
           select: {
-            message: true,
+            messages: true,
           },
         });
         const message_user = await this.prisma.messages.findFirst({
@@ -881,14 +899,14 @@ export class ChatService {
         };
         if (message_user) {
           person.latestMessage =
-            allmessage.message[allmessage.message.length - 1].data;
-          person.conversation = allmessage.message.map((x) => ({
+            allmessage.messages[allmessage.messages.length - 1].data;
+          person.conversation = allmessage.messages.map((x) => ({
             type: '',
             message: x.data,
           }));
         }
-        for (let i = allmessage.message.length - 1; i >= 0; i--) {
-          if (user1.nickname === allmessage.message[i].userLogin)
+        for (let i = allmessage.messages.length - 1; i >= 0; i--) {
+          if (user1.nickname === allmessage.messages[i].userLogin)
             person.conversation[i].type = 'friend';
           else person.conversation[i].type = 'user';
         }
@@ -901,7 +919,7 @@ export class ChatService {
   async getRM(user: any): Promise<any> {
     const rooms = await this.prisma.room.findMany({
       where: {
-        OR: [{ type: 'protected' }, { type: 'public' }, { type: 'private' }],
+        OR: [{ type: 'PROTECTED' }, { type: 'PUBLIC' }, { type: 'PRIVATE' }],
       },
     });
     const obj = [];
@@ -913,7 +931,7 @@ export class ChatService {
             name: rooms[index].name,
           },
           select: {
-            message: true,
+            messages: true,
           },
         });
         let role: string;
@@ -935,7 +953,7 @@ export class ChatService {
           conversation: [],
           join: 'YES',
         };
-        person.conversation = allmessage.message.map(() => ({
+        person.conversation = allmessage.messages.map(() => ({
           login: '',
           message: '',
           picture: '',
@@ -948,17 +966,17 @@ export class ChatService {
         });
         if (message_user) {
           person.latestMessage =
-            allmessage.message[allmessage.message.length - 1].data;
-          person.conversation = allmessage.message.map((x) => ({
+            allmessage.messages[allmessage.messages.length - 1].data;
+          person.conversation = allmessage.messages.map((x) => ({
             login: '',
             message: x.data,
             picture: '',
             type: '',
           }));
-          for (let i = allmessage.message.length - 1; i >= 0; i--) {
+          for (let i = allmessage.messages.length - 1; i >= 0; i--) {
             const user_chanel = await this.prisma.user.findUnique({
               where: {
-                nickname: allmessage.message[i].userLogin,
+                nickname: allmessage.messages[i].userLogin,
               },
             });
             person.conversation[i].login = user_chanel.nickname;
@@ -973,13 +991,13 @@ export class ChatService {
       const isBlock = rooms[index].blocked.find(
         (login) => login === user.nickname,
       );
-      if (!id1 && !isBlock && rooms[index].type !== 'private') {
+      if (!id1 && !isBlock && rooms[index].type !== 'PRIVATE') {
         const allmessage = await this.prisma.room.findUnique({
           where: {
             name: rooms[index].name,
           },
           select: {
-            message: true,
+            messages: true,
           },
         });
         const person = {
@@ -992,7 +1010,7 @@ export class ChatService {
           conversation: [],
           join: 'NON',
         };
-        person.conversation = allmessage.message.map(() => ({
+        person.conversation = allmessage.messages.map(() => ({
           login: '',
           message: '',
           picture: '',
@@ -1005,17 +1023,17 @@ export class ChatService {
         });
         if (message_user) {
           person.latestMessage =
-            allmessage.message[allmessage.message.length - 1].data;
-          person.conversation = allmessage.message.map((x) => ({
+            allmessage.messages[allmessage.messages.length - 1].data;
+          person.conversation = allmessage.messages.map((x) => ({
             login: '',
             message: x.data,
             picture: '',
             type: '',
           }));
-          for (let i = allmessage.message.length - 1; i >= 0; i--) {
+          for (let i = allmessage.messages.length - 1; i >= 0; i--) {
             const user_chanel = await this.prisma.user.findUnique({
               where: {
-                nickname: allmessage.message[i].userLogin,
+                nickname: allmessage.messages[i].userLogin,
               },
             });
             person.conversation[i].login = user_chanel.nickname;

@@ -37,7 +37,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const senderUser: User = client.user;
     this.id += 1;
-    let wsRoomName = `<${senderUser.nickname}_${this.id}>`;
+    let wsRoomName = `<<${senderUser.nickname}_${this.id}>>`;
 
     if (Body.type === 'DM') {
       const receiverUser = await this.prisma.user.findUnique({

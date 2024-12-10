@@ -228,7 +228,7 @@ export class UsersService {
       });
 
       await this.chatService.createRoom(
-        requesterUser.id + addresseeUser.id,
+        this.chatService.generateDMRoomName(requesterUser.id, addresseeUser.id),
         requesterUser.nickname,
         [addresseeUser.nickname],
         'DIRECTMESSAGE',

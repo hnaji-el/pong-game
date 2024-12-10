@@ -33,16 +33,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('msgServer')
   async handleMessage(
     @ConnectedSocket() client: any,
-    @MessageBody() Body: any,
+    @MessageBody() wsMsgBody: any,
   ) {
     const senderUser: User = client.user;
     this.id += 1;
-    let wsRoomName = `<<${senderUser.nickname}_${this.id}>>`;
+    const wsRoomName = `<${senderUser.id}_${this.id}>`;
 
-    if (Body.type === 'DM') {
+    if (wsMsgBody.type === 'DM') {
       const receiverUser = await this.prisma.user.findUnique({
         where: {
-          nickname: Body.name, // TODO: use the `id` instead of `nickname` ...
+          nickname: wsMsgBody.name, // TODO: use the `id` instead of `nickname` ...
         },
       });
 
@@ -57,16 +57,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       const room = await this.prisma.room.findUnique({
         where: {
-          name: receiverUser.id + senderUser.id,
+          name: this.chatService.generateDMRoomName(
+            receiverUser.id,
+            senderUser.id,
+          ),
         },
       });
 
       if (room) {
         await this.prisma.messages.create({
           data: {
-            roomName: receiverUser.nickname + senderUser.nickname,
+            roomName: room.name,
             receiverUser: receiverUser.nickname,
-            data: Body.data,
+            data: wsMsgBody.data,
           },
         });
 
@@ -78,7 +81,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           );
 
         for (const client of this.connectedClients) {
-          if (client.user.nickname === senderUser.nickname) {
+          if (client.user.id === senderUser.id) {
             client.emit(
               'msgFromServer',
               await this.chatService.getRoomMsgs(receiverUser, room, 'chat'),
@@ -86,61 +89,25 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           }
         }
       } else {
-        const roomFriend = await this.prisma.room.findUnique({
-          where: {
-            name: senderUser.id + receiverUser.id,
-          },
-        });
-
-        if (roomFriend) {
-          await this.prisma.messages.create({
-            data: {
-              roomName: senderUser.nickname + receiverUser.nickname,
-              receiverUser: receiverUser.nickname,
-              data: Body.data,
-            },
-          });
-
-          this.server
-            .to(wsRoomName)
-            .emit(
-              'msgFromServer',
-              await this.chatService.getRoomMsgs(
-                senderUser,
-                roomFriend,
-                'chat',
-              ),
-            );
-
-          for (const client of this.connectedClients) {
-            if (client.user.nickname === senderUser.nickname) {
-              client.emit(
-                'msgFromServer',
-                await this.chatService.getRoomMsgs(
-                  receiverUser,
-                  roomFriend,
-                  'chat',
-                ),
-              );
-            }
-          }
-        } else return;
+        console.error('Room not found');
       }
-    } else {
+    }
+
+    if (wsMsgBody.type === 'RM') {
       const rom = await this.prisma.room.findUnique({
         where: {
-          name: Body.name,
+          name: wsMsgBody.name,
         },
       });
       const user2 = await this.prisma.muted.findMany({
         where: {
           receiverUser: senderUser.nickname,
-          roomName: Body.name,
+          roomName: wsMsgBody.name,
         },
       });
       if (user2[0]) {
         if (user2[0].time < moment().format('YYYY-MM-DD hh:mm:ss')) {
-          this.chatService.unmuted(senderUser, Body);
+          this.chatService.unmuted(senderUser, wsMsgBody);
         } else return;
       }
       if (rom) {
@@ -152,8 +119,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
         const msg = await this.prisma.messages.create({
           data: {
-            roomName: Body.name,
-            data: Body.data,
+            roomName: wsMsgBody.name,
+            data: wsMsgBody.data,
             receiverUser: senderUser.nickname,
           },
         });

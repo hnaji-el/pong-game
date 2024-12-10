@@ -351,6 +351,7 @@ export function CardChannelConversation({
 }: TypeChannelConversation) {
   const stateMessages = useContext(StateMssages);
   const messageData = useContext(MessagesContext);
+
   return (
     <div
       className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${

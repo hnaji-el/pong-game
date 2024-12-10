@@ -87,31 +87,31 @@ export class UsersController {
     await this.usersService.addFriend(req.user, id);
   }
 
-  @Delete('users/remove-friend/:id')
+  @Delete('/users/remove-friend/:id')
   @UseGuards(JwtAuthGuard)
   async removeFriend(@Req() req, @Param('id') id: string) {
     await this.usersService.removeFriend(req.user, id);
   }
 
-  @Patch('users/block-friend/:id')
+  @Patch('/users/block-friend/:id')
   @UseGuards(JwtAuthGuard)
   async blockUser(@Req() req, @Param('id') id: string) {
     await this.usersService.blockUser(req.user, id);
   }
 
-  @Patch('users/unblock-friend/:id')
+  @Patch('/users/unblock-friend/:id')
   @UseGuards(JwtAuthGuard)
   async unblockUser(@Req() req, @Param('id') id: string) {
     await this.usersService.unblockUser(req.user, id);
   }
 
-  @Get('users/game/match-history/:id')
+  @Get('/users/game/match-history/:id')
   @UseGuards(JwtAuthGuard)
   async getMatchHistory(@Param('id') id: string) {
     return await this.usersService.getMatchHistory(id);
   }
 
-  @Get('users/game/achievement/:id')
+  @Get('/users/game/achievement/:id')
   @UseGuards(JwtAuthGuard)
   async getAchievement(@Param('id') id: string) {
     return await this.usersService.getAchievement(id);

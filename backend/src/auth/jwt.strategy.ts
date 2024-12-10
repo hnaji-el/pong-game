@@ -19,6 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       where: { id: payload.sub },
       include: { requester: true, addressee: true },
     });
+
     if (!user || !payload.isValid) {
       throw new UnauthorizedException();
     }

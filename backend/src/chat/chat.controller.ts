@@ -3,28 +3,25 @@ import { UseGuards, Patch, Delete, Req } from '@nestjs/common';
 import { Body, UseFilters } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
-import { ForbiddenException } from '@nestjs/common';
-import { HttpExceptionFilter } from './chat.exception';
 
 @Controller('chat')
 export class ChatController {
   constructor(private chatService: ChatService) {}
 
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(new HttpExceptionFilter())
   @Post('create-room')
+  @UseGuards(JwtAuthGuard)
   async createRoom(@Req() req, @Body() room) {
     await this.chatService.createRoom(
       room.data.name,
       req.user.nickname,
+      [],
       room.data.type,
       room.data.password,
     );
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(new HttpExceptionFilter())
   @Post('/join-room')
+  @UseGuards(JwtAuthGuard)
   async joinRoom(@Req() req, @Body() room) {
     try {
       if (room.data.type === 'PUBLIC') {
@@ -35,9 +32,8 @@ export class ChatController {
     } catch {}
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(new HttpExceptionFilter())
   @Post('/add-to-room')
+  @UseGuards(JwtAuthGuard)
   async addtoroom(@Req() req, @Body() room) {
     try {
       if (room.data.type === 'PUBLIC')
@@ -46,109 +42,94 @@ export class ChatController {
     } catch (error) {}
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseFilters(new HttpExceptionFilter())
   @Get('/friends-in-room/:name')
+  @UseGuards(JwtAuthGuard)
   async getfriendNotjoinRoom(@Req() req, @Param('name') name: string) {
     return await this.chatService.getfriendNotjoinRoom(req.user, name);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Get('/users-in-room/:name')
+  @UseGuards(JwtAuthGuard)
   async getallUserinRoom(@Req() req, @Param('name') name: string) {
     return await this.chatService.getallUsersinRoom(req.user, name);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Post('quite-room')
+  @UseGuards(JwtAuthGuard)
   async quite_room(@Req() req, @Body() rom) {
     return await this.chatService.quite_room(req.user, rom);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Get('all-rooms')
+  @UseGuards(JwtAuthGuard)
   async getallRooms(@Req() req) {
     return await this.chatService.getAllRooms(req.user);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Post('/set-admin')
+  @UseGuards(JwtAuthGuard)
   async setuseradmins(@Req() req, @Body() room) {
     try {
       await this.chatService.adduseradmins(req.user, room);
     } catch (error) {}
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Patch('/ban')
+  @UseGuards(JwtAuthGuard)
   async banmember(@Req() req, @Body() room) {
     await this.chatService.banmember(req.user, room);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Patch('/kick')
+  @UseGuards(JwtAuthGuard)
   async kickmember(@Req() req, @Body() room) {
     await this.chatService.quickmember(req.user, room);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Patch('/unblock-from-room')
+  @UseGuards(JwtAuthGuard)
   async unblock(@Req() req, @Body() room) {
     await this.chatService.unblockfromroom(req.user, room);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Get('all-messages')
+  @UseGuards(JwtAuthGuard)
   async getMessage(@Body() room) {
     return await this.chatService.getMessage(room.name);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Get('DM')
+  @UseGuards(JwtAuthGuard)
   async getDM(@Req() req) {
     return await this.chatService.getDM('DIRECTMESSAGE', req.user);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Get('DM-with-all-users')
+  @UseGuards(JwtAuthGuard)
   async getDMWithAllUsers(@Req() req) {
     return await this.chatService.getDMWithAllUsers('DIRECTMESSAGE', req.user);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Get('room-message')
+  @UseGuards(JwtAuthGuard)
   async getRM(@Req() req) {
     return await this.chatService.getRM(req.user);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Patch('muted')
+  @UseGuards(JwtAuthGuard)
   async muteduser(@Req() req, @Body() room) {
     return await this.chatService.muted(req.user, room);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Patch('unmuted')
+  @UseGuards(JwtAuthGuard)
   async unmuteduser(@Req() req, @Body() room) {
     return await this.chatService.unmuted(req.user, room);
   }
 
-  @UseFilters(new HttpExceptionFilter())
-  @UseGuards(JwtAuthGuard)
   @Delete('delete-room/:name')
+  @UseGuards(JwtAuthGuard)
   async DeleteRoom(@Req() req, @Param() room) {
     return this.chatService.deleteroom(req.user, room);
   }

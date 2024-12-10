@@ -55,10 +55,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         }
       });
 
-      // room: receiverUser.nickname + senderUser.nickname
       const room = await this.prisma.room.findUnique({
         where: {
-          name: receiverUser.nickname + senderUser.nickname,
+          name: receiverUser.id + senderUser.id,
         },
       });
 
@@ -89,7 +88,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       } else {
         const roomFriend = await this.prisma.room.findUnique({
           where: {
-            name: senderUser.nickname + receiverUser.nickname,
+            name: senderUser.id + receiverUser.id,
           },
         });
 

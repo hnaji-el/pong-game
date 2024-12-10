@@ -144,11 +144,12 @@ export class ChatService {
   async createRoom(
     name: string,
     owner: string,
+    members: string[],
     type: string,
     password?: string,
   ) {
     if (type === 'PROTECTED' && !password) {
-      throw new ForbiddenException('Password is required for protected rooms.');
+      throw new ForbiddenException('Password is required for protected rooms');
     }
 
     try {
@@ -157,7 +158,7 @@ export class ChatService {
           name: name,
           owner: owner,
           admins: [owner],
-          members: [owner],
+          members: [owner, ...members],
           type: type,
           ...(type === 'PROTECTED' && password
             ? {
@@ -173,7 +174,7 @@ export class ChatService {
         error.code === 'P2002'
       ) {
         throw new ForbiddenException(
-          'A room with this name already exists. Please choose a different name.',
+          'A room with this name already exists. Please choose a different name',
         );
       }
 
@@ -184,7 +185,7 @@ export class ChatService {
       );
 
       throw new InternalServerErrorException(
-        'An unexpected error occurred. Please try again later.',
+        'An unexpected error occurred. Please try again later',
       );
     }
   }

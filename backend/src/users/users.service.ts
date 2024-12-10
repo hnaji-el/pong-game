@@ -1,8 +1,13 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ChatService } from 'src/chat/chat.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 import { GameEntity } from './entities/game.entity';
+import { AttachedUserEntity } from './entities/attachedUser.entity';
 
 @Injectable()
 export class UsersService {
@@ -11,19 +16,15 @@ export class UsersService {
     private chatService: ChatService,
   ) {}
 
-  async create(
-    _nickname: string,
-    _email: string,
-    _pictureURL: string,
-  ): Promise<any> {
+  async create(nickname: string, email: string, pictureURL: string) {
     let user = await this.prisma.user.findUnique({
-      where: { email: _email },
+      where: { email: email },
       include: { requester: true, addressee: true },
     });
 
     if (!user) {
       user = await this.prisma.user.create({
-        data: { nickname: _nickname, email: _email, pictureURL: _pictureURL },
+        data: { nickname: nickname, email: email, pictureURL: pictureURL },
         include: { requester: true, addressee: true },
       });
     }
@@ -201,36 +202,55 @@ export class UsersService {
     return entities;
   }
 
-  async addFriend(requesterUser: any, addresseeUserId: string) {
-    const addresseeUser = await this.prisma.user.findUnique({
-      where: { id: addresseeUserId },
-      include: { requester: true, addressee: true },
-    });
+  async addFriend(requesterUser: AttachedUserEntity, addresseeUserId: string) {
+    try {
+      const addresseeUser = await this.prisma.user.findUnique({
+        where: { id: addresseeUserId },
+        include: { requester: true, addressee: true },
+      });
 
-    if (!addresseeUser) throw new ForbiddenException('User does not exit');
-    if (this.isFriend(requesterUser, addresseeUser))
-      throw new ForbiddenException('User is already a friend');
-    if (this.isBlocked(requesterUser, addresseeUser))
-      throw new ForbiddenException('User is blocked');
+      if (!addresseeUser) {
+        throw new ForbiddenException('The user does not exit');
+      }
+      if (this.isFriend(requesterUser, addresseeUser)) {
+        throw new ForbiddenException('The user is already a friend');
+      }
+      if (this.isBlocked(requesterUser, addresseeUser)) {
+        throw new ForbiddenException('The user is already on the blocked list');
+      }
 
-    await this.prisma.relationShip.create({
-      data: {
-        requesterId: requesterUser.id,
-        addresseeId: addresseeUser.id,
-        type: 'FRIENDSHIP',
-      },
-    });
+      await this.prisma.relationShip.create({
+        data: {
+          requesterId: requesterUser.id,
+          addresseeId: addresseeUser.id,
+          type: 'FRIENDSHIP',
+        },
+      });
 
-    await this.chatService.createRoom(
-      requesterUser.nickname + addresseeUser.nickname,
-      requesterUser.nickname,
-      'DIRECTMESSAGE',
-    );
+      await this.chatService.createRoom(
+        requesterUser.id + addresseeUser.id,
+        requesterUser.nickname,
+        [addresseeUser.nickname],
+        'DIRECTMESSAGE',
+      );
+    } catch (error) {
+      if (
+        error instanceof ForbiddenException ||
+        error instanceof InternalServerErrorException
+      ) {
+        throw error;
+      }
 
-    await this.chatService.joinRoom(
-      addresseeUser,
-      requesterUser.nickname + addresseeUser.nickname,
-    );
+      // handle database connection error or other unexpected error
+      console.error(
+        'Database connection error or other unexpected error:',
+        error.stack,
+      );
+
+      throw new InternalServerErrorException(
+        'An unexpected error occurred. Please try again later',
+      );
+    }
   }
 
   async removeFriend(requesterUser: any, addresseeUserId: string) {
@@ -334,7 +354,7 @@ export class UsersService {
     return false;
   }
 
-  isFriend(user1: any, user2: any): boolean {
+  isFriend(user1: AttachedUserEntity, user2: AttachedUserEntity) {
     for (const elem of user1.requester) {
       if (elem.addresseeId === user2.id && elem.type === 'FRIENDSHIP') {
         return true;
@@ -346,10 +366,11 @@ export class UsersService {
         return true;
       }
     }
+
     return false;
   }
 
-  isBlocked(user1: any, user2: any): boolean {
+  isBlocked(user1: AttachedUserEntity, user2: AttachedUserEntity) {
     for (const elem of user1.requester) {
       if (elem.addresseeId === user2.id && elem.type === 'BLOCK') {
         return true;
@@ -361,6 +382,7 @@ export class UsersService {
         return true;
       }
     }
+
     return false;
   }
 

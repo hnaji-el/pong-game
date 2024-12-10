@@ -65,7 +65,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         await this.prisma.messages.create({
           data: {
             roomName: receiverUser.nickname + senderUser.nickname,
-            userLogin: receiverUser.nickname,
+            receiverUser: receiverUser.nickname,
             data: Body.data,
           },
         });
@@ -96,7 +96,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           await this.prisma.messages.create({
             data: {
               roomName: senderUser.nickname + receiverUser.nickname,
-              userLogin: receiverUser.nickname,
+              receiverUser: receiverUser.nickname,
               data: Body.data,
             },
           });
@@ -134,7 +134,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
       const user2 = await this.prisma.muted.findMany({
         where: {
-          userLogin: senderUser.nickname,
+          receiverUser: senderUser.nickname,
           roomName: Body.name,
         },
       });
@@ -154,7 +154,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           data: {
             roomName: Body.name,
             data: Body.data,
-            userLogin: senderUser.nickname,
+            receiverUser: senderUser.nickname,
           },
         });
         this.server

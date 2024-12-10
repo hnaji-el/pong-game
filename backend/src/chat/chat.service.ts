@@ -79,7 +79,7 @@ export class ChatService {
       type: type,
       latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1].data,
       conversation: roomMsgs.messages.map((msg) => ({
-        type: msg.userLogin === user.nickname ? 'user' : 'friend',
+        type: msg.receiverUser === user.nickname ? 'user' : 'friend',
         message: msg.data,
       })),
     };
@@ -131,7 +131,7 @@ export class ChatService {
       for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.messages[i].userLogin,
+            nickname: allmessage.messages[i].receiverUser,
           },
         });
         person.conversation[i].login = user_chanel.nickname;
@@ -251,7 +251,7 @@ export class ChatService {
       for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.messages[i].userLogin,
+            nickname: allmessage.messages[i].receiverUser,
           },
         });
         person.conversation[i].login = user_chanel.nickname;
@@ -333,10 +333,10 @@ export class ChatService {
       for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.messages[i].userLogin,
+            nickname: allmessage.messages[i].receiverUser,
           },
         });
-        if (user.nickname === allmessage.messages[i].userLogin)
+        if (user.nickname === allmessage.messages[i].receiverUser)
           person.conversation[i].type = 'user';
         else {
           person.conversation[i].type = 'member';
@@ -797,7 +797,7 @@ export class ChatService {
           }));
         }
         for (let i = allmessage.messages.length - 1; i >= 0; i--) {
-          if (user1.nickname === allmessage.messages[i].userLogin)
+          if (user1.nickname === allmessage.messages[i].receiverUser)
             person.conversation[i].type = 'friend';
           else person.conversation[i].type = 'user';
         }
@@ -907,7 +907,7 @@ export class ChatService {
           }));
         }
         for (let i = allmessage.messages.length - 1; i >= 0; i--) {
-          if (user1.nickname === allmessage.messages[i].userLogin)
+          if (user1.nickname === allmessage.messages[i].receiverUser)
             person.conversation[i].type = 'friend';
           else person.conversation[i].type = 'user';
         }
@@ -977,7 +977,7 @@ export class ChatService {
           for (let i = allmessage.messages.length - 1; i >= 0; i--) {
             const user_chanel = await this.prisma.user.findUnique({
               where: {
-                nickname: allmessage.messages[i].userLogin,
+                nickname: allmessage.messages[i].receiverUser,
               },
             });
             person.conversation[i].login = user_chanel.nickname;
@@ -1034,7 +1034,7 @@ export class ChatService {
           for (let i = allmessage.messages.length - 1; i >= 0; i--) {
             const user_chanel = await this.prisma.user.findUnique({
               where: {
-                nickname: allmessage.messages[i].userLogin,
+                nickname: allmessage.messages[i].receiverUser,
               },
             });
             person.conversation[i].login = user_chanel.nickname;
@@ -1081,7 +1081,7 @@ export class ChatService {
     await this.prisma.muted.create({
       data: {
         roomName: room.data.name,
-        userLogin: user_friend.nickname,
+        receiverUser: user_friend.nickname,
         time: time,
       },
     });
@@ -1090,7 +1090,7 @@ export class ChatService {
   async unmuted(user: any, room: any) {
     await this.prisma.muted.deleteMany({
       where: {
-        AND: [{ userLogin: user.nickname }, { roomName: room.name }],
+        AND: [{ receiverUser: user.nickname }, { roomName: room.name }],
       },
     });
   }

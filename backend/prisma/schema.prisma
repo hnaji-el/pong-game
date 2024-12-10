@@ -60,21 +60,21 @@ model Room {
 }
 
 model Messages {
-  id        String @id @default(uuid())
-  roomName  String
-  userLogin String
-  data      String
-  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
+  id           String @id @default(uuid())
+  roomName     String
+  receiverUser String
+  data         String
+  room         Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
 
   @@map("messages")
 }
 
 model Muted {
-  id        String @id @default(uuid())
-  roomName  String
-  userLogin String
-  time      String
-  room      Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
+  id           String @id @default(uuid())
+  roomName     String
+  receiverUser String
+  time         String
+  room         Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
 
   @@map("muted")
 }

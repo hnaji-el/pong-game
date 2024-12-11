@@ -55,14 +55,15 @@ model Room {
   blocked         String[]
   type            String // DIRECTMESSAGE | PUBLIC | PROTECTED | PRIVATE
   hashedPassword  String?
-  messages        Messages[]
+  messages        Message[]
   muted           Muted[]
 }
 
-model Messages {
+model Message {
   id           String @id @default(uuid())
   roomName     String
   receiverUser String
+  pictureURL   String
   data         String
   room         Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
 

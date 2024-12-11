@@ -46,14 +46,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
 
-      this.connectedClients.forEach((client) => {
+      for (const client of this.connectedClients) {
         if (
           client.user.id === senderUser.id ||
           client.user.id === receiverUser.id
         ) {
           client.join(wsRoomName);
         }
-      });
+      }
 
       const room = await this.prisma.room.findUnique({
         where: {
@@ -64,73 +64,79 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
 
-      if (room) {
-        await this.prisma.messages.create({
-          data: {
-            roomName: room.name,
-            receiverUser: receiverUser.nickname,
-            data: wsMsgBody.data,
-          },
-        });
+      if (!room) return;
 
-        this.server
-          .to(wsRoomName)
-          .emit(
+      await this.prisma.message.create({
+        data: {
+          roomName: room.name,
+          receiverUser: receiverUser.nickname,
+          pictureURL: receiverUser.pictureURL,
+          data: wsMsgBody.data,
+        },
+      });
+
+      this.server
+        .to(wsRoomName)
+        .emit(
+          'msgFromServer',
+          await this.chatService.getDMRoomMsgs(room, senderUser, 'chat'),
+        );
+
+      for (const client of this.connectedClients) {
+        if (client.user.id === senderUser.id) {
+          client.emit(
             'msgFromServer',
-            await this.chatService.getRoomMsgs(senderUser, room, 'chat'),
+            await this.chatService.getDMRoomMsgs(room, receiverUser, 'chat'),
           );
-
-        for (const client of this.connectedClients) {
-          if (client.user.id === senderUser.id) {
-            client.emit(
-              'msgFromServer',
-              await this.chatService.getRoomMsgs(receiverUser, room, 'chat'),
-            );
-          }
         }
-      } else {
-        console.error('Room not found');
       }
     }
 
     if (wsMsgBody.type === 'RM') {
-      const rom = await this.prisma.room.findUnique({
+      const room = await this.prisma.room.findUnique({
         where: {
           name: wsMsgBody.name,
         },
       });
-      const user2 = await this.prisma.muted.findMany({
+
+      const mutedEntry = await this.prisma.muted.findFirst({
         where: {
-          receiverUser: senderUser.nickname,
           roomName: wsMsgBody.name,
+          receiverUser: senderUser.nickname,
         },
       });
-      if (user2[0]) {
-        if (user2[0].time < moment().format('YYYY-MM-DD hh:mm:ss')) {
+
+      if (mutedEntry) {
+        if (mutedEntry.time < moment().format('YYYY-MM-DD hh:mm:ss')) {
           this.chatService.unmuted(senderUser, wsMsgBody);
-        } else return;
-      }
-      if (rom) {
-        for (let i = 0; i < this.connectedClients.length; i++) {
-          const login = rom.members.find(
-            (login) => login == this.connectedClients[i].user.nickname,
-          );
-          if (login) this.connectedClients[i].join(wsRoomName);
+        } else {
+          return;
         }
-        const msg = await this.prisma.messages.create({
-          data: {
-            roomName: wsMsgBody.name,
-            data: wsMsgBody.data,
-            receiverUser: senderUser.nickname,
-          },
-        });
-        this.server
-          .to(wsRoomName)
-          .emit(
-            'msgFromServer',
-            await this.chatService.emit_messagetoRoom(senderUser, rom),
-          );
       }
+
+      if (!room) return;
+
+      for (const client of this.connectedClients) {
+        if (room.members.includes(client.user.nickname)) {
+          client.join(wsRoomName);
+        }
+      }
+
+      await this.prisma.message.create({
+        data: {
+          roomName: wsMsgBody.name,
+          receiverUser: senderUser.nickname,
+          pictureURL: senderUser.pictureURL,
+          data: wsMsgBody.data,
+        },
+      });
+
+      this.server
+        .to(wsRoomName)
+        .emit(
+          'msgFromServer',
+          await this.chatService.getRoomMsgs(room, senderUser),
+        );
     }
   }
 

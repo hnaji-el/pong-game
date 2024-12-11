@@ -6,8 +6,8 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import {
-  chanel,
   RoomMsgsType,
+  DMRoomMsgsType,
   userchanel,
   Searchchanel,
   chanelprotected,
@@ -55,11 +55,11 @@ export class ChatService {
     return user;
   }
 
-  async getRoomMsgs(
-    user: User,
+  async getDMRoomMsgs(
     room: Room,
+    user: User,
     type: string,
-  ): Promise<RoomMsgsType> {
+  ): Promise<DMRoomMsgsType> {
     const roomMsgs = await this.prisma.room.findUnique({
       where: {
         name: room.name,
@@ -69,7 +69,7 @@ export class ChatService {
       },
     });
 
-    // TODO: what's if roomMsgs is null
+    // TODO: what's if roomMsgs is null or there is an unexpected errors
 
     return {
       id: user.id,
@@ -77,7 +77,7 @@ export class ChatService {
       status: user.status,
       picture: user.pictureURL,
       type: type,
-      latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1].data,
+      latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
       conversation: roomMsgs.messages.map((msg) => ({
         type: msg.receiverUser === user.nickname ? 'user' : 'friend',
         message: msg.data,
@@ -85,8 +85,8 @@ export class ChatService {
     };
   }
 
-  async emit_messagetoRoom(user: any, room: any): Promise<chanel> {
-    const allmessage = await this.prisma.room.findUnique({
+  async getRoomMsgs(room: Room, user: User): Promise<RoomMsgsType> {
+    const roomMsgs = await this.prisma.room.findUnique({
       where: {
         name: room.name,
       },
@@ -94,56 +94,33 @@ export class ChatService {
         messages: true,
       },
     });
-    let role;
+
+    // TODO: what's if roomMsgs is null or there is an unexpected errors
+
+    let role: string;
+
     if (room.owner === user.nickname) role = 'owner';
-    else {
-      const admin = room.admins.find((login) => login === user.nickname);
-      if (admin) role = 'admins';
-      else role = 'members';
-    }
-    const person: chanel = {
+    else if (room.admins.includes(user.nickname)) role = 'admins';
+    else role = 'members';
+
+    return {
       id: room.id,
       name: room.name,
       members: room.members.length,
-      latestMessage: '',
-      role: role,
       type: room.type,
-      conversation: [],
+      role: role,
+      latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
+      conversation: roomMsgs.messages.map((msg) => ({
+        login: msg.receiverUser,
+        picture: msg.pictureURL,
+        message: msg.data,
+      })),
     };
-    person.conversation = allmessage.messages.map(() => ({
-      login: '',
-      message: '',
-      picture: '',
-    }));
-    const message_user = await this.prisma.messages.findFirst({
-      where: {
-        roomName: room.name,
-      },
-    });
-    if (message_user) {
-      person.latestMessage =
-        allmessage.messages[allmessage.messages.length - 1].data;
-      person.conversation = allmessage.messages.map((x) => ({
-        login: '',
-        message: x.data,
-        picture: '',
-      }));
-      for (let i = allmessage.messages.length - 1; i >= 0; i--) {
-        const user_chanel = await this.prisma.user.findUnique({
-          where: {
-            nickname: allmessage.messages[i].receiverUser,
-          },
-        });
-        person.conversation[i].login = user_chanel.nickname;
-        person.conversation[i].picture = user_chanel.pictureURL;
-      }
-    }
-    return person;
   }
 
-  generateDMRoomName (id1: string, id2: string) {
+  generateDMRoomName(id1: string, id2: string) {
     return id1 < id2 ? id1 + id2 : id2 + id1;
-  };
+  }
 
   async createRoom(
     name: string,
@@ -229,13 +206,13 @@ export class ChatService {
         messages: true,
       },
     });
-    const message_user = await this.prisma.messages.findFirst({
+    const message_user = await this.prisma.message.findFirst({
       where: {
         roomName: name,
       },
     });
 
-    const person: chanel = {
+    const person: RoomMsgsType = {
       id: userUpdate.id,
       name: userUpdate.name,
       members: userUpdate.members.length,
@@ -311,7 +288,7 @@ export class ChatService {
         messages: true,
       },
     });
-    const message_user = await this.prisma.messages.findFirst({
+    const message_user = await this.prisma.message.findFirst({
       where: {
         roomName: room.data.name,
       },
@@ -746,8 +723,8 @@ export class ChatService {
     return allmessage.messages[v - 1];
   }
 
-  async getDMWithAllUsers(type: string, user1: any): Promise<RoomMsgsType[]> {
-    const obj: RoomMsgsType[] = [];
+  async getDMWithAllUsers(type: string, user1: any): Promise<DMRoomMsgsType[]> {
+    const obj: DMRoomMsgsType[] = [];
     const rooms = await this.prisma.room.findMany({
       where: {
         type: type,
@@ -777,13 +754,13 @@ export class ChatService {
             messages: true,
           },
         });
-        const message_user = await this.prisma.messages.findFirst({
+        const message_user = await this.prisma.message.findFirst({
           where: {
             roomName: rooms[index].name,
           },
         });
         if (!message_user) continue;
-        const person: RoomMsgsType = {
+        const person: DMRoomMsgsType = {
           id: user.id,
           username: user.nickname,
           status: user.status,
@@ -819,7 +796,7 @@ export class ChatService {
         if (friend.nickname === obj[index].username) break;
       }
       if (index === obj.length && friend.nickname !== user1.nickname) {
-        const person: RoomMsgsType = {
+        const person: DMRoomMsgsType = {
           id: friend.id,
           username: friend.nickname,
           status: friend.status,
@@ -842,7 +819,7 @@ export class ChatService {
         if (friend.nickname === obj[index].username) break;
       }
       if (index === obj.length && friend.nickname !== user1.nickname) {
-        const person: RoomMsgsType = {
+        const person: DMRoomMsgsType = {
           id: friend.id,
           username: friend.nickname,
           status: friend.status,
@@ -858,8 +835,8 @@ export class ChatService {
     return obj;
   }
 
-  async getDM(type: string, user1: any): Promise<RoomMsgsType[]> {
-    const obj: RoomMsgsType[] = [];
+  async getDM(type: string, user1: any): Promise<DMRoomMsgsType[]> {
+    const obj: DMRoomMsgsType[] = [];
     const rooms = await this.prisma.room.findMany({
       where: {
         type: type,
@@ -887,13 +864,13 @@ export class ChatService {
             messages: true,
           },
         });
-        const message_user = await this.prisma.messages.findFirst({
+        const message_user = await this.prisma.message.findFirst({
           where: {
             roomName: rooms[index].name,
           },
         });
         if (!message_user) continue;
-        const person: RoomMsgsType = {
+        const person: DMRoomMsgsType = {
           id: user.id,
           username: user.nickname,
           status: user.status,
@@ -964,7 +941,7 @@ export class ChatService {
           picture: '',
           type: '',
         }));
-        const message_user = await this.prisma.messages.findFirst({
+        const message_user = await this.prisma.message.findFirst({
           where: {
             roomName: rooms[index].name,
           },
@@ -1021,7 +998,7 @@ export class ChatService {
           picture: '',
           type: '',
         }));
-        const message_user = await this.prisma.messages.findFirst({
+        const message_user = await this.prisma.message.findFirst({
           where: {
             roomName: rooms[index].name,
           },

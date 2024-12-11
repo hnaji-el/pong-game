@@ -1,4 +1,4 @@
-export interface RoomMsgsType {
+export interface DMRoomMsgsType {
   id: string;
   username: string;
   status: string;
@@ -11,25 +11,24 @@ export interface RoomMsgsType {
   }[];
 }
 
-export interface objectChannel {
-  type: string;
-  message: string;
-  picture: string;
-}
-
-export interface converssession_channel {
-  login: string;
-  message: string;
-  picture: string;
-}
-export interface chanel {
+export interface RoomMsgsType {
   id: string;
   name: string;
   members: number;
   latestMessage: string;
   role: string;
   type: string;
-  conversation: converssession_channel[];
+  conversation: {
+    login: string;
+    message: string;
+    picture: string;
+  }[];
+}
+
+export interface objectChannel {
+  type: string;
+  message: string;
+  picture: string;
 }
 
 export interface userchanel {

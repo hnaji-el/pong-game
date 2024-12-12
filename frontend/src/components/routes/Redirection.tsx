@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
+
 import Spinner from "../Spinner";
 
 export default function Redirection() {
-  useEffect(() => {
+  React.useEffect(() => {
     document.title = "Pong - Redirection...";
   }, []);
+
   return (
-    <div className="mx-3 flex justify-center items-center h-full">
+    <div className="mx-3 flex h-full items-center justify-center">
       <Spinner />
     </div>
   );

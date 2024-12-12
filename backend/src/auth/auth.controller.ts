@@ -47,6 +47,13 @@ export class AuthController {
     this.authService.login(req, res);
   }
 
+  // check for JWT token validity
+  @Get('/auth/validate-token')
+  @UseGuards(JwtAuthGuard)
+  checkJwtTokenValidity() {
+    return;
+  }
+
   // Logout
   @Get('auth/logout')
   @UseGuards(JwtAuthGuard)

@@ -7,7 +7,7 @@ interface TypeProps {
 export default function Spinner({ edit }: TypeProps) {
   return (
     <div
-      className={`loader ease-linear rounded-full border-[3px] border-t-[3px] border-shape h-16 w-16 ${edit}`}
+      className={`loader h-16 w-16 rounded-full border-[3px] border-t-[3px] border-shape ease-linear ${edit}`}
     ></div>
   );
 }

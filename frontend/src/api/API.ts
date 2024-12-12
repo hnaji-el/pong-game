@@ -1,78 +1,46 @@
+import React from "react";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+import {
+  TypeDataLogged,
+  TypeDataUsers,
+  TypeDataProfileUser,
+  TypedataFriend,
+} from "./types";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"
     ? import.meta.env.VITE_BACKEND_ORIGIN
     : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
-interface TypeDataLogged {
-  id: string;
-  nickname: string;
-  pictureURL: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
-}
-
-export function CheckToken() {
+export async function verifyUserAuthenticity() {
   const navigate = useNavigate();
-  axios
-    .get(`${BACKEND_ORIGIN}/users/logged-user`, {
-      withCredentials: true,
-    })
-    .then()
-    .catch((error) => {
-      if (error.response.data.statusCode === 401) {
-        navigate("/login");
-      }
-    });
+
+  const response = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
+    credentials: "include",
+  });
+
+  if (response.status === 401) {
+    navigate("/login");
+  }
 }
 
-export function CheckTokenLogin(getRes: any) {
+export async function verifyUserAuthenticityInLoginPage(
+  setStatus: React.Dispatch<React.SetStateAction<string>>,
+) {
   const navigate = useNavigate();
-  axios
-    .get(`${BACKEND_ORIGIN}/users/logged-user`, {
-      withCredentials: true,
-    })
-    .then(() => {
-      getRes("200");
-      navigate("/home");
-    })
-    .catch(() => {
-      getRes("error");
-    });
-}
 
-interface TypeDataProfileUser {
-  friendsNumber: number;
-  id: string;
-  nickname: string;
-  pictureURL: string;
-}
+  const response = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
+    credentials: "include",
+  });
 
-interface TypeDataUesrs {
-  id: string;
-  nickname: string;
-  pictureURL: string;
-  isFriendToLoggedUser: boolean;
-}
-
-interface TypeDataProfileUser {
-  friendsNumber: number;
-  id: string;
-  isBlockedByLoggedUser: boolean;
-  isFriendToLoggedUser: boolean;
-  nickname: string;
-  pictureURL: string;
-  status: string;
-  winsNumber: number;
-  losesNumber: number;
-}
-
-interface TypedataFriend {
-  id: string;
-  nickname: string;
-  pictureURL: string;
+  if (response.status === 200) {
+    navigate("/home");
+  } else {
+    setStatus("resolved");
+  }
 }
 
 export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
@@ -86,7 +54,7 @@ export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
     .catch();
 }
 
-export function getDataUsers(getRes: (res: TypeDataUesrs[]) => void) {
+export function getDataUsers(getRes: (res: TypeDataUsers[]) => void) {
   axios
     .get(`${BACKEND_ORIGIN}/users`, {
       withCredentials: true,
@@ -217,7 +185,11 @@ export function getChannelsDm() {
 
 export async function CreateChannel(getRes: any, data: any) {
   await axios
-    .post(`${BACKEND_ORIGIN}/chat/create-room`, { data }, { withCredentials: true })
+    .post(
+      `${BACKEND_ORIGIN}/chat/create-room`,
+      { data },
+      { withCredentials: true },
+    )
     .then((res) => {
       getRes(res);
     })
@@ -250,14 +222,22 @@ export function getMembersChannel(getRes: any, nameChannel: string) {
 
 export async function addToRoom(data: any) {
   await axios
-    .post(`${BACKEND_ORIGIN}/chat/add-to-room`, { data }, { withCredentials: true })
+    .post(
+      `${BACKEND_ORIGIN}/chat/add-to-room`,
+      { data },
+      { withCredentials: true },
+    )
     .then()
     .catch();
 }
 
 export async function setAdmin(data: any) {
   await axios
-    .post(`${BACKEND_ORIGIN}/chat/set-admin`, { data }, { withCredentials: true })
+    .post(
+      `${BACKEND_ORIGIN}/chat/set-admin`,
+      { data },
+      { withCredentials: true },
+    )
     .then()
     .catch();
 }
@@ -285,7 +265,11 @@ export async function setMute(data: any) {
 
 export async function leaveRoom(name: string) {
   await axios
-    .post(`${BACKEND_ORIGIN}/chat/quite-room`, { name }, { withCredentials: true })
+    .post(
+      `${BACKEND_ORIGIN}/chat/quite-room`,
+      { name },
+      { withCredentials: true },
+    )
     .then()
     .catch();
 }
@@ -303,7 +287,11 @@ export function joinRoom(getRes: any, data: any) {
   console.log("data: ", data);
 
   axios
-    .post(`${BACKEND_ORIGIN}/chat/join-room`, { data }, { withCredentials: true })
+    .post(
+      `${BACKEND_ORIGIN}/chat/join-room`,
+      { data },
+      { withCredentials: true },
+    )
     .then((res) => {
       getRes(res.data);
     })

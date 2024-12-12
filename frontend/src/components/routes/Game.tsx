@@ -8,7 +8,7 @@ import { io, Socket } from "socket.io-client";
 import { getDataUserLogged } from "../../api/API";
 import { globalSocket } from "../../utilities/socket";
 import { popOutFunc } from "./eventListener";
-import { CheckToken } from "../../api/API";
+import { verifyUserAuthenticity } from "../../api/API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
@@ -45,7 +45,7 @@ export const GameContext = createContext<TypeContext>({
 });
 
 export default function Game() {
-  CheckToken();
+  verifyUserAuthenticity();
   const [dataUser, setDataUser] = useState<TypeData>({
     id: "",
     pictureURL: "",
@@ -283,18 +283,18 @@ export default function Game() {
       value={{ value: true, settings: dataUser, updateSettings: setDataUser }}
     >
       <Navigation />
-      <main className="mx-3 pb-20 lg:pb-1 pt-10 lg:ml-64 lg:mr-4">
+      <main className="mx-3 pb-20 pt-10 lg:ml-64 lg:mr-4 lg:pb-1">
         <canvas id="canvas" className="hidden"></canvas>
         <div className="flex gap-4">
           <button
             id="easy"
-            className="bg-primary text-primaryText text-sm font-bold py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-300 ease-in-out"
+            className="hover:bg-secondary rounded-lg bg-primary px-6 py-3 text-sm font-bold text-primaryText transition-colors duration-300 ease-in-out"
           >
             Easy
           </button>
           <button
             id="hard"
-            className="bg-primary text-primaryText text-sm font-bold py-3 px-6 rounded-lg hover:bg-secondary transition-colors duration-300 ease-in-out"
+            className="hover:bg-secondary rounded-lg bg-primary px-6 py-3 text-sm font-bold text-primaryText transition-colors duration-300 ease-in-out"
           >
             Hard
           </button>

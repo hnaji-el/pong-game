@@ -2,7 +2,7 @@ import React, { useEffect, createContext, useState } from "react";
 
 import Navigation from "../navigation/Navigation";
 import fire from "../../assets/fire.png";
-import { CheckToken, getDataUserLogged } from "../../api/API";
+import { verifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
 
@@ -38,7 +38,7 @@ export const ActiveHome = createContext<TypeContext>({
 });
 
 export default function Home() {
-  CheckToken();
+  verifyUserAuthenticity();
 
   const [ArrayofPlayersAndroomId, setArrayofPlayersAndroomId] = useState<
     string[]
@@ -69,16 +69,16 @@ export default function Home() {
         value={{ value: true, settings: settings, updateSettings: setSettings }}
       >
         <Navigation />
-        <main className="mx-3 pb-20 lg:pb-1 pt-10 lg:ml-64 lg:mr-4">
-          <div className="flex flex-col gap-5 w-full h-full">
-            <h1 className="text-primaryText text-2xl flex items-center gap-1.5">
+        <main className="mx-3 pb-20 pt-10 lg:ml-64 lg:mr-4 lg:pb-1">
+          <div className="flex h-full w-full flex-col gap-5">
+            <h1 className="flex items-center gap-1.5 text-2xl text-primaryText">
               <span>Live Games</span>
               <img src={fire} alt="fire" className="w-4" />
             </h1>
             {ArrayofPlayersAndroomId.map((element: any) => (
               <div key={element.players}>
                 <Link to="/game" state={{ roomId: element.roomId }}>
-                  <button className="bg-primary hover:bg-primaryHover text-white font-bold py-2 px-4 rounded">
+                  <button className="hover:bg-primaryHover rounded bg-primary px-4 py-2 font-bold text-white">
                     {element.players}
                   </button>
                 </Link>
@@ -89,7 +89,7 @@ export default function Home() {
       </ActiveHome.Provider>
     );
   return (
-    <div className="mx-3 flex justify-center items-center h-full">
+    <div className="mx-3 flex h-full items-center justify-center">
       <Spinner />
     </div>
   );

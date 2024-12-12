@@ -4,7 +4,11 @@ import { CardProfileUser } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
 import { BtnMessage } from "../BtnMessage";
 import BtnAddFriend from "../BtnAddFriend";
-import { CheckToken, getDataUserLogged, getOneUser } from "../../api/API";
+import {
+  verifyUserAuthenticity,
+  getDataUserLogged,
+  getOneUser,
+} from "../../api/API";
 import Spinner from "../Spinner";
 import { useLocation, useNavigate } from "react-router-dom";
 import BtnFriend from "../BtnFriend";
@@ -51,7 +55,7 @@ export const ActiveProfileUser = createContext<TypeContext>({
 export const UpdateDataProfileUser = createContext<any>({});
 
 export default function ProfileUser() {
-  CheckToken();
+  verifyUserAuthenticity();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -107,7 +111,7 @@ export default function ProfileUser() {
       >
         <UpdateDataProfileUser.Provider value={{ setDataUser: setDataUser }}>
           <Navigation />
-          <main className="mx-3 pt-10 lg:ml-64 lg:mr-4 flex flex-col gap-12 h-full pb-0">
+          <main className="mx-3 flex h-full flex-col gap-12 pb-0 pt-10 lg:ml-64 lg:mr-4">
             {typeUser === "blocked" ? (
               <BlockUser
                 id={dataUser.id}
@@ -116,9 +120,9 @@ export default function ProfileUser() {
               />
             ) : (
               <>
-                <section className="flex  flex-col items-center gap-10  justify-center lg:flex-row lg:justify-between">
+                <section className="flex flex-col items-center justify-center gap-10 lg:flex-row lg:justify-between">
                   <CardProfileUser data={dataUser} />
-                  <div className="flex flex-row lg:flex-col 1xl:flex-row items-center gap-3">
+                  <div className="1xl:flex-row flex flex-row items-center gap-3 lg:flex-col">
                     {typeUser === "friend" ? (
                       <>
                         <BtnFriend id={dataUser.id} setTypeUser={setTypeUser} />
@@ -132,28 +136,26 @@ export default function ProfileUser() {
                   </div>
                   <div className="flex gap-10">
                     <span className="flex flex-col items-center">
-                      <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
+                      <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
                         {dataUser.friendsNumber}
                       </span>
-                      <span className="text-secondaryText text-sm">
+                      <span className="text-sm text-secondaryText">
                         Friends
                       </span>
                     </span>
                     <span className="w-[1px] bg-shape"></span>
                     <span className="flex flex-col items-center">
-                      <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
+                      <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
                         {dataUser.winsNumber}
                       </span>
-                      <span className="text-secondaryText text-sm ">Wins</span>
+                      <span className="text-sm text-secondaryText">Wins</span>
                     </span>
                     <span className="w-[1px] bg-shape"></span>
                     <span className="flex flex-col items-center">
-                      <span className="text-primaryText text-4xl font-extrabold max-w-[8rem] overflow-hidden text-ellipsis">
+                      <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
                         {dataUser.losesNumber}
                       </span>
-                      <span className="text-secondaryText text-sm ">
-                        Losses
-                      </span>
+                      <span className="text-sm text-secondaryText">Losses</span>
                     </span>
                   </div>
                 </section>
@@ -166,7 +168,7 @@ export default function ProfileUser() {
     );
 
   return (
-    <div className="mx-3 flex justify-center items-center h-full">
+    <div className="mx-3 flex h-full items-center justify-center">
       <Spinner />
     </div>
   );

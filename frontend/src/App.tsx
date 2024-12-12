@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { Routes, Route, useNavigate } from "react-router-dom";
 
@@ -18,7 +18,7 @@ import NotFound from "./components/routes/NotFound";
 function App() {
   const navigate = useNavigate();
 
-  useEffect(() => {
+  React.useEffect(() => {
     globalSocket.on("connect", () => {});
     globalSocket.on("disconnect", () => {});
 

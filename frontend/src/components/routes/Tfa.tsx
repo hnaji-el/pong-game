@@ -11,7 +11,7 @@ import {
 import logo from "../../assets/logo.svg";
 import FormTfa from "../FormTfa";
 
-export default function Tfa() {
+function Tfa() {
   React.useEffect(() => {
     document.title = "Pong - Tfa";
   }, []);
@@ -35,3 +35,5 @@ export default function Tfa() {
     </div>
   );
 }
+
+export default Tfa;

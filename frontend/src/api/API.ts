@@ -39,21 +39,9 @@ export function useVerifyUserAuthenticity(isOnLoginPage = false) {
     };
 
     verifyAuthenticity();
-  }, [isOnLoginPage]);
-
-  return status;
-}
-
-export async function verifyUserAuthenticity() {
-  const navigate = useNavigate();
-
-  const response = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
-    credentials: "include",
   });
 
-  if (response.status === 401) {
-    navigate("/login");
-  }
+  return status;
 }
 
 export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {

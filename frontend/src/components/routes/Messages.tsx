@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import NavigationChat from "../navigation/NavigationChat";
@@ -8,7 +9,7 @@ import Spinner from "../Spinner";
 import { SendIcon } from "../Icons";
 
 import {
-  verifyUserAuthenticity,
+  useVerifyUserAuthenticity,
   getAllChannels,
   getDataUserLogged,
   getDmUsers,
@@ -17,7 +18,7 @@ import {
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
-interface TypeData {
+interface UserData {
   id: string;
   pictureURL: string;
   nickname: string;
@@ -32,7 +33,7 @@ interface TypeContext {
   firstClick: boolean;
   setFirstClick: React.Dispatch<React.SetStateAction<boolean>>;
   settings: any;
-  updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
+  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
 }
 
 export const StateMssages = React.createContext<TypeContext>({
@@ -53,25 +54,25 @@ const socket = io(DOMAIN, {
 });
 
 function Messages() {
-  verifyUserAuthenticity();
-
+  const status = useVerifyUserAuthenticity();
   const [click, setClick] = React.useState(false);
   const [firstClick, setFirstClick] = React.useState(true);
   const [dataDm, setDataDm] = React.useState<any>([]);
   const [channelDm, setChannelDm] = React.useState<any>([]);
-  const [indexDm, setIndexDm] = React.useState<number>(0);
-  const [indexChannel, setIndexChannel] = React.useState<number>(0);
+  const [indexDm, setIndexDm] = React.useState(0);
+  const [indexChannel, setIndexChannel] = React.useState(0);
   const [dataChatBox, setDataChatBox] = React.useState<any>([]);
-  const [typeDm, setTypeDm] = React.useState<string>("chat");
-  const [message, setMessage] = React.useState<string>("");
+  const [typeDm, setTypeDm] = React.useState("chat");
+  const [message, setMessage] = React.useState("");
   const [passwordProtected, setpasswordProtected] = React.useState(false);
-  const [settings, setSettings] = React.useState<TypeData>({
+  const [settings, setSettings] = React.useState<UserData>({
     id: "",
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
     status: "",
   });
+  const navigate = useNavigate();
 
   const dataChat = {
     type: "DM",
@@ -85,19 +86,9 @@ function Messages() {
     name: dataChatBox?.name,
   };
 
-  function sendMessage() {
-    if (typeDm === "chat") {
-      socket.emit("msgServer", dataChat);
-      getDmUsers((res: any) => {
-        setDataDm(res);
-      });
-    } else {
-      socket.emit("msgServer", dataChannel);
-      getAllChannels((res: any) => {
-        setChannelDm(res);
-      });
-    }
-  }
+  React.useEffect(() => {
+    document.title = "Pong - Messages";
+  }, []);
 
   React.useEffect(() => {
     getAllChannels((res: any) => {
@@ -122,13 +113,30 @@ function Messages() {
   }, []);
 
   React.useEffect(() => {
-    document.title = "Pong - Messages";
-    getDataUserLogged((res: TypeData) => {
+    getDataUserLogged((res: UserData) => {
       setSettings(res);
     });
   }, []);
 
-  if (!settings.nickname.length) {
+  function sendMessage() {
+    if (typeDm === "chat") {
+      socket.emit("msgServer", dataChat);
+      getDmUsers((res: any) => {
+        setDataDm(res);
+      });
+    } else {
+      socket.emit("msgServer", dataChannel);
+      getAllChannels((res: any) => {
+        setChannelDm(res);
+      });
+    }
+  }
+
+  if (status === "error") {
+    navigate("/login");
+  }
+
+  if (status === "pending" || !settings.nickname.length) {
     return (
       <div className="mx-3 flex h-full items-center justify-center">
         <Spinner />

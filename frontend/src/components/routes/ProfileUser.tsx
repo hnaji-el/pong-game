@@ -1,20 +1,22 @@
-import React, { createContext, useEffect, useState } from "react";
+import React from "react";
+
+import { useLocation, useNavigate } from "react-router-dom";
+
 import Navigation from "../navigation/Navigation";
 import { CardProfileUser } from "../Cards";
 import SwitchersProfile from "../SwitchersProfile";
-import { BtnMessage } from "../BtnMessage";
 import BtnAddFriend from "../BtnAddFriend";
-import {
-  verifyUserAuthenticity,
-  getDataUserLogged,
-  getOneUser,
-} from "../../api/API";
 import Spinner from "../Spinner";
-import { useLocation, useNavigate } from "react-router-dom";
 import BtnFriend from "../BtnFriend";
 import BlockUser from "../BlockUser";
 
-interface TypeData {
+import {
+  useVerifyUserAuthenticity,
+  getDataUserLogged,
+  getOneUser,
+} from "../../api/API";
+
+interface UserData {
   id: string;
   pictureURL: string;
   nickname: string;
@@ -24,8 +26,8 @@ interface TypeData {
 
 interface TypeContext {
   value: boolean;
-  settings: TypeData;
-  updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
+  settings: UserData;
+  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
 }
 
 interface TypeDataProfileUser {
@@ -40,7 +42,7 @@ interface TypeDataProfileUser {
   losesNumber: number;
 }
 
-export const ActiveProfileUser = createContext<TypeContext>({
+export const ActiveProfileUser = React.createContext<TypeContext>({
   value: false,
   settings: {
     id: "",
@@ -52,23 +54,23 @@ export const ActiveProfileUser = createContext<TypeContext>({
   updateSettings: () => {},
 });
 
-export const UpdateDataProfileUser = createContext<any>({});
+export const UpdateDataProfileUser = React.createContext<any>({});
 
-export default function ProfileUser() {
-  verifyUserAuthenticity();
+function ProfileUser() {
+  const status = useVerifyUserAuthenticity();
   const location = useLocation();
   const navigate = useNavigate();
 
   const id = location.state?.id;
-  const [typeUser, setTypeUser] = useState<string>("");
-  const [settings, setSettings] = useState<TypeData>({
+  const [typeUser, setTypeUser] = React.useState<string>("");
+  const [settings, setSettings] = React.useState<UserData>({
     id: "",
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
     status: "",
   });
-  const [dataUser, setDataUser] = useState<TypeDataProfileUser>({
+  const [dataUser, setDataUser] = React.useState<TypeDataProfileUser>({
     friendsNumber: 0,
     id: "",
     isBlockedByLoggedUser: false,
@@ -79,9 +81,13 @@ export default function ProfileUser() {
     winsNumber: 0,
     losesNumber: 0,
   });
-  useEffect(() => {
+
+  React.useEffect(() => {
     document.title = "Pong - Profile";
-    getDataUserLogged((res: TypeData) => {
+  }, []);
+
+  React.useEffect(() => {
+    getDataUserLogged((res: UserData) => {
       setSettings(res);
     });
 
@@ -95,81 +101,86 @@ export default function ProfileUser() {
 
   if (id === undefined) navigate(-1);
 
+  if (status === "error") {
+    navigate("/login");
+  }
+
   if (
-    id !== undefined &&
-    dataUser.nickname.length &&
-    typeUser.length &&
-    settings.nickname.length
-  )
+    status === "pending" ||
+    !(
+      id !== undefined &&
+      dataUser.nickname.length &&
+      typeUser.length &&
+      settings.nickname.length
+    )
+  ) {
     return (
-      <ActiveProfileUser.Provider
-        value={{
-          value: true,
-          settings: settings,
-          updateSettings: setSettings,
-        }}
-      >
-        <UpdateDataProfileUser.Provider value={{ setDataUser: setDataUser }}>
-          <Navigation />
-          <main className="mx-3 flex h-full flex-col gap-12 pb-0 pt-10 lg:ml-64 lg:mr-4">
-            {typeUser === "blocked" ? (
-              <BlockUser
-                id={dataUser.id}
-                data={dataUser}
-                setTypeUser={setTypeUser}
-              />
-            ) : (
-              <>
-                <section className="flex flex-col items-center justify-center gap-10 lg:flex-row lg:justify-between">
-                  <CardProfileUser data={dataUser} />
-                  <div className="1xl:flex-row flex flex-row items-center gap-3 lg:flex-col">
-                    {typeUser === "friend" ? (
-                      <>
-                        <BtnFriend id={dataUser.id} setTypeUser={setTypeUser} />
-                      </>
-                    ) : (
-                      <BtnAddFriend
-                        id={dataUser.id}
-                        setTypeUser={setTypeUser}
-                      />
-                    )}
-                  </div>
-                  <div className="flex gap-10">
-                    <span className="flex flex-col items-center">
-                      <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
-                        {dataUser.friendsNumber}
-                      </span>
-                      <span className="text-sm text-secondaryText">
-                        Friends
-                      </span>
-                    </span>
-                    <span className="w-[1px] bg-shape"></span>
-                    <span className="flex flex-col items-center">
-                      <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
-                        {dataUser.winsNumber}
-                      </span>
-                      <span className="text-sm text-secondaryText">Wins</span>
-                    </span>
-                    <span className="w-[1px] bg-shape"></span>
-                    <span className="flex flex-col items-center">
-                      <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
-                        {dataUser.losesNumber}
-                      </span>
-                      <span className="text-sm text-secondaryText">Losses</span>
-                    </span>
-                  </div>
-                </section>
-                <SwitchersProfile id={dataUser.id} />
-              </>
-            )}
-          </main>
-        </UpdateDataProfileUser.Provider>
-      </ActiveProfileUser.Provider>
+      <div className="mx-3 flex h-full items-center justify-center">
+        <Spinner />
+      </div>
     );
+  }
 
   return (
-    <div className="mx-3 flex h-full items-center justify-center">
-      <Spinner />
-    </div>
+    <ActiveProfileUser.Provider
+      value={{
+        value: true,
+        settings: settings,
+        updateSettings: setSettings,
+      }}
+    >
+      <UpdateDataProfileUser.Provider value={{ setDataUser: setDataUser }}>
+        <Navigation />
+        <main className="mx-3 flex h-full flex-col gap-12 pb-0 pt-10 lg:ml-64 lg:mr-4">
+          {typeUser === "blocked" ? (
+            <BlockUser
+              id={dataUser.id}
+              data={dataUser}
+              setTypeUser={setTypeUser}
+            />
+          ) : (
+            <>
+              <section className="flex flex-col items-center justify-center gap-10 lg:flex-row lg:justify-between">
+                <CardProfileUser data={dataUser} />
+                <div className="1xl:flex-row flex flex-row items-center gap-3 lg:flex-col">
+                  {typeUser === "friend" ? (
+                    <>
+                      <BtnFriend id={dataUser.id} setTypeUser={setTypeUser} />
+                    </>
+                  ) : (
+                    <BtnAddFriend id={dataUser.id} setTypeUser={setTypeUser} />
+                  )}
+                </div>
+                <div className="flex gap-10">
+                  <span className="flex flex-col items-center">
+                    <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
+                      {dataUser.friendsNumber}
+                    </span>
+                    <span className="text-sm text-secondaryText">Friends</span>
+                  </span>
+                  <span className="w-[1px] bg-shape"></span>
+                  <span className="flex flex-col items-center">
+                    <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
+                      {dataUser.winsNumber}
+                    </span>
+                    <span className="text-sm text-secondaryText">Wins</span>
+                  </span>
+                  <span className="w-[1px] bg-shape"></span>
+                  <span className="flex flex-col items-center">
+                    <span className="max-w-[8rem] overflow-hidden text-ellipsis text-4xl font-extrabold text-primaryText">
+                      {dataUser.losesNumber}
+                    </span>
+                    <span className="text-sm text-secondaryText">Losses</span>
+                  </span>
+                </div>
+              </section>
+              <SwitchersProfile id={dataUser.id} />
+            </>
+          )}
+        </main>
+      </UpdateDataProfileUser.Provider>
+    </ActiveProfileUser.Provider>
   );
 }
+
+export default ProfileUser;

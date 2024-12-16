@@ -1,14 +1,30 @@
-import React, { useEffect } from "react";
-import { verifyUserAuthenticity } from "../../api/API";
+import React from "react";
+
+import { Link, useNavigate } from "react-router-dom";
+
 import Astro from "../Astro";
-import { Link } from "react-router-dom";
+import Spinner from "../Spinner";
+import { useVerifyUserAuthenticity } from "../../api/API";
 
-export default function NotFound() {
-  verifyUserAuthenticity();
+function NotFound() {
+  const status = useVerifyUserAuthenticity();
+  const navigate = useNavigate();
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.title = "Pong - Not Found";
   }, []);
+
+  if (status === "pending") {
+    return (
+      <div className="mx-3 flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    navigate("/login");
+  }
 
   return (
     <main className="flex h-full items-center justify-center">
@@ -37,3 +53,5 @@ export default function NotFound() {
     </main>
   );
 }
+
+export default NotFound;

@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -8,7 +8,9 @@ import { io, Socket } from "socket.io-client";
 import { getDataUserLogged } from "../../api/API";
 import { globalSocket } from "../../utilities/socket";
 import { popOutFunc } from "./eventListener";
-import { verifyUserAuthenticity } from "../../api/API";
+import Spinner from "../Spinner";
+
+import { useVerifyUserAuthenticity } from "../../api/API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
@@ -18,7 +20,7 @@ const PLAYER_COLOR = "#7970B3";
 const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
 const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 
-interface TypeData {
+interface UserData {
   id: string;
   pictureURL: string;
   nickname: string;
@@ -28,11 +30,11 @@ interface TypeData {
 
 interface TypeContext {
   value: boolean;
-  settings: TypeData;
-  updateSettings: React.Dispatch<React.SetStateAction<TypeData>>;
+  settings: UserData;
+  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
 }
 
-export const GameContext = createContext<TypeContext>({
+export const GameContext = React.createContext<TypeContext>({
   value: false,
   settings: {
     id: "",
@@ -44,17 +46,17 @@ export const GameContext = createContext<TypeContext>({
   updateSettings: () => {},
 });
 
-export default function Game() {
-  verifyUserAuthenticity();
-  const [dataUser, setDataUser] = useState<TypeData>({
+function Game() {
+  const status = useVerifyUserAuthenticity();
+  const [dataUser, setDataUser] = React.useState<UserData>({
     id: "",
     pictureURL: "",
     nickname: "",
     isTwoFactorAuthEnabled: false,
     status: "",
   });
-  // let cookie = Object.fromEntries(
-  // document.cookie.split("; ").map((c) => c.split("="))
+  const navigate = useNavigate();
+
   // get cookie using document.cookie to get the auth token
   let cookies = Object.fromEntries(
     document.cookie.split("; ").map((c) => {
@@ -62,16 +64,20 @@ export default function Game() {
       return [key, v.join("=")];
     }),
   );
+
   // cookies["auth-token"] = cookies["auth-token"].replace(/"/g, "");
   const loc = useLocation();
   // if no state is passed, then the user is not joining a game, but creating a new one
   const roomId = loc.state ? loc.state.roomId : undefined;
   const privateQueue = loc.state ? loc.state.privateQueue : undefined;
-  const playerIdRef = useRef<number>(-1);
-  const navigate = useNavigate();
-  const socketRef = useRef<Socket | null>(null);
+  const playerIdRef = React.useRef<number>(-1);
+  const socketRef = React.useRef<Socket | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    document.title = "Pong - Game";
+  }, []);
+
+  React.useEffect(() => {
     const socket = io(DOMAIN, {
       path: SOCKET_PATH,
       withCredentials: true,
@@ -81,7 +87,7 @@ export default function Game() {
     });
 
     socketRef.current = socket;
-    getDataUserLogged((res: TypeData) => {
+    getDataUserLogged((res: UserData) => {
       setDataUser(res);
     });
 
@@ -271,13 +277,26 @@ export default function Game() {
       100,
     );
   }
+
   function init(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     canvas.height = CANVA_HEIGHT;
     canvas.width = CANVA_WIDTH;
     ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
-  // if (dataUser.nickname.length)
+
+  if (status === "pending") {
+    return (
+      <div className="mx-3 flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    navigate("/login");
+  }
+
   return (
     <GameContext.Provider
       value={{ value: true, settings: dataUser, updateSettings: setDataUser }}
@@ -304,3 +323,5 @@ export default function Game() {
     </GameContext.Provider>
   );
 }
+
+export default Game;

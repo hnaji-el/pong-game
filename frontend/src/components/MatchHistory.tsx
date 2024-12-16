@@ -16,13 +16,13 @@ export default function MatchHistory({ id }: TypdProps) {
         setMatchHistory(res);
         setRender(true);
       }, id);
-  }, []);
+  }, [id]);
 
   if (render) {
     if (matchHistory.length)
       return (
-        <div className="pt-5 pb-[7.6rem] lg:pb-[2.7rem] flex">
-          <table className="table w-full ">
+        <div className="flex pb-[7.6rem] pt-5 lg:pb-[2.7rem]">
+          <table className="table w-full">
             <thead>
               <tr className="rounded-xl bg-body font-medium text-primaryText shadow">
                 <th className="rounded-xl p-4 text-left">Players</th>
@@ -40,13 +40,13 @@ export default function MatchHistory({ id }: TypdProps) {
       );
     else
       return (
-        <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText text-md">
+        <div className="text-md flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
           No Matches.
         </div>
       );
   }
   return (
-    <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText">
+    <div className="flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
       <Spinner edit="w-9 h-9" />
     </div>
   );

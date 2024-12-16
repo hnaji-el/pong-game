@@ -16,27 +16,27 @@ export default function AddMember() {
       setFriend(res);
       setRender(true);
     }, messageData.dataChatBox.name);
-  }, []);
+  }, [messageData.dataChatBox.name]);
 
   if (render) {
     if (friend.length) {
       return (
         <AddMemberContext.Provider value={{ setFriend: setFriend }}>
-          <div className="pt-5 w-full flex flex-col gap-6">
+          <div className="flex w-full flex-col gap-6 pt-5">
             <FriendMember data={friend} />
           </div>
         </AddMemberContext.Provider>
       );
     }
     return (
-      <div className="p-8 pb-[1rem] w-full flex gap-1 text-sm text-secondaryText justify-center item-center">
+      <div className="item-center flex w-full justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
         <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
         No friends available to add.
       </div>
     );
   } else
     return (
-      <div className="p-8 pb-[1rem] w-full flex gap-1 text-sm text-secondaryText justify-center item-center">
+      <div className="item-center flex w-full justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
         <Spinner edit="w-9 h-9" />
       </div>
     );

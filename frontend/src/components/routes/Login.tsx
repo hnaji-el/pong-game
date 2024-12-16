@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import Redirection from "./Redirection";
 import gmailLogo from "../../assets/gmailLogo.svg";
 import logo from "../../assets/logo.svg";
+import Spinner from "../Spinner";
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,24 +13,31 @@ import {
   Pong,
 } from "../PongElements";
 
-import { verifyUserAuthenticityInLoginPage } from "../../api/API";
+import { useVerifyUserAuthenticity } from "../../api/API";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"
     ? import.meta.env.VITE_BACKEND_ORIGIN
     : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
-export default function Login() {
-  const [status, setStatus] = React.useState("pending"); // "pending" | "resolved"
-
-  verifyUserAuthenticityInLoginPage(setStatus);
+function Login() {
+  const status = useVerifyUserAuthenticity(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     document.title = "Pong - Login";
   }, []);
 
   if (status === "pending") {
-    return <Redirection />;
+    return (
+      <div className="mx-3 flex h-full items-center justify-center">
+        <Spinner />
+      </div>
+    );
+  }
+
+  if (status === "error") {
+    navigate("/home");
   }
 
   return (
@@ -71,3 +78,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default Login;

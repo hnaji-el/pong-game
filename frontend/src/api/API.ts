@@ -15,6 +15,35 @@ const BACKEND_ORIGIN =
     ? import.meta.env.VITE_BACKEND_ORIGIN
     : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
+export function useVerifyUserAuthenticity(isOnLoginPage = false) {
+  const [status, setStatus] = React.useState("pending"); // 'pending' | 'success' | 'error'
+
+  React.useEffect(() => {
+    const verifyAuthenticity = async () => {
+      try {
+        const response = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
+          credentials: "include",
+        });
+
+        if (
+          (isOnLoginPage && !response.ok) ||
+          (!isOnLoginPage && response.ok)
+        ) {
+          setStatus("success");
+        } else {
+          setStatus("error");
+        }
+      } catch (error) {
+        isOnLoginPage ? setStatus("success") : setStatus("error");
+      }
+    };
+
+    verifyAuthenticity();
+  }, [isOnLoginPage]);
+
+  return status;
+}
+
 export async function verifyUserAuthenticity() {
   const navigate = useNavigate();
 
@@ -24,22 +53,6 @@ export async function verifyUserAuthenticity() {
 
   if (response.status === 401) {
     navigate("/login");
-  }
-}
-
-export async function verifyUserAuthenticityInLoginPage(
-  setStatus: React.Dispatch<React.SetStateAction<string>>,
-) {
-  const navigate = useNavigate();
-
-  const response = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
-    credentials: "include",
-  });
-
-  if (response.status === 200) {
-    navigate("/home");
-  } else {
-    setStatus("resolved");
   }
 }
 

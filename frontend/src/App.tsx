@@ -40,7 +40,7 @@ function App() {
       globalSocket.off("invitePlayer");
       globalSocket.off("navigateToGame");
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <Routes>

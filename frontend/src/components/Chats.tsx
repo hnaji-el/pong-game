@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getAllChannels, getDmUsers } from "../api/API";
 import { CardConversation } from "./Cards";
-import { SearchIcon } from "./Icons";
 import { MessagesContext } from "./routes/Messages";
 import Spinner from "./Spinner";
 
@@ -13,14 +11,14 @@ export default function Chats() {
   }, []);
   if (render)
     return (
-      <div className="flex h-full flex-col  gap-6">
-        <div className="flex h-full relative flex-col overflow-auto">
+      <div className="flex h-full flex-col gap-6">
+        <div className="relative flex h-full flex-col overflow-auto">
           {conversations.dataDm.length ? (
             conversations.dataDm.map((e: any, index: number) => {
               return <CardConversation data={e} key={index} index={index} />;
             })
           ) : (
-            <div className="h-full flex pb-[7.3rem] justify-center items-center text-primaryText text-sm">
+            <div className="flex h-full items-center justify-center pb-[7.3rem] text-sm text-primaryText">
               No messages.
             </div>
           )}
@@ -29,7 +27,7 @@ export default function Chats() {
     );
   else
     return (
-      <div className="h-full flex pb-[7.3rem] justify-center items-center text-primaryText">
+      <div className="flex h-full items-center justify-center pb-[7.3rem] text-primaryText">
         <Spinner edit="w-9 h-9" />
       </div>
     );

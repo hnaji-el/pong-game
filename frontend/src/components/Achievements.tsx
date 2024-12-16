@@ -16,27 +16,27 @@ export default function Achievements({ id }: TypeProps) {
         setRender(true);
         setAchievements(res);
       }, id);
-  }, []);
+  }, [id]);
 
   if (render) {
     if (achievements)
       return (
-        <div className="flex pt-5 pb-[7.6rem] lg:pb-[2.7rem] flex-col gap-10 md:gap-16">
-          <div className="flex items-center flex-col gap-10 justify-around w-full md:flex-row md:gap-5">
+        <div className="flex flex-col gap-10 pb-[7.6rem] pt-5 md:gap-16 lg:pb-[2.7rem]">
+          <div className="flex w-full flex-col items-center justify-around gap-10 md:flex-row md:gap-5">
             <CardAchievments />
           </div>
         </div>
       );
     else {
       return (
-        <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText text-md">
+        <div className="text-md flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
           No achievements.
         </div>
       );
     }
   }
   return (
-    <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText">
+    <div className="flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
       <Spinner edit="w-9 h-9" />
     </div>
   );

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { MessagesIcon } from "./Icons";
 
 export function BtnMessage() {

@@ -233,7 +233,7 @@ export default function Game() {
 
       globalSocket.off("invitePlayer", popOutFunc);
     };
-  }, []);
+  }, [cookies, dataUser, navigate, privateQueue, roomId]);
 
   function paintGame(state: GameState, ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = BG_COLOR;

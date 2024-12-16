@@ -107,7 +107,7 @@ function Messages() {
       setDataDm(res);
       setDataChatBox(res[indexDm]);
     });
-  }, []);
+  }, [indexDm]);
 
   React.useEffect(() => {
     if (!socket.connected) socket.connect();

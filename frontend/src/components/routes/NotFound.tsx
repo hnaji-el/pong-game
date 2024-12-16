@@ -18,7 +18,7 @@ export default function NotFound() {
           <span className="text-[6rem] font-extrabold text-primary">404</span>
           <div className="flex flex-col items-center gap-8 lg:items-start">
             <span className="text-[1.5rem] font-bold text-primaryText">
-              UH OH! You're lost.
+              UH OH! You&apos;re lost.
             </span>
             <p className="w-[80%] text-center text-sm text-primaryText lg:w-[29rem] lg:text-left">
               The page you are looking for does not exist. How you got here is a

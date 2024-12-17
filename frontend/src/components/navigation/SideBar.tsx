@@ -7,11 +7,11 @@ import {
   ControllerIcon,
 } from "../Icons";
 import { Link } from "react-router-dom";
-import { ActiveHome } from "../routes/Home";
-import { StateMssages } from "../routes/Messages";
-import { ActiveProfile } from "../routes/Profile";
-import { ActiveProfileUser } from "../routes/ProfileUser";
-import { GameContext } from "../routes/Game";
+import { ActiveHome } from "../../pages/Home";
+import { StateMssages } from "../../pages/Messages";
+import { ActiveProfile } from "../../pages/Profile";
+import { ActiveProfileUser } from "../../pages/ProfileUser";
+import { GameContext } from "../../pages/Game";
 import logo from "../../assets/logo.svg";
 import ListFriendOnline from "../ListFriendOnline";
 

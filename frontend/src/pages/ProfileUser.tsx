@@ -2,19 +2,19 @@ import React from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import Navigation from "../navigation/Navigation";
-import { CardProfileUser } from "../Cards";
-import SwitchersProfile from "../SwitchersProfile";
-import BtnAddFriend from "../BtnAddFriend";
-import Spinner from "../Spinner";
-import BtnFriend from "../BtnFriend";
-import BlockUser from "../BlockUser";
+import Navigation from "../components/navigation/Navigation";
+import { CardProfileUser } from "../components/Cards";
+import SwitchersProfile from "../components/SwitchersProfile";
+import BtnAddFriend from "../components/BtnAddFriend";
+import Spinner from "../components/Spinner";
+import BtnFriend from "../components/BtnFriend";
+import BlockUser from "../components/BlockUser";
 
 import {
   useVerifyUserAuthenticity,
   getDataUserLogged,
   getOneUser,
-} from "../../api/API";
+} from "../api/API";
 
 interface UserData {
   id: string;

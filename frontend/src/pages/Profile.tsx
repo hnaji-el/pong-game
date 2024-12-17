@@ -2,18 +2,18 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import Navigation from "../navigation/Navigation";
-import { CardProfile } from "../Cards";
-import SwitchersProfile from "../SwitchersProfile";
-import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
-import SettingsBody from "../modals/settings/SettingsBody";
-import Spinner from "../Spinner";
+import Navigation from "../components/navigation/Navigation";
+import { CardProfile } from "../components/Cards";
+import SwitchersProfile from "../components/SwitchersProfile";
+import { Modal, ModalBody, ModalHeader } from "../components/modals/Modals";
+import SettingsBody from "../components/modals/settings/SettingsBody";
+import Spinner from "../components/Spinner";
 
 import {
   useVerifyUserAuthenticity,
   getDataUserLogged,
   getOneUser,
-} from "../../api/API";
+} from "../api/API";
 
 interface UserData {
   id: string;

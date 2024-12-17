@@ -3,17 +3,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-import NavigationChat from "../navigation/NavigationChat";
-import ChatBox from "../ChatBox";
-import Spinner from "../Spinner";
-import { SendIcon } from "../Icons";
+import NavigationChat from "../components/navigation/NavigationChat";
+import ChatBox from "../components/ChatBox";
+import Spinner from "../components/Spinner";
+import { SendIcon } from "../components/Icons";
 
 import {
   useVerifyUserAuthenticity,
   getAllChannels,
   getDataUserLogged,
   getDmUsers,
-} from "../../api/API";
+} from "../api/API";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;

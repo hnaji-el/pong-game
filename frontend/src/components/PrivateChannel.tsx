@@ -3,7 +3,7 @@ import { getAllChannels } from "../api/API";
 import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
-import { MessagesContext } from "./routes/Messages";
+import { MessagesContext } from "../pages/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

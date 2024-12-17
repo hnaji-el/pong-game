@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CardConversation } from "./Cards";
-import { MessagesContext } from "./routes/Messages";
+import { MessagesContext } from "../pages/Messages";
 import Spinner from "./Spinner";
 
 export default function Chats() {

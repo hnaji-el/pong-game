@@ -2,18 +2,18 @@ import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import gmailLogo from "../../assets/gmailLogo.svg";
-import logo from "../../assets/logo.svg";
-import Spinner from "../Spinner";
+import gmailLogo from "../assets/gmailLogo.svg";
+import logo from "../assets/logo.svg";
+import Spinner from "../components/Spinner";
 import {
   ArrowLeft,
   ArrowRight,
   PointsBottom,
   PointsTop,
   Pong,
-} from "../PongElements";
+} from "../components/PongElements";
 
-import { useVerifyUserAuthenticity } from "../../api/API";
+import { useVerifyUserAuthenticity } from "../api/API";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"

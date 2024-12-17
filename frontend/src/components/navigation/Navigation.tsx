@@ -7,9 +7,9 @@ import ModalSettings from "../modals/ModalSettings";
 import SettingsBody from "../modals/settings/SettingsBody";
 import SearchInput from "../SearchInput";
 import ViewSettings from "../ViewSettings";
-import { ActiveHome } from "../routes/Home";
-import { ActiveProfile } from "../routes/Profile";
-import { ActiveProfileUser } from "../routes/ProfileUser";
+import { ActiveHome } from "../../pages/Home";
+import { ActiveProfile } from "../../pages/Profile";
+import { ActiveProfileUser } from "../../pages/ProfileUser";
 
 export default function Navigation() {
   const [open, setOpen] = useState<boolean>(false);

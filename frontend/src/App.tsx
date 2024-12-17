@@ -3,17 +3,17 @@ import React from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import { globalSocket } from "./utilities/socket";
-import { popOutFunc } from "./components/routes/eventListener";
+import { popOutFunc } from "./components/eventListener";
 
-import Login from "./components/routes/Login";
-import Edit from "./components/routes/Edit";
-import Home from "./components/routes/Home";
-import Messages from "./components/routes/Messages";
-import Profile from "./components/routes/Profile";
-import ProfileUser from "./components/routes/ProfileUser";
-import Game from "./components/routes/Game";
-import Tfa from "./components/routes/Tfa";
-import NotFound from "./components/routes/NotFound";
+import Login from "./pages/Login";
+import Edit from "./pages/Edit";
+import Home from "./pages/Home";
+import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
+import ProfileUser from "./pages/ProfileUser";
+import Game from "./pages/Game";
+import Tfa from "./pages/Tfa";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const navigate = useNavigate();

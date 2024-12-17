@@ -2,7 +2,7 @@ import React from "react";
 
 import { ExclamationIcon } from "../Icons";
 import MembersContainer from "../MembersContainer";
-import { MessagesContext } from "../routes/Messages";
+import { MessagesContext } from "../../pages/Messages";
 import Spinner from "../Spinner";
 
 import { getMembersChannel } from "../../api/API";

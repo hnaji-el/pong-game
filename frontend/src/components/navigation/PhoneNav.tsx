@@ -7,9 +7,9 @@ import {
   ControllerIcon,
 } from "../Icons";
 import { Link } from "react-router-dom";
-import { ActiveHome } from "../routes/Home";
-import { StateMssages } from "../routes/Messages";
-import { ActiveProfile } from "../routes/Profile";
+import { ActiveHome } from "../../pages/Home";
+import { StateMssages } from "../../pages/Messages";
+import { ActiveProfile } from "../../pages/Profile";
 import ListFriendOnline from "../ListFriendOnline";
 
 interface TypeProps {

@@ -3,7 +3,7 @@ import { getAllChannels } from "../api/API";
 import { checkChannelName, checkPasswordChannel } from "../utilities/helpers";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
-import { MessagesContext } from "./routes/Messages";
+import { MessagesContext } from "../pages/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

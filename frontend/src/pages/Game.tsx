@@ -2,15 +2,15 @@ import React from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import Navigation from "../navigation/Navigation";
-import { GameState } from "../../utilities/types";
+import Navigation from "../components/navigation/Navigation";
+import { GameState } from "../utilities/types";
 import { io, Socket } from "socket.io-client";
-import { getDataUserLogged } from "../../api/API";
-import { globalSocket } from "../../utilities/socket";
-import { popOutFunc } from "./eventListener";
-import Spinner from "../Spinner";
+import { getDataUserLogged } from "../api/API";
+import { globalSocket } from "../utilities/socket";
+import { popOutFunc } from "../components/eventListener";
+import Spinner from "../components/Spinner";
 
-import { useVerifyUserAuthenticity } from "../../api/API";
+import { useVerifyUserAuthenticity } from "../api/API";
 
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;

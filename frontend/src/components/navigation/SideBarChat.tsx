@@ -4,8 +4,8 @@ import logo from "../../assets/logo.svg";
 import Channels from "../Channels";
 import Chats from "../Chats";
 import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "../Tabs";
-import { StateMssages } from "../routes/Messages";
-import { MessagesContext } from "../routes/Messages";
+import { StateMssages } from "../../pages/Messages";
+import { MessagesContext } from "../../pages/Messages";
 import { getAllChannels, getDmUsers } from "../../api/API";
 
 interface TypeProps {

@@ -5,10 +5,10 @@ import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
-import { ActiveHome } from "../routes/Home";
-import { ActiveProfile } from "../routes/Profile";
-import { ActiveProfileUser } from "../routes/ProfileUser";
-import { GameContext } from "../routes/Game";
+import { ActiveHome } from "../../pages/Home";
+import { ActiveProfile } from "../../pages/Profile";
+import { ActiveProfileUser } from "../../pages/ProfileUser";
+import { GameContext } from "../../pages/Game";
 import { logout } from "../../api/API";
 
 interface TypeProps {

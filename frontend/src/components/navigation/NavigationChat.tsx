@@ -9,12 +9,12 @@ import ModalSearch from "../modals/ModalSearch";
 import SearchInput from "../SearchInput";
 import ModalSettings from "../modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
-import { StateMssages } from "../routes/Messages";
+import { StateMssages } from "../../pages/Messages";
 import CreateChannel from "../modals/CreateChannel";
 import AddMember from "../modals/AddMember";
 import Members from "../modals/Members";
 import FormProtected from "../FormProtected";
-import { MessagesContext } from "../routes/Messages";
+import { MessagesContext } from "../../pages/Messages";
 
 export default function NavigationChat() {
   const [open, setOpen] = useState<boolean>(false);

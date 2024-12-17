@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { getAllChannels, getChannelsDm } from "../api/API";
 import { CardChannelConversation } from "./Cards";
 import { PlusIcon, SearchIcon } from "./Icons";
-import { MessagesContext } from "./routes/Messages";
+import { MessagesContext } from "../pages/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

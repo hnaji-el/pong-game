@@ -1,17 +1,21 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { getMembersChannel } from "../../api/API";
+import React from "react";
+
 import { ExclamationIcon } from "../Icons";
 import MembersContainer from "../MembersContainer";
 import { MessagesContext } from "../routes/Messages";
 import Spinner from "../Spinner";
 
-export const MembersContext = createContext<any>({});
-export default function Members() {
-  const messageData = useContext(MessagesContext);
-  const [members, setMembers] = useState<any>([]);
-  const [render, setRender] = useState<boolean>(false);
+import { getMembersChannel } from "../../api/API";
 
-  useEffect(() => {
+export const MembersContext = React.createContext<any>({});
+
+// TODO: check for [TypeError: cannot read properties of undefined `name`]
+function Members() {
+  const messageData = React.useContext(MessagesContext);
+  const [members, setMembers] = React.useState<any>([]);
+  const [render, setRender] = React.useState(false);
+
+  React.useEffect(() => {
     getMembersChannel((res: any) => {
       setMembers(res);
       setRender(true);
@@ -28,15 +32,17 @@ export default function Members() {
         </MembersContext.Provider>
       );
     return (
-      <div className="item-center flex w-full justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
         <ExclamationIcon edit="w-5 h-4 fill-secondaryText relative top-[.1rem]" />
         You are the only one in this room.
       </div>
     );
   } else
     return (
-      <div className="item-center flex w-full justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-        <Spinner edit="w-9 h-9" />
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+        <Spinner width={9} height={9} />
       </div>
     );
 }
+
+export default Members;

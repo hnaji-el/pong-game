@@ -1,13 +1,16 @@
 import React from "react";
 
-interface TypeProps {
-  edit?: string;
-}
+type PropsType = {
+  width?: number;
+  height?: number;
+};
 
-export default function Spinner({ edit }: TypeProps) {
+function Spinner({ width = 16, height = 16 }: PropsType) {
   return (
     <div
-      className={`loader h-16 w-16 rounded-full border-[3px] border-t-[3px] border-shape ease-linear ${edit}`}
+      className={`loader h-${height} w-${width} rounded-full border-[3px] border-t-[3px] border-shape ease-linear`}
     ></div>
   );
 }
+
+export default Spinner;

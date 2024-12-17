@@ -1,17 +1,21 @@
-import React, { useContext, useEffect, useState, createContext } from "react";
-import { getFriendChannel } from "../../api/API";
+import React from "react";
+
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
 import { MessagesContext } from "../routes/Messages";
 import Spinner from "../Spinner";
 
-export const AddMemberContext = createContext<any>({});
+import { getFriendChannel } from "../../api/API";
 
-export default function AddMember() {
-  const messageData = useContext(MessagesContext);
-  const [friend, setFriend] = useState<any>([]);
-  const [render, setRender] = useState<boolean>(false);
-  useEffect(() => {
+export const AddMemberContext = React.createContext<any>({});
+
+// TODO: check for [TypeError: cannot read properties of undefined `name`]
+function AddMember() {
+  const messageData = React.useContext(MessagesContext);
+  const [friend, setFriend] = React.useState<any>([]);
+  const [render, setRender] = React.useState(false);
+
+  React.useEffect(() => {
     getFriendChannel((res: any) => {
       setFriend(res);
       setRender(true);
@@ -29,15 +33,17 @@ export default function AddMember() {
       );
     }
     return (
-      <div className="item-center flex w-full justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
         <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
         No friends available to add.
       </div>
     );
   } else
     return (
-      <div className="item-center flex w-full justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-        <Spinner edit="w-9 h-9" />
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+        <Spinner width={9} height={9} />
       </div>
     );
 }
+
+export default AddMember;

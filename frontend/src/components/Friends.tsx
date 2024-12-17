@@ -40,11 +40,11 @@ function Friends({ id }: TypeProps) {
   if (render) {
     if (dataFriend.length)
       return (
-        <div className="flex pt-5 pb-[7.6rem] lg:pb-[2.7rem] flex-col gap-12">
+        <div className="flex flex-col gap-12 pb-[7.6rem] pt-5 lg:pb-[2.7rem]">
           {dataFriend.map((e: TypedataFriend[], index: number) => {
             return (
               <div
-                className="flex w-full flex-col md:flex-row gap-12"
+                className="flex w-full flex-col gap-12 md:flex-row"
                 key={index}
               >
                 {e.map((element: TypedataFriend, index: number) => {
@@ -57,14 +57,14 @@ function Friends({ id }: TypeProps) {
       );
     else
       return (
-        <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText text-md">
+        <div className="text-md flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
           No friends.
         </div>
       );
   }
   return (
-    <div className="h-full flex pb-[7.3rem] lg:pb-6 justify-center items-center text-primaryText">
-      <Spinner edit="w-9 h-9" />
+    <div className="flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
+      <Spinner width={9} height={9} />
     </div>
   );
 }

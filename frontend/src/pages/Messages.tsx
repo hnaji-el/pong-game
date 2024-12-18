@@ -10,8 +10,8 @@ import { SendIcon } from "../components/Icons";
 
 import {
   useVerifyUserAuthenticity,
-  getAllChannels,
   getDataUserLogged,
+  getAllChannels,
   getDmUsers,
 } from "../api/API";
 
@@ -32,21 +32,29 @@ interface TypeContext {
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   firstClick: boolean;
   setFirstClick: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: any;
+  settings: UserData;
   updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
 }
 
+const userData = {
+  id: "",
+  pictureURL: "",
+  nickname: "",
+  isTwoFactorAuthEnabled: false,
+  status: "",
+};
+
+export const Click = React.createContext(false);
+export const MessagesContext = React.createContext<any>({});
 export const StateMssages = React.createContext<TypeContext>({
   active: false,
   click: false,
   setClick: () => {},
   firstClick: false,
   setFirstClick: () => {},
-  settings: { id: "", pictureURL: "", nickname: "" },
+  settings: userData,
   updateSettings: () => {},
 });
-export const Click = React.createContext<boolean>(false);
-export const MessagesContext = React.createContext<any>({});
 
 const socket = io(DOMAIN, {
   path: SOCKET_CHAT_PATH,
@@ -55,23 +63,17 @@ const socket = io(DOMAIN, {
 
 function Messages() {
   const status = useVerifyUserAuthenticity();
+  const [settings, setSettings] = React.useState<UserData>(userData); // getDataUserLogged
+  const [dataDm, setDataDm] = React.useState<any>([]); // getDmUsers
+  const [channelDm, setChannelDm] = React.useState<any>([]); // getAllChannels
+  const [dataChatBox, setDataChatBox] = React.useState<any>([]); // socket & getDmUsers
+  const [typeDm, setTypeDm] = React.useState("chat"); // socket
+  const [message, setMessage] = React.useState(""); // send Icon
   const [click, setClick] = React.useState(false);
   const [firstClick, setFirstClick] = React.useState(true);
-  const [dataDm, setDataDm] = React.useState<any>([]);
-  const [channelDm, setChannelDm] = React.useState<any>([]);
   const [indexDm, setIndexDm] = React.useState(0);
   const [indexChannel, setIndexChannel] = React.useState(0);
-  const [dataChatBox, setDataChatBox] = React.useState<any>([]);
-  const [typeDm, setTypeDm] = React.useState("chat");
-  const [message, setMessage] = React.useState("");
   const [passwordProtected, setpasswordProtected] = React.useState(false);
-  const [settings, setSettings] = React.useState<UserData>({
-    id: "",
-    pictureURL: "",
-    nickname: "",
-    isTwoFactorAuthEnabled: false,
-    status: "",
-  });
   const navigate = useNavigate();
 
   const dataChat = {
@@ -87,6 +89,12 @@ function Messages() {
   };
 
   React.useEffect(() => {
+    getDataUserLogged((res: UserData) => {
+      setSettings(res);
+    });
+  }, []);
+
+  React.useEffect(() => {
     document.title = "Pong - Messages";
   }, []);
 
@@ -94,6 +102,7 @@ function Messages() {
     getAllChannels((res: any) => {
       setChannelDm(res);
     });
+
     getDmUsers((res: any) => {
       setDataDm(res);
       setDataChatBox(res[indexDm]);
@@ -101,21 +110,23 @@ function Messages() {
   }, [indexDm]);
 
   React.useEffect(() => {
-    if (!socket.connected) socket.connect();
+    if (!socket.connected) {
+      socket.connect();
+    }
+
     socket.on("msgFromServer", (data) => {
-      if (data.members) setTypeDm("channel");
-      else setTypeDm("chat");
+      if (data.members) {
+        setTypeDm("channel");
+      } else {
+        setTypeDm("chat");
+      }
+
       setDataChatBox(data);
     });
+
     return () => {
       socket.off("msgToClients");
     };
-  }, []);
-
-  React.useEffect(() => {
-    getDataUserLogged((res: UserData) => {
-      setSettings(res);
-    });
   }, []);
 
   function sendMessage() {

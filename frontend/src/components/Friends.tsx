@@ -64,7 +64,7 @@ function Friends({ id }: TypeProps) {
   }
   return (
     <div className="flex h-full items-center justify-center pb-[7.3rem] text-primaryText lg:pb-6">
-      <Spinner width={9} height={9} />
+      <Spinner size={36} />
     </div>
   );
 }

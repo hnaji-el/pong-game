@@ -1,14 +1,10 @@
 import React from "react";
 
-type PropsType = {
-  width?: number;
-  height?: number;
-};
-
-function Spinner({ width = 16, height = 16 }: PropsType) {
+function Spinner({ size = 64 }: { size?: number }) {
   return (
     <div
-      className={`loader h-${height} w-${width} rounded-full border-[3px] border-t-[3px] border-shape ease-linear`}
+      className={`loader rounded-full border-[3px] border-t-[3px] border-shape ease-linear`}
+      style={{ width: size, height: size }}
     ></div>
   );
 }

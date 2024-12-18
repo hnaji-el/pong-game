@@ -28,7 +28,7 @@ export default function Chats() {
   else
     return (
       <div className="flex h-full items-center justify-center pb-[7.3rem] text-primaryText">
-        <Spinner width={9} height={9} />
+        <Spinner size={36} />
       </div>
     );
 }

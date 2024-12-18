@@ -40,7 +40,7 @@ function Members() {
   } else
     return (
       <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-        <Spinner width={9} height={9} />
+        <Spinner size={36} />
       </div>
     );
 }

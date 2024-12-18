@@ -101,13 +101,13 @@ export class ChatController {
   @Get('DM')
   @UseGuards(JwtAuthGuard)
   async getDM(@Req() req) {
-    return await this.chatService.getDM('DIRECTMESSAGE', req.user);
+    return await this.chatService.getDM('DM', req.user);
   }
 
   @Get('DM-with-all-users')
   @UseGuards(JwtAuthGuard)
   async getDMWithAllUsers(@Req() req) {
-    return await this.chatService.getDMWithAllUsers('DIRECTMESSAGE', req.user);
+    return await this.chatService.getDMWithAllUsers('DM', req.user);
   }
 
   @Get('room-message')

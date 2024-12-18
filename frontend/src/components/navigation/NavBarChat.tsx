@@ -25,9 +25,9 @@ export default function NavBarChat({
     <section
       className={`${
         !stateMessage.click ? "hidden" : ""
-      } lg:flex justify-center items-center pt-7 lg:justify-between lg:items-start mx-3 lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5 z-[999]`}
+      } z-[999] mx-3 items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:flex lg:items-start lg:justify-between lg:gap-5 lg:pt-7`}
     >
-      {messageData.typeDm === "chat" ? (
+      {messageData.isDmOrChannel === "DM" ? (
         <CardChatFriend data={messageData.dataChatBox} />
       ) : (
         <CardChatChannel
@@ -36,10 +36,10 @@ export default function NavBarChat({
           setMembers={setMembers}
         />
       )}
-      <div className="hidden lg:flex items-center gap-5">
+      <div className="hidden items-center gap-5 lg:flex">
         <Link
           to="/game"
-          className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3"
+          className="flex w-36 items-center justify-center gap-2.5 rounded-md bg-primary p-3 text-sm text-primaryText"
         >
           <ControllerIcon edit="w-7" />
           <span>Play now</span>

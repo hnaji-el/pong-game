@@ -24,7 +24,7 @@ export function Tabs({ children, edit }: Props) {
 
   return (
     <indexTab.Provider value={{ state: state, setState: setState, count: 0 }}>
-      <div className={`flex flex-col gap-6 h-full lg:overflow-hidden ${edit}`}>
+      <div className={`flex h-full flex-col gap-6 lg:overflow-hidden ${edit}`}>
         {children}
       </div>
     </indexTab.Provider>
@@ -32,7 +32,7 @@ export function Tabs({ children, edit }: Props) {
 }
 
 export function TabsList({ children, edit }: Props) {
-  return <div className={`text-sm flex items-center ${edit}`}>{children}</div>;
+  return <div className={`flex items-center text-sm ${edit}`}>{children}</div>;
 }
 
 export function Tab({ children, onClick }: Props) {
@@ -40,10 +40,10 @@ export function Tab({ children, onClick }: Props) {
 
   return (
     <button
-      className={`flex-1 flex justify-center items-center pb-2 border-b-[1px] ${
+      className={`flex flex-1 items-center justify-center border-b-[1px] pb-2 text-[13px] ${
         tabs.state === tabs.count++
-          ? "text-primaryText border-b-primary"
-          : "text-secondaryText border-b-shape"
+          ? "border-b-primary text-primaryText"
+          : "border-b-shape text-secondaryText"
       }`}
       onClick={(e) => {
         let index = getIndexElement(e);

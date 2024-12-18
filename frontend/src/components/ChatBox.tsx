@@ -25,9 +25,9 @@ export default function ChatBox({ data }: TypeProps) {
   }, [messageData.indexDm, messageData.indexChannel, messageData.dataChatBox]);
 
   return (
-    <div className="flex flex-col gap-10 h-full overflow-auto" ref={chatBox}>
+    <div className="flex h-full flex-col gap-10 overflow-auto" ref={chatBox}>
       {data?.map((e: any, index: number) => {
-        if (messageData.typeDm === "chat") {
+        if (messageData.isDmOrChannel === "DM") {
           if (e.type === "friend")
             return (
               <BoxMessagesFriend

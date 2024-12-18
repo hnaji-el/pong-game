@@ -50,7 +50,7 @@ export default function SideBarChat({
                 });
               }}
             >
-              Chats
+              Direct Messages
             </Tab>
             <Tab
               onClick={() => {

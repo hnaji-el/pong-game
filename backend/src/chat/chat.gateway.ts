@@ -79,20 +79,20 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         .to(wsRoomName)
         .emit(
           'msgFromServer',
-          await this.chatService.getDMRoomMsgs(room, senderUser, 'chat'),
+          await this.chatService.getDMRoomMsgs(room, senderUser),
         );
 
       for (const client of this.connectedClients) {
         if (client.user.id === senderUser.id) {
           client.emit(
             'msgFromServer',
-            await this.chatService.getDMRoomMsgs(room, receiverUser, 'chat'),
+            await this.chatService.getDMRoomMsgs(room, receiverUser),
           );
         }
       }
     }
 
-    if (wsMsgBody.type === 'RM') {
+    if (wsMsgBody.type === 'CHANNEL') {
       const room = await this.prisma.room.findUnique({
         where: {
           name: wsMsgBody.name,
@@ -135,7 +135,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         .to(wsRoomName)
         .emit(
           'msgFromServer',
-          await this.chatService.getRoomMsgs(room, senderUser),
+          await this.chatService.getChannelRoomMsgs(room, senderUser),
         );
     }
   }

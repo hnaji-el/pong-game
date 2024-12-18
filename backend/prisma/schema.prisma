@@ -53,7 +53,7 @@ model Room {
   admins          String[]
   members         String[]
   blocked         String[]
-  type            String // DIRECTMESSAGE | PUBLIC | PROTECTED | PRIVATE
+  type            String // DM | PUBLIC | PROTECTED | PRIVATE
   hashedPassword  String?
   messages        Message[]
   muted           Muted[]

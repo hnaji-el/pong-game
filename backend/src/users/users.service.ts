@@ -231,7 +231,7 @@ export class UsersService {
         this.chatService.generateDMRoomName(requesterUser.id, addresseeUser.id),
         requesterUser.nickname,
         [addresseeUser.nickname],
-        'DIRECTMESSAGE',
+        'DM',
       );
     } catch (error) {
       if (

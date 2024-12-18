@@ -292,7 +292,7 @@ export function CardConversation({ data, index }: TypeConversation) {
           messageData.setIndexDm(index);
           stateMessages.setClick(true);
           messageData.setDataChatBox(messageData.dataDm[index]);
-          messageData.setTypeDm("chat");
+          messageData.setIsDmOrChannel("DM");
         }}
       >
         <div className="flex items-center gap-2">
@@ -372,7 +372,7 @@ export function CardChannelConversation({
             joinRoom((res: any) => {
               stateMessages.setClick(true);
               messageData.setIndexChannel(index);
-              messageData.setTypeDm("channel");
+              messageData.setIsDmOrChannel("CHANNEL");
               messageData.setIndexDm(-1);
               messageData.setDataChatBox(res);
               getAllChannels((response: any) => {
@@ -386,7 +386,7 @@ export function CardChannelConversation({
             } else {
               stateMessages.setClick(true);
               messageData.setIndexChannel(index);
-              messageData.setTypeDm("channel");
+              messageData.setIsDmOrChannel("CHANNEL");
               messageData.setIndexDm(-1);
               messageData.setDataChatBox(messageData.channelDm[index]);
             }

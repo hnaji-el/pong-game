@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import {
-  RoomMsgsType,
+  ChannelRoomMsgsType,
   DMRoomMsgsType,
   userchanel,
   Searchchanel,
@@ -55,11 +55,7 @@ export class ChatService {
     return user;
   }
 
-  async getDMRoomMsgs(
-    room: Room,
-    user: User,
-    type: string,
-  ): Promise<DMRoomMsgsType> {
+  async getDMRoomMsgs(room: Room, user: User): Promise<DMRoomMsgsType> {
     const roomMsgs = await this.prisma.room.findUnique({
       where: {
         name: room.name,
@@ -76,7 +72,7 @@ export class ChatService {
       username: user.nickname,
       status: user.status,
       picture: user.pictureURL,
-      type: type,
+      type: room.type,
       latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
       conversation: roomMsgs.messages.map((msg) => ({
         type: msg.receiverUser === user.nickname ? 'user' : 'friend',
@@ -85,7 +81,10 @@ export class ChatService {
     };
   }
 
-  async getRoomMsgs(room: Room, user: User): Promise<RoomMsgsType> {
+  async getChannelRoomMsgs(
+    room: Room,
+    user: User,
+  ): Promise<ChannelRoomMsgsType> {
     const roomMsgs = await this.prisma.room.findUnique({
       where: {
         name: room.name,
@@ -106,7 +105,6 @@ export class ChatService {
     return {
       id: room.id,
       name: room.name,
-      members: room.members.length,
       type: room.type,
       role: role,
       latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
@@ -212,10 +210,9 @@ export class ChatService {
       },
     });
 
-    const person: RoomMsgsType = {
+    const person: ChannelRoomMsgsType = {
       id: userUpdate.id,
       name: userUpdate.name,
-      members: userUpdate.members.length,
       latestMessage: '',
       role: 'member',
       type: userUpdate.type,

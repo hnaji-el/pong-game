@@ -3,7 +3,7 @@ export interface DMRoomMsgsType {
   username: string;
   status: string;
   picture: string;
-  type: string;
+  type: string; // 'DM'
   latestMessage: string | undefined;
   conversation: {
     type: string;
@@ -11,13 +11,12 @@ export interface DMRoomMsgsType {
   }[];
 }
 
-export interface RoomMsgsType {
+export interface ChannelRoomMsgsType {
   id: string;
   name: string;
-  members: number;
   latestMessage: string;
   role: string;
-  type: string;
+  type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
   conversation: {
     login: string;
     message: string;

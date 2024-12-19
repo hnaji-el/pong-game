@@ -8,7 +8,7 @@ import {
 } from "../Icons";
 import { Link } from "react-router-dom";
 import { ActiveHome } from "../../pages/Home";
-import { StateMssages } from "../../pages/Messages";
+import { StateMssages } from "../../pages/Messages/Messages";
 import { ActiveProfile } from "../../pages/Profile";
 import ListFriendOnline from "../ListFriendOnline";
 
@@ -36,12 +36,12 @@ export default function PhoneNav({
           !openSearch ? "bg-body" : ""
         } z-[999] flex-col`}
       >
-        <nav className="bg-sideBackground shadow-lg p-2 px-3 rounded-lg">
-          <ul className="flex justify-between items-center">
+        <nav className="rounded-lg bg-sideBackground p-2 px-3 shadow-lg">
+          <ul className="flex items-center justify-between">
             <li>
               <Link
                 to="/home"
-                className="flex flex-col justify-center items-center gap-1.5"
+                className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);
                   setOpenSettings(false);
@@ -69,7 +69,7 @@ export default function PhoneNav({
             <li>
               <Link
                 to="/messages"
-                className="flex flex-col justify-center items-center gap-1.5"
+                className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);
                   setOpenSettings(false);
@@ -97,7 +97,7 @@ export default function PhoneNav({
             <li>
               <Link
                 to="/profile"
-                className="flex flex-col justify-center items-center gap-1.5"
+                className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(false);
                   setOpenSettings(false);
@@ -124,7 +124,7 @@ export default function PhoneNav({
             </li>
             <li>
               <button
-                className="flex flex-col justify-center items-center gap-1.5"
+                className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(true);
                 }}
@@ -145,15 +145,15 @@ export default function PhoneNav({
             </li>
             <li>
               <button
-                className={`flex flex-col justify-center items-center gap-1.5 ${
-                  openSettings ? "border-[2px] border-primary rounded-full" : ""
+                className={`flex flex-col items-center justify-center gap-1.5 ${
+                  openSettings ? "rounded-full border-[2px] border-primary" : ""
                 }`}
                 onClick={() => {
                   setOpenSettings(true);
                 }}
               >
                 <img
-                  className="w-10 h-10 rounded-3xl"
+                  className="h-10 w-10 rounded-3xl"
                   src={messages.settings.pictureURL}
                   alt="User profile"
                 />
@@ -165,7 +165,7 @@ export default function PhoneNav({
       </section>
       <Link
         to="/game"
-        className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]"
+        className="fixed bottom-24 right-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full bg-primary lg:hidden"
       >
         <ControllerIcon edit="w-8" />
       </Link>

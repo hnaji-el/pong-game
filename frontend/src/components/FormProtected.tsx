@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { getAllChannels, joinRoom } from "../api/API";
 import InputPasswordForm from "./InputPasswordForm";
-import { MessagesContext } from "../pages/Messages";
-import { StateMssages } from "../pages/Messages";
+import { MessagesContext } from "../pages/Messages/Messages";
+import { StateMssages } from "../pages/Messages/Messages";
 
 export default function FormProtected() {
   const [errorPassword, setErrorPassowrd] = useState<string>("");
@@ -26,7 +26,7 @@ export default function FormProtected() {
           onClick={(e) => {
             e.preventDefault();
             let data = {
-              name: messageData.channelDm[messageData.indexChannel].name,
+              name: messageData.channels[messageData.indexChannel].name,
               type: "PROTECTED",
               password: password,
             };
@@ -45,7 +45,7 @@ export default function FormProtected() {
                 messageData.setIndexDm(-1);
                 messageData.setDataChatBox(res);
                 getAllChannels((response: any) => {
-                  messageData.setChannelDm(response);
+                  messageData.setChannels(response);
                   messageData.setpasswordProtected(false);
                   document.body.style.overflow = "auto";
                 });

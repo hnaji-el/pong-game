@@ -10,11 +10,11 @@ import {
   SettingsIcon,
 } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
-import { StateMssages } from "../pages/Messages";
+import { StateMssages } from "../pages/Messages/Messages";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-import { ActiveProfile } from "../pages/Profile";
-import { ActiveProfileUser } from "../pages/ProfileUser";
-import { MessagesContext } from "../pages/Messages";
+import { ActiveProfile } from "../pages/Profile/Profile";
+import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
+import { MessagesContext } from "../pages/Messages/Messages";
 import { AddMemberContext } from "./modals/AddMember";
 import { MembersContext } from "./modals/Members";
 import {
@@ -376,7 +376,7 @@ export function CardChannelConversation({
               messageData.setIndexDm(-1);
               messageData.setDataChatBox(res);
               getAllChannels((response: any) => {
-                messageData.setChannelDm(response);
+                messageData.setChannels(response);
               });
             }, obj);
           } else {
@@ -388,7 +388,7 @@ export function CardChannelConversation({
               messageData.setIndexChannel(index);
               messageData.setIsDmOrChannel("CHANNEL");
               messageData.setIndexDm(-1);
-              messageData.setDataChatBox(messageData.channelDm[index]);
+              messageData.setDataChatBox(messageData.channels[index]);
             }
           }
         }}
@@ -421,7 +421,7 @@ export function CardChannelConversation({
                   onClick={async () => {
                     await deleteRoom(data.name);
                     getAllChannels((res: any) => {
-                      messageData.setChannelDm(res);
+                      messageData.setChannels(res);
                     });
                   }}
                 >
@@ -433,7 +433,7 @@ export function CardChannelConversation({
                 onClick={async () => {
                   await leaveRoom(data.name);
                   getAllChannels((res: any) => {
-                    messageData.setChannelDm(res);
+                    messageData.setChannels(res);
                   });
                 }}
               >

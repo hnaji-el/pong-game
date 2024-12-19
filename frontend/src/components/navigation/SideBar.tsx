@@ -8,7 +8,7 @@ import {
 } from "../Icons";
 import { Link } from "react-router-dom";
 import { ActiveHome } from "../../pages/Home";
-import { StateMssages } from "../../pages/Messages";
+import { StateMssages } from "../../pages/Messages/Messages";
 import { ActiveProfile } from "../../pages/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser";
 import { GameContext } from "../../pages/Game";
@@ -46,9 +46,9 @@ export default function SideBar({
       <section
         className={`fixed bottom-0 w-full px-3 pb-3 ${
           !openSearch ? "bg-body" : ""
-        } 2xl:left-auto z-[999] lg:flex flex-col lg:w-60 lg:px-0 lg:py-7 lg:gap-12 lg:bg-sideBackground lg:top-0 lg:left-0`}
+        } z-[999] flex-col lg:left-0 lg:top-0 lg:flex lg:w-60 lg:gap-12 lg:bg-sideBackground lg:px-0 lg:py-7 2xl:left-auto`}
       >
-        <div className=" hidden lg:flex items-center justify-center">
+        <div className="hidden items-center justify-center lg:flex">
           <Link
             to="/home"
             onClick={() => {
@@ -60,14 +60,14 @@ export default function SideBar({
             <img src={logo} alt="Pong logo" className="w-48 lg:w-44" />
           </Link>
         </div>
-        <nav className="bg-sideBackground shadow-lg p-2 px-3 rounded-lg lg:rounded-none lg:shadow-none lg:bg-transparent lg:p-0 lg:px-0">
-          <ul className="flex justify-between items-center lg:items-start  lg:flex-col lg:gap-12">
+        <nav className="rounded-lg bg-sideBackground p-2 px-3 shadow-lg lg:rounded-none lg:bg-transparent lg:p-0 lg:px-0 lg:shadow-none">
+          <ul className="flex items-center justify-between lg:flex-col lg:items-start lg:gap-12">
             <li className="lg:w-full">
               <Link
                 to="/home"
-                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
+                className={`flex flex-col items-center justify-center gap-1.5 lg:flex-row lg:justify-start lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
                   home.value
-                    ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
+                    ? "lg:border-l-[6px] lg:border-primary lg:bg-shape"
                     : ""
                 }`}
                 onClick={() => {
@@ -84,7 +84,7 @@ export default function SideBar({
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm lg:relative lg:top-[.1rem] ${
+                  className={`text-xs lg:relative lg:top-[.1rem] lg:text-sm lg:text-primaryText ${
                     home.value && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
@@ -97,9 +97,9 @@ export default function SideBar({
             <li className="lg:w-full">
               <Link
                 to="/messages"
-                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
+                className={`flex flex-col items-center justify-center gap-1.5 lg:flex-row lg:justify-start lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
                   messages.active
-                    ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
+                    ? "lg:border-l-[6px] lg:border-primary lg:bg-shape"
                     : ""
                 }`}
                 onClick={() => {
@@ -116,7 +116,7 @@ export default function SideBar({
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm ${
+                  className={`text-xs lg:text-sm lg:text-primaryText ${
                     messages.active && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
@@ -129,9 +129,9 @@ export default function SideBar({
             <li className="lg:w-full">
               <Link
                 to="/profile"
-                className={`flex flex-col justify-center items-center gap-1.5 lg:justify-start lg:flex-row lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
+                className={`flex flex-col items-center justify-center gap-1.5 lg:flex-row lg:justify-start lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
                   profile.value
-                    ? "lg:bg-shape lg:border-l-[6px] lg:border-primary"
+                    ? "lg:border-l-[6px] lg:border-primary lg:bg-shape"
                     : ""
                 }`}
                 onClick={() => {
@@ -148,7 +148,7 @@ export default function SideBar({
                   }`}
                 />
                 <span
-                  className={`text-xs lg:text-primaryText lg:text-sm lg:relative lg:top-[.1rem] ${
+                  className={`text-xs lg:relative lg:top-[.1rem] lg:text-sm lg:text-primaryText ${
                     profile.value && !openSearch && !openSettings
                       ? "text-primary"
                       : "text-secondaryText"
@@ -160,7 +160,7 @@ export default function SideBar({
             </li>
             <li className="lg:hidden">
               <button
-                className="flex flex-col justify-center items-center gap-1.5"
+                className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
                   setOpenSearch(true);
                 }}
@@ -181,15 +181,15 @@ export default function SideBar({
             </li>
             <li className="lg:hidden">
               <button
-                className={`flex flex-col justify-center items-center gap-1.5 ${
-                  openSettings ? "border-[2px] border-primary rounded-full" : ""
+                className={`flex flex-col items-center justify-center gap-1.5 ${
+                  openSettings ? "rounded-full border-[2px] border-primary" : ""
                 }`}
                 onClick={() => {
                   setOpenSettings(true);
                 }}
               >
                 <img
-                  className="w-10 h-10 rounded-3xl"
+                  className="h-10 w-10 rounded-3xl"
                   src={dataUserLogged.settings.pictureURL}
                   alt="User profile"
                 />
@@ -200,7 +200,7 @@ export default function SideBar({
       </section>
       <Link
         to="/game"
-        className="fixed bg-primary bottom-24 right-3 flex justify-center items-center  w-14 h-14 rounded-full lg:hidden z-[999]"
+        className="fixed bottom-24 right-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full bg-primary lg:hidden"
       >
         <ControllerIcon edit="w-8" />
       </Link>

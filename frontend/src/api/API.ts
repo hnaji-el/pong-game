@@ -166,7 +166,7 @@ export function getDmUsers(getRes: any) {
 
 export function getAllChannels(getRes: any) {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/channels/messages`, {
+    .get(`${BACKEND_ORIGIN}/chat/channels/channels-msgs`, {
       withCredentials: true,
     })
     .then((res: any) => {
@@ -177,7 +177,7 @@ export function getAllChannels(getRes: any) {
 
 export function getChannelsDm() {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/channels/messages`, {
+    .get(`${BACKEND_ORIGIN}/chat/channels/channels-msgs`, {
       withCredentials: true,
     })
     .then((res) => {})
@@ -187,7 +187,7 @@ export function getChannelsDm() {
 export async function CreateChannel(getRes: any, data: any) {
   await axios
     .post(
-      `${BACKEND_ORIGIN}/chat/create-room`,
+      `${BACKEND_ORIGIN}/chat/channels/create-channel`,
       { data },
       { withCredentials: true },
     )

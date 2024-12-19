@@ -4,8 +4,8 @@ import { logout } from "../../api/API";
 import { CardChatChannel, CardChatFriend } from "../Cards";
 import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
-import { StateMssages } from "../../pages/Messages";
-import { MessagesContext } from "../../pages/Messages";
+import { StateMssages } from "../../pages/Messages/Messages";
+import { MessagesContext } from "../../pages/Messages/Messages";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

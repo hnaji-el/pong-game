@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useRef } from "react";
 import BoxMessagesFriend from "./BoxMessagesFriend";
 import BoxMessagesMember from "./BoxMessagesMember";
 import BoxMessagesUser from "./BoxMessagesUser";
-import { MessagesContext } from "../pages/Messages";
-import { StateMssages } from "../pages/Messages";
+import { MessagesContext } from "../pages/Messages/Messages";
+import { StateMssages } from "../pages/Messages/Messages";
 
 interface TypeProps {
   data: any;

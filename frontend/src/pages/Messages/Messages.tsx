@@ -3,17 +3,19 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-import NavigationChat from "../components/navigation/NavigationChat";
-import ChatBox from "../components/ChatBox";
-import Spinner from "../components/Spinner";
-import { SendIcon } from "../components/Icons";
+import NavigationChat from "../../components/navigation/NavigationChat";
+import ChatBox from "../../components/ChatBox";
+import Spinner from "../../components/Spinner";
+import { SendIcon } from "../../components/Icons";
 
 import {
   useVerifyUserAuthenticity,
   getDataUserLogged,
   getAllChannels,
   getDmUsers,
-} from "../api/API";
+} from "../../api/API";
+
+import { ChannelType } from "./types";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
@@ -64,13 +66,14 @@ const socket = io(DOMAIN, {
 function Messages() {
   const status = useVerifyUserAuthenticity();
   const [message, setMessage] = React.useState("");
-  // [ used, socket, passed, passed ]
-  const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
   // [ used, getDataUserLogged(/users/logged-user), passed, passed ]
   const [settings, setSettings] = React.useState<UserData>(userData);
 
-  // [     , getAllChannels(/chat/channels/messages) handleMsg, passed, passed ]
-  const [channelDm, setChannelDm] = React.useState<any>([]);
+  // [ used, socket, passed, passed ]
+  const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
+  // [     , getAllChannels(/chat/channels/channels-msgs) handleMsg, passed, passed ]
+  const [channels, setChannels] = React.useState<ChannelType[]>([]);
+
   // [     , getDmUsers(/chat/DM-with-all-users) handleMsg, passed, passed ]
   const [dataDm, setDataDm] = React.useState<any>([]);
   // [ used, getDmUsers(/chat/DM-with-all-users) socket, passed, passed ]
@@ -96,7 +99,7 @@ function Messages() {
 
   React.useEffect(() => {
     getAllChannels((res: any) => {
-      setChannelDm(res);
+      setChannels(res);
     });
 
     getDmUsers((res: any) => {
@@ -141,7 +144,7 @@ function Messages() {
       });
 
       getAllChannels((res: any) => {
-        setChannelDm(res);
+        setChannels(res);
       });
     }
   }
@@ -174,8 +177,8 @@ function Messages() {
         value={{
           dataDm: dataDm,
           setDataDm: setDataDm,
-          channelDm: channelDm,
-          setChannelDm: setChannelDm,
+          channels: channels,
+          setChannels: setChannels,
           dataChatBox: dataChatBox,
           setDataChatBox: setDataChatBox,
           sesetDataDm: setDataDm,

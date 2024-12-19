@@ -3,7 +3,7 @@ import { getAllChannels } from "../api/API";
 import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
-import { MessagesContext } from "../pages/Messages";
+import { MessagesContext } from "../pages/Messages/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -48,7 +48,7 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
                 setErrorMessage("Name already exists");
               } else {
                 getAllChannels((res: any) => {
-                  messageData.setChannelDm(res);
+                  messageData.setChannels(res);
                   setCreateChannel(false);
                   document.body.style.overflow = "auto";
                 });

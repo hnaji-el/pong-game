@@ -3,7 +3,7 @@ import { getAllChannels } from "../api/API";
 import { checkChannelName, checkPasswordChannel } from "../utilities/helpers";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
-import { MessagesContext } from "../pages/Messages";
+import { MessagesContext } from "../pages/Messages/Messages";
 
 interface TypeProps {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -66,7 +66,7 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
                 setErrorMessage("Name already exists");
               } else {
                 getAllChannels((res: any) => {
-                  messageData.setChannelDm(res);
+                  messageData.setChannels(res);
                   setCreateChannel(false);
                   document.body.style.overflow = "auto";
                 });

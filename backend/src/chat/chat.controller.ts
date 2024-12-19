@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 import { UseGuards, Patch, Delete, Req } from '@nestjs/common';
-import { Body, UseFilters } from '@nestjs/common';
+import { Body } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
 
@@ -8,19 +8,19 @@ import { ChatService } from './chat.service';
 export class ChatController {
   constructor(private chatService: ChatService) {}
 
-  @Post('create-room')
+  @Post('/channels/create-channel')
   @UseGuards(JwtAuthGuard)
-  async createRoom(@Req() req, @Body() room) {
+  async createChannel(@Req() req, @Body() channel) {
     await this.chatService.createRoom(
-      room.data.name,
+      channel.data.name,
       req.user.nickname,
       [],
-      room.data.type,
-      room.data.password,
+      channel.data.type,
+      channel.data.password,
     );
   }
 
-  @Get('/channels/messages')
+  @Get('/channels/channels-msgs')
   @UseGuards(JwtAuthGuard)
   async getAllChannelRoomsMsgs(@Req() req) {
     return await this.chatService.getAllChannelRoomsMsgs(req.user);

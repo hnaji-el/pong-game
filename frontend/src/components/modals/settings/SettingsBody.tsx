@@ -5,7 +5,7 @@ import Settings from "./Settings";
 import { ActiveHome } from "../../../pages/Home";
 import { ActiveProfile } from "../../../pages/Profile";
 import { ActiveProfileUser } from "../../../pages/ProfileUser";
-import { StateMssages } from "../../../pages/Messages";
+import { StateMssages } from "../../../pages/Messages/Messages";
 import { GameContext } from "../../../pages/Game";
 
 interface TypeProps {

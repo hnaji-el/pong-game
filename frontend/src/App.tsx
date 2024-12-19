@@ -8,7 +8,7 @@ import { popOutFunc } from "./components/eventListener";
 import Login from "./pages/Login";
 import Edit from "./pages/Edit";
 import Home from "./pages/Home";
-import Messages from "./pages/Messages";
+import Messages from "./pages/Messages/Messages";
 import Profile from "./pages/Profile";
 import ProfileUser from "./pages/ProfileUser";
 import Game from "./pages/Game";

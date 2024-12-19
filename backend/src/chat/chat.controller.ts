@@ -20,6 +20,12 @@ export class ChatController {
     );
   }
 
+  @Get('/channels/messages')
+  @UseGuards(JwtAuthGuard)
+  async getAllChannelRoomsMsgs(@Req() req) {
+    return await this.chatService.getAllChannelRoomsMsgs(req.user);
+  }
+
   @Post('/join-room')
   @UseGuards(JwtAuthGuard)
   async joinRoom(@Req() req, @Body() room) {
@@ -108,12 +114,6 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   async getDMWithAllUsers(@Req() req) {
     return await this.chatService.getDMWithAllUsers('DM', req.user);
-  }
-
-  @Get('room-message')
-  @UseGuards(JwtAuthGuard)
-  async getRM(@Req() req) {
-    return await this.chatService.getRM(req.user);
   }
 
   @Patch('muted')

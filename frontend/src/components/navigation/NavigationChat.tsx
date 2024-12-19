@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 
 import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
 import SettingsBody from "../modals/settings/SettingsBody";
@@ -17,14 +17,14 @@ import FormProtected from "../FormProtected";
 import { MessagesContext } from "../../pages/Messages";
 
 export default function NavigationChat() {
-  const [open, setOpen] = useState<boolean>(false);
-  const [openSearch, setOpenSearch] = useState<boolean>(false);
-  const [openSettings, setOpenSettings] = useState<boolean>(false);
-  const [createChannel, setCreateChannel] = useState<boolean>(false);
-  const [addMember, setAddMember] = useState<boolean>(false);
-  const [members, setMembers] = useState<boolean>(false);
-  const stateMessages = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [openSearch, setOpenSearch] = React.useState<boolean>(false);
+  const [openSettings, setOpenSettings] = React.useState<boolean>(false);
+  const [createChannel, setCreateChannel] = React.useState<boolean>(false);
+  const [addMember, setAddMember] = React.useState<boolean>(false);
+  const [members, setMembers] = React.useState<boolean>(false);
+  const stateMessages = React.useContext(StateMssages);
+  const messageData = React.useContext(MessagesContext);
 
   return (
     <>

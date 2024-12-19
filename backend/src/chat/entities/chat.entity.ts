@@ -1,4 +1,4 @@
-export interface DMRoomMsgsType {
+export interface DmRoomMsgsEntity {
   id: string;
   username: string;
   status: string;
@@ -11,17 +11,20 @@ export interface DMRoomMsgsType {
   }[];
 }
 
-export interface ChannelRoomMsgsType {
+export interface ChannelRoomMsgsEntity {
   id: string;
   name: string;
-  latestMessage: string;
   role: string;
+  members: number;
   type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
+  latestMessage: string | undefined;
   conversation: {
     login: string;
     message: string;
     picture: string;
+    type?: string;
   }[];
+  isJoined?: boolean;
 }
 
 export interface objectChannel {
@@ -41,7 +44,7 @@ export interface userchanel {
 export interface Searchchanel {
   name: string;
   type: string;
-  join: string;
+  isJoined: boolean;
 }
 
 export interface chanelprotected {

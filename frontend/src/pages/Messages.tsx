@@ -63,19 +63,18 @@ const socket = io(DOMAIN, {
 
 function Messages() {
   const status = useVerifyUserAuthenticity();
+  const [message, setMessage] = React.useState("");
+  // [ used, socket, passed, passed ]
+  const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
   // [ used, getDataUserLogged(/users/logged-user), passed, passed ]
   const [settings, setSettings] = React.useState<UserData>(userData);
-  // [     , getAllChannels(/chat/room-message) handleMsg, passed, passed ]
-  const [channelDm, setChannelDm] = React.useState<any>([]); // getAllChannels
+
+  // [     , getAllChannels(/chat/channels/messages) handleMsg, passed, passed ]
+  const [channelDm, setChannelDm] = React.useState<any>([]);
   // [     , getDmUsers(/chat/DM-with-all-users) handleMsg, passed, passed ]
   const [dataDm, setDataDm] = React.useState<any>([]);
   // [ used, getDmUsers(/chat/DM-with-all-users) socket, passed, passed ]
-  const [dataChatBox, setDataChatBox] = React.useState<any>([]); // socket & getDmUsers
-  // [ used, socket, passed, passed ]
-  const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
-
-  // [ used, input message,       ,        ]
-  const [message, setMessage] = React.useState(""); // hold the message from the user
+  const [dataChatBox, setDataChatBox] = React.useState<any>([]);
 
   const [click, setClick] = React.useState(false); // used, , passed, passed
   const [firstClick, setFirstClick] = React.useState(true); //  ,   , passed, passed
@@ -84,18 +83,6 @@ function Messages() {
   const [passwordProtected, setpasswordProtected] = React.useState(false); //   ,   , passed, passed
 
   const navigate = useNavigate();
-
-  const dmData = {
-    type: "DM",
-    data: message,
-    name: dataChatBox?.username,
-  };
-
-  const channelData = {
-    type: "CHANNEL",
-    data: message,
-    name: dataChatBox?.name,
-  };
 
   React.useEffect(() => {
     document.title = "Pong - Messages";
@@ -123,25 +110,36 @@ function Messages() {
       socket.connect();
     }
 
-    socket.on("msgFromServer", (data) => {
+    const handleServerMessage = (data: any) => {
       data.type === "DM" ? setIsDmOrChannel("DM") : setIsDmOrChannel("CHANNEL");
-
       setDataChatBox(data);
-    });
+    };
+
+    socket.on("msgFromServer", handleServerMessage);
 
     return () => {
-      socket.off("msgToClients");
+      socket.off("msgFromServer", handleServerMessage);
     };
   }, []);
 
   function sendMessage() {
     if (isDmOrChannel === "DM") {
-      socket.emit("msgServer", dmData);
+      socket.emit("msgServer", {
+        type: "DM",
+        data: message,
+        name: dataChatBox?.username,
+      });
+
       getDmUsers((res: any) => {
         setDataDm(res);
       });
     } else {
-      socket.emit("msgServer", channelData);
+      socket.emit("msgServer", {
+        type: "CHANNEL",
+        data: message,
+        name: dataChatBox?.name,
+      });
+
       getAllChannels((res: any) => {
         setChannelDm(res);
       });

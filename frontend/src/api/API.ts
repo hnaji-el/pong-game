@@ -166,7 +166,7 @@ export function getDmUsers(getRes: any) {
 
 export function getAllChannels(getRes: any) {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/room-message`, {
+    .get(`${BACKEND_ORIGIN}/chat/channels/messages`, {
       withCredentials: true,
     })
     .then((res: any) => {
@@ -177,7 +177,7 @@ export function getAllChannels(getRes: any) {
 
 export function getChannelsDm() {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/room-message`, {
+    .get(`${BACKEND_ORIGIN}/chat/channels/messages`, {
       withCredentials: true,
     })
     .then((res) => {})

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { addFriend, getOneUser } from "../api/API";
 import { AddFriendIcon } from "./Icons";
-import { UpdateDataProfileUser } from "../pages/ProfileUser";
+import { UpdateDataProfileUser } from "../pages/ProfileUser/ProfileUser";
 
 interface TypeProps {
   id: string;
@@ -13,7 +13,7 @@ export default function BtnAddFriend({ id, setTypeUser }: TypeProps) {
 
   return (
     <button
-      className="w-36 p-2 rounded-md bg-primary gap-2 flex items-center justify-center"
+      className="flex w-36 items-center justify-center gap-2 rounded-md bg-primary p-2"
       onClick={async () => {
         setTypeUser("friend");
         await addFriend(id);
@@ -23,7 +23,7 @@ export default function BtnAddFriend({ id, setTypeUser }: TypeProps) {
       }}
     >
       <AddFriendIcon edit="w-5 fill-primaryText" />
-      <span className="text-primaryText text-sm">Add friend</span>
+      <span className="text-sm text-primaryText">Add friend</span>
     </button>
   );
 }

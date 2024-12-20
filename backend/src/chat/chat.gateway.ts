@@ -79,14 +79,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         .to(wsRoomName)
         .emit(
           'msgFromServer',
-          await this.chatService.getDmRoomMsgs(room, senderUser),
+          await this.chatService.getDmData(room, senderUser),
         );
 
       for (const client of this.connectedClients) {
         if (client.user.id === senderUser.id) {
           client.emit(
             'msgFromServer',
-            await this.chatService.getDmRoomMsgs(room, receiverUser),
+            await this.chatService.getDmData(room, receiverUser),
           );
         }
       }
@@ -135,7 +135,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         .to(wsRoomName)
         .emit(
           'msgFromServer',
-          await this.chatService.getChannelRoomMsgs(room, senderUser),
+          await this.chatService.getChannelData(room, senderUser),
         );
     }
   }

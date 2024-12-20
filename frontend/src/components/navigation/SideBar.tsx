@@ -7,13 +7,12 @@ import {
   ControllerIcon,
 } from "../Icons";
 import { Link } from "react-router-dom";
-import { ActiveHome } from "../../pages/Home";
+import { ActiveHome } from "../../pages/Home/Home";
 import { StateMssages } from "../../pages/Messages/Messages";
-import { ActiveProfile } from "../../pages/Profile";
-import { ActiveProfileUser } from "../../pages/ProfileUser";
-import { GameContext } from "../../pages/Game";
+import { ActiveProfile } from "../../pages/Profile/Profile";
+import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
+import { GameContext } from "../../pages/Game/Game";
 import logo from "../../assets/logo.svg";
-import ListFriendOnline from "../ListFriendOnline";
 
 interface TypeProps {
   openSearch: boolean;

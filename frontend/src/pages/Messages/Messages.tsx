@@ -74,9 +74,9 @@ function Messages() {
   // [     , getAllChannels(/chat/channels/channels-msgs) handleMsg, passed, passed ]
   const [channels, setChannels] = React.useState<ChannelType[]>([]);
 
-  // [     , getDmUsers(/chat/DM-with-all-users) handleMsg, passed, passed ]
+  // [     , getDmUsers(/chat/dms/dms-messages) handleMsg, passed, passed ]
   const [dataDm, setDataDm] = React.useState<any>([]);
-  // [ used, getDmUsers(/chat/DM-with-all-users) socket, passed, passed ]
+  // [ used, getDmUsers(/chat/dms/dms-messages) socket, passed, passed ]
   const [dataChatBox, setDataChatBox] = React.useState<any>([]);
 
   const [click, setClick] = React.useState(false); // used, , passed, passed

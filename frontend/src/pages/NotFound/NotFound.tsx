@@ -2,9 +2,9 @@ import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import Astro from "../components/Astro";
-import Spinner from "../components/Spinner";
-import { useVerifyUserAuthenticity } from "../api/API";
+import Astro from "../../components/Astro";
+import Spinner from "../../components/Spinner";
+import { useVerifyUserAuthenticity } from "../../api/API";
 
 function NotFound() {
   const status = useVerifyUserAuthenticity();

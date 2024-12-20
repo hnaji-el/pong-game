@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { blockFriend, getOneUser, unfriend } from "../api/API";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
-import { ActiveProfileUser } from "../pages/ProfileUser";
+import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
 import { globalSocket } from "../utilities/socket";
-import { UpdateDataProfileUser } from "../pages/ProfileUser";
+import { UpdateDataProfileUser } from "../pages/ProfileUser/ProfileUser";
 
 interface TypeProps {
   id: string;

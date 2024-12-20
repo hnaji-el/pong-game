@@ -2,11 +2,11 @@ import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import Navigation from "../components/navigation/Navigation";
-import fire from "../assets/fire.png";
-import Spinner from "../components/Spinner";
+import Navigation from "../../components/navigation/Navigation";
+import fire from "../../assets/fire.png";
+import Spinner from "../../components/Spinner";
 
-import { useVerifyUserAuthenticity, getDataUserLogged } from "../api/API";
+import { useVerifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"

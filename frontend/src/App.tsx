@@ -5,15 +5,15 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { globalSocket } from "./utilities/socket";
 import { popOutFunc } from "./components/eventListener";
 
-import Login from "./pages/Login";
-import Edit from "./pages/Edit";
-import Home from "./pages/Home";
+import Login from "./pages/Login/Login";
+import Edit from "./pages/Edit/Edit";
+import Home from "./pages/Home/Home";
 import Messages from "./pages/Messages/Messages";
-import Profile from "./pages/Profile";
-import ProfileUser from "./pages/ProfileUser";
-import Game from "./pages/Game";
-import Tfa from "./pages/Tfa";
-import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile/Profile";
+import ProfileUser from "./pages/ProfileUser/ProfileUser";
+import Game from "./pages/Game/Game";
+import Tfa from "./pages/Tfa/Tfa";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   const navigate = useNavigate();

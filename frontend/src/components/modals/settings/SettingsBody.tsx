@@ -2,11 +2,11 @@ import React, { useContext, useState } from "react";
 import QrcodeDisable from "./QrcodeDisable";
 import QrcodeEnable from "./QrcodeEnable";
 import Settings from "./Settings";
-import { ActiveHome } from "../../../pages/Home";
-import { ActiveProfile } from "../../../pages/Profile";
-import { ActiveProfileUser } from "../../../pages/ProfileUser";
+import { ActiveHome } from "../../../pages/Home/Home";
+import { ActiveProfile } from "../../../pages/Profile/Profile";
+import { ActiveProfileUser } from "../../../pages/ProfileUser/ProfileUser";
 import { StateMssages } from "../../../pages/Messages/Messages";
-import { GameContext } from "../../../pages/Game";
+import { GameContext } from "../../../pages/Game/Game";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

@@ -5,10 +5,10 @@ import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
-import { ActiveHome } from "../../pages/Home";
-import { ActiveProfile } from "../../pages/Profile";
-import { ActiveProfileUser } from "../../pages/ProfileUser";
-import { GameContext } from "../../pages/Game";
+import { ActiveHome } from "../../pages/Home/Home";
+import { ActiveProfile } from "../../pages/Profile/Profile";
+import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
+import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
 
 interface TypeProps {
@@ -27,15 +27,15 @@ export default function NavBar({ setOpen }: TypeProps) {
   if (!dataUserLogged.value) dataUserLogged = dataGame;
 
   return (
-    <section className="flex justify-center items-center pt-7 lg:justify-between lg:items-start lg:mr-4 lg:ml-64 lg:pt-7 lg:gap-5">
+    <section className="flex items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:items-start lg:justify-between lg:gap-5 lg:pt-7">
       <Link to="/home" className="lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
       </Link>
       <SearchInput />
-      <div className="hidden lg:flex items-center gap-5">
+      <div className="hidden items-center gap-5 lg:flex">
         <Link
           to="/game"
-          className="bg-primary text-primaryText text-sm flex items-center justify-center gap-2.5 w-36 rounded-md p-3"
+          className="flex w-36 items-center justify-center gap-2.5 rounded-md bg-primary p-3 text-sm text-primaryText"
         >
           <ControllerIcon edit="w-7" />
           <span>Play Now</span>

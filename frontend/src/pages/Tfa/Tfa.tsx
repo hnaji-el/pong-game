@@ -7,9 +7,9 @@ import {
   ArrowRight,
   PointsBottom,
   PointsTop,
-} from "../components/PongElements";
-import logo from "../assets/logo.svg";
-import FormTfa from "../components/FormTfa";
+} from "../../components/PongElements";
+import logo from "../../assets/logo.svg";
+import FormTfa from "../../components/FormTfa";
 
 function Tfa() {
   React.useEffect(() => {

@@ -1,9 +1,9 @@
-export interface DmRoomMsgsEntity {
+export interface DmType {
   id: string;
   username: string;
   status: string;
   picture: string;
-  type: string; // 'DM'
+  type: string;
   latestMessage: string | undefined;
   conversation: {
     type: string;
@@ -11,7 +11,7 @@ export interface DmRoomMsgsEntity {
   }[];
 }
 
-export interface ChannelRoomMsgsEntity {
+export interface ChannelType {
   id: string;
   name: string;
   role: string;

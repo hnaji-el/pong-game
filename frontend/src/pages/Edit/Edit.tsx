@@ -7,12 +7,12 @@ import {
   ArrowRight,
   PointsBottom,
   PointsTop,
-} from "../components/PongElements";
-import logo from "../assets/logo.svg";
-import FormEdit from "../components/FormEdit";
-import Spinner from "../components/Spinner";
+} from "../../components/PongElements";
+import logo from "../../assets/logo.svg";
+import FormEdit from "../../components/FormEdit";
+import Spinner from "../../components/Spinner";
 
-import { useVerifyUserAuthenticity, getDataUserLogged } from "../api/API";
+import { useVerifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 
 interface UserData {
   id: string;

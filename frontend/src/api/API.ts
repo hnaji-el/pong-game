@@ -142,9 +142,11 @@ export function unBlockFriend(id: string) {
     .catch();
 }
 
-//------------------------ chat --------------------------------
+/*
+ * Chat
+ */
 
-export function getDmUsers(getRes: any) {
+export function getAllDms(getRes: any) {
   axios
     .get(`${BACKEND_ORIGIN}/chat/dms/dms-messages`, {
       withCredentials: true,
@@ -157,7 +159,7 @@ export function getDmUsers(getRes: any) {
 
 export function getAllChannels(getRes: any) {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/channels/channels-msgs`, {
+    .get(`${BACKEND_ORIGIN}/chat/channels/channels-messages`, {
       withCredentials: true,
     })
     .then((res: any) => {
@@ -168,7 +170,7 @@ export function getAllChannels(getRes: any) {
 
 export function getChannelsDm() {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/channels/channels-msgs`, {
+    .get(`${BACKEND_ORIGIN}/chat/channels/channels-messages`, {
       withCredentials: true,
     })
     .then((res) => {})

@@ -28,10 +28,10 @@ export default function NavBarChat({
       } z-[999] mx-3 items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:flex lg:items-start lg:justify-between lg:gap-5 lg:pt-7`}
     >
       {messageData.isDmOrChannel === "DM" ? (
-        <CardChatFriend data={messageData.dataChatBox} />
+        <CardChatFriend data={messageData.chatDataBox} />
       ) : (
         <CardChatChannel
-          data={messageData.dataChatBox}
+          data={messageData.chatDataBox}
           setAddMember={setAddMember}
           setMembers={setMembers}
         />

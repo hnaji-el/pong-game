@@ -22,7 +22,7 @@ export default function ChatBox({ data }: TypeProps) {
       if (hasVerticalScrollbar) chatBox.current.classList.add("pr-4");
       else chatBox.current.classList.remove("pr-4");
     }
-  }, [messageData.indexDm, messageData.indexChannel, messageData.dataChatBox]);
+  }, [messageData.dmIndex, messageData.channelIndex, messageData.chatDataBox]);
 
   return (
     <div className="flex h-full flex-col gap-10 overflow-auto" ref={chatBox}>

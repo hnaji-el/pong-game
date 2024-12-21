@@ -26,7 +26,7 @@ export default function FormProtected() {
           onClick={(e) => {
             e.preventDefault();
             let data = {
-              name: messageData.channels[messageData.indexChannel].name,
+              name: messageData.channels[messageData.channelIndex].name,
               type: "PROTECTED",
               password: password,
             };
@@ -42,8 +42,8 @@ export default function FormProtected() {
               } else {
                 stateMessages.setClick(true);
                 messageData.setIsDmOrChannel("CHANNEL");
-                messageData.setIndexDm(-1);
-                messageData.setDataChatBox(res);
+                messageData.setDmIndex(-1);
+                messageData.setChatDataBox(res);
                 getAllChannels((response: any) => {
                   messageData.setChannels(response);
                   messageData.setpasswordProtected(false);

@@ -19,8 +19,8 @@ function Members() {
     getMembersChannel((res: any) => {
       setMembers(res);
       setRender(true);
-    }, messageData.dataChatBox.name);
-  }, [messageData.dataChatBox.name]);
+    }, messageData.chatDataBox.name);
+  }, [messageData.chatDataBox.name]);
 
   if (render) {
     if (members.length)

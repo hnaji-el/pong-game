@@ -1,3 +1,16 @@
+export interface DmType {
+  id: string;
+  username: string;
+  picture: string;
+  status: string;
+  type: string; // 'DM'
+  latestMessage: string | undefined;
+  conversation: {
+    type: string; // ??? 'user' | 'friend'
+    message: string;
+  }[];
+}
+
 export interface ChannelType {
   id: string;
   name: string;

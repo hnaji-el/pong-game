@@ -22,7 +22,7 @@ import {
   blockFriend,
   deleteRoom,
   getAllChannels,
-  getDmUsers,
+  getAllDms,
   getFriendChannel,
   getMembersChannel,
   joinRoom,
@@ -282,16 +282,16 @@ export function CardConversation({ data, index }: TypeConversation) {
   return (
     <div
       className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
-        index === messageData.indexDm ? "lg:bg-backgroundHover" : null
+        index === messageData.dmIndex ? "lg:bg-backgroundHover" : null
       }`}
     >
       <Link
         to=""
         className="flex flex-1 justify-between py-4"
         onClick={() => {
-          messageData.setIndexDm(index);
+          messageData.setDmIndex(index);
           stateMessages.setClick(true);
-          messageData.setDataChatBox(messageData.dataDm[index]);
+          messageData.setChatDataBox(messageData.dms[index]);
           messageData.setIsDmOrChannel("DM");
         }}
       >
@@ -331,8 +331,8 @@ export function CardConversation({ data, index }: TypeConversation) {
               className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
               onClick={async () => {
                 await blockFriend(data.id);
-                getDmUsers((res: any) => {
-                  messageData.setDataDm(res);
+                getAllDms((res: any) => {
+                  messageData.setDms(res);
                 });
               }}
             >
@@ -355,7 +355,7 @@ export function CardChannelConversation({
   return (
     <div
       className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
-        messageData.indexDm === -1 && index === messageData.indexChannel
+        messageData.dmIndex === -1 && index === messageData.channelIndex
           ? "lg:bg-backgroundHover"
           : null
       }`}
@@ -371,24 +371,24 @@ export function CardChannelConversation({
 
             joinRoom((res: any) => {
               stateMessages.setClick(true);
-              messageData.setIndexChannel(index);
+              messageData.setChannelIndex(index);
               messageData.setIsDmOrChannel("CHANNEL");
-              messageData.setIndexDm(-1);
-              messageData.setDataChatBox(res);
+              messageData.setDmIndex(-1);
+              messageData.setChatDataBox(res);
               getAllChannels((response: any) => {
                 messageData.setChannels(response);
               });
             }, obj);
           } else {
             if (!data.role.length && data.type === "PROTECTED") {
-              messageData.setIndexChannel(index);
+              messageData.setChannelIndex(index);
               messageData.setpasswordProtected(true);
             } else {
               stateMessages.setClick(true);
-              messageData.setIndexChannel(index);
+              messageData.setChannelIndex(index);
               messageData.setIsDmOrChannel("CHANNEL");
-              messageData.setIndexDm(-1);
-              messageData.setDataChatBox(messageData.channels[index]);
+              messageData.setDmIndex(-1);
+              messageData.setChatDataBox(messageData.channels[index]);
             }
           }
         }}
@@ -456,7 +456,7 @@ export function CardChatFriend({ data }: TypeChat) {
   const messageData = useContext(MessagesContext);
   return (
     <div className="flex flex-1 items-center gap-4">
-      {messageData.dataChatBox ? (
+      {messageData.chatDataBox ? (
         <>
           <button
             className="flex h-6 w-6 items-center justify-center rounded-full bg-shape lg:hidden"
@@ -582,14 +582,14 @@ export function CardFriendMember({ data }: TypeFriendChannel) {
         className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1"
         onClick={async () => {
           let obj = {
-            name: messageData.dataChatBox.name,
-            type: messageData.dataChatBox.type,
+            name: messageData.chatDataBox.name,
+            type: messageData.chatDataBox.type,
             login: data.nickname,
           };
           await addToRoom(obj);
           getFriendChannel((res: any) => {
             addMemberData.setFriend(res);
-          }, messageData.dataChatBox.name);
+          }, messageData.chatDataBox.name);
         }}
       >
         <PlusIcon edit="fill-secondaryText w-3 h-3" />
@@ -651,7 +651,7 @@ export function CardMember({ data, role }: TypeMember) {
         </MenuButton>
 
         {/* Owner */}
-        {messageData.dataChatBox.role === "owner" ? (
+        {messageData.chatDataBox.role === "owner" ? (
           <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
               className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
@@ -668,13 +668,13 @@ export function CardMember({ data, role }: TypeMember) {
               className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
-                  name: messageData.dataChatBox.name,
+                  name: messageData.chatDataBox.name,
                   login: data.username,
                 };
                 await setAdmin(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
-                }, messageData.dataChatBox.name);
+                }, messageData.chatDataBox.name);
               }}
             >
               admin
@@ -683,13 +683,13 @@ export function CardMember({ data, role }: TypeMember) {
               className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
-                  name: messageData.dataChatBox.name,
+                  name: messageData.chatDataBox.name,
                   login: data.username,
                 };
                 await setBlock(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
-                }, messageData.dataChatBox.name);
+                }, messageData.chatDataBox.name);
               }}
             >
               block
@@ -698,13 +698,13 @@ export function CardMember({ data, role }: TypeMember) {
               className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
-                  name: messageData.dataChatBox.name,
+                  name: messageData.chatDataBox.name,
                   login: data.username,
                 };
                 await setKick(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
-                }, messageData.dataChatBox.name);
+                }, messageData.chatDataBox.name);
               }}
             >
               kick
@@ -713,13 +713,13 @@ export function CardMember({ data, role }: TypeMember) {
               className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
               onClick={async () => {
                 let obj = {
-                  name: messageData.dataChatBox.name,
+                  name: messageData.chatDataBox.name,
                   login: data.username,
                 };
                 await setMute(obj);
                 getMembersChannel((res: any) => {
                   memberData.setMembers(res);
-                }, messageData.dataChatBox.name);
+                }, messageData.chatDataBox.name);
               }}
             >
               mute
@@ -728,7 +728,7 @@ export function CardMember({ data, role }: TypeMember) {
         ) : null}
 
         {/* Admin */}
-        {messageData.dataChatBox.role === "admin" ? (
+        {messageData.chatDataBox.role === "admin" ? (
           <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
               className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
@@ -747,13 +747,13 @@ export function CardMember({ data, role }: TypeMember) {
                   className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
                   onClick={async () => {
                     let obj = {
-                      name: messageData.dataChatBox.name,
+                      name: messageData.chatDataBox.name,
                       login: data.username,
                     };
                     await setBlock(obj);
                     getMembersChannel((res: any) => {
                       memberData.setMembers(res);
-                    }, messageData.dataChatBox.name);
+                    }, messageData.chatDataBox.name);
                   }}
                 >
                   block
@@ -762,13 +762,13 @@ export function CardMember({ data, role }: TypeMember) {
                   className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
                   onClick={async () => {
                     let obj = {
-                      name: messageData.dataChatBox.name,
+                      name: messageData.chatDataBox.name,
                       login: data.username,
                     };
                     await setKick(obj);
                     getMembersChannel((res: any) => {
                       memberData.setMembers(res);
-                    }, messageData.dataChatBox.name);
+                    }, messageData.chatDataBox.name);
                   }}
                 >
                   kick
@@ -777,13 +777,13 @@ export function CardMember({ data, role }: TypeMember) {
                   className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
                   onClick={async () => {
                     let obj = {
-                      name: messageData.dataChatBox.name,
+                      name: messageData.chatDataBox.name,
                       login: data.username,
                     };
                     await setMute(obj);
                     getMembersChannel((res: any) => {
                       memberData.setMembers(res);
-                    }, messageData.dataChatBox.name);
+                    }, messageData.chatDataBox.name);
                   }}
                 >
                   mute
@@ -793,7 +793,7 @@ export function CardMember({ data, role }: TypeMember) {
           </MenuList>
         ) : null}
         {/* Member */}
-        {messageData.dataChatBox.role === "member" ? (
+        {messageData.chatDataBox.role === "member" ? (
           <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
               className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"

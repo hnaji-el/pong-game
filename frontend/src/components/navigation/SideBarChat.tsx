@@ -6,7 +6,7 @@ import Chats from "../Chats";
 import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "../Tabs";
 import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
-import { getAllChannels, getDmUsers } from "../../api/API";
+import { getAllChannels, getAllDms } from "../../api/API";
 
 interface TypeProps {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,8 +45,8 @@ export default function SideBarChat({
           <TabsList edit="mx-3 lg:mx-2">
             <Tab
               onClick={() => {
-                getDmUsers((res: any) => {
-                  messageData.setDataDm(res);
+                getAllDms((res: any) => {
+                  messageData.setDms(res);
                 });
               }}
             >

@@ -13,8 +13,8 @@ export default function Chats() {
     return (
       <div className="flex h-full flex-col gap-6">
         <div className="relative flex h-full flex-col overflow-auto">
-          {conversations.dataDm.length ? (
-            conversations.dataDm.map((e: any, index: number) => {
+          {conversations.dms.length ? (
+            conversations.dms.map((e: any, index: number) => {
               return <CardConversation data={e} key={index} index={index} />;
             })
           ) : (

@@ -12,10 +12,10 @@ import {
   useVerifyUserAuthenticity,
   getDataUserLogged,
   getAllChannels,
-  getDmUsers,
+  getAllDms,
 } from "../../api/API";
 
-import { ChannelType } from "./types";
+import { DmType, ChannelType } from "./types";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
@@ -71,18 +71,19 @@ function Messages() {
 
   // [ used, socket, passed, passed ]
   const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
-  // [     , getAllChannels(/chat/channels/channels-msgs) handleMsg, passed, passed ]
+  // [     , getAllDms(/chat/dms/dms-messages) handleMsg, passed, passed ]
+  const [dms, setDms] = React.useState<DmType[]>([]);
+  // [     , getAllChannels(/chat/channels/channels-messages) handleMsg, passed, passed ]
   const [channels, setChannels] = React.useState<ChannelType[]>([]);
 
-  // [     , getDmUsers(/chat/dms/dms-messages) handleMsg, passed, passed ]
-  const [dataDm, setDataDm] = React.useState<any>([]);
-  // [ used, getDmUsers(/chat/dms/dms-messages) socket, passed, passed ]
-  const [dataChatBox, setDataChatBox] = React.useState<any>([]);
+  // [ used, getAllDms(/chat/dms/dms-messages) socket, passed, passed ]
+  // chatDataBox: DmType | ChannelType | undefined
+  const [chatDataBox, setChatDataBox] = React.useState<any>();
+  const [dmIndex, setDmIndex] = React.useState(0); // used,    , passed, passed
+  const [channelIndex, setChannelIndex] = React.useState(0); //   ,    , passed, passed
 
   const [click, setClick] = React.useState(false); // used, , passed, passed
   const [firstClick, setFirstClick] = React.useState(true); //  ,   , passed, passed
-  const [indexDm, setIndexDm] = React.useState(0); // used,    , passed, passed
-  const [indexChannel, setIndexChannel] = React.useState(0); //   ,    , passed, passed
   const [passwordProtected, setpasswordProtected] = React.useState(false); //   ,   , passed, passed
 
   const navigate = useNavigate();
@@ -102,11 +103,11 @@ function Messages() {
       setChannels(res);
     });
 
-    getDmUsers((res: any) => {
-      setDataDm(res);
-      setDataChatBox(res[indexDm]);
+    getAllDms((res: any) => {
+      setDms(res);
+      setChatDataBox(res[dmIndex]);
     });
-  }, [indexDm]);
+  }, [dmIndex]);
 
   React.useEffect(() => {
     if (!socket.connected) {
@@ -115,7 +116,7 @@ function Messages() {
 
     const handleServerMessage = (data: any) => {
       data.type === "DM" ? setIsDmOrChannel("DM") : setIsDmOrChannel("CHANNEL");
-      setDataChatBox(data);
+      setChatDataBox(data);
     };
 
     socket.on("msgFromServer", handleServerMessage);
@@ -130,17 +131,17 @@ function Messages() {
       socket.emit("msgServer", {
         type: "DM",
         data: message,
-        name: dataChatBox?.username,
+        name: chatDataBox?.username,
       });
 
-      getDmUsers((res: any) => {
-        setDataDm(res);
+      getAllDms((res: any) => {
+        setDms(res);
       });
     } else {
       socket.emit("msgServer", {
         type: "CHANNEL",
         data: message,
-        name: dataChatBox?.name,
+        name: chatDataBox?.name,
       });
 
       getAllChannels((res: any) => {
@@ -175,32 +176,31 @@ function Messages() {
     >
       <MessagesContext.Provider
         value={{
-          dataDm: dataDm,
-          setDataDm: setDataDm,
+          dms: dms,
+          setDms: setDms,
           channels: channels,
           setChannels: setChannels,
-          dataChatBox: dataChatBox,
-          setDataChatBox: setDataChatBox,
-          sesetDataDm: setDataDm,
-          indexDm: indexDm,
-          setIndexDm: setIndexDm,
-          indexChannel: indexChannel,
-          setIndexChannel: setIndexChannel,
           isDmOrChannel: isDmOrChannel,
           setIsDmOrChannel: setIsDmOrChannel,
+          chatDataBox: chatDataBox,
+          setChatDataBox: setChatDataBox,
+          dmIndex: dmIndex,
+          setDmIndex: setDmIndex,
+          channelIndex: channelIndex,
+          setChannelIndex: setChannelIndex,
           passwordProtected: passwordProtected,
           setpasswordProtected: setpasswordProtected,
         }}
       >
         <NavigationChat />
-        {dataChatBox ? (
+        {chatDataBox ? (
           <>
             <main
               className={`${
                 click ? "" : "absolute h-0 w-0"
               } mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1`}
             >
-              <ChatBox data={dataChatBox?.conversation} />
+              <ChatBox data={chatDataBox?.conversation} />
             </main>
             <div className="absolute bottom-[0.9rem] w-full px-3 lg:pl-64 lg:pr-4">
               <form className="flex items-center rounded-md bg-shape pr-2">

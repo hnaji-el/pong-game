@@ -28,7 +28,7 @@ export class ChatController {
     return await this.chatService.getDmsData(req.user);
   }
 
-  @Get('/channels/channels-msgs')
+  @Get('/channels/channels-messages')
   @UseGuards(JwtAuthGuard)
   async getChannelsData(@Req() req: Request) {
     return await this.chatService.getChannelsData(req.user);

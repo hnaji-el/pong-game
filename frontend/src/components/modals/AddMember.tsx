@@ -19,8 +19,8 @@ function AddMember() {
     getFriendChannel((res: any) => {
       setFriend(res);
       setRender(true);
-    }, messageData.dataChatBox.name);
-  }, [messageData.dataChatBox.name]);
+    }, messageData.chatDataBox.name);
+  }, [messageData.chatDataBox.name]);
 
   if (render) {
     if (friend.length) {

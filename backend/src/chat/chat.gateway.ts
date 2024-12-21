@@ -75,18 +75,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
 
-      this.server
-        .to(wsRoomName)
-        .emit(
-          'msgFromServer',
-          await this.chatService.getDmData(room, senderUser),
-        );
+      this.server.to(wsRoomName).emit(
+        'msgFromServer',
+        await this.chatService.getDmData(room, senderUser), // TODO: handle the case when this function throw an InternalServerErrorException
+      );
 
       for (const client of this.connectedClients) {
         if (client.user.id === senderUser.id) {
           client.emit(
             'msgFromServer',
-            await this.chatService.getDmData(room, receiverUser),
+            await this.chatService.getDmData(room, receiverUser), // TODO: handle the case when this function throw an InternalServerErrorException
           );
         }
       }
@@ -131,12 +129,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
 
-      this.server
-        .to(wsRoomName)
-        .emit(
-          'msgFromServer',
-          await this.chatService.getChannelData(room, senderUser),
-        );
+      this.server.to(wsRoomName).emit(
+        'msgFromServer',
+        await this.chatService.getChannelData(room, senderUser), // TODO: handle the case when this function throw an InternalServerErrorException
+      );
     }
   }
 

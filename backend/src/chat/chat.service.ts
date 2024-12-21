@@ -57,56 +57,67 @@ export class ChatService {
   }
 
   async getDmData(room: Room, user: User): Promise<DmType> {
-    const roomMsgs = await this.prisma.room.findUnique({
-      where: {
-        name: room.name,
-      },
-      select: {
-        messages: true,
-      },
-    });
+    try {
+      const roomMsgs = await this.prisma.room.findUnique({
+        where: {
+          name: room.name,
+        },
+        select: {
+          messages: true,
+        },
+      });
 
-    // TODO: what's if roomMsgs is null or there is an unexpected errors
-
-    return {
-      id: user.id,
-      username: user.nickname,
-      status: user.status,
-      picture: user.pictureURL,
-      type: room.type,
-      latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
-      conversation: roomMsgs.messages.map((msg) => ({
-        type: msg.receiverUser === user.nickname ? 'user' : 'friend',
-        message: msg.data,
-      })),
-    };
+      return {
+        id: user.id,
+        username: user.nickname,
+        picture: user.pictureURL,
+        status: user.status,
+        type: room.type,
+        latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
+        conversation: roomMsgs.messages.map((msg) => ({
+          type: msg.receiverUser === user.nickname ? 'user' : 'friend',
+          message: msg.data,
+        })),
+      };
+    } catch (error) {
+      this.handleUnexpectedErrors(error);
+    }
   }
 
   async getDmsData(user: AttachedUserEntity): Promise<DmType[]> {
-    const dmsData: DmType[] = [];
-
-    const rooms = await this.prisma.room.findMany({
-      where: {
-        type: 'DM',
-      },
-    });
-
-    for (const room of rooms) {
-      if (room.members.includes(user.nickname)) {
-        const friendUser = await this.prisma.user.findUnique({
-          where: {
-            nickname:
-              user.nickname === room.members[0]
-                ? room.members[1]
-                : room.members[0],
+    try {
+      const rooms = await this.prisma.room.findMany({
+        where: {
+          type: 'DM',
+          members: {
+            has: user.nickname,
           },
-        });
+        },
+      });
 
-        dmsData.push(await this.getDmData(room, friendUser));
+      const dmsData = await Promise.all(
+        rooms.map(async (room) => {
+          const friend = await this.prisma.user.findUnique({
+            where: {
+              nickname:
+                user.nickname === room.members[0]
+                  ? room.members[1]
+                  : room.members[0],
+            },
+          });
+
+          return this.getDmData(room, friend);
+        }),
+      );
+
+      return dmsData;
+    } catch (error) {
+      // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
+      if (error instanceof InternalServerErrorException) {
+        throw error;
       }
+      this.handleUnexpectedErrors(error);
     }
-
-    return dmsData;
   }
 
   async getChannelData(
@@ -114,56 +125,68 @@ export class ChatService {
     user: User,
     isJoined?: boolean,
   ): Promise<ChannelType> {
-    const roomMsgs = await this.prisma.room.findUnique({
-      where: {
+    try {
+      const roomMsgs = await this.prisma.room.findUnique({
+        where: {
+          name: room.name,
+        },
+        select: {
+          messages: true,
+        },
+      });
+
+      return {
+        id: room.id,
         name: room.name,
-      },
-      select: {
-        messages: true,
-      },
-    });
-
-    // TODO: what's if roomMsgs is null or there is an unexpected errors
-
-    return {
-      id: room.id,
-      name: room.name,
-      members: room.members.length,
-      role: this.getRole(room, user.nickname),
-      type: room.type,
-      latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
-      conversation: roomMsgs.messages.map((msg) => ({
-        login: msg.receiverUser,
-        picture: msg.pictureURL,
-        message: msg.data,
-      })),
-      isJoined: isJoined,
-    };
+        members: room.members.length,
+        role: this.getRole(room, user.nickname),
+        type: room.type,
+        latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
+        conversation: roomMsgs.messages.map((msg) => ({
+          login: msg.receiverUser,
+          picture: msg.pictureURL,
+          message: msg.data,
+        })),
+        isJoined: isJoined,
+      };
+    } catch (error) {
+      this.handleUnexpectedErrors(error);
+    }
   }
 
   async getChannelsData(user: AttachedUserEntity): Promise<ChannelType[]> {
-    const channelsData: ChannelType[] = [];
+    try {
+      const rooms = await this.prisma.room.findMany({
+        where: {
+          OR: [{ type: 'PROTECTED' }, { type: 'PUBLIC' }, { type: 'PRIVATE' }],
+        },
+      });
 
-    const rooms = await this.prisma.room.findMany({
-      where: {
-        OR: [{ type: 'PROTECTED' }, { type: 'PUBLIC' }, { type: 'PRIVATE' }],
-      },
-    });
+      const channelsData = (
+        await Promise.all(
+          rooms.map(async (room) => {
+            const isMember = room.members.includes(user.nickname);
+            const isBlocked = room.blocked.includes(user.nickname);
 
-    for (const room of rooms) {
-      const isMember = room.members.includes(user.nickname);
-      const isBlocked = room.blocked.includes(user.nickname);
+            if (isMember) {
+              return this.getChannelData(room, user, true);
+            }
 
-      if (isMember) {
-        channelsData.push(await this.getChannelData(room, user, true));
+            if (!isMember && !isBlocked && room.type !== 'PRIVATE') {
+              return this.getChannelData(room, user, false);
+            }
+          }),
+        )
+      ).filter((data) => data !== undefined);
+
+      return channelsData;
+    } catch (error) {
+      // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
+      if (error instanceof InternalServerErrorException) {
+        throw error;
       }
-
-      if (!isMember && !isBlocked && room.type !== 'PRIVATE') {
-        channelsData.push(await this.getChannelData(room, user, false));
-      }
+      this.handleUnexpectedErrors(error);
     }
-
-    return channelsData;
   }
 
   async createRoom(
@@ -907,5 +930,16 @@ export class ChatService {
 
   generateDMRoomName(id1: string, id2: string) {
     return id1 < id2 ? id1 + id2 : id2 + id1;
+  }
+
+  handleUnexpectedErrors(error: Error) {
+    console.error(
+      'Database connection error or other unexpected error:',
+      error.stack,
+    );
+
+    throw new InternalServerErrorException(
+      'An unexpected error occurred. Please try again later',
+    );
   }
 }

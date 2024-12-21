@@ -1,12 +1,12 @@
 export interface DmType {
   id: string;
   username: string;
-  status: string;
   picture: string;
-  type: string;
+  status: string;
+  type: string; // 'DM'
   latestMessage: string | undefined;
   conversation: {
-    type: string;
+    type: string; // ??? 'user' | 'friend'
     message: string;
   }[];
 }

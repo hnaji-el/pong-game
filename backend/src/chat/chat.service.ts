@@ -73,7 +73,8 @@ export class ChatService {
         picture: user.pictureURL,
         status: user.status,
         type: room.type,
-        latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
+        latestMessage:
+          roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
         conversation: roomMsgs.messages.map((msg) => ({
           type: msg.receiverUser === user.nickname ? 'user' : 'friend',
           message: msg.data,
@@ -141,7 +142,8 @@ export class ChatService {
         members: room.members.length,
         role: this.getRole(room, user.nickname),
         type: room.type,
-        latestMessage: roomMsgs.messages[roomMsgs.messages.length - 1]?.data,
+        latestMessage:
+          roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
         conversation: roomMsgs.messages.map((msg) => ({
           login: msg.receiverUser,
           picture: msg.pictureURL,
@@ -290,7 +292,7 @@ export class ChatService {
     };
     if (message_user) {
       person.latestMessage =
-        allmessage.messages[allmessage.messages.length - 1]?.data;
+        allmessage.messages[allmessage.messages.length - 1]?.data ?? '';
       person.conversation = allmessage.messages.map((x) => ({
         login: '',
         message: x.data,
@@ -836,7 +838,7 @@ export class ChatService {
         };
         if (message_user) {
           person.latestMessage =
-            allmessage.messages[allmessage.messages.length - 1]?.data;
+            allmessage.messages[allmessage.messages.length - 1]?.data ?? '';
           person.conversation = allmessage.messages.map((x) => ({
             type: '',
             message: x.data,

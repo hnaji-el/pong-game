@@ -4,7 +4,7 @@ export interface DmType {
   picture: string;
   status: string;
   type: string; // 'DM'
-  latestMessage: string | undefined;
+  latestMessage: string;
   conversation: {
     type: string; // ??? 'user' | 'friend'
     message: string;
@@ -17,7 +17,7 @@ export interface ChannelType {
   role: string;
   members: number;
   type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
-  latestMessage: string | undefined;
+  latestMessage: string;
   conversation: {
     login: string;
     message: string;

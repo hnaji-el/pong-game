@@ -1,7 +1,6 @@
 import React from "react";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 import {
   UserType,
@@ -9,6 +8,7 @@ import {
   TypeDataProfileUser,
   TypedataFriend,
 } from "./types";
+import { ChannelType, DmType } from "../pages/Messages/types";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"
@@ -146,7 +146,7 @@ export function unBlockFriend(id: string) {
  * Chat
  */
 
-export function getAllDms(getRes: any) {
+export function getAllDms(getRes: (res: DmType[]) => void) {
   axios
     .get(`${BACKEND_ORIGIN}/chat/dms/dms-messages`, {
       withCredentials: true,
@@ -157,7 +157,7 @@ export function getAllDms(getRes: any) {
     .catch();
 }
 
-export function getAllChannels(getRes: any) {
+export function getAllChannels(getRes: (res: ChannelType[]) => void) {
   axios
     .get(`${BACKEND_ORIGIN}/chat/channels/channels-messages`, {
       withCredentials: true,

@@ -895,16 +895,16 @@ export class ChatService {
     });
   }
 
-  async unmuted(user: any, room: any) {
+  async unmuted(user: any, roomName: string) {
     await this.prisma.muted.deleteMany({
       where: {
-        AND: [{ receiverUser: user.nickname }, { roomName: room.name }],
+        AND: [{ receiverUser: user.nickname }, { roomName: roomName }],
       },
     });
   }
 
   async deleteroom(user: any, room: any) {
-    const testOwner = await this.prisma.room.findUnique({
+    await this.prisma.room.findUnique({
       where: {
         name: room.name,
       },
@@ -912,11 +912,12 @@ export class ChatService {
     // const id1 = testOwner.admins.find((login) => login === user.nickname);
     // if (!id1) throw new ForbiddenException('you are not admin');
 
-    const rom = await this.prisma.room.delete({
+    await this.prisma.room.delete({
       where: {
         name: room.name,
       },
     });
+
     return 'deleted';
   }
 

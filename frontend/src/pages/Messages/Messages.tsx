@@ -40,7 +40,6 @@ const userData = {
   isTwoFactorAuthEnabled: false,
 };
 
-export const Click = React.createContext(false);
 export const MessagesContext = React.createContext<any>({});
 export const StateMssages = React.createContext<TypeContext>({
   active: false,
@@ -93,13 +92,13 @@ function Messages() {
   }, []);
 
   React.useEffect(() => {
-    getAllChannels((res: any) => {
-      setChannels(res);
-    });
-
-    getAllDms((res: any) => {
+    getAllDms((res: DmType[]) => {
       setDms(res);
       setChatDataBox(res[dmIndex]);
+    });
+
+    getAllChannels((res: ChannelType[]) => {
+      setChannels(res);
     });
   }, [dmIndex]);
 
@@ -124,21 +123,21 @@ function Messages() {
     if (isDmOrChannel === "DM") {
       socket.emit("msgServer", {
         type: "DM",
-        data: message,
-        name: chatDataBox?.username,
+        receiverUserId: chatDataBox.id,
+        message: message,
       });
 
-      getAllDms((res: any) => {
+      getAllDms((res: DmType[]) => {
         setDms(res);
       });
     } else {
       socket.emit("msgServer", {
         type: "CHANNEL",
-        data: message,
-        name: chatDataBox?.name,
+        channelId: chatDataBox.id,
+        message: message,
       });
 
-      getAllChannels((res: any) => {
+      getAllChannels((res: ChannelType[]) => {
         setChannels(res);
       });
     }

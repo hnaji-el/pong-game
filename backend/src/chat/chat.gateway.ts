@@ -12,6 +12,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
 import * as moment from 'moment';
 import { User } from '@prisma/client';
+import { WsDataType } from './entities/chat.entity';
 
 @WebSocketGateway(+process.env.BACKEND_CHAT_PORT, {
   cors: {
@@ -33,16 +34,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('msgServer')
   async handleMessage(
     @ConnectedSocket() client: any,
-    @MessageBody() wsMsgBody: any,
+    @MessageBody() wsData: WsDataType,
   ) {
     const senderUser: User = client.user;
     this.id += 1;
     const wsRoomName = `<${senderUser.id}_${this.id}>`;
 
-    if (wsMsgBody.type === 'DM') {
+    if (wsData.type === 'DM') {
       const receiverUser = await this.prisma.user.findUnique({
         where: {
-          nickname: wsMsgBody.name, // TODO: use the `id` instead of `nickname` ...
+          id: wsData.receiverUserId,
         },
       });
 
@@ -71,7 +72,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           roomName: room.name,
           receiverUser: receiverUser.nickname,
           pictureURL: receiverUser.pictureURL,
-          data: wsMsgBody.data,
+          data: wsData.message,
         },
       });
 
@@ -90,23 +91,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
 
-    if (wsMsgBody.type === 'CHANNEL') {
+    if (wsData.type === 'CHANNEL') {
       const room = await this.prisma.room.findUnique({
         where: {
-          name: wsMsgBody.name,
+          id: wsData.channelId,
         },
       });
 
       const mutedEntry = await this.prisma.muted.findFirst({
         where: {
-          roomName: wsMsgBody.name,
+          roomName: room.name,
           receiverUser: senderUser.nickname,
         },
       });
 
       if (mutedEntry) {
         if (mutedEntry.time < moment().format('YYYY-MM-DD hh:mm:ss')) {
-          this.chatService.unmuted(senderUser, wsMsgBody);
+          this.chatService.unmuted(senderUser, room.name);
         } else {
           return;
         }
@@ -122,10 +123,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       await this.prisma.message.create({
         data: {
-          roomName: wsMsgBody.name,
+          roomName: room.name,
           receiverUser: senderUser.nickname,
           pictureURL: senderUser.pictureURL,
-          data: wsMsgBody.data,
+          data: wsData.message,
         },
       });
 

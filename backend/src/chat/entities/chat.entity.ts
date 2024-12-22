@@ -27,6 +27,13 @@ export interface ChannelType {
   isJoined?: boolean;
 }
 
+export interface WsDataType {
+  type: string; // 'DM' | 'CHANNEL'
+  receiverUserId?: string;
+  channelId?: string;
+  message: string;
+}
+
 export interface objectChannel {
   type: string;
   message: string;

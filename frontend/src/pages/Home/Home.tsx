@@ -8,33 +8,28 @@ import Spinner from "../../components/Spinner";
 
 import { useVerifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 
+import { UserType } from "../../api/types";
+
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"
     ? import.meta.env.VITE_BACKEND_ORIGIN
     : `${import.meta.env.VITE_BACKEND_ORIGIN}${import.meta.env.VITE_PROXY_PREFIX_FOR_BACKEND}`;
 
-interface UserData {
-  id: string;
-  pictureURL: string;
-  nickname: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
-}
-
 interface TypeContext {
   value: boolean;
-  settings: UserData;
-  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
+  settings: UserType;
+  updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 export const ActiveHome = React.createContext<TypeContext>({
   value: false,
   settings: {
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "offline",
+    isTwoFactorAuthEnabled: false,
   },
   updateSettings: () => {},
 });
@@ -44,12 +39,13 @@ function Home() {
   const [ArrayofPlayersAndroomId, setArrayofPlayersAndroomId] = React.useState<
     string[]
   >([]);
-  const [settings, setSettings] = React.useState<UserData>({
+  const [settings, setSettings] = React.useState<UserType>({
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "offline",
+    isTwoFactorAuthEnabled: false,
   });
   const navigate = useNavigate();
 
@@ -62,7 +58,7 @@ function Home() {
       .then((response) => response.json())
       .then((data) => setArrayofPlayersAndroomId(data))
       .catch((error) => console.log(error));
-    getDataUserLogged((res: UserData) => {
+    getDataUserLogged((res: UserType) => {
       setSettings(res);
     });
   }, []);

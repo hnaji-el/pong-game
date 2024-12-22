@@ -16,17 +16,10 @@ import {
 } from "../../api/API";
 
 import { DmType, ChannelType } from "./types";
+import { UserType } from "../../api/types";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
-
-interface UserData {
-  id: string;
-  pictureURL: string;
-  nickname: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
-}
 
 interface TypeContext {
   active: boolean;
@@ -34,16 +27,17 @@ interface TypeContext {
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   firstClick: boolean;
   setFirstClick: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: UserData;
-  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
+  settings: UserType;
+  updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 const userData = {
   id: "",
-  pictureURL: "",
+  email: "",
   nickname: "",
-  isTwoFactorAuthEnabled: false,
+  pictureURL: "",
   status: "",
+  isTwoFactorAuthEnabled: false,
 };
 
 export const Click = React.createContext(false);
@@ -67,7 +61,7 @@ function Messages() {
   const status = useVerifyUserAuthenticity();
   const [message, setMessage] = React.useState("");
   // [ used, getDataUserLogged(/users/logged-user), passed, passed ]
-  const [settings, setSettings] = React.useState<UserData>(userData);
+  const [settings, setSettings] = React.useState<UserType>(userData);
 
   // [ used, socket, passed, passed ]
   const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
@@ -93,7 +87,7 @@ function Messages() {
   }, []);
 
   React.useEffect(() => {
-    getDataUserLogged((res: UserData) => {
+    getDataUserLogged((res: UserType) => {
       setSettings(res);
     });
   }, []);

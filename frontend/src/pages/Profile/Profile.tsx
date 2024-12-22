@@ -15,28 +15,23 @@ import {
   getOneUser,
 } from "../../api/API";
 
-interface UserData {
-  id: string;
-  pictureURL: string;
-  nickname: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
-}
+import { UserType } from "../../api/types";
 
 interface TypeContext {
   value: boolean;
-  settings: UserData;
-  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
+  settings: UserType;
+  updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 export const ActiveProfile = React.createContext<TypeContext>({
   value: false,
   settings: {
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "",
+    isTwoFactorAuthEnabled: false,
   },
   updateSettings: () => {},
 });
@@ -45,12 +40,13 @@ function Profile() {
   const status = useVerifyUserAuthenticity();
   const [open, setOpen] = React.useState(false);
   const [dataGame, setDataGame] = React.useState<any>({});
-  const [settings, setSettings] = React.useState<UserData>({
+  const [settings, setSettings] = React.useState<UserType>({
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "",
+    isTwoFactorAuthEnabled: false,
   });
   const navigate = useNavigate();
 
@@ -59,7 +55,7 @@ function Profile() {
   }, []);
 
   React.useEffect(() => {
-    getDataUserLogged((res: UserData) => {
+    getDataUserLogged((res: UserType) => {
       setSettings(res);
       getOneUser((response: any) => {
         setDataGame(response);

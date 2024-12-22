@@ -12,6 +12,8 @@ import Spinner from "../../components/Spinner";
 
 import { useVerifyUserAuthenticity } from "../../api/API";
 
+import { UserType } from "../../api/types";
+
 const CANVA_WIDTH = 1200;
 const CANVA_HEIGHT = 600;
 const BG_COLOR = "black";
@@ -20,40 +22,34 @@ const PLAYER_COLOR = "#7970B3";
 const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
 const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 
-interface UserData {
-  id: string;
-  pictureURL: string;
-  nickname: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
-}
-
 interface TypeContext {
   value: boolean;
-  settings: UserData;
-  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
+  settings: UserType;
+  updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 export const GameContext = React.createContext<TypeContext>({
   value: false,
   settings: {
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "",
+    isTwoFactorAuthEnabled: false,
   },
   updateSettings: () => {},
 });
 
 function Game() {
   const status = useVerifyUserAuthenticity();
-  const [dataUser, setDataUser] = React.useState<UserData>({
+  const [dataUser, setDataUser] = React.useState<UserType>({
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "",
+    isTwoFactorAuthEnabled: false,
   });
   const navigate = useNavigate();
 
@@ -87,7 +83,7 @@ function Game() {
     });
 
     socketRef.current = socket;
-    getDataUserLogged((res: UserData) => {
+    getDataUserLogged((res: UserType) => {
       setDataUser(res);
     });
 

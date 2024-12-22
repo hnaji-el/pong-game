@@ -22,10 +22,16 @@ export class UsersController {
   @Get('/users/logged-user')
   @UseGuards(JwtAuthGuard)
   getLoggedUser(@Req() req: Request) {
-    delete req.user.requester;
-    delete req.user.addressee;
+    const user = {
+      id: req.user.id,
+      email: req.user.email,
+      nickname: req.user.nickname,
+      pictureURL: req.user.pictureURL,
+      status: req.user.status,
+      isTwoFactorAuthEnabled: req.user.isTwoFactorAuthEnabled,
+    };
 
-    return req.user;
+    return user;
   }
 
   @Patch('/users/update_nickname')

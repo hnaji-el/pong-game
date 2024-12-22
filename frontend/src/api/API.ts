@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import {
-  TypeDataLogged,
+  UserType,
   TypeDataUsers,
   TypeDataProfileUser,
   TypedataFriend,
@@ -44,7 +44,7 @@ export function useVerifyUserAuthenticity(isOnLoginPage = false) {
   return status;
 }
 
-export function getDataUserLogged(getRes: (res: TypeDataLogged) => void) {
+export function getDataUserLogged(getRes: (res: UserType) => void) {
   axios
     .get(`${BACKEND_ORIGIN}/users/logged-user`, {
       withCredentials: true,

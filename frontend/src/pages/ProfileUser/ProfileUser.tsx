@@ -16,18 +16,12 @@ import {
   getOneUser,
 } from "../../api/API";
 
-interface UserData {
-  id: string;
-  pictureURL: string;
-  nickname: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
-}
+import { UserType } from "../../api/types";
 
 interface TypeContext {
   value: boolean;
-  settings: UserData;
-  updateSettings: React.Dispatch<React.SetStateAction<UserData>>;
+  settings: UserType;
+  updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 interface TypeDataProfileUser {
@@ -46,10 +40,11 @@ export const ActiveProfileUser = React.createContext<TypeContext>({
   value: false,
   settings: {
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "",
+    isTwoFactorAuthEnabled: false,
   },
   updateSettings: () => {},
 });
@@ -63,12 +58,13 @@ function ProfileUser() {
 
   const id = location.state?.id;
   const [typeUser, setTypeUser] = React.useState<string>("");
-  const [settings, setSettings] = React.useState<UserData>({
+  const [settings, setSettings] = React.useState<UserType>({
     id: "",
-    pictureURL: "",
+    email: "",
     nickname: "",
-    isTwoFactorAuthEnabled: false,
+    pictureURL: "",
     status: "",
+    isTwoFactorAuthEnabled: false,
   });
   const [dataUser, setDataUser] = React.useState<TypeDataProfileUser>({
     friendsNumber: 0,
@@ -87,7 +83,7 @@ function ProfileUser() {
   }, []);
 
   React.useEffect(() => {
-    getDataUserLogged((res: UserData) => {
+    getDataUserLogged((res: UserType) => {
       setSettings(res);
     });
 

@@ -1,9 +1,10 @@
-export interface TypeDataLogged {
+export interface UserType {
   id: string;
+  email: string;
   nickname: string;
   pictureURL: string;
-  isTwoFactorAuthEnabled: boolean;
   status: string;
+  isTwoFactorAuthEnabled: boolean;
 }
 
 export interface TypeDataUsers {

@@ -31,7 +31,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   connectedClients = [];
   id = 0;
 
-  @SubscribeMessage('msgServer')
+  @SubscribeMessage('msgFromClient')
   async handleMessage(
     @ConnectedSocket() client: any,
     @MessageBody() wsData: WsDataType,

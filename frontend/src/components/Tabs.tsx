@@ -1,42 +1,61 @@
-import React, { createContext, useContext, useState, Children } from "react";
+import React from "react";
+
 import { getIndexElement } from "../utilities/helpers";
 
-interface Props {
-  children: JSX.Element | JSX.Element[] | string;
-  edit?: string;
-  onClick?: any;
-}
-
-interface TypeContext {
+interface ContextType {
   state: number;
   setState: React.Dispatch<React.SetStateAction<number>>;
   count: number;
 }
 
-export const indexTab = createContext<TypeContext>({
+export const indexTab = React.createContext<ContextType>({
   state: 0,
   setState: () => {},
   count: 0,
 });
 
-export function Tabs({ children, edit }: Props) {
-  const [state, setState] = useState<number>(0);
+export function Tabs({
+  children,
+  className,
+}: {
+  children: JSX.Element[];
+  className?: string;
+}) {
+  const [state, setState] = React.useState(0);
 
   return (
     <indexTab.Provider value={{ state: state, setState: setState, count: 0 }}>
-      <div className={`flex h-full flex-col gap-6 lg:overflow-hidden ${edit}`}>
+      <div
+        className={`flex h-full flex-col gap-6 lg:overflow-hidden ${className ? className : ""}`}
+      >
         {children}
       </div>
     </indexTab.Provider>
   );
 }
 
-export function TabsList({ children, edit }: Props) {
-  return <div className={`flex items-center text-sm ${edit}`}>{children}</div>;
+export function TabsList({
+  children,
+  className,
+}: {
+  children: JSX.Element[];
+  className?: string;
+}) {
+  return (
+    <div className={`flex items-center text-sm ${className ? className : ""}`}>
+      {children}
+    </div>
+  );
 }
 
-export function Tab({ children, onClick }: Props) {
-  const tabs = useContext(indexTab);
+export function Button({
+  children,
+  onClick,
+}: {
+  children: string;
+  onClick?: () => void;
+}) {
+  const tabs = React.useContext(indexTab);
 
   return (
     <button
@@ -46,7 +65,7 @@ export function Tab({ children, onClick }: Props) {
           : "border-b-shape text-secondaryText"
       }`}
       onClick={(e) => {
-        let index = getIndexElement(e);
+        const index = getIndexElement(e);
         tabs.setState(index);
         if (onClick) {
           onClick();
@@ -58,14 +77,33 @@ export function Tab({ children, onClick }: Props) {
   );
 }
 
-export function TabsPanels({ children, edit }: Props) {
-  const index = useContext(indexTab).state;
-  let arrChildren = Children.toArray(children);
+export function TabsPanels({
+  children,
+  edit,
+}: {
+  children: JSX.Element[];
+  edit?: string;
+}) {
+  const index = React.useContext(indexTab).state;
+  let arrChildren = React.Children.toArray(children);
+
   return (
-    <div className={`h-full overflow-hidden ${edit}`}>{arrChildren[index]}</div>
+    <div className={`h-full overflow-hidden ${edit ? edit : ""}`}>
+      {arrChildren[index]}
+    </div>
   );
 }
 
-export function TabContent({ children, edit }: Props) {
-  return <div className={`h-full overflow-hidden ${edit}`}>{children}</div>;
+export function TabContent({
+  children,
+  edit,
+}: {
+  children: JSX.Element;
+  edit?: string;
+}) {
+  return (
+    <div className={`h-full overflow-hidden ${edit ? edit : ""}`}>
+      {children}
+    </div>
+  );
 }

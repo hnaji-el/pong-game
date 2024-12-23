@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { getAllChannels, getChannelsDm } from "../api/API";
+import React from "react";
+
 import { CardChannelConversation } from "./Cards";
-import { PlusIcon, SearchIcon } from "./Icons";
+import { PlusIcon } from "./Icons";
 import { MessagesContext } from "../pages/Messages/Messages";
 
-interface TypeProps {
+export default function Channels({
+  setCreateChannel,
+}: {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function Channels({ setCreateChannel }: TypeProps) {
-  const messageData = useContext(MessagesContext);
+}) {
+  const messageData = React.useContext(MessagesContext);
 
   return (
     <div className="flex h-full flex-col gap-6">

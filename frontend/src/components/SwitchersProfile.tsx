@@ -1,21 +1,19 @@
 import React from "react";
+
 import Achievements from "./Achievements";
 import Friends from "./Friends";
 import MatchHistory from "./MatchHistory";
-import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "./Tabs";
+import { Tabs, TabsList, Button, TabsPanels, TabContent } from "./Tabs";
 
-interface TypeProps {
-  id?: string;
-}
-
-export default function SwitchersProfile({ id }: TypeProps) {
+function SwitchersProfile({ id }: { id?: string }) {
   return (
-    <Tabs edit="gap-0 lg:overflow-visible">
+    <Tabs className="gap-0 lg:overflow-visible">
       <TabsList>
-        <Tab>Achievements</Tab>
-        <Tab>Friends</Tab>
-        <Tab>Match History</Tab>
+        <Button>Achievements</Button>
+        <Button>Friends</Button>
+        <Button>Match History</Button>
       </TabsList>
+
       <TabsPanels edit="overflow-visible">
         <TabContent edit="overflow-visible">
           <Achievements id={id} />
@@ -30,3 +28,5 @@ export default function SwitchersProfile({ id }: TypeProps) {
     </Tabs>
   );
 }
+
+export default SwitchersProfile;

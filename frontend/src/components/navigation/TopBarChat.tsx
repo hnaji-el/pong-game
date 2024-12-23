@@ -1,9 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
+
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../../api/API";
+
 import { CardChatChannel, CardChatFriend } from "../Cards";
 import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
 import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
+
+import { logout } from "../../api/API";
+
 import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
 
@@ -13,14 +17,11 @@ interface TypeProps {
   setMembers: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function NavBarChat({
-  setOpen,
-  setAddMember,
-  setMembers,
-}: TypeProps) {
-  const stateMessage = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
+function TopBarChat({ setOpen, setAddMember, setMembers }: TypeProps) {
+  const stateMessage = React.useContext(StateMssages);
+  const messageData = React.useContext(MessagesContext);
   const navigate = useNavigate();
+
   return (
     <section
       className={`${
@@ -77,3 +78,5 @@ export default function NavBarChat({
     </section>
   );
 }
+
+export default TopBarChat;

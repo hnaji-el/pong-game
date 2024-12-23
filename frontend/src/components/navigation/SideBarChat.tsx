@@ -1,12 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
+
 import { Link } from "react-router-dom";
+
 import logo from "../../assets/logo.svg";
 import Channels from "../Channels";
 import Chats from "../Chats";
-import { Tabs, TabsList, Tab, TabsPanels, TabContent } from "../Tabs";
+import { Tabs, TabsList, Button, TabsPanels, TabContent } from "../Tabs";
+
+import { getAllChannels, getAllDms } from "../../api/API";
+
 import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
-import { getAllChannels, getAllDms } from "../../api/API";
 
 interface TypeProps {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,59 +23,90 @@ export default function SideBarChat({
   setOpenSettings,
   setCreateChannel,
 }: TypeProps) {
-  const stateMessage = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
+  const stateMessage = React.useContext(StateMssages);
+  const messageData = React.useContext(MessagesContext);
 
   return (
-    <>
-      <section
-        className={`${
-          stateMessage.click ? "hidden" : "flex"
-        } h-full w-full flex-col gap-12 pb-[12.95rem] pt-7 lg:fixed lg:left-0 lg:top-0 lg:z-[999] lg:flex lg:w-60 lg:bg-sideBackground lg:px-0 lg:py-7 2xl:left-auto`}
-      >
-        <div className="flex items-center justify-center">
-          <Link
-            to="/home"
+    <section
+      className={`${
+        stateMessage.click ? "hidden" : "flex"
+      } h-full w-full flex-col gap-12 pb-[12.95rem] pt-7 lg:fixed lg:left-0 lg:top-0 lg:z-[999] lg:flex lg:w-60 lg:bg-sideBackground lg:px-0 lg:py-7 2xl:left-auto`}
+    >
+      <div className="flex items-center justify-center">
+        <Link
+          to="/home"
+          onClick={() => {
+            setOpenSearch(false);
+            setOpenSettings(false);
+            document.body.style.overflow = "auto";
+          }}
+        >
+          <img src={logo} alt="pong logo" className="w-48 lg:w-44" />
+        </Link>
+      </div>
+      {/* <div className="flex h-full flex-col gap-6 lg:overflow-hidden">
+        <div className={`mx-3 flex items-center text-sm lg:mx-2`}>
+          <button
+            className={`flex flex-1 items-center justify-center border-b-[1px] pb-2 text-[13px] ${
+              true
+                ? "border-b-primary text-primaryText"
+                : "border-b-shape text-secondaryText"
+            }`}
             onClick={() => {
-              setOpenSearch(false);
-              setOpenSettings(false);
-              document.body.style.overflow = "auto";
+              getAllDms((res: any) => {
+                messageData.setDms(res);
+              });
             }}
           >
-            <img src={logo} alt="Pong logo" className="w-48 lg:w-44" />
-          </Link>
+            Direct Messages
+          </button>
+          <button
+            className={`flex flex-1 items-center justify-center border-b-[1px] pb-2 text-[13px] ${
+              false
+                ? "border-b-primary text-primaryText"
+                : "border-b-shape text-secondaryText"
+            }`}
+            onClick={() => {
+              getAllDms((res: any) => {
+                messageData.setDms(res);
+              });
+            }}
+          >
+            Channels
+          </button>
         </div>
-        <Tabs>
-          <TabsList edit="mx-3 lg:mx-2">
-            <Tab
-              onClick={() => {
-                getAllDms((res: any) => {
-                  messageData.setDms(res);
-                });
-              }}
-            >
-              Direct Messages
-            </Tab>
-            <Tab
-              onClick={() => {
-                getAllChannels((res: any) => {
-                  messageData.setChannels(res);
-                });
-              }}
-            >
-              Channels
-            </Tab>
-          </TabsList>
-          <TabsPanels>
-            <TabContent>
-              <Chats />
-            </TabContent>
-            <TabContent>
-              <Channels setCreateChannel={setCreateChannel} />
-            </TabContent>
-          </TabsPanels>
-        </Tabs>
-      </section>
-    </>
+      </div> */}
+      <Tabs>
+        <TabsList className="mx-3 lg:mx-2">
+          <Button
+            onClick={() => {
+              getAllDms((res: any) => {
+                messageData.setDms(res);
+              });
+            }}
+          >
+            Direct Messages
+          </Button>
+          <Button
+            onClick={() => {
+              getAllChannels((res: any) => {
+                messageData.setChannels(res);
+              });
+            }}
+          >
+            Channels
+          </Button>
+        </TabsList>
+
+        <TabsPanels>
+          <TabContent>
+            <Chats />
+          </TabContent>
+          <TabContent>
+            <Channels setCreateChannel={setCreateChannel} />
+          </TabContent>
+        </TabsPanels>
+      </Tabs>
+    </section>
   );
 }

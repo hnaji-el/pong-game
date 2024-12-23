@@ -107,7 +107,7 @@ function Messages() {
       socket.connect();
     }
 
-    const handleServerMessage = (data: any) => {
+    const handleServerMessage = (data: DmType | ChannelType) => {
       data.type === "DM" ? setIsDmOrChannel("DM") : setIsDmOrChannel("CHANNEL");
       setChatDataBox(data);
     };
@@ -121,7 +121,7 @@ function Messages() {
 
   function sendMessage() {
     if (isDmOrChannel === "DM") {
-      socket.emit("msgServer", {
+      socket.emit("msgFromClient", {
         type: "DM",
         receiverUserId: chatDataBox.id,
         message: message,
@@ -131,7 +131,7 @@ function Messages() {
         setDms(res);
       });
     } else {
-      socket.emit("msgServer", {
+      socket.emit("msgFromClient", {
         type: "CHANNEL",
         channelId: chatDataBox.id,
         message: message,

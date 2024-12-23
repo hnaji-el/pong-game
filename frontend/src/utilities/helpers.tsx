@@ -12,14 +12,15 @@ export function getIndexElement(
 ): number {
   let listChild: NodeListOf<ChildNode> | undefined =
     e.currentTarget.parentNode?.childNodes;
-  let index: number = 0;
+  let index = 0;
 
-  listChild?.forEach((element: ChildNode, i: number) => {
+  listChild?.forEach((element, i) => {
     if (element === e.currentTarget) {
       index = i;
       return;
     }
   });
+
   return index;
 }
 

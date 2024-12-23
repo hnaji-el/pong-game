@@ -1,34 +1,42 @@
 import React from "react";
 
-import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
 import SettingsBody from "../modals/settings/SettingsBody";
 import PhoneNav from "./PhoneNav";
-import NavBarChat from "./NavBarChat";
+import TopBarChat from "./TopBarChat";
 import SideBarChat from "./SideBarChat";
 import ModalSearch from "../modals/ModalSearch";
 import SearchInput from "../SearchInput";
 import ModalSettings from "../modals/ModalSettings";
 import ViewSettings from "../ViewSettings";
-import { StateMssages } from "../../pages/Messages/Messages";
 import CreateChannel from "../modals/CreateChannel";
 import AddMember from "../modals/AddMember";
 import Members from "../modals/Members";
 import FormProtected from "../FormProtected";
+import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
+
+import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
 
-export default function NavigationChat() {
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [openSearch, setOpenSearch] = React.useState<boolean>(false);
-  const [openSettings, setOpenSettings] = React.useState<boolean>(false);
-  const [createChannel, setCreateChannel] = React.useState<boolean>(false);
-  const [addMember, setAddMember] = React.useState<boolean>(false);
-  const [members, setMembers] = React.useState<boolean>(false);
+/*
+ * NavigationCaht
+ *  |— TopBarChat
+ *  |— SideBarChat
+ */
+
+function NavigationChat() {
+  const [open, setOpen] = React.useState(false);
+  const [openSearch, setOpenSearch] = React.useState(false);
+  const [openSettings, setOpenSettings] = React.useState(false);
+  const [createChannel, setCreateChannel] = React.useState(false);
+  const [addMember, setAddMember] = React.useState(false);
+  const [members, setMembers] = React.useState(false);
+
   const stateMessages = React.useContext(StateMssages);
   const messageData = React.useContext(MessagesContext);
 
   return (
     <>
-      <NavBarChat
+      <TopBarChat
         setOpen={setOpen}
         setAddMember={setAddMember}
         setMembers={setMembers}
@@ -107,3 +115,5 @@ export default function NavigationChat() {
     </>
   );
 }
+
+export default NavigationChat;

@@ -7,23 +7,6 @@ interface TypeData {
   isFriendToLoggedUser: boolean;
 }
 
-export function getIndexElement(
-  e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-): number {
-  let listChild: NodeListOf<ChildNode> | undefined =
-    e.currentTarget.parentNode?.childNodes;
-  let index = 0;
-
-  listChild?.forEach((element, i) => {
-    if (element === e.currentTarget) {
-      index = i;
-      return;
-    }
-  });
-
-  return index;
-}
-
 export function checkNickname(value: string): string {
   if (!value.trim().length) return "Zone text empty";
   if (value.length > 20) return "Maximum 20 characters";

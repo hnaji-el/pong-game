@@ -2,9 +2,11 @@ import React from "react";
 
 import { CardChannelConversation } from "./Cards";
 import { PlusIcon } from "./Icons";
-import { MessagesContext } from "../pages/Messages/Messages";
 
-export default function Channels({
+import { MessagesContext } from "../pages/Messages/Messages";
+import { ChannelType } from "../pages/Messages/types";
+
+function Channels({
   setCreateChannel,
 }: {
   setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,9 +30,13 @@ export default function Channels({
       </div>
       {messageData.channels.length ? (
         <div className="relative flex h-full flex-col overflow-auto">
-          {messageData.channels.map((e: any, index: number) => {
+          {messageData.channels.map((channel: ChannelType, index: number) => {
             return (
-              <CardChannelConversation data={e} key={index} index={index} />
+              <CardChannelConversation
+                data={channel}
+                key={index}
+                index={index}
+              />
             );
           })}
         </div>
@@ -42,3 +48,5 @@ export default function Channels({
     </div>
   );
 }
+
+export default Channels;

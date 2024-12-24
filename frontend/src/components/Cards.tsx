@@ -19,10 +19,8 @@ import { AddMemberContext } from "./modals/AddMember";
 import { MembersContext } from "./modals/Members";
 import {
   addToRoom,
-  blockFriend,
   deleteRoom,
   getAllChannels,
-  getAllDms,
   getFriendChannel,
   getMembersChannel,
   joinRoom,
@@ -82,11 +80,6 @@ interface TypedataFriend {
 
 interface TypeChat {
   data: any;
-}
-
-interface TypeConversation {
-  data: any;
-  index: number;
 }
 
 interface TypeChannelConversation {
@@ -275,76 +268,6 @@ export function CardUser({ data }: TypedataFriend) {
   );
 }
 
-export function CardConversation({ data, index }: TypeConversation) {
-  const stateMessages = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
-  const dataUser = useContext(StateMssages);
-  return (
-    <div
-      className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
-        index === messageData.dmIndex ? "lg:bg-backgroundHover" : null
-      }`}
-    >
-      <Link
-        to=""
-        className="flex flex-1 justify-between py-4"
-        onClick={() => {
-          messageData.setDmIndex(index);
-          stateMessages.setClick(true);
-          messageData.setChatDataBox(messageData.dms[index]);
-          messageData.setIsDmOrChannel("DM");
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <img
-            src={data.picture}
-            alt="Friend"
-            className="h-10 w-10 rounded-full"
-          />
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
-                {data.username}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Link>
-      <span className="flex items-center justify-center">
-        <Menu>
-          <MenuButton className="group flex items-center justify-center rounded-full p-0">
-            <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-          </MenuButton>
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-              onClick={() => {
-                globalSocket.emit("inviteToPlay", {
-                  sender: dataUser.settings,
-                  receiverId: data.id,
-                });
-              }}
-            >
-              Invite to play
-            </MenuItem>
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-              onClick={async () => {
-                await blockFriend(data.id);
-                getAllDms((res: any) => {
-                  messageData.setDms(res);
-                });
-              }}
-            >
-              block
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </span>
-    </div>
-  );
-}
-
 export function CardChannelConversation({
   index,
   data,
@@ -357,7 +280,7 @@ export function CardChannelConversation({
       className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
         messageData.dmIndex === -1 && index === messageData.channelIndex
           ? "lg:bg-backgroundHover"
-          : null
+          : ""
       }`}
     >
       <button

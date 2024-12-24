@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 import logo from "../../assets/logo.svg";
 import Button from "../Button";
+import Dms from "../Dms";
 import Channels from "../Channels";
-import Chats from "../Chats";
 
 import { getAllChannels, getAllDms } from "../../api/API";
 
@@ -23,9 +23,9 @@ function SideBarChat({
   setOpenSettings,
   setCreateChannel,
 }: PropsType) {
-  const [isDm, setIsDm] = React.useState(true);
   const stateMessage = React.useContext(StateMssages);
   const messageData = React.useContext(MessagesContext);
+  const [isDm, setIsDm] = React.useState(true);
 
   return (
     <section
@@ -73,7 +73,7 @@ function SideBarChat({
         </div>
 
         <div className="h-full overflow-hidden">
-          {isDm ? <Chats /> : <Channels setCreateChannel={setCreateChannel} />}
+          {isDm ? <Dms /> : <Channels setCreateChannel={setCreateChannel} />}
         </div>
       </div>
     </section>

@@ -21,6 +21,8 @@ import { MessagesContext } from "../../pages/Messages/Messages";
  * NavigationCaht
  *  |— TopBarChat
  *  |— SideBarChat
+ *      |— Dms
+ *      |— Channels
  */
 
 function NavigationChat() {

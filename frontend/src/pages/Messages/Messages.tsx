@@ -40,7 +40,7 @@ const userData = {
   isTwoFactorAuthEnabled: false,
 };
 
-export const MessagesContext = React.createContext<any>({});
+export const MessagesContext = React.createContext<any>({}); // TODO: type the Context values
 export const StateMssages = React.createContext<TypeContext>({
   active: false,
   click: false,

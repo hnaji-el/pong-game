@@ -279,7 +279,7 @@ export function CardChannelConversation({
     <div
       className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
         messageData.dmIndex === -1 && index === messageData.channelIndex
-          ? "lg:bg-backgroundHover"
+          ? "bg-backgroundHover"
           : ""
       }`}
     >
@@ -335,7 +335,7 @@ export function CardChannelConversation({
         <span className="flex items-center justify-center">
           <Menu>
             <MenuButton className="group flex items-center justify-center rounded-full p-0">
-              <PointsIcon edit="w-2.5 h-2.5 fill-secondaryText" />
+              <PointsIcon edit="w-3 h-3 fill-secondaryText" />
             </MenuButton>
             <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
               {data.role === "owner" ? (

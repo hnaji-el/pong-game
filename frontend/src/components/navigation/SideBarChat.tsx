@@ -2,11 +2,10 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import logo from "../../assets/logo.svg";
-import Button from "../Button";
-import Dms from "../Dms";
 import Channels from "../Channels";
-
+import DmCardList from "../DmCardList";
+import Button from "../Button";
+import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";
 
 import { StateMssages } from "../../pages/Messages/Messages";
@@ -23,14 +22,14 @@ function SideBarChat({
   setOpenSettings,
   setCreateChannel,
 }: PropsType) {
-  const stateMessage = React.useContext(StateMssages);
-  const messageData = React.useContext(MessagesContext);
+  const { click } = React.useContext(StateMssages);
+  const { setDms, setChannels } = React.useContext(MessagesContext);
   const [isDm, setIsDm] = React.useState(true);
 
   return (
     <section
       className={`h-full w-full flex-col gap-12 pb-[12.95rem] pt-7 lg:fixed lg:left-0 lg:top-0 lg:z-[999] lg:flex lg:w-60 lg:bg-sideBackground lg:px-0 lg:py-7 2xl:left-auto ${
-        stateMessage.click ? "hidden" : "flex"
+        click ? "hidden" : "flex"
       } `}
     >
       <div className="flex items-center justify-center">
@@ -53,7 +52,7 @@ function SideBarChat({
             onClick={() => {
               setIsDm(true);
               getAllDms((res: any) => {
-                messageData.setDms(res);
+                setDms(res);
               });
             }}
           >
@@ -64,7 +63,7 @@ function SideBarChat({
             onClick={() => {
               setIsDm(false);
               getAllChannels((res: any) => {
-                messageData.setChannels(res);
+                setChannels(res);
               });
             }}
           >
@@ -73,7 +72,11 @@ function SideBarChat({
         </div>
 
         <div className="h-full overflow-hidden">
-          {isDm ? <Dms /> : <Channels setCreateChannel={setCreateChannel} />}
+          {isDm ? (
+            <DmCardList />
+          ) : (
+            <Channels setCreateChannel={setCreateChannel} />
+          )}
         </div>
       </div>
     </section>

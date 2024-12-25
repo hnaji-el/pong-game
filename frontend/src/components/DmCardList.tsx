@@ -4,8 +4,7 @@ import DmCard from "./DmCard";
 import { DmType } from "../pages/Messages/types";
 
 import { globalSocket } from "../utilities/socket";
-import { StateMssages } from "../pages/Messages/Messages";
-import { MessagesContext } from "../pages/Messages/Messages";
+import { StateMssages, MessagesContext } from "../pages/Messages/Messages";
 import { blockFriend, getAllDms } from "../api/API";
 
 function DmCardList() {

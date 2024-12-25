@@ -21,15 +21,18 @@ import { MessagesContext } from "../../pages/Messages/Messages";
  * NavigationCaht
  *  |— TopBarChat
  *  |— SideBarChat
- *      |— Dms
- *      |— Channels
+ *  |—  |— DmCardList
+ *  |—  |—  |— DmCard
+ *  |—  |— ChannelCardList
+ *  |—  |—  |— ChannelCard
  */
 
 function NavigationChat() {
   const [open, setOpen] = React.useState(false);
   const [openSearch, setOpenSearch] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
-  const [createChannel, setCreateChannel] = React.useState(false);
+  const [isCreateChannelBtnClicked, setIsCreateChannelBtnClicked] =
+    React.useState(false);
   const [addMember, setAddMember] = React.useState(false);
   const [members, setMembers] = React.useState(false);
 
@@ -46,7 +49,7 @@ function NavigationChat() {
       <SideBarChat
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
-        setCreateChannel={setCreateChannel}
+        setIsCreateChannelBtnClicked={setIsCreateChannelBtnClicked}
       />
       {!stateMessages.click ? (
         <PhoneNav
@@ -75,11 +78,13 @@ function NavigationChat() {
         </ModalSettings>
       ) : null}
 
-      {createChannel ? (
+      {isCreateChannelBtnClicked ? (
         <Modal edit="w-[90%] h-[40rem] lg:w-[40rem] lg:h-[21.5rem]">
-          <ModalHeader setOpen={setCreateChannel}>Create channel</ModalHeader>
+          <ModalHeader setOpen={setIsCreateChannelBtnClicked}>
+            Create channel
+          </ModalHeader>
           <ModalBody edit="justify-center">
-            <CreateChannel setCreateChannel={setCreateChannel} />
+            <CreateChannel setCreateChannel={setIsCreateChannelBtnClicked} />
           </ModalBody>
         </Modal>
       ) : null}

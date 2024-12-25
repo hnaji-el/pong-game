@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import Channels from "../Channels";
+import ChannelCardList from "../ChannelCardList";
 import DmCardList from "../DmCardList";
 import Button from "../Button";
 import logo from "../../assets/logo.svg";
@@ -10,21 +10,42 @@ import { getAllChannels, getAllDms } from "../../api/API";
 
 import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
+import { ChannelType, DmType } from "../../pages/Messages/types";
 
 interface PropsType {
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
-  setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsCreateChannelBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function SideBarChat({
   setOpenSearch,
   setOpenSettings,
-  setCreateChannel,
+  setIsCreateChannelBtnClicked,
 }: PropsType) {
   const { click } = React.useContext(StateMssages);
   const { setDms, setChannels } = React.useContext(MessagesContext);
   const [isDm, setIsDm] = React.useState(true);
+
+  function handleLogoClick() {
+    setOpenSearch(false);
+    setOpenSettings(false);
+    document.body.style.overflow = "auto";
+  }
+
+  function handleDmsButtonClick() {
+    setIsDm(true);
+    getAllDms((res: DmType[]) => {
+      setDms(res);
+    });
+  }
+
+  function handleChannelsButtonClick() {
+    setIsDm(false);
+    getAllChannels((res: ChannelType[]) => {
+      setChannels(res);
+    });
+  }
 
   return (
     <section
@@ -33,40 +54,17 @@ function SideBarChat({
       } `}
     >
       <div className="flex items-center justify-center">
-        <Link
-          to="/home"
-          onClick={() => {
-            setOpenSearch(false);
-            setOpenSettings(false);
-            document.body.style.overflow = "auto";
-          }}
-        >
+        <Link to="/home" onClick={handleLogoClick}>
           <img src={logo} alt="pong logo" className="w-48 lg:w-44" />
         </Link>
       </div>
 
       <div className="flex h-full flex-col gap-6 lg:overflow-hidden">
         <div className="mx-3 flex items-center text-sm lg:mx-2">
-          <Button
-            isClicked={isDm}
-            onClick={() => {
-              setIsDm(true);
-              getAllDms((res: any) => {
-                setDms(res);
-              });
-            }}
-          >
+          <Button isClicked={isDm} onClick={handleDmsButtonClick}>
             Direct Messages
           </Button>
-          <Button
-            isClicked={!isDm}
-            onClick={() => {
-              setIsDm(false);
-              getAllChannels((res: any) => {
-                setChannels(res);
-              });
-            }}
-          >
+          <Button isClicked={!isDm} onClick={handleChannelsButtonClick}>
             Channels
           </Button>
         </div>
@@ -75,7 +73,9 @@ function SideBarChat({
           {isDm ? (
             <DmCardList />
           ) : (
-            <Channels setCreateChannel={setCreateChannel} />
+            <ChannelCardList
+              setIsCreateChannelBtnClicked={setIsCreateChannelBtnClicked}
+            />
           )}
         </div>
       </div>

@@ -1,15 +1,15 @@
 import React from "react";
 
-import { CardChannelConversation } from "./Cards";
+import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
-
-import { MessagesContext } from "../pages/Messages/Messages";
 import { ChannelType } from "../pages/Messages/types";
 
-function Channels({
-  setCreateChannel,
+import { MessagesContext } from "../pages/Messages/Messages";
+
+function ChannelCardList({
+  setIsCreateChannelBtnClicked,
 }: {
-  setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsCreateChannelBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const messageData = React.useContext(MessagesContext);
 
@@ -19,7 +19,7 @@ function Channels({
         <button
           className="flex w-full items-center justify-center gap-2 rounded-[.3rem] bg-primary p-2"
           onClick={() => {
-            setCreateChannel(true);
+            setIsCreateChannelBtnClicked(true);
           }}
         >
           <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
@@ -30,9 +30,11 @@ function Channels({
       </div>
       {messageData.channels.length ? (
         <div className="relative flex h-full flex-col overflow-auto">
-          {messageData.channels.map((channel: ChannelType, index: number) => {
+          {(messageData.channels as ChannelType[]).map((channel, index) => {
             return (
-              <CardChannelConversation
+              <ChannelCard
+                title={channel.name}
+                isLabeled={channel.type === "PRIVATE"}
                 data={channel}
                 key={index}
                 index={index}
@@ -49,4 +51,4 @@ function Channels({
   );
 }
 
-export default Channels;
+export default ChannelCardList;

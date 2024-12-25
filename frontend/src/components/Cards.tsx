@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-import friendPicture from "../assets/friend.jpg";
+
 import { Link } from "react-router-dom";
+
+import friendPicture from "../assets/friend.jpg";
 import {
   ArrowLeftIcon,
   GroupIcon,
-  LockIcon,
   PlusIcon,
   PointsIcon,
   SettingsIcon,
@@ -19,12 +20,8 @@ import { AddMemberContext } from "./modals/AddMember";
 import { MembersContext } from "./modals/Members";
 import {
   addToRoom,
-  deleteRoom,
-  getAllChannels,
   getFriendChannel,
   getMembersChannel,
-  joinRoom,
-  leaveRoom,
   setAdmin,
   setBlock,
   setKick,
@@ -80,11 +77,6 @@ interface TypedataFriend {
 
 interface TypeChat {
   data: any;
-}
-
-interface TypeChannelConversation {
-  data: any;
-  index: number;
 }
 
 interface TypeFriendChannel {
@@ -263,112 +255,6 @@ export function CardUser({ data }: TypedataFriend) {
             </MenuItem>
           </MenuList>
         </Menu>
-      ) : null}
-    </div>
-  );
-}
-
-export function CardChannelConversation({
-  index,
-  data,
-}: TypeChannelConversation) {
-  const stateMessages = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
-
-  return (
-    <div
-      className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
-        messageData.dmIndex === -1 && index === messageData.channelIndex
-          ? "bg-backgroundHover"
-          : ""
-      }`}
-    >
-      <button
-        className="flex flex-1 items-start justify-between py-4"
-        onClick={() => {
-          if (!data.role.length && data.type === "PUBLIC") {
-            let obj = {
-              name: data.name,
-              type: "PUBLIC",
-            };
-
-            joinRoom((res: any) => {
-              stateMessages.setClick(true);
-              messageData.setChannelIndex(index);
-              messageData.setIsDmOrChannel("CHANNEL");
-              messageData.setDmIndex(-1);
-              messageData.setChatDataBox(res);
-              getAllChannels((response: any) => {
-                messageData.setChannels(response);
-              });
-            }, obj);
-          } else {
-            if (!data.role.length && data.type === "PROTECTED") {
-              messageData.setChannelIndex(index);
-              messageData.setpasswordProtected(true);
-            } else {
-              stateMessages.setClick(true);
-              messageData.setChannelIndex(index);
-              messageData.setIsDmOrChannel("CHANNEL");
-              messageData.setDmIndex(-1);
-              messageData.setChatDataBox(messageData.channels[index]);
-            }
-          }
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-primaryText">
-                {data.name}
-              </span>
-            </div>
-          </div>
-        </div>
-        {data.type === "PRIVATE" ? (
-          <div className="p-.6 relative right-2 top-[.2rem] z-[-1] w-12 rounded-full bg-primary text-center text-[.6rem] font-light capitalize text-primaryText">
-            private
-          </div>
-        ) : null}
-      </button>
-      {data.role.length ? (
-        <span className="flex items-center justify-center">
-          <Menu>
-            <MenuButton className="group flex items-center justify-center rounded-full p-0">
-              <PointsIcon edit="w-3 h-3 fill-secondaryText" />
-            </MenuButton>
-            <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-              {data.role === "owner" ? (
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-                  onClick={async () => {
-                    await deleteRoom(data.name);
-                    getAllChannels((res: any) => {
-                      messageData.setChannels(res);
-                    });
-                  }}
-                >
-                  delete
-                </MenuItem>
-              ) : null}
-              <MenuItem
-                className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-                onClick={async () => {
-                  await leaveRoom(data.name);
-                  getAllChannels((res: any) => {
-                    messageData.setChannels(res);
-                  });
-                }}
-              >
-                leave
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </span>
-      ) : data.type === "PROTECTED" ? (
-        <div className="flex items-center justify-center">
-          <LockIcon edit="w-4 h-4 fill-secondaryText" />
-        </div>
       ) : null}
     </div>
   );

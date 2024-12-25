@@ -14,7 +14,7 @@ export interface DmType {
 export interface ChannelType {
   id: string;
   name: string;
-  role: string;
+  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | ''
   members: number;
   type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
   latestMessage: string;
@@ -24,7 +24,7 @@ export interface ChannelType {
     picture: string;
     type?: string;
   }[];
-  isJoined?: boolean;
+  isJoined: boolean;
 }
 
 export interface WsDataType {

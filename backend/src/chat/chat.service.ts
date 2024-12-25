@@ -124,7 +124,7 @@ export class ChatService {
   async getChannelData(
     room: Room,
     user: User,
-    isJoined?: boolean,
+    isJoined: boolean,
   ): Promise<ChannelType> {
     try {
       const roomMsgs = await this.prisma.room.findUnique({
@@ -286,9 +286,10 @@ export class ChatService {
       name: userUpdate.name,
       members: userUpdate.members.length,
       latestMessage: '',
-      role: 'member',
+      role: 'MEMBER',
       type: userUpdate.type,
       conversation: [],
+      isJoined: true,
     };
     if (message_user) {
       person.latestMessage =
@@ -367,7 +368,7 @@ export class ChatService {
       name: userUpdate.name,
       members: userUpdate.members.length,
       latestMessage: '',
-      role: 'member',
+      role: 'MEMBER',
       type: userUpdate.type,
       conversation: [],
       status: 'valide',
@@ -389,7 +390,7 @@ export class ChatService {
         if (user.nickname === allmessage.messages[i].receiverUser)
           person.conversation[i].type = 'user';
         else {
-          person.conversation[i].type = 'member';
+          person.conversation[i].type = 'MEMBER';
           person.conversation[i].picture = user_chanel.pictureURL;
         }
       }
@@ -539,13 +540,13 @@ export class ChatService {
           },
         });
         let role;
-        if (rooms.owner === rooms.members[index]) role = 'owner';
+        if (rooms.owner === rooms.members[index]) role = 'OWNER';
         else {
           const admin = rooms.admins.find(
             (login) => login === rooms.members[index],
           );
-          if (admin) role = 'admin';
-          else role = 'member';
+          if (admin) role = 'ADMIN';
+          else role = 'MEMBER';
         }
         const person: userchanel = {
           id: user1.id,
@@ -926,9 +927,10 @@ export class ChatService {
    */
 
   getRole(room: Room, userNickname: string) {
-    if (room.owner === userNickname) return 'owner';
-    else if (room.admins.includes(userNickname)) return 'admins';
-    else return 'members';
+    if (room.owner === userNickname) return 'OWNER';
+    else if (room.admins.includes(userNickname)) return 'ADMIN';
+    else if (room.members.includes(userNickname)) return 'MEMBER';
+    else return '';
   }
 
   generateDMRoomName(id1: string, id2: string) {

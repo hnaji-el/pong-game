@@ -30,33 +30,36 @@ function ChannelCard({ title, isLabeled, index, data }: PropsType) {
   } = React.useContext(MessagesContext);
 
   function handleCardClick() {
-    if (!data.role.length && data.type === "PUBLIC") {
-      let obj = {
-        name: data.name,
-        type: "PUBLIC",
-      };
+    if (data.isJoined) {
+      setClick(true);
+      setChannelIndex(index);
+      setIsDmOrChannel("CHANNEL");
+      setDmIndex(-1);
+      setChatDataBox(channels[index]);
+    }
 
-      joinRoom((res: any) => {
-        setClick(true);
-        setChannelIndex(index);
-        setIsDmOrChannel("CHANNEL");
-        setDmIndex(-1);
-        setChatDataBox(res);
-        getAllChannels((response: any) => {
-          setChannels(response);
-        });
-      }, obj);
-    } else {
-      if (!data.role.length && data.type === "PROTECTED") {
-        setChannelIndex(index);
-        setpasswordProtected(true);
-      } else {
-        setClick(true);
-        setChannelIndex(index);
-        setIsDmOrChannel("CHANNEL");
-        setDmIndex(-1);
-        setChatDataBox(channels[index]);
-      }
+    if (!data.isJoined && data.type === "PROTECTED") {
+      setChannelIndex(index);
+      setpasswordProtected(true);
+    }
+
+    if (!data.isJoined && data.type === "PUBLIC") {
+      joinRoom(
+        (res: any) => {
+          setClick(true);
+          setChannelIndex(index);
+          setIsDmOrChannel("CHANNEL");
+          setDmIndex(-1);
+          setChatDataBox(res);
+          getAllChannels((response: any) => {
+            setChannels(response);
+          });
+        },
+        {
+          name: data.name,
+          type: "PUBLIC",
+        },
+      );
     }
   }
 
@@ -99,29 +102,36 @@ function ChannelCard({ title, isLabeled, index, data }: PropsType) {
           </div>
         )}
       </button>
-      <span className="flex items-center justify-center">
-        <Menu>
-          <MenuButton className="group flex items-center justify-center rounded-full p-0">
-            <PointsIcon edit="w-3 h-3 fill-secondaryText" />
-          </MenuButton>
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            {data.role === "owner" && (
+      {data.isJoined && (
+        <span className="flex items-center justify-center">
+          <Menu>
+            <MenuButton className="group flex items-center justify-center rounded-full p-0">
+              <PointsIcon edit="w-3 h-3 fill-secondaryText" />
+            </MenuButton>
+            <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
+              {data.role === "OWNER" && (
+                <MenuItem
+                  className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
+                  onClick={handleDeleteClick}
+                >
+                  delete
+                </MenuItem>
+              )}
               <MenuItem
                 className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-                onClick={handleDeleteClick}
+                onClick={handleLeaveClick}
               >
-                delete
+                leave
               </MenuItem>
-            )}
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-              onClick={handleLeaveClick}
-            >
-              leave
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </span>
+            </MenuList>
+          </Menu>
+        </span>
+      )}
+      {!data.isJoined && data.type === "PROTECTED" && (
+        <div className="flex items-center justify-center">
+          <LockIcon edit="w-4 h-4 fill-secondaryText" />
+        </div>
+      )}
     </div>
   );
 }

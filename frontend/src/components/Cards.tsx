@@ -331,7 +331,7 @@ export function CardChatChannel({
             {data?.name}
           </span>
           <div className="flex items-center gap-4">
-            {data?.role !== "member" && data?.type !== "PROTECTED" ? (
+            {data?.role !== "MEMBER" && data?.type !== "PROTECTED" ? (
               <button
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
                 onClick={() => {
@@ -427,12 +427,12 @@ export function CardMember({ data, role }: TypeMember) {
             >
               {data.username}
             </span>
-            {role !== "member" ? (
+            {role !== "MEMBER" ? (
               <span
                 className={`w-16 rounded-sm ${
-                  role === "owner"
+                  role === "OWNER"
                     ? "bg-ownerBg text-ownerText"
-                    : role === "admin"
+                    : role === "ADMIN"
                       ? "bg-adminBg text-adminText"
                       : ""
                 } flex items-center justify-center text-xs capitalize`}
@@ -460,7 +460,7 @@ export function CardMember({ data, role }: TypeMember) {
         </MenuButton>
 
         {/* Owner */}
-        {messageData.chatDataBox.role === "owner" ? (
+        {messageData.chatDataBox.role === "OWNER" ? (
           <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
               className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
@@ -537,7 +537,7 @@ export function CardMember({ data, role }: TypeMember) {
         ) : null}
 
         {/* Admin */}
-        {messageData.chatDataBox.role === "admin" ? (
+        {messageData.chatDataBox.role === "ADMIN" ? (
           <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
               className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
@@ -550,7 +550,7 @@ export function CardMember({ data, role }: TypeMember) {
             >
               Invite to play
             </MenuItem>
-            {role === "member" ? (
+            {role === "MEMBER" ? (
               <>
                 <MenuItem
                   className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
@@ -602,7 +602,7 @@ export function CardMember({ data, role }: TypeMember) {
           </MenuList>
         ) : null}
         {/* Member */}
-        {messageData.chatDataBox.role === "member" ? (
+        {messageData.chatDataBox.role === "MEMBER" ? (
           <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
             <MenuItem
               className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"

@@ -132,7 +132,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
       this.server.to(wsRoomName).emit(
         'msgFromServer',
-        await this.chatService.getChannelData(room, senderUser), // TODO: handle the case when this function throw an InternalServerErrorException
+        await this.chatService.getChannelData(room, senderUser, true), // TODO: handle the case when this function throw an InternalServerErrorException
       );
     }
   }

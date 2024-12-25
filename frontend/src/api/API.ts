@@ -192,6 +192,19 @@ export async function CreateChannel(getRes: any, data: any) {
     });
 }
 
+export function joinRoom(getRes: any, data: any) {
+  axios
+    .post(
+      `${BACKEND_ORIGIN}/chat/join-room`,
+      { data },
+      { withCredentials: true },
+    )
+    .then((res) => {
+      getRes(res.data);
+    })
+    .catch();
+}
+
 export function getFriendChannel(getRes: any, nameChannel: string) {
   axios
     .get(`${BACKEND_ORIGIN}/chat/friends-in-room/${nameChannel}`, {
@@ -274,21 +287,6 @@ export async function deleteRoom(name: string) {
       withCredentials: true,
     })
     .then()
-    .catch();
-}
-
-export function joinRoom(getRes: any, data: any) {
-  console.log("data: ", data);
-
-  axios
-    .post(
-      `${BACKEND_ORIGIN}/chat/join-room`,
-      { data },
-      { withCredentials: true },
-    )
-    .then((res) => {
-      getRes(res.data);
-    })
     .catch();
 }
 

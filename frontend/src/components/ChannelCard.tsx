@@ -22,7 +22,6 @@ function ChannelCard({ title, isLabeled, index, data }: PropsType) {
     setDmIndex,
     channelIndex,
     setChannelIndex,
-    setIsDmOrChannel,
     setChatDataBox,
     channels,
     setChannels,
@@ -33,7 +32,6 @@ function ChannelCard({ title, isLabeled, index, data }: PropsType) {
     if (data.isJoined) {
       setClick(true);
       setChannelIndex(index);
-      setIsDmOrChannel("CHANNEL");
       setDmIndex(-1);
       setChatDataBox(channels[index]);
     }
@@ -48,7 +46,6 @@ function ChannelCard({ title, isLabeled, index, data }: PropsType) {
         (res: any) => {
           setClick(true);
           setChannelIndex(index);
-          setIsDmOrChannel("CHANNEL");
           setDmIndex(-1);
           setChatDataBox(res);
           getAllChannels((response: any) => {

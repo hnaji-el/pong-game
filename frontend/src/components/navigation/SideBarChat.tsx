@@ -24,8 +24,8 @@ function SideBarChat({
   setIsCreateChannelBtnClicked,
 }: PropsType) {
   const { click } = React.useContext(StateMssages);
-  const { setDms, setChannels } = React.useContext(MessagesContext);
-  const [isDm, setIsDm] = React.useState(true);
+  const { setDms, setChannels, isDm, setIsDm } =
+    React.useContext(MessagesContext);
 
   function handleLogoClick() {
     setOpenSearch(false);
@@ -61,10 +61,10 @@ function SideBarChat({
 
       <div className="flex h-full flex-col gap-6 lg:overflow-hidden">
         <div className="mx-3 flex items-center text-sm lg:mx-2">
-          <Button isClicked={isDm} onClick={handleDmsButtonClick}>
+          <Button isHovered={isDm} onClick={handleDmsButtonClick}>
             Direct Messages
           </Button>
-          <Button isClicked={!isDm} onClick={handleChannelsButtonClick}>
+          <Button isHovered={!isDm} onClick={handleChannelsButtonClick}>
             Channels
           </Button>
         </div>

@@ -28,7 +28,7 @@ function TopBarChat({ setOpen, setAddMember, setMembers }: TypeProps) {
         !stateMessage.click ? "hidden" : ""
       } z-[999] mx-3 items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:flex lg:items-start lg:justify-between lg:gap-5 lg:pt-7`}
     >
-      {messageData.isDmOrChannel === "DM" ? (
+      {messageData.isDm ? (
         <CardChatFriend data={messageData.chatDataBox} />
       ) : (
         <CardChatChannel

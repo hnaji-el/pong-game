@@ -40,7 +40,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.id += 1;
     const wsRoomName = `<${senderUser.id}_${this.id}>`;
 
-    if (wsData.type === 'DM') {
+    if (wsData.isDm) {
       const receiverUser = await this.prisma.user.findUnique({
         where: {
           id: wsData.receiverUserId,
@@ -91,7 +91,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
 
-    if (wsData.type === 'CHANNEL') {
+    if (!wsData.isDm) {
       const room = await this.prisma.room.findUnique({
         where: {
           id: wsData.channelId,

@@ -30,17 +30,22 @@ function ChannelCardList({
       </div>
       {messageData.channels.length ? (
         <div className="relative flex h-full flex-col overflow-auto">
-          {(messageData.channels as ChannelType[]).map((channel, index) => {
-            return (
-              <ChannelCard
-                title={channel.name}
-                isLabeled={channel.type === "PRIVATE"}
-                data={channel}
-                key={index}
-                index={index}
-              />
-            );
-          })}
+          {[
+            ...(messageData.channels as ChannelType[]).filter(
+              (channel) => channel.isJoined,
+            ),
+            ...(messageData.channels as ChannelType[]).filter(
+              (channel) => !channel.isJoined,
+            ),
+          ].map((channel, index) => (
+            <ChannelCard
+              title={channel.name}
+              isLabeled={channel.type === "PRIVATE"}
+              data={channel}
+              key={index}
+              index={index}
+            />
+          ))}
         </div>
       ) : (
         <div className="flex h-full items-center justify-center pb-[7.3rem] text-sm text-primaryText">

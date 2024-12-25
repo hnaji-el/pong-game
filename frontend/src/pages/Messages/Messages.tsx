@@ -63,7 +63,7 @@ function Messages() {
   const [settings, setSettings] = React.useState<UserType>(userData);
 
   // [ used, socket, passed, passed ]
-  const [isDmOrChannel, setIsDmOrChannel] = React.useState("DM"); // "DM" | "CHANNEL"
+  const [isDm, setIsDm] = React.useState(true);
   // [     , getAllDms(/chat/dms/dms-messages) handleMsg, passed, passed ]
   const [dms, setDms] = React.useState<DmType[]>([]);
   // [     , getAllChannels(/chat/channels/channels-messages) handleMsg, passed, passed ]
@@ -107,8 +107,9 @@ function Messages() {
       socket.connect();
     }
 
+    // TODO: check this because it's changed the chat main section directly even if they don't the person that you are talking with them.
     const handleServerMessage = (data: DmType | ChannelType) => {
-      data.type === "DM" ? setIsDmOrChannel("DM") : setIsDmOrChannel("CHANNEL");
+      data.type === "DM" ? setIsDm(true) : setIsDm(false);
       setChatDataBox(data);
     };
 
@@ -120,9 +121,9 @@ function Messages() {
   }, []);
 
   function sendMessage() {
-    if (isDmOrChannel === "DM") {
+    if (isDm) {
       socket.emit("msgFromClient", {
-        type: "DM",
+        isDm: true,
         receiverUserId: chatDataBox.id,
         message: message,
       });
@@ -132,7 +133,7 @@ function Messages() {
       });
     } else {
       socket.emit("msgFromClient", {
-        type: "CHANNEL",
+        isDm: false,
         channelId: chatDataBox.id,
         message: message,
       });
@@ -173,8 +174,8 @@ function Messages() {
           setDms: setDms,
           channels: channels,
           setChannels: setChannels,
-          isDmOrChannel: isDmOrChannel,
-          setIsDmOrChannel: setIsDmOrChannel,
+          isDm: isDm,
+          setIsDm: setIsDm,
           chatDataBox: chatDataBox,
           setChatDataBox: setChatDataBox,
           dmIndex: dmIndex,

@@ -41,7 +41,6 @@ export default function FormProtected() {
                 return;
               } else {
                 stateMessages.setClick(true);
-                messageData.setIsDmOrChannel("CHANNEL");
                 messageData.setDmIndex(-1);
                 messageData.setChatDataBox(res);
                 getAllChannels((response: any) => {

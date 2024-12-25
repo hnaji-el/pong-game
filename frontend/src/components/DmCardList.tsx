@@ -9,14 +9,13 @@ import { blockFriend, getAllDms } from "../api/API";
 
 function DmCardList() {
   const { setClick, settings } = React.useContext(StateMssages);
-  const { dms, dmIndex, setDmIndex, setChatDataBox, setIsDmOrChannel, setDms } =
+  const { dms, dmIndex, setDmIndex, setChatDataBox, setDms } =
     React.useContext(MessagesContext);
 
   function handleCardClick(index: number) {
     setDmIndex(index);
     setChatDataBox(dms[index]);
     setClick(true);
-    setIsDmOrChannel("DM");
   }
 
   function handleInviteToPlayClick(userId: string) {

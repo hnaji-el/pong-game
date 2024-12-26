@@ -192,7 +192,13 @@ export async function CreateChannel(getRes: any, data: any) {
     });
 }
 
-export function joinRoom(getRes: any, data: any) {
+export function joinRoom(
+  getRes: (channelData: ChannelType) => void,
+  data: {
+    name: string;
+    type: string;
+  },
+) {
   axios
     .post(
       `${BACKEND_ORIGIN}/chat/join-room`,

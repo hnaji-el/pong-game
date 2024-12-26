@@ -2,16 +2,69 @@ import React from "react";
 
 import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
+import { deleteRoom, getAllChannels, joinRoom, leaveRoom } from "../api/API";
 import { ChannelType } from "../pages/Messages/types";
 
-import { MessagesContext } from "../pages/Messages/Messages";
+import { MessagesContext, StateMssages } from "../pages/Messages/Messages";
 
 function ChannelCardList({
   setIsCreateChannelBtnClicked,
 }: {
   setIsCreateChannelBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const messageData = React.useContext(MessagesContext);
+  const { setClick } = React.useContext(StateMssages);
+  const {
+    channels,
+    setChannels,
+    channelIndex,
+    setChannelIndex,
+    setChatDataBox,
+    setpasswordProtected,
+  } = React.useContext(MessagesContext);
+
+  function handleCardClick(channelData: ChannelType, index: number) {
+    if (channelData.isJoined) {
+      setClick(true);
+      setChannelIndex(index);
+      setChatDataBox(channels[index]);
+    }
+
+    if (!channelData.isJoined && channelData.type === "PROTECTED") {
+      setChannelIndex(index);
+      setpasswordProtected(true);
+    }
+
+    if (!channelData.isJoined && channelData.type === "PUBLIC") {
+      joinRoom(
+        (chnlData: ChannelType) => {
+          setClick(true);
+          setChannelIndex(index);
+          setChatDataBox(chnlData);
+          getAllChannels((chnlsData: ChannelType[]) => {
+            setChannels(chnlsData);
+          });
+        },
+        {
+          name: channelData.name,
+          type: "PUBLIC",
+        },
+      );
+    }
+  }
+
+  async function handleDeleteClick(channelData: ChannelType) {
+    await deleteRoom(channelData.name);
+    getAllChannels((chnlsData: ChannelType[]) => {
+      setChannels(chnlsData);
+    });
+  }
+
+  async function handleLeaveClick(channelData: ChannelType) {
+    await leaveRoom(channelData.name);
+    getAllChannels((chnlsData: ChannelType[]) => {
+      setChannels(chnlsData);
+    });
+  }
 
   return (
     <div className="flex h-full flex-col gap-6">
@@ -28,22 +81,27 @@ function ChannelCardList({
           </span>
         </button>
       </div>
-      {messageData.channels.length ? (
+      {channels.length ? (
         <div className="relative flex h-full flex-col overflow-auto">
           {[
-            ...(messageData.channels as ChannelType[]).filter(
+            ...(channels as ChannelType[]).filter(
               (channel) => channel.isJoined,
             ),
-            ...(messageData.channels as ChannelType[]).filter(
+            ...(channels as ChannelType[]).filter(
               (channel) => !channel.isJoined,
             ),
           ].map((channel, index) => (
             <ChannelCard
+              key={channel.id}
               title={channel.name}
               isLabeled={channel.type === "PRIVATE"}
-              data={channel}
-              key={index}
-              index={index}
+              isHovered={index === channelIndex}
+              isJoined={channel.isJoined}
+              isOwner={channel.role === "OWNER"}
+              isProtected={channel.type === "PROTECTED"}
+              handleCardClick={() => handleCardClick(channel, index)}
+              handleDeleteClick={() => handleDeleteClick(channel)}
+              handleLeaveClick={() => handleLeaveClick(channel)}
             />
           ))}
         </div>

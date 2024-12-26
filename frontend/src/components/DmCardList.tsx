@@ -27,9 +27,8 @@ function DmCardList() {
 
   async function handleBlockClick(userId: string) {
     await blockFriend(userId);
-
-    getAllDms((res: DmType[]) => {
-      setDms(res);
+    getAllDms((dmsData: DmType[]) => {
+      setDms(dmsData);
     });
   }
 
@@ -47,7 +46,7 @@ function DmCardList() {
               handleInviteToPlayClick={() => handleInviteToPlayClick(dm.id)}
               handleBlockClick={() => handleBlockClick(dm.id)}
             />
-          )) // TODO: Check for key attribute
+          ))
         ) : (
           <div className="flex h-full items-center justify-center pb-[7.3rem] text-sm text-primaryText">
             No messages.

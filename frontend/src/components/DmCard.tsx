@@ -37,12 +37,10 @@ function DmCard({
             alt="friend avatar"
             className="h-10 w-10 rounded-full"
           />
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1.5">
-              <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
-                {title}
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5">
+            <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
+              {title}
+            </span>
           </div>
         </div>
       </button>

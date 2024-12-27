@@ -34,8 +34,8 @@ interface TypeCardProfile {
 }
 
 interface TypePropsChannel {
-  setAddMember: React.Dispatch<React.SetStateAction<boolean>>;
-  setMembers: React.Dispatch<React.SetStateAction<boolean>>;
+  openMembersModal: () => void;
+  openAddMemberModal: () => void;
   data: any;
 }
 
@@ -310,8 +310,8 @@ export function CardChatFriend({ data }: TypeChat) {
 }
 
 export function CardChatChannel({
-  setAddMember,
-  setMembers,
+  openMembersModal,
+  openAddMemberModal,
   data,
 }: TypePropsChannel) {
   const stateMessages = useContext(StateMssages);
@@ -334,18 +334,14 @@ export function CardChatChannel({
             {data?.role !== "MEMBER" && data?.type !== "PROTECTED" ? (
               <button
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
-                onClick={() => {
-                  setAddMember(true);
-                }}
+                onClick={openAddMemberModal}
               >
                 <PlusIcon edit="fill-secondaryText w-4 h-4" />
               </button>
             ) : null}
             <button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
-              onClick={() => {
-                setMembers(true);
-              }}
+              onClick={openMembersModal}
             >
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
             </button>

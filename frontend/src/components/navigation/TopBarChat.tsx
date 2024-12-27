@@ -13,14 +13,14 @@ import { MessagesContext } from "../../pages/Messages/Messages";
 
 interface PropsType {
   openSettingsModal: () => void;
-  setAddMember: React.Dispatch<React.SetStateAction<boolean>>;
-  setMembers: React.Dispatch<React.SetStateAction<boolean>>;
+  openMembersModal: () => void;
+  openAddMemberModal: () => void;
 }
 
 function TopBarChat({
   openSettingsModal,
-  setAddMember,
-  setMembers,
+  openMembersModal,
+  openAddMemberModal,
 }: PropsType) {
   const stateMessage = React.useContext(StateMssages);
   const messageData = React.useContext(MessagesContext);
@@ -37,8 +37,8 @@ function TopBarChat({
       ) : (
         <CardChatChannel
           data={messageData.chatDataBox}
-          setAddMember={setAddMember}
-          setMembers={setMembers}
+          openMembersModal={openMembersModal}
+          openAddMemberModal={openAddMemberModal}
         />
       )}
       <div className="hidden items-center gap-5 lg:flex">

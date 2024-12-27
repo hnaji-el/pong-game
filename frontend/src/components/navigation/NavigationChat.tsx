@@ -14,7 +14,7 @@ import Members from "../modals/Members";
 import FormProtected from "../FormProtected";
 import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
 
-import { StateMssages, MessagesContext } from "../../pages/Messages/Messages";
+import { StateMssages } from "../../pages/Messages/Messages";
 
 /*
  * NavigationChat
@@ -33,18 +33,18 @@ function NavigationChat() {
   const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] =
     React.useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
+  const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
 
   const [openSearch, setOpenSearch] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
-  const [addMember, setAddMember] = React.useState(false);
-  const [members, setMembers] = React.useState(false);
 
   return (
     <>
       <TopBarChat
         openSettingsModal={() => setIsSettingsModalOpen(true)}
-        setAddMember={setAddMember}
-        setMembers={setMembers}
+        openMembersModal={() => setIsMembersModalOpen(true)}
+        openAddMemberModal={() => setIsAddMemberModalOpen(true)}
       />
 
       <SideBarChat
@@ -99,9 +99,12 @@ function NavigationChat() {
         </Modal>
       )}
 
-      {addMember && (
+      {isAddMemberModalOpen && (
         <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
-          <ModalHeader closeModal={() => setAddMember(false)} className="px-4">
+          <ModalHeader
+            closeModal={() => setIsAddMemberModalOpen(false)}
+            className="px-4"
+          >
             Add member
           </ModalHeader>
           <ModalBody className="justify-center">
@@ -110,9 +113,12 @@ function NavigationChat() {
         </Modal>
       )}
 
-      {members && (
+      {isMembersModalOpen && (
         <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
-          <ModalHeader closeModal={() => setMembers(false)} className="px-4">
+          <ModalHeader
+            closeModal={() => setIsMembersModalOpen(false)}
+            className="px-4"
+          >
             Members
           </ModalHeader>
           <ModalBody className="justify-center">

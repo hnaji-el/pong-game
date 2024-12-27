@@ -4,19 +4,19 @@ interface TypeProps {
   closeModal: () => void;
 }
 
-export default function ModalSettings({ children, closeModal }: TypeProps) {
-  const modalSettings = useRef<HTMLDivElement>(null);
+function SearchModal({ children, closeModal }: TypeProps) {
+  const modalSearch = useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const setWindowDimensions = () => {
     setWindowWidth(window.innerWidth);
   };
 
-  function checkEquale(e: HTMLButtonElement): boolean {
-    let buttonsModal = modalSettings.current?.querySelectorAll("button");
+  function checkEquale(e: HTMLElement, type: string): boolean {
+    let htmlElement = modalSearch.current?.querySelectorAll(type);
     let find = false;
 
-    buttonsModal?.forEach((button) => {
-      if (button === e) {
+    htmlElement?.forEach((element) => {
+      if (element === e) {
         find = true;
         return;
       }
@@ -30,9 +30,19 @@ export default function ModalSettings({ children, closeModal }: TypeProps) {
     document.body.style.overflow = "hidden";
     window.addEventListener("resize", setWindowDimensions);
     let allButton = document.querySelectorAll("button");
+    let allInput = document.querySelectorAll("input");
 
     allButton.forEach((e: HTMLButtonElement) => {
-      if (checkEquale(e)) {
+      if (checkEquale(e, "button")) {
+        e.addEventListener("click", () => {
+          closeModal();
+          document.body.style.overflow = "auto";
+        });
+      }
+    });
+
+    allInput.forEach((e: HTMLInputElement) => {
+      if (checkEquale(e, "input")) {
         e.addEventListener("click", () => {
           closeModal();
           document.body.style.overflow = "auto";
@@ -46,10 +56,12 @@ export default function ModalSettings({ children, closeModal }: TypeProps) {
 
   return (
     <div
-      className="fixed left-0 top-0 flex h-screen w-full flex-col items-start bg-body px-3 pt-7 lg:hidden"
-      ref={modalSettings}
+      className="fixed left-0 top-0 z-[1] flex h-screen w-full justify-center bg-black/30 px-3 pt-7 backdrop-blur-sm lg:hidden lg:items-start"
+      ref={modalSearch}
     >
       {children}
     </div>
   );
 }
+
+export default SearchModal;

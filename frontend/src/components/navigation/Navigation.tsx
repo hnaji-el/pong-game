@@ -2,8 +2,8 @@ import React, { useContext, useState } from "react";
 import NavBar from "./NavBar";
 import SideBar from "./SideBar";
 import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
-import ModalSearch from "../modals/ModalSearch";
-import ModalSettings from "../modals/ModalSettings";
+import SearchModal from "../modals/SearchModal";
+import MobileSettingsModal from "../modals/MobileSettingsModal";
 import SettingsModal from "../modals/SettingsModal";
 import SearchInput from "../SearchInput";
 import ViewSettings from "../ViewSettings";
@@ -39,14 +39,14 @@ export default function Navigation() {
         </Modal>
       )}
       {openSearch && (
-        <ModalSearch closeModal={() => setOpenSearch(false)}>
+        <SearchModal closeModal={() => setOpenSearch(false)}>
           <SearchInput setOpenSearch={setOpenSearch} modal={true} />
-        </ModalSearch>
+        </SearchModal>
       )}
       {openSettings && (
-        <ModalSettings closeModal={() => setOpenSettings(false)}>
+        <MobileSettingsModal closeModal={() => setOpenSettings(false)}>
           <ViewSettings openModal={() => setOpen(true)} />
-        </ModalSettings>
+        </MobileSettingsModal>
       )}
     </>
   );

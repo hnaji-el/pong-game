@@ -10,7 +10,7 @@ import { getFriendChannel } from "../../api/API";
 export const AddMemberContext = React.createContext<any>({});
 
 // TODO: check for [TypeError: cannot read properties of undefined `name`]
-function AddMember() {
+function AddMemberModal() {
   const messageData = React.useContext(MessagesContext);
   const [friend, setFriend] = React.useState<any>([]);
   const [render, setRender] = React.useState(false);
@@ -22,28 +22,26 @@ function AddMember() {
     }, messageData.chatDataBox.name);
   }, [messageData.chatDataBox.name]);
 
-  if (render) {
-    if (friend.length) {
-      return (
-        <AddMemberContext.Provider value={{ setFriend: setFriend }}>
-          <div className="flex w-full flex-col gap-6 pt-5">
-            <FriendMember data={friend} />
-          </div>
-        </AddMemberContext.Provider>
-      );
-    }
-    return (
-      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-        <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
-        No friends available to add.
-      </div>
-    );
-  } else
+  if (!render) {
     return (
       <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
         <Spinner size={36} />
       </div>
     );
+  }
+
+  return friend.length ? (
+    <AddMemberContext.Provider value={{ setFriend: setFriend }}>
+      <div className="flex w-full flex-col gap-6 pt-5">
+        <FriendMember data={friend} />
+      </div>
+    </AddMemberContext.Provider>
+  ) : (
+    <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+      <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
+      No friends available to add.
+    </div>
+  );
 }
 
-export default AddMember;
+export default AddMemberModal;

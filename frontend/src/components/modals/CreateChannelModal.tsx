@@ -6,7 +6,7 @@ import PublicChannel from "../PublicChannel";
 import { CheckIcon } from "../Icons";
 
 type ChannelType = "PUBLIC" | "PRIVATE" | "PROTECTED";
-type CreateChannelPropsType = {
+type CreateChannelModalPropsType = {
   closeModal: () => void;
 };
 type ButtonPropsType = {
@@ -15,7 +15,7 @@ type ButtonPropsType = {
   onClick: () => void;
 };
 
-function CreateChannel({ closeModal }: CreateChannelPropsType) {
+function CreateChannelModal({ closeModal }: CreateChannelModalPropsType) {
   const [type, setType] = React.useState<ChannelType>("PUBLIC");
 
   return (
@@ -71,4 +71,4 @@ function Button({ children, isClicked, onClick }: ButtonPropsType) {
   );
 }
 
-export default CreateChannel;
+export default CreateChannelModal;

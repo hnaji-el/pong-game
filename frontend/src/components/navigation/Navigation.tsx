@@ -4,7 +4,7 @@ import SideBar from "./SideBar";
 import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
 import ModalSearch from "../modals/ModalSearch";
 import ModalSettings from "../modals/ModalSettings";
-import SettingsBody from "../modals/settings/SettingsBody";
+import SettingsModal from "../modals/SettingsModal";
 import SearchInput from "../SearchInput";
 import ViewSettings from "../ViewSettings";
 import { ActiveHome } from "../../pages/Home/Home";
@@ -30,24 +30,24 @@ export default function Navigation() {
         openSettings={openSettings}
         setOpenSettings={setOpenSettings}
       />
-      {open ? (
+      {open && (
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
           <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
           <ModalBody className="justify-center">
-            <SettingsBody closeModal={() => setOpen(false)} />
+            <SettingsModal closeModal={() => setOpen(false)} />
           </ModalBody>
         </Modal>
-      ) : null}
-      {openSearch ? (
-        <ModalSearch setOpenSearch={setOpenSearch}>
+      )}
+      {openSearch && (
+        <ModalSearch closeModal={() => setOpenSearch(false)}>
           <SearchInput setOpenSearch={setOpenSearch} modal={true} />
         </ModalSearch>
-      ) : null}
-      {openSettings ? (
-        <ModalSettings setOpenSettings={setOpenSettings}>
+      )}
+      {openSettings && (
+        <ModalSettings closeModal={() => setOpenSettings(false)}>
           <ViewSettings openModal={() => setOpen(true)} />
         </ModalSettings>
-      ) : null}
+      )}
     </>
   );
 }

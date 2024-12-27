@@ -15,23 +15,23 @@ import { MessagesContext } from "../../pages/Messages/Messages";
 interface PropsType {
   openPasswordModal: () => void;
   openCreateChannelModal: () => void;
-  setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  closeSearchModal: () => void;
+  closeMobileSettingsModal: () => void;
 }
 
 function SideBarChat({
   openPasswordModal,
   openCreateChannelModal,
-  setOpenSearch,
-  setOpenSettings,
+  closeSearchModal,
+  closeMobileSettingsModal,
 }: PropsType) {
   const { click } = React.useContext(StateMssages);
   const { isDm, setIsDm, setDms, setChannels } =
     React.useContext(MessagesContext);
 
   function handleLogoClick() {
-    setOpenSearch(false);
-    setOpenSettings(false);
+    closeSearchModal();
+    closeMobileSettingsModal();
     document.body.style.overflow = "auto";
   }
 

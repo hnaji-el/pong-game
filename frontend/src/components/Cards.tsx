@@ -269,9 +269,7 @@ export function CardChatFriend({ data }: TypeChat) {
         <>
           <button
             className="flex h-6 w-6 items-center justify-center rounded-full bg-shape lg:hidden"
-            onClick={() => {
-              stateMessages.setClick(false);
-            }}
+            onClick={() => stateMessages.setClick(false)}
           >
             <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
           </button>
@@ -319,9 +317,7 @@ export function CardChatChannel({
     <div className="flex flex-1 items-center gap-4">
       <button
         className="flex h-6 w-6 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover lg:hidden"
-        onClick={() => {
-          stateMessages.setClick(false);
-        }}
+        onClick={() => stateMessages.setClick(false)}
       >
         <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
       </button>

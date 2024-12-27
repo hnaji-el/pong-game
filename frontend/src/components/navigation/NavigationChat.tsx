@@ -1,7 +1,7 @@
 import React from "react";
 
-import SettingsBody from "../modals/settings/SettingsBody";
-import PhoneNav from "./PhoneNav";
+import SettingsModal from "../modals/SettingsModal";
+import BottomBarChat from "./BottomBarChat";
 import TopBarChat from "./TopBarChat";
 import SideBarChat from "./SideBarChat";
 import ModalSearch from "../modals/ModalSearch";
@@ -35,9 +35,9 @@ function NavigationChat() {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
-
-  const [openSearch, setOpenSearch] = React.useState(false);
-  const [openSettings, setOpenSettings] = React.useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
+  const [isMobileSettingsModalOpen, setIsMobileSettingsModalOpen] =
+    React.useState(false);
 
   return (
     <>
@@ -50,16 +50,18 @@ function NavigationChat() {
       <SideBarChat
         openPasswordModal={() => setIsPasswordModalOpen(true)}
         openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
-        setOpenSearch={setOpenSearch}
-        setOpenSettings={setOpenSettings}
+        closeSearchModal={() => setIsSearchModalOpen(false)} // ??
+        closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
       />
 
       {!click && (
-        <PhoneNav
-          openSearch={openSearch}
-          setOpenSearch={setOpenSearch}
-          openSettings={openSettings}
-          setOpenSettings={setOpenSettings}
+        <BottomBarChat
+          isSearchModalOpen={isSearchModalOpen}
+          openSearchModal={() => setIsSearchModalOpen(true)} // ??
+          closeSearchModal={() => setIsSearchModalOpen(false)} // ??
+          isMobileSettingsModalOpen={isMobileSettingsModalOpen}
+          openMobileSettingsModal={() => setIsMobileSettingsModalOpen(true)}
+          closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
         />
       )}
 
@@ -69,19 +71,19 @@ function NavigationChat() {
             Settings
           </ModalHeader>
           <ModalBody className="justify-center">
-            <SettingsBody closeModal={() => setIsSettingsModalOpen(false)} />
+            <SettingsModal closeModal={() => setIsSettingsModalOpen(false)} />
           </ModalBody>
         </Modal>
       )}
 
-      {openSearch && (
-        <ModalSearch setOpenSearch={setOpenSearch}>
+      {isSearchModalOpen && (
+        <ModalSearch closeModal={() => setIsSearchModalOpen(false)}>
           <SearchInput modal={true} />
         </ModalSearch>
       )}
 
-      {openSettings && (
-        <ModalSettings setOpenSettings={setOpenSettings}>
+      {isMobileSettingsModalOpen && (
+        <ModalSettings closeModal={() => setIsMobileSettingsModalOpen(false)}>
           <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
         </ModalSettings>
       )}

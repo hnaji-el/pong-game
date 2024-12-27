@@ -1,4 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
+
+import { Link } from "react-router-dom";
+
 import {
   HomeIcon,
   MessagesIcon,
@@ -6,35 +9,39 @@ import {
   SearchIcon,
   ControllerIcon,
 } from "../Icons";
-import { Link } from "react-router-dom";
-import { ActiveHome } from "../../pages/Home/Home";
-import { StateMssages } from "../../pages/Messages/Messages";
 import { ActiveProfile } from "../../pages/Profile/Profile";
 import ListFriendOnline from "../ListFriendOnline";
 
+import { StateMssages } from "../../pages/Messages/Messages";
+import { ActiveHome } from "../../pages/Home/Home";
+
 interface TypeProps {
-  openSearch: boolean;
-  setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  openSettings: boolean;
-  setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  isSearchModalOpen: boolean;
+  openSearchModal: () => void;
+  closeSearchModal: () => void;
+  isMobileSettingsModalOpen: boolean;
+  openMobileSettingsModal: () => void;
+  closeMobileSettingsModal: () => void;
 }
 
-export default function PhoneNav({
-  openSearch,
-  setOpenSearch,
-  openSettings,
-  setOpenSettings,
+function BottomBarChat({
+  isSearchModalOpen,
+  openSearchModal,
+  closeSearchModal,
+  isMobileSettingsModalOpen,
+  openMobileSettingsModal,
+  closeMobileSettingsModal,
 }: TypeProps) {
-  const home = useContext(ActiveHome);
-  const messages = useContext(StateMssages);
-  const profile = useContext(ActiveProfile);
+  const home = React.useContext(ActiveHome);
+  const messages = React.useContext(StateMssages);
+  const profile = React.useContext(ActiveProfile);
 
   return (
     <>
       <section
-        className={`fixed bottom-0 w-full px-3 pb-3 lg:hidden ${
-          !openSearch ? "bg-body" : ""
-        } z-[999] flex-col`}
+        className={`fixed bottom-0 z-[999] w-full flex-col px-3 pb-3 lg:hidden ${
+          !isSearchModalOpen ? "bg-body" : ""
+        }`}
       >
         <nav className="rounded-lg bg-sideBackground p-2 px-3 shadow-lg">
           <ul className="flex items-center justify-between">
@@ -43,21 +50,21 @@ export default function PhoneNav({
                 to="/home"
                 className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
-                  setOpenSearch(false);
-                  setOpenSettings(false);
+                  closeSearchModal();
+                  closeMobileSettingsModal();
                   document.body.style.overflow = "auto";
                 }}
               >
                 <HomeIcon
                   edit={`w-6 h-6 ${
-                    home.value && !openSearch && !openSettings
+                    home.value && !isSearchModalOpen && !isMobileSettingsModalOpen
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    home.value && !openSearch && !openSettings
+                    home.value && !isSearchModalOpen && !isMobileSettingsModalOpen
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -71,21 +78,21 @@ export default function PhoneNav({
                 to="/messages"
                 className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
-                  setOpenSearch(false);
-                  setOpenSettings(false);
+                  closeSearchModal();
+                  closeMobileSettingsModal();
                   document.body.style.overflow = "auto";
                 }}
               >
                 <MessagesIcon
                   edit={`w-6 h-6 ${
-                    messages.active && !openSearch && !openSettings
+                    messages.active && !isSearchModalOpen && !isMobileSettingsModalOpen
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    messages.active && !openSearch && !openSettings
+                    messages.active && !isSearchModalOpen && !isMobileSettingsModalOpen
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -99,21 +106,21 @@ export default function PhoneNav({
                 to="/profile"
                 className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
-                  setOpenSearch(false);
-                  setOpenSettings(false);
+                  closeSearchModal();
+                  closeMobileSettingsModal();
                   document.body.style.overflow = "auto";
                 }}
               >
                 <UserIcon
                   edit={`w-6 h-6 ${
-                    profile.value && !openSearch && !openSettings
+                    profile.value && !isSearchModalOpen && !isMobileSettingsModalOpen
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    profile.value && !openSearch && !openSettings
+                    profile.value && !isSearchModalOpen && !isMobileSettingsModalOpen
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -126,17 +133,17 @@ export default function PhoneNav({
               <button
                 className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
-                  setOpenSearch(true);
+                  openSearchModal();
                 }}
               >
                 <SearchIcon
                   edit={`w-5 h-6 ${
-                    openSearch ? "fill-primary" : "fill-secondaryText"
+                    isSearchModalOpen ? "fill-primary" : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    openSearch ? "text-primary" : "text-secondaryText"
+                    isSearchModalOpen ? "text-primary" : "text-secondaryText"
                   }`}
                 >
                   Search
@@ -146,10 +153,10 @@ export default function PhoneNav({
             <li>
               <button
                 className={`flex flex-col items-center justify-center gap-1.5 ${
-                  openSettings ? "rounded-full border-[2px] border-primary" : ""
+                  isMobileSettingsModalOpen ? "rounded-full border-[2px] border-primary" : ""
                 }`}
                 onClick={() => {
-                  setOpenSettings(true);
+                  openMobileSettingsModal();
                 }}
               >
                 <img
@@ -172,3 +179,5 @@ export default function PhoneNav({
     </>
   );
 }
+
+export default BottomBarChat;

@@ -6,7 +6,7 @@ import Navigation from "../../components/navigation/Navigation";
 import { CardProfile } from "../../components/Cards";
 import SwitchersProfile from "../../components/SwitchersProfile";
 import { Modal, ModalBody, ModalHeader } from "../../components/modals/Modals";
-import SettingsBody from "../../components/modals/settings/SettingsBody";
+import SettingsModal from "../../components/modals/SettingsModal";
 import Spinner from "../../components/Spinner";
 
 import {
@@ -112,7 +112,7 @@ function Profile() {
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
           <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
           <ModalBody className="justify-center">
-            <SettingsBody closeModal={() => setOpen(false)} />
+            <SettingsModal closeModal={() => setOpen(false)} />
           </ModalBody>
         </Modal>
       ) : null}

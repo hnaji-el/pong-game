@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 interface TypeProps {
   children: JSX.Element | JSX.Element[] | string;
-  setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  closeModal: () => void;
 }
 
-export default function ModalSearch({ children, setOpenSearch }: TypeProps) {
+function ModalSearch({ children, closeModal }: TypeProps) {
   const modalSearch = useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const setWindowDimensions = () => {
@@ -35,7 +35,7 @@ export default function ModalSearch({ children, setOpenSearch }: TypeProps) {
     allButton.forEach((e: HTMLButtonElement) => {
       if (checkEquale(e, "button")) {
         e.addEventListener("click", () => {
-          setOpenSearch(false);
+          closeModal();
           document.body.style.overflow = "auto";
         });
       }
@@ -44,22 +44,24 @@ export default function ModalSearch({ children, setOpenSearch }: TypeProps) {
     allInput.forEach((e: HTMLInputElement) => {
       if (checkEquale(e, "input")) {
         e.addEventListener("click", () => {
-          setOpenSearch(false);
+          closeModal();
           document.body.style.overflow = "auto";
         });
       }
     });
-  }, [setOpenSearch]);
+  }, [closeModal]);
 
   if (windowWidth >= 1024) document.body.style.overflow = "auto";
   else document.body.style.overflow = "hidden";
 
   return (
     <div
-      className="fixed left-0 top-0 flex justify-center px-3 pt-7 lg:items-start bg-black/30 w-full h-screen backdrop-blur-sm lg:hidden z-[1]"
+      className="fixed left-0 top-0 z-[1] flex h-screen w-full justify-center bg-black/30 px-3 pt-7 backdrop-blur-sm lg:hidden lg:items-start"
       ref={modalSearch}
     >
       {children}
     </div>
   );
 }
+
+export default ModalSearch;

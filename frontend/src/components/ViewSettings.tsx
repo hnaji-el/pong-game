@@ -15,12 +15,7 @@ function ViewSettings({ openModal }: { openModal: () => void }) {
         <img src={logo} alt="Pong logo" className="w-48" />
       </Link>
       <div className="text-md flex w-full flex-col items-center justify-center gap-8 pt-10 text-primaryText">
-        <button
-          className="flex gap-2 p-2"
-          onClick={() => {
-            openModal();
-          }}
-        >
+        <button className="flex gap-2 p-2" onClick={openModal}>
           <SettingsNavIcon edit="w-7 h-7 fill-primaryText" />
           <span>Settings</span>
         </button>

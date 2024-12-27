@@ -72,7 +72,6 @@ function Messages() {
   const [channelIndex, setChannelIndex] = React.useState(0); //   ,    , passed, passed
 
   const [click, setClick] = React.useState(false); // used, , passed, passed
-  const [passwordProtected, setpasswordProtected] = React.useState(false); //   ,   , passed, passed
 
   const navigate = useNavigate();
 
@@ -175,8 +174,6 @@ function Messages() {
           setDmIndex: setDmIndex,
           channelIndex: channelIndex,
           setChannelIndex: setChannelIndex,
-          passwordProtected: passwordProtected,
-          setpasswordProtected: setpasswordProtected,
         }}
       >
         <NavigationChat />

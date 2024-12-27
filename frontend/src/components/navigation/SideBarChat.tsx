@@ -13,12 +13,14 @@ import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
 
 interface PropsType {
+  openPasswordModal: () => void;
   openCreateChannelModal: () => void;
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function SideBarChat({
+  openPasswordModal,
   openCreateChannelModal,
   setOpenSearch,
   setOpenSettings,
@@ -73,7 +75,10 @@ function SideBarChat({
           {isDm ? (
             <DmCardList />
           ) : (
-            <ChannelCardList openCreateChannelModal={openCreateChannelModal} />
+            <ChannelCardList
+              openPasswordModal={openPasswordModal}
+              openCreateChannelModal={openCreateChannelModal}
+            />
           )}
         </div>
       </div>

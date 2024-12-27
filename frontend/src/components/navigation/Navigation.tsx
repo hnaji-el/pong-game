@@ -31,10 +31,10 @@ export default function Navigation() {
         setOpenSettings={setOpenSettings}
       />
       {open ? (
-        <Modal className="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
+        <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
           <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
           <ModalBody className="justify-center">
-            <SettingsBody setOpen={setOpen} />
+            <SettingsBody closeModal={() => setOpen(false)} />
           </ModalBody>
         </Modal>
       ) : null}
@@ -45,7 +45,7 @@ export default function Navigation() {
       ) : null}
       {openSettings ? (
         <ModalSettings setOpenSettings={setOpenSettings}>
-          <ViewSettings setOpen={setOpen} />
+          <ViewSettings openModal={() => setOpen(true)} />
         </ModalSettings>
       ) : null}
     </>

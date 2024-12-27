@@ -27,27 +27,28 @@ import { StateMssages, MessagesContext } from "../../pages/Messages/Messages";
  */
 
 function NavigationChat() {
+  const { click } = React.useContext(StateMssages);
+
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
   const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] =
     React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
+
   const [openSearch, setOpenSearch] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
   const [addMember, setAddMember] = React.useState(false);
   const [members, setMembers] = React.useState(false);
 
-  const { click } = React.useContext(StateMssages);
-  const { passwordProtected, setpasswordProtected } =
-    React.useContext(MessagesContext);
-
   return (
     <>
       <TopBarChat
-        setOpen={setOpen}
+        openSettingsModal={() => setIsSettingsModalOpen(true)}
         setAddMember={setAddMember}
         setMembers={setMembers}
       />
 
       <SideBarChat
+        openPasswordModal={() => setIsPasswordModalOpen(true)}
         openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
@@ -62,11 +63,13 @@ function NavigationChat() {
         />
       )}
 
-      {open && (
+      {isSettingsModalOpen && (
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
-          <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
+          <ModalHeader closeModal={() => setIsSettingsModalOpen(false)}>
+            Settings
+          </ModalHeader>
           <ModalBody className="justify-center">
-            <SettingsBody setOpen={setOpen} />
+            <SettingsBody closeModal={() => setIsSettingsModalOpen(false)} />
           </ModalBody>
         </Modal>
       )}
@@ -79,7 +82,7 @@ function NavigationChat() {
 
       {openSettings && (
         <ModalSettings setOpenSettings={setOpenSettings}>
-          <ViewSettings setOpen={setOpen} />
+          <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
         </ModalSettings>
       )}
 
@@ -118,13 +121,13 @@ function NavigationChat() {
         </Modal>
       )}
 
-      {passwordProtected && (
+      {isPasswordModalOpen && (
         <Modal className="h-[15rem] w-[90%] lg:h-[15rem] lg:w-[40rem]">
-          <ModalHeader closeModal={() => setpasswordProtected(false)}>
+          <ModalHeader closeModal={() => setIsPasswordModalOpen(false)}>
             Password
           </ModalHeader>
           <ModalBody className="justify-center">
-            <FormProtected />
+            <FormProtected closeModal={() => setIsPasswordModalOpen(false)} />
           </ModalBody>
         </Modal>
       )}

@@ -1,25 +1,24 @@
 import React from "react";
+
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../api/API";
+
 import logo from "../assets/logo.svg";
 import { LogoutIcon, SettingsNavIcon } from "./Icons";
+import { logout } from "../api/API";
 
-interface TypeProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function ViewSettings({ setOpen }: TypeProps) {
+function ViewSettings({ openModal }: { openModal: () => void }) {
   const navigate = useNavigate();
+
   return (
     <>
-      <Link to="/home" className="lg:hidden w-full flex justify-center">
+      <Link to="/home" className="flex w-full justify-center lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
       </Link>
-      <div className="w-full pt-10 flex flex-col gap-8 justify-center items-center text-primaryText text-md">
+      <div className="text-md flex w-full flex-col items-center justify-center gap-8 pt-10 text-primaryText">
         <button
           className="flex gap-2 p-2"
           onClick={() => {
-            setOpen(true);
+            openModal();
           }}
         >
           <SettingsNavIcon edit="w-7 h-7 fill-primaryText" />
@@ -39,3 +38,5 @@ export default function ViewSettings({ setOpen }: TypeProps) {
     </>
   );
 }
+
+export default ViewSettings;

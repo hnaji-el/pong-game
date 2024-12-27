@@ -7,11 +7,15 @@ import { deleteRoom, getAllChannels, joinRoom, leaveRoom } from "../api/API";
 import { ChannelType } from "../pages/Messages/types";
 import { MessagesContext, StateMssages } from "../pages/Messages/Messages";
 
-function ChannelCardList({
-  openCreateChannelModal,
-}: {
+interface PropsType {
+  openPasswordModal: () => void;
   openCreateChannelModal: () => void;
-}) {
+}
+
+function ChannelCardList({
+  openPasswordModal,
+  openCreateChannelModal,
+}: PropsType) {
   const { setClick } = React.useContext(StateMssages);
   const {
     channels,
@@ -19,7 +23,6 @@ function ChannelCardList({
     channelIndex,
     setChannelIndex,
     setChatDataBox,
-    setpasswordProtected,
   } = React.useContext(MessagesContext);
 
   function handleCardClick(channelData: ChannelType, index: number) {
@@ -31,7 +34,7 @@ function ChannelCardList({
 
     if (!channelData.isJoined && channelData.type === "PROTECTED") {
       setChannelIndex(index);
-      setpasswordProtected(true);
+      openPasswordModal();
     }
 
     if (!channelData.isJoined && channelData.type === "PUBLIC") {

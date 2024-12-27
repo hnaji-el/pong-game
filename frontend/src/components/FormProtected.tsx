@@ -1,14 +1,15 @@
-import React, { useContext, useState } from "react";
-import { getAllChannels, joinRoom } from "../api/API";
-import InputPasswordForm from "./InputPasswordForm";
-import { MessagesContext } from "../pages/Messages/Messages";
-import { StateMssages } from "../pages/Messages/Messages";
+import React from "react";
 
-export default function FormProtected() {
-  const [errorPassword, setErrorPassowrd] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const messageData = useContext(MessagesContext);
-  const stateMessages = useContext(StateMssages);
+import InputPasswordForm from "./InputPasswordForm";
+import { getAllChannels, joinRoom } from "../api/API";
+
+import { MessagesContext, StateMssages } from "../pages/Messages/Messages";
+
+function FormProtected({ closeModal }: { closeModal: () => void }) {
+  const stateMessages = React.useContext(StateMssages);
+  const messageData = React.useContext(MessagesContext);
+  const [errorPassword, setErrorPassowrd] = React.useState<string>("");
+  const [password, setPassword] = React.useState<string>("");
 
   return (
     <form className="flex flex-col items-center justify-center gap-16">
@@ -25,7 +26,7 @@ export default function FormProtected() {
           className="w-full rounded-md bg-primary p-2 text-sm text-primaryText"
           onClick={(e) => {
             e.preventDefault();
-            let data = {
+            const data = {
               name: messageData.channels[messageData.channelIndex].name,
               type: "PROTECTED",
               password: password,
@@ -41,11 +42,10 @@ export default function FormProtected() {
                 return;
               } else {
                 stateMessages.setClick(true);
-                messageData.setDmIndex(-1);
                 messageData.setChatDataBox(res);
                 getAllChannels((response: any) => {
                   messageData.setChannels(response);
-                  messageData.setpasswordProtected(false);
+                  closeModal();
                   document.body.style.overflow = "auto";
                 });
               }
@@ -58,3 +58,5 @@ export default function FormProtected() {
     </form>
   );
 }
+
+export default FormProtected;

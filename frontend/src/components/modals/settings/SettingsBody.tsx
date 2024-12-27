@@ -8,11 +8,7 @@ import { ActiveProfileUser } from "../../../pages/ProfileUser/ProfileUser";
 import { StateMssages } from "../../../pages/Messages/Messages";
 import { GameContext } from "../../../pages/Game/Game";
 
-interface TypeProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function SettingsBody({ setOpen }: TypeProps) {
+function SettingsBody({ closeModal }: { closeModal: () => void }) {
   let dataUserLogged = useContext(ActiveHome);
   let dataUserLoggedProfile = useContext(ActiveProfile);
   let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
@@ -44,7 +40,7 @@ export default function SettingsBody({ setOpen }: TypeProps) {
   if (!tfa)
     return (
       <Settings
-        setOpen={setOpen}
+        closeModal={closeModal}
         setTfa={setTfa}
         enable={enable}
         pictureUser={pictureUser}
@@ -63,3 +59,5 @@ export default function SettingsBody({ setOpen }: TypeProps) {
   if (!enable) return <QrcodeEnable setTfa={setTfa} setEnable={setEnable} />;
   else return <QrcodeDisable setTfa={setTfa} setEnable={setEnable} />;
 }
+
+export default SettingsBody;

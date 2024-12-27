@@ -11,13 +11,17 @@ import { logout } from "../../api/API";
 import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
 
-interface TypeProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+interface PropsType {
+  openSettingsModal: () => void;
   setAddMember: React.Dispatch<React.SetStateAction<boolean>>;
   setMembers: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function TopBarChat({ setOpen, setAddMember, setMembers }: TypeProps) {
+function TopBarChat({
+  openSettingsModal,
+  setAddMember,
+  setMembers,
+}: PropsType) {
   const stateMessage = React.useContext(StateMssages);
   const messageData = React.useContext(MessagesContext);
   const navigate = useNavigate();
@@ -53,12 +57,7 @@ function TopBarChat({ setOpen, setAddMember, setMembers }: TypeProps) {
             arrow={true}
           />
           <DropdownList edit="top-12">
-            <DropdownItem
-              edit="justify-center p-2"
-              onClick={() => {
-                if (setOpen) setOpen(true);
-              }}
-            >
+            <DropdownItem edit="justify-center p-2" onClick={openSettingsModal}>
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>

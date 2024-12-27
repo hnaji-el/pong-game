@@ -10,7 +10,8 @@ import { checkNickname } from "../../../utilities/helpers";
 import { EditAvatarIcon } from "../../Icons";
 import InputForm from "../../InputForm";
 
-interface TypeProps {
+interface PropsType {
+  closeModal: () => void;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   pictureUser: string;
@@ -19,7 +20,6 @@ interface TypeProps {
   setTmpPicture: React.Dispatch<React.SetStateAction<string>>;
   sendPicture: {};
   setSendPicture: React.Dispatch<React.SetStateAction<{}>>;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setTfa: React.Dispatch<React.SetStateAction<boolean>>;
   enable: boolean;
   dataUserLogged: any;
@@ -33,7 +33,8 @@ interface TypeData {
   status: string;
 }
 
-export default function Settings({
+function Settings({
+  closeModal,
   value,
   setValue,
   pictureUser,
@@ -42,12 +43,12 @@ export default function Settings({
   setTmpPicture,
   sendPicture,
   setSendPicture,
-  setOpen,
   setTfa,
   enable,
   dataUserLogged,
-}: TypeProps) {
-  const [errorMessage, setErrorMessage] = useState<string>("");
+}: PropsType) {
+  const [errorMessage, setErrorMessage] = useState("");
+
   return (
     <form className="flex flex-col justify-between py-6">
       <div>
@@ -126,7 +127,7 @@ export default function Settings({
           className="w-32 rounded-md bg-shape p-2 text-sm text-primaryText shadow"
           type="button"
           onClick={() => {
-            setOpen(false);
+            closeModal();
             document.body.style.overflow = "auto";
           }}
         >
@@ -153,7 +154,7 @@ export default function Settings({
 
                 getDataUserLogged((res: TypeData) => {
                   dataUserLogged.updateSettings(res);
-                  setOpen(false);
+                  closeModal();
                   document.body.style.overflow = "auto";
                 });
               }
@@ -166,3 +167,5 @@ export default function Settings({
     </form>
   );
 }
+
+export default Settings;

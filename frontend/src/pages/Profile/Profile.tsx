@@ -112,7 +112,7 @@ function Profile() {
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
           <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
           <ModalBody className="justify-center">
-            <SettingsBody setOpen={setOpen} />
+            <SettingsBody closeModal={() => setOpen(false)} />
           </ModalBody>
         </Modal>
       ) : null}

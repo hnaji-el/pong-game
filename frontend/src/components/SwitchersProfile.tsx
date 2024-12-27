@@ -30,19 +30,19 @@ function SwitchersProfile({ id }: { id?: string }) {
     <div className="flex h-full flex-col gap-0 lg:overflow-visible">
       <div className="flex items-center text-sm">
         <Button
-          isClicked={tabState.isAchievements}
+          isHovered={tabState.isAchievements}
           onClick={() => handleTabState("isAchievements")}
         >
           Achievements
         </Button>
         <Button
-          isClicked={tabState.isFriends}
+          isHovered={tabState.isFriends}
           onClick={() => handleTabState("isFriends")}
         >
           Friends
         </Button>
         <Button
-          isClicked={tabState.isMatchHistory}
+          isHovered={tabState.isMatchHistory}
           onClick={() => handleTabState("isMatchHistory")}
         >
           Match History

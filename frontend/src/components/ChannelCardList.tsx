@@ -3,14 +3,14 @@ import React from "react";
 import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
 import { deleteRoom, getAllChannels, joinRoom, leaveRoom } from "../api/API";
-import { ChannelType } from "../pages/Messages/types";
 
+import { ChannelType } from "../pages/Messages/types";
 import { MessagesContext, StateMssages } from "../pages/Messages/Messages";
 
 function ChannelCardList({
-  setIsCreateChannelBtnClicked,
+  openCreateChannelModal,
 }: {
-  setIsCreateChannelBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
+  openCreateChannelModal: () => void;
 }) {
   const { setClick } = React.useContext(StateMssages);
   const {
@@ -71,9 +71,7 @@ function ChannelCardList({
       <div className="mx-3 flex items-center gap-2 lg:mx-2">
         <button
           className="flex w-full items-center justify-center gap-2 rounded-[.3rem] bg-primary p-2"
-          onClick={() => {
-            setIsCreateChannelBtnClicked(true);
-          }}
+          onClick={openCreateChannelModal}
         >
           <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
           <span className="text-sm font-light text-primaryText">

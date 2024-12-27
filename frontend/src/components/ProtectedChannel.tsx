@@ -1,20 +1,19 @@
-import React, { useContext, useState } from "react";
-import { getAllChannels } from "../api/API";
-import { checkChannelName, checkPasswordChannel } from "../utilities/helpers";
+import React from "react";
+
+import { checkChannelName } from "../utilities/helpers";
 import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
+import { getAllChannels } from "../api/API";
+
 import { MessagesContext } from "../pages/Messages/Messages";
+import { ChannelType } from "../pages/Messages/types";
 
-interface TypeProps {
-  setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [channelName, setChannelName] = useState<string>("");
-  const [errorPassword, setErrorPassowrd] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const messageData = useContext(MessagesContext);
+function ProtectedChannel({ closeModal }: { closeModal: () => void }) {
+  const { setChannels } = React.useContext(MessagesContext);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [channelName, setChannelName] = React.useState("");
+  const [errorPassword, setErrorPassowrd] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   return (
     <form className="flex flex-col gap-5 lg:gap-5">
@@ -41,7 +40,7 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
           className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32"
           onClick={(e) => {
             e.preventDefault();
-            let data = {
+            const data = {
               name: channelName,
               type: "PROTECTED",
               password: password,
@@ -65,9 +64,9 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
               if (res === "error") {
                 setErrorMessage("Name already exists");
               } else {
-                getAllChannels((res: any) => {
-                  messageData.setChannels(res);
-                  setCreateChannel(false);
+                getAllChannels((channelsData: ChannelType[]) => {
+                  setChannels(channelsData);
+                  closeModal();
                   document.body.style.overflow = "auto";
                 });
               }
@@ -80,3 +79,5 @@ export default function ProtectedChannel({ setCreateChannel }: TypeProps) {
     </form>
   );
 }
+
+export default ProtectedChannel;

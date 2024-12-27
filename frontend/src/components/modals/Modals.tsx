@@ -1,20 +1,32 @@
-import React, { useEffect } from "react";
+import React from "react";
+
 import { CloseIcon } from "../Icons";
 
-interface TypeProps {
-  children: JSX.Element | JSX.Element[] | string;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  edit?: string;
+interface ModalPropsType {
+  children: JSX.Element[];
+  className: string;
 }
 
-export function Modal({ children, edit }: TypeProps) {
-  useEffect(() => {
+interface ModalHeaderPropsType {
+  children: string;
+  className?: string;
+  closeModal: () => void;
+}
+
+interface ModalBodyPropsType {
+  children: JSX.Element;
+  className: string;
+}
+
+export function Modal({ children, className }: ModalPropsType) {
+  React.useEffect(() => {
     document.body.style.overflow = "hidden";
   }, []);
+
   return (
-    <div className="fixed left-0 top-0 flex justify-center items-center lg:items-start bg-black/30 w-full h-full backdrop-blur-sm z-[999]">
+    <div className="fixed left-0 top-0 z-[999] flex h-full w-full items-center justify-center bg-black/30 backdrop-blur-sm lg:items-start">
       <div
-        className={`bg-shape mt-0 lg:mt-8 rounded-lg flex flex-col p-4 ${edit}`}
+        className={`mt-0 flex flex-col rounded-lg bg-shape p-4 lg:mt-8 ${className}`}
       >
         {children}
       </div>
@@ -22,32 +34,34 @@ export function Modal({ children, edit }: TypeProps) {
   );
 }
 
-export function ModalHeader({ children, edit, setOpen }: TypeProps) {
+export function ModalHeader({
+  children,
+  className,
+  closeModal,
+}: ModalHeaderPropsType) {
   return (
     <>
       <div
-        className={`flex items-center w-full justify-between border-secondaryText ${edit}`}
+        className={`flex w-full items-center justify-between border-secondaryText ${className}`}
       >
-        <div className="text-primaryText text-xl font-light">{children}</div>
+        <div className="text-xl font-light text-primaryText">{children}</div>
         <button
-          className="w-4 h-4 rounded-full"
+          className="h-4 w-4 rounded-full"
           onClick={() => {
-            if (setOpen) {
-              setOpen(false);
-              document.body.style.overflow = "auto";
-            }
+            closeModal();
+            document.body.style.overflow = "auto";
           }}
         >
           <CloseIcon edit="w-full h-full fill-secondaryText" />
         </button>
       </div>
-      <div className={`pt-5 ${edit}`}>
+      <div className={`pt-5 ${className}`}>
         <div className={`h-[1px] w-full bg-secondaryText`}></div>
       </div>
     </>
   );
 }
 
-export function ModalBody({ children, edit }: TypeProps) {
-  return <div className={`flex h-full ${edit}`}>{children}</div>;
+export function ModalBody({ children, className }: ModalBodyPropsType) {
+  return <div className={`flex h-full ${className}`}>{children}</div>;
 }

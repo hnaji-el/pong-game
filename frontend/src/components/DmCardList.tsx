@@ -1,11 +1,11 @@
 import React from "react";
 
 import DmCard from "./DmCard";
-import { DmType } from "../pages/Messages/types";
+import { blockFriend, getAllDms } from "../api/API";
 
 import { globalSocket } from "../utilities/socket";
+import { DmType } from "../pages/Messages/types";
 import { StateMssages, MessagesContext } from "../pages/Messages/Messages";
-import { blockFriend, getAllDms } from "../api/API";
 
 function DmCardList() {
   const { setClick, settings } = React.useContext(StateMssages);

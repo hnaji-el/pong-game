@@ -1,18 +1,17 @@
-import React, { useContext, useState } from "react";
-import { getAllChannels } from "../api/API";
+import React from "react";
+
 import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
+import { getAllChannels } from "../api/API";
+
 import { MessagesContext } from "../pages/Messages/Messages";
+import { ChannelType } from "../pages/Messages/types";
 
-interface TypeProps {
-  setCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function PublicChannel({ setCreateChannel }: TypeProps) {
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [value, setValue] = useState<string>("");
-  const messageData = useContext(MessagesContext);
+function PrivateChannel({ closeModal }: { closeModal: () => void }) {
+  const { setChannels } = React.useContext(MessagesContext);
+  const [value, setValue] = React.useState<string>("");
+  const [errorMessage, setErrorMessage] = React.useState<string>("");
 
   return (
     <form className="flex flex-col gap-1">
@@ -47,9 +46,9 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
               if (res === "error") {
                 setErrorMessage("Name already exists");
               } else {
-                getAllChannels((res: any) => {
-                  messageData.setChannels(res);
-                  setCreateChannel(false);
+                getAllChannels((channelsData: ChannelType[]) => {
+                  setChannels(channelsData);
+                  closeModal();
                   document.body.style.overflow = "auto";
                 });
               }
@@ -59,14 +58,16 @@ export default function PublicChannel({ setCreateChannel }: TypeProps) {
           Create
         </button>
       </div>
-      {errorMessage.length ? (
+      {errorMessage.length > 0 && (
         <div
           className={`mt-1 hidden gap-1.5 fill-error text-xs font-medium text-error lg:flex`}
         >
           <ExclamationIcon edit="w-3 h-3 relative top-0.5" />
           <span>{errorMessage}</span>
         </div>
-      ) : null}
+      )}
     </form>
   );
 }
+
+export default PrivateChannel;

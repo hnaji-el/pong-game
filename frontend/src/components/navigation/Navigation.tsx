@@ -31,9 +31,9 @@ export default function Navigation() {
         setOpenSettings={setOpenSettings}
       />
       {open ? (
-        <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
-          <ModalHeader setOpen={setOpen}>Settings</ModalHeader>
-          <ModalBody edit="justify-center">
+        <Modal className="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
+          <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
+          <ModalBody className="justify-center">
             <SettingsBody setOpen={setOpen} />
           </ModalBody>
         </Modal>

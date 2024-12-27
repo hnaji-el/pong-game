@@ -25,8 +25,6 @@ interface TypeContext {
   active: boolean;
   click: boolean;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
-  firstClick: boolean;
-  setFirstClick: React.Dispatch<React.SetStateAction<boolean>>;
   settings: UserType;
   updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
 }
@@ -45,8 +43,6 @@ export const StateMssages = React.createContext<TypeContext>({
   active: false,
   click: false,
   setClick: () => {},
-  firstClick: false,
-  setFirstClick: () => {},
   settings: userData,
   updateSettings: () => {},
 });
@@ -76,7 +72,6 @@ function Messages() {
   const [channelIndex, setChannelIndex] = React.useState(0); //   ,    , passed, passed
 
   const [click, setClick] = React.useState(false); // used, , passed, passed
-  const [firstClick, setFirstClick] = React.useState(true); //  ,   , passed, passed
   const [passwordProtected, setpasswordProtected] = React.useState(false); //   ,   , passed, passed
 
   const navigate = useNavigate();
@@ -161,8 +156,6 @@ function Messages() {
       value={{
         active: true,
         click: click,
-        firstClick: firstClick,
-        setFirstClick: setFirstClick,
         setClick: setClick,
         settings: settings,
         updateSettings: setSettings,

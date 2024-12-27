@@ -109,9 +109,9 @@ function Profile() {
         <SwitchersProfile id={settings.id} />
       </main>
       {open ? (
-        <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
-          <ModalHeader setOpen={setOpen}>Settings</ModalHeader>
-          <ModalBody edit="justify-center">
+        <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
+          <ModalBody className="justify-center">
             <SettingsBody setOpen={setOpen} />
           </ModalBody>
         </Modal>

@@ -14,30 +14,30 @@ import Members from "../modals/Members";
 import FormProtected from "../FormProtected";
 import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
 
-import { StateMssages } from "../../pages/Messages/Messages";
-import { MessagesContext } from "../../pages/Messages/Messages";
+import { StateMssages, MessagesContext } from "../../pages/Messages/Messages";
 
 /*
- * NavigationCaht
+ * NavigationChat
  *  |— TopBarChat
  *  |— SideBarChat
  *  |—  |— DmCardList
- *  |—  |—  |— DmCard
+ *  |—  |—  |— DmCard[]
  *  |—  |— ChannelCardList
- *  |—  |—  |— ChannelCard
+ *  |—  |—  |— ChannelCard[]
  */
 
 function NavigationChat() {
+  const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] =
+    React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [openSearch, setOpenSearch] = React.useState(false);
   const [openSettings, setOpenSettings] = React.useState(false);
-  const [isCreateChannelBtnClicked, setIsCreateChannelBtnClicked] =
-    React.useState(false);
   const [addMember, setAddMember] = React.useState(false);
   const [members, setMembers] = React.useState(false);
 
-  const stateMessages = React.useContext(StateMssages);
-  const messageData = React.useContext(MessagesContext);
+  const { click } = React.useContext(StateMssages);
+  const { passwordProtected, setpasswordProtected } =
+    React.useContext(MessagesContext);
 
   return (
     <>
@@ -46,79 +46,88 @@ function NavigationChat() {
         setAddMember={setAddMember}
         setMembers={setMembers}
       />
+
       <SideBarChat
+        openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
         setOpenSearch={setOpenSearch}
         setOpenSettings={setOpenSettings}
-        setIsCreateChannelBtnClicked={setIsCreateChannelBtnClicked}
       />
-      {!stateMessages.click ? (
+
+      {!click && (
         <PhoneNav
           openSearch={openSearch}
           setOpenSearch={setOpenSearch}
           openSettings={openSettings}
           setOpenSettings={setOpenSettings}
         />
-      ) : null}
-      {open ? (
-        <Modal edit="w-[90%] h-[34rem] lg:w-[40rem] lg:h-[21.5rem]">
-          <ModalHeader setOpen={setOpen}>Settings</ModalHeader>
-          <ModalBody edit="justify-center">
+      )}
+
+      {open && (
+        <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setOpen(false)}>Settings</ModalHeader>
+          <ModalBody className="justify-center">
             <SettingsBody setOpen={setOpen} />
           </ModalBody>
         </Modal>
-      ) : null}
-      {openSearch ? (
+      )}
+
+      {openSearch && (
         <ModalSearch setOpenSearch={setOpenSearch}>
           <SearchInput modal={true} />
         </ModalSearch>
-      ) : null}
-      {openSettings ? (
+      )}
+
+      {openSettings && (
         <ModalSettings setOpenSettings={setOpenSettings}>
           <ViewSettings setOpen={setOpen} />
         </ModalSettings>
-      ) : null}
+      )}
 
-      {isCreateChannelBtnClicked ? (
-        <Modal edit="w-[90%] h-[40rem] lg:w-[40rem] lg:h-[21.5rem]">
-          <ModalHeader setOpen={setIsCreateChannelBtnClicked}>
+      {isCreateChannelModalOpen && (
+        <Modal className="h-[40rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setIsCreateChannelModalOpen(false)}>
             Create channel
           </ModalHeader>
-          <ModalBody edit="justify-center">
-            <CreateChannel setCreateChannel={setIsCreateChannelBtnClicked} />
+          <ModalBody className="justify-center">
+            <CreateChannel
+              closeModal={() => setIsCreateChannelModalOpen(false)}
+            />
           </ModalBody>
         </Modal>
-      ) : null}
-      {addMember ? (
-        <Modal edit="h-auto w-[90%] lg:w-[40rem] px-0">
-          <ModalHeader setOpen={setAddMember} edit="px-4">
+      )}
+
+      {addMember && (
+        <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
+          <ModalHeader closeModal={() => setAddMember(false)} className="px-4">
             Add member
           </ModalHeader>
-          <ModalBody edit="justify-center">
+          <ModalBody className="justify-center">
             <AddMember />
           </ModalBody>
         </Modal>
-      ) : null}
+      )}
 
-      {members ? (
-        <Modal edit="h-auto w-[90%] lg:w-[40rem] px-0">
-          <ModalHeader setOpen={setMembers} edit="px-4">
+      {members && (
+        <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
+          <ModalHeader closeModal={() => setMembers(false)} className="px-4">
             Members
           </ModalHeader>
-          <ModalBody edit="justify-center">
+          <ModalBody className="justify-center">
             <Members />
           </ModalBody>
         </Modal>
-      ) : null}
-      {messageData.passwordProtected ? (
-        <Modal edit="w-[90%] h-[15rem] lg:w-[40rem] lg:h-[15rem]">
-          <ModalHeader setOpen={messageData.setpasswordProtected}>
+      )}
+
+      {passwordProtected && (
+        <Modal className="h-[15rem] w-[90%] lg:h-[15rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setpasswordProtected(false)}>
             Password
           </ModalHeader>
-          <ModalBody edit="justify-center">
+          <ModalBody className="justify-center">
             <FormProtected />
           </ModalBody>
         </Modal>
-      ) : null}
+      )}
     </>
   );
 }

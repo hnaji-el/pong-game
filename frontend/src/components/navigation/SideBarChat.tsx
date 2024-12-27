@@ -8,23 +8,23 @@ import Button from "../Button";
 import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";
 
+import { ChannelType, DmType } from "../../pages/Messages/types";
 import { StateMssages } from "../../pages/Messages/Messages";
 import { MessagesContext } from "../../pages/Messages/Messages";
-import { ChannelType, DmType } from "../../pages/Messages/types";
 
 interface PropsType {
+  openCreateChannelModal: () => void;
   setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setOpenSettings: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsCreateChannelBtnClicked: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function SideBarChat({
+  openCreateChannelModal,
   setOpenSearch,
   setOpenSettings,
-  setIsCreateChannelBtnClicked,
 }: PropsType) {
   const { click } = React.useContext(StateMssages);
-  const { setDms, setChannels, isDm, setIsDm } =
+  const { isDm, setIsDm, setDms, setChannels } =
     React.useContext(MessagesContext);
 
   function handleLogoClick() {
@@ -73,9 +73,7 @@ function SideBarChat({
           {isDm ? (
             <DmCardList />
           ) : (
-            <ChannelCardList
-              setIsCreateChannelBtnClicked={setIsCreateChannelBtnClicked}
-            />
+            <ChannelCardList openCreateChannelModal={openCreateChannelModal} />
           )}
         </div>
       </div>

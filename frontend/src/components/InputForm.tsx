@@ -24,7 +24,7 @@ export default function InputForm({
 }: TypeProps) {
   return (
     <div className={`flex flex-col gap-1.5 ${edit}`}>
-      <label htmlFor={label} className="text-sm text-primaryText capitalize">
+      <label htmlFor={label} className="text-sm capitalize text-primaryText">
         {label}
       </label>
       <input
@@ -39,14 +39,14 @@ export default function InputForm({
           setValue(e.currentTarget.value);
         }}
       />
-      {errorMessage.length ? (
+      {errorMessage.length > 0 && (
         <div
-          className={`text-error text-xs font-medium fill-error flex gap-1.5 ${editError}`}
+          className={`flex gap-1.5 fill-error text-xs font-medium text-error ${editError}`}
         >
           <ExclamationIcon edit="w-3 h-3 relative top-[.1rem]" />
           <span className="font-medium">{errorMessage}</span>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -8,8 +8,8 @@ import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import { logout } from "../../api/API";
 
-import { StateMssages } from "../../pages/Messages/Messages";
-import { MessagesContext } from "../../pages/Messages/Messages";
+import { StateMssages } from "../../pages/Chat/Chat";
+import { MessagesContext } from "../../pages/Chat/Chat";
 
 interface PropsType {
   openSettingsModal: () => void;

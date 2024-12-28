@@ -8,7 +8,7 @@ import {
   TypeDataProfileUser,
   TypedataFriend,
 } from "./types";
-import { ChannelType, DmType } from "../pages/Messages/types";
+import { ChannelType, DmType } from "../pages/Chat/types";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"

@@ -8,7 +8,7 @@ import { popOutFunc } from "./components/eventListener";
 import Login from "./pages/Login/Login";
 import Edit from "./pages/Edit/Edit";
 import Home from "./pages/Home/Home";
-import Messages from "./pages/Messages/Messages";
+import Chat from "./pages/Chat/Chat";
 import Profile from "./pages/Profile/Profile";
 import ProfileUser from "./pages/ProfileUser/ProfileUser";
 import Game from "./pages/Game/Game";
@@ -49,7 +49,7 @@ function App() {
       <Route path="/edit" element={<Edit />} caseSensitive />
       <Route path="/tfa" element={<Tfa />} caseSensitive />
       <Route path="/home" element={<Home />} caseSensitive />
-      <Route path="/messages" element={<Messages />} caseSensitive />
+      <Route path="/chat" element={<Chat />} caseSensitive />
       <Route path="/profile" element={<Profile />} caseSensitive />
       <Route path="/profile-user" element={<ProfileUser />} caseSensitive />
       <Route path="/game" element={<Game />} caseSensitive />

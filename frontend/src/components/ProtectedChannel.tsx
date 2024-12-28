@@ -5,8 +5,8 @@ import InputForm from "./InputForm";
 import InputPasswordForm from "./InputPasswordForm";
 import { getAllChannels } from "../api/API";
 
-import { MessagesContext } from "../pages/Messages/Messages";
-import { ChannelType } from "../pages/Messages/types";
+import { MessagesContext } from "../pages/Chat/Chat";
+import { ChannelType } from "../pages/Chat/types";
 
 function ProtectedChannel({ closeModal }: { closeModal: () => void }) {
   const { setChannels } = React.useContext(MessagesContext);

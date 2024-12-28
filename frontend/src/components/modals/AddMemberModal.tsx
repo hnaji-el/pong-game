@@ -2,7 +2,7 @@ import React from "react";
 
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
-import { MessagesContext } from "../../pages/Messages/Messages";
+import { MessagesContext } from "../../pages/Chat/Chat";
 import Spinner from "../Spinner";
 
 import { getFriendChannel } from "../../api/API";

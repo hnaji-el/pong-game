@@ -3,7 +3,7 @@ import React from "react";
 import InputPasswordForm from "./InputPasswordForm";
 import { getAllChannels, joinRoom } from "../api/API";
 
-import { MessagesContext, StateMssages } from "../pages/Messages/Messages";
+import { MessagesContext, StateMssages } from "../pages/Chat/Chat";
 
 function FormProtected({ closeModal }: { closeModal: () => void }) {
   const stateMessages = React.useContext(StateMssages);

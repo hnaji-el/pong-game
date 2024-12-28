@@ -62,7 +62,7 @@ model Room {
 model Message {
   id           String @id @default(uuid())
   roomName     String
-  receiverUser String
+  userId       String
   pictureURL   String
   data         String
   room         Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)

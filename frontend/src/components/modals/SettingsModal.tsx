@@ -17,7 +17,7 @@ import {
   turOnTfa,
 } from "../../api/API";
 
-import { StateMssages } from "../../pages/Messages/Messages";
+import { StateMssages } from "../../pages/Chat/Chat";
 import { ActiveHome } from "../../pages/Home/Home";
 import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";

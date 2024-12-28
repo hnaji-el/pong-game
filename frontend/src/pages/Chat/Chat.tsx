@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import NavigationChat from "../../components/navigation/NavigationChat";
-import ChatBox from "../../components/ChatBox";
+import Messages from "../../components/Messages";
 import Spinner from "../../components/Spinner";
 import { SendIcon } from "../../components/Icons";
 
@@ -52,7 +52,7 @@ const socket = io(DOMAIN, {
   withCredentials: true,
 });
 
-function Messages() {
+function Chat() {
   const status = useVerifyUserAuthenticity();
   const [message, setMessage] = React.useState("");
   // [ used, getDataUserLogged(/users/logged-user), passed, passed ]
@@ -177,14 +177,14 @@ function Messages() {
         }}
       >
         <NavigationChat />
-        {chatDataBox ? (
+        {chatDataBox && (
           <>
             <main
-              className={`${
+              className={`mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1 ${
                 click ? "" : "absolute h-0 w-0"
-              } mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1`}
+              }`}
             >
-              <ChatBox data={chatDataBox?.conversation} />
+              <Messages messages={chatDataBox.messages} />
             </main>
             <div className="absolute bottom-[0.9rem] w-full px-3 lg:pl-64 lg:pr-4">
               <form className="flex items-center rounded-md bg-shape pr-2">
@@ -211,10 +211,10 @@ function Messages() {
               </form>
             </div>
           </>
-        ) : null}
+        )}
       </MessagesContext.Provider>
     </StateMssages.Provider>
   );
 }
 
-export default Messages;
+export default Chat;

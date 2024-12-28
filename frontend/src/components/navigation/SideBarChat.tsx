@@ -8,9 +8,9 @@ import Button from "../Button";
 import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";
 
-import { ChannelType, DmType } from "../../pages/Messages/types";
-import { StateMssages } from "../../pages/Messages/Messages";
-import { MessagesContext } from "../../pages/Messages/Messages";
+import { ChannelType, DmType } from "../../pages/Chat/types";
+import { StateMssages } from "../../pages/Chat/Chat";
+import { MessagesContext } from "../../pages/Chat/Chat";
 
 interface PropsType {
   openPasswordModal: () => void;

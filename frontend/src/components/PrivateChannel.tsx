@@ -5,8 +5,8 @@ import { ExclamationIcon } from "./Icons";
 import InputForm from "./InputForm";
 import { getAllChannels } from "../api/API";
 
-import { MessagesContext } from "../pages/Messages/Messages";
-import { ChannelType } from "../pages/Messages/types";
+import { MessagesContext } from "../pages/Chat/Chat";
+import { ChannelType } from "../pages/Chat/types";
 
 function PrivateChannel({ closeModal }: { closeModal: () => void }) {
   const { setChannels } = React.useContext(MessagesContext);

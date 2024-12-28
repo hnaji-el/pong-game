@@ -12,7 +12,7 @@ import {
 import { ActiveProfile } from "../../pages/Profile/Profile";
 import ListFriendOnline from "../ListFriendOnline";
 
-import { StateMssages } from "../../pages/Messages/Messages";
+import { StateMssages } from "../../pages/Chat/Chat";
 import { ActiveHome } from "../../pages/Home/Home";
 
 interface TypeProps {
@@ -57,14 +57,18 @@ function BottomBarChat({
               >
                 <HomeIcon
                   edit={`w-6 h-6 ${
-                    home.value && !isSearchModalOpen && !isMobileSettingsModalOpen
+                    home.value &&
+                    !isSearchModalOpen &&
+                    !isMobileSettingsModalOpen
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    home.value && !isSearchModalOpen && !isMobileSettingsModalOpen
+                    home.value &&
+                    !isSearchModalOpen &&
+                    !isMobileSettingsModalOpen
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -85,14 +89,18 @@ function BottomBarChat({
               >
                 <MessagesIcon
                   edit={`w-6 h-6 ${
-                    messages.active && !isSearchModalOpen && !isMobileSettingsModalOpen
+                    messages.active &&
+                    !isSearchModalOpen &&
+                    !isMobileSettingsModalOpen
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    messages.active && !isSearchModalOpen && !isMobileSettingsModalOpen
+                    messages.active &&
+                    !isSearchModalOpen &&
+                    !isMobileSettingsModalOpen
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -113,14 +121,18 @@ function BottomBarChat({
               >
                 <UserIcon
                   edit={`w-6 h-6 ${
-                    profile.value && !isSearchModalOpen && !isMobileSettingsModalOpen
+                    profile.value &&
+                    !isSearchModalOpen &&
+                    !isMobileSettingsModalOpen
                       ? "fill-primary"
                       : "fill-secondaryText"
                   }`}
                 />
                 <span
                   className={`text-xs ${
-                    profile.value && !isSearchModalOpen && !isMobileSettingsModalOpen
+                    profile.value &&
+                    !isSearchModalOpen &&
+                    !isMobileSettingsModalOpen
                       ? "text-primary"
                       : "text-secondaryText"
                   }`}
@@ -153,7 +165,9 @@ function BottomBarChat({
             <li>
               <button
                 className={`flex flex-col items-center justify-center gap-1.5 ${
-                  isMobileSettingsModalOpen ? "rounded-full border-[2px] border-primary" : ""
+                  isMobileSettingsModalOpen
+                    ? "rounded-full border-[2px] border-primary"
+                    : ""
                 }`}
                 onClick={() => {
                   openMobileSettingsModal();

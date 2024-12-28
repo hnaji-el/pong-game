@@ -4,8 +4,8 @@ import DmCard from "./DmCard";
 import { blockFriend, getAllDms } from "../api/API";
 
 import { globalSocket } from "../utilities/socket";
-import { DmType } from "../pages/Messages/types";
-import { StateMssages, MessagesContext } from "../pages/Messages/Messages";
+import { DmType } from "../pages/Chat/types";
+import { StateMssages, MessagesContext } from "../pages/Chat/Chat";
 
 function DmCardList() {
   const { setClick, settings } = React.useContext(StateMssages);

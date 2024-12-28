@@ -14,7 +14,7 @@ import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
 import MembersModal from "../modals/MembersModal";
 import CreateChannelModal from "../modals/CreateChannelModal";
 
-import { StateMssages } from "../../pages/Messages/Messages";
+import { StateMssages } from "../../pages/Chat/Chat";
 
 /*
  * NavigationChat

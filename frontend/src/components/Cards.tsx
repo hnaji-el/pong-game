@@ -11,11 +11,11 @@ import {
   SettingsIcon,
 } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
-import { StateMssages } from "../pages/Messages/Messages";
+import { StateMssages } from "../pages/Chat/Chat";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../pages/Profile/Profile";
 import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
-import { MessagesContext } from "../pages/Messages/Messages";
+import { MessagesContext } from "../pages/Chat/Chat";
 import { AddMemberContext } from "./modals/AddMemberModal";
 import { MembersContext } from "./modals/MembersModal";
 import {

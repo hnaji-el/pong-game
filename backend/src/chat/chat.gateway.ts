@@ -70,7 +70,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.prisma.message.create({
         data: {
           roomName: room.name,
-          receiverUser: receiverUser.nickname,
+          userId: senderUser.id,
           pictureURL: receiverUser.pictureURL,
           data: wsData.message,
         },
@@ -124,7 +124,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       await this.prisma.message.create({
         data: {
           roomName: room.name,
-          receiverUser: senderUser.nickname,
+          userId: senderUser.id,
           pictureURL: senderUser.pictureURL,
           data: wsData.message,
         },

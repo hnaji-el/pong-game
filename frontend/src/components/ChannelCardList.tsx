@@ -4,8 +4,8 @@ import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
 import { deleteRoom, getAllChannels, joinRoom, leaveRoom } from "../api/API";
 
-import { ChannelType } from "../pages/Messages/types";
-import { MessagesContext, StateMssages } from "../pages/Messages/Messages";
+import { ChannelType } from "../pages/Chat/types";
+import { MessagesContext, StateMssages } from "../pages/Chat/Chat";
 
 interface PropsType {
   openPasswordModal: () => void;

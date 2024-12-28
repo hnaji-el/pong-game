@@ -8,7 +8,7 @@ import {
 } from "../Icons";
 import { Link } from "react-router-dom";
 import { ActiveHome } from "../../pages/Home/Home";
-import { StateMssages } from "../../pages/Messages/Messages";
+import { StateMssages } from "../../pages/Chat/Chat";
 import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";

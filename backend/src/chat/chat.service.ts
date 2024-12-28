@@ -75,9 +75,12 @@ export class ChatService {
         type: room.type,
         latestMessage:
           roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
-        conversation: roomMsgs.messages.map((msg) => ({
-          type: msg.receiverUser === user.nickname ? 'user' : 'friend',
-          message: msg.data,
+        messages: roomMsgs.messages.map((msg) => ({
+          id: msg.id,
+          roomName: msg.roomName,
+          userId: msg.userId,
+          pictureURL: msg.pictureURL,
+          data: msg.data,
         })),
       };
     } catch (error) {
@@ -144,10 +147,12 @@ export class ChatService {
         type: room.type,
         latestMessage:
           roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
-        conversation: roomMsgs.messages.map((msg) => ({
-          login: msg.receiverUser,
-          picture: msg.pictureURL,
-          message: msg.data,
+        messages: roomMsgs.messages.map((msg) => ({
+          id: msg.id,
+          roomName: msg.roomName,
+          userId: msg.userId,
+          pictureURL: msg.pictureURL,
+          data: msg.data,
         })),
         isJoined: isJoined,
       };
@@ -288,26 +293,19 @@ export class ChatService {
       latestMessage: '',
       role: 'MEMBER',
       type: userUpdate.type,
-      conversation: [],
+      messages: [],
       isJoined: true,
     };
     if (message_user) {
       person.latestMessage =
         allmessage.messages[allmessage.messages.length - 1]?.data ?? '';
-      person.conversation = allmessage.messages.map((x) => ({
-        login: '',
-        message: x.data,
-        picture: '',
+      person.messages = allmessage.messages.map((msg) => ({
+        id: msg.id,
+        roomName: msg.roomName,
+        userId: msg.userId,
+        pictureURL: msg.pictureURL,
+        data: msg.data,
       }));
-      for (let i = allmessage.messages.length - 1; i >= 0; i--) {
-        const user_chanel = await this.prisma.user.findUnique({
-          where: {
-            nickname: allmessage.messages[i].receiverUser,
-          },
-        });
-        person.conversation[i].login = user_chanel.nickname;
-        person.conversation[i].picture = user_chanel.pictureURL;
-      }
     }
     return person;
   }
@@ -384,10 +382,10 @@ export class ChatService {
       for (let i = allmessage.messages.length - 1; i >= 0; i--) {
         const user_chanel = await this.prisma.user.findUnique({
           where: {
-            nickname: allmessage.messages[i].receiverUser,
+            nickname: allmessage.messages[i].userId,
           },
         });
-        if (user.nickname === allmessage.messages[i].receiverUser)
+        if (user.nickname === allmessage.messages[i].userId)
           person.conversation[i].type = 'user';
         else {
           person.conversation[i].type = 'MEMBER';
@@ -834,21 +832,19 @@ export class ChatService {
           status: user.status,
           latestMessage: '',
           picture: user.pictureURL,
-          conversation: [],
+          messages: [],
           type: 'DM',
         };
         if (message_user) {
           person.latestMessage =
             allmessage.messages[allmessage.messages.length - 1]?.data ?? '';
-          person.conversation = allmessage.messages.map((x) => ({
-            type: '',
-            message: x.data,
+          person.messages = allmessage.messages.map((msg) => ({
+            id: msg.id,
+            roomName: msg.roomName,
+            userId: msg.userId,
+            pictureURL: msg.pictureURL,
+            data: msg.data,
           }));
-        }
-        for (let i = allmessage.messages.length - 1; i >= 0; i--) {
-          if (user1.nickname === allmessage.messages[i].receiverUser)
-            person.conversation[i].type = 'friend';
-          else person.conversation[i].type = 'user';
         }
         obj.push(person);
       }

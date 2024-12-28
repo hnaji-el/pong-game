@@ -1,3 +1,11 @@
+export interface Message {
+  id: string;
+  roomName: string;
+  userId: string;
+  pictureURL: string;
+  data: string;
+}
+
 export interface DmType {
   id: string;
   username: string;
@@ -5,10 +13,7 @@ export interface DmType {
   status: string;
   type: string; // 'DM'
   latestMessage: string;
-  conversation: {
-    type: string; // ??? 'user' | 'friend'
-    message: string;
-  }[];
+  messages: Message[];
 }
 
 export interface ChannelType {
@@ -18,11 +23,6 @@ export interface ChannelType {
   members: number;
   type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
   latestMessage: string;
-  conversation: {
-    login: string;
-    message: string;
-    picture: string;
-    type?: string;
-  }[];
+  messages: Message[];
   isJoined: boolean;
 }

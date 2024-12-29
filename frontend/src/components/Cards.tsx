@@ -86,7 +86,7 @@ interface TypeFriendChannel {
 export function CardFriendOnline() {
   return (
     <Link
-      to="/messages"
+      to="/chat"
       className="flex items-center justify-between p-2 hover:bg-backgroundHover"
     >
       <div className="flex items-center gap-2">

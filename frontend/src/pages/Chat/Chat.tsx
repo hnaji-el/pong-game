@@ -3,8 +3,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-import NavigationChat from "../../components/navigation/NavigationChat";
-import Messages from "../../components/Messages";
+import ChatLayout from "./ChatLayout";
+import Messages from "./Messages";
 import Spinner from "../../components/Spinner";
 import { SendIcon } from "../../components/Icons";
 
@@ -176,42 +176,43 @@ function Chat() {
           setChannelIndex: setChannelIndex,
         }}
       >
-        <NavigationChat />
-        {chatDataBox && (
-          <>
-            <main
-              className={`mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1 ${
-                click ? "" : "absolute h-0 w-0"
-              }`}
-            >
-              <Messages messages={chatDataBox.messages} />
+        <ChatLayout>
+          {chatDataBox && (
+            <main>
+              <div
+                className={`mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1 ${
+                  click ? "" : "absolute h-0 w-0"
+                }`}
+              >
+                <Messages messages={chatDataBox.messages} />
+              </div>
+              <div className="absolute bottom-[0.9rem] w-full px-3 lg:pl-64 lg:pr-4">
+                <form className="flex items-center rounded-md bg-shape pr-2">
+                  <input
+                    type="text"
+                    placeholder="Type a message"
+                    value={message}
+                    className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
+                    onChange={(e) => {
+                      setMessage(e.currentTarget.value);
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className="flex h-8 w-8 items-center justify-center rounded-md bg-primary"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMessage("");
+                      sendMessage();
+                    }}
+                  >
+                    <SendIcon edit="w-4 fill-white" />
+                  </button>
+                </form>
+              </div>
             </main>
-            <div className="absolute bottom-[0.9rem] w-full px-3 lg:pl-64 lg:pr-4">
-              <form className="flex items-center rounded-md bg-shape pr-2">
-                <input
-                  type="text"
-                  placeholder="Type a message"
-                  value={message}
-                  className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
-                  onChange={(e) => {
-                    setMessage(e.currentTarget.value);
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="flex h-8 w-8 items-center justify-center rounded-md bg-primary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setMessage("");
-                    sendMessage();
-                  }}
-                >
-                  <SendIcon edit="w-4 fill-white" />
-                </button>
-              </form>
-            </div>
-          </>
-        )}
+          )}
+        </ChatLayout>
       </MessagesContext.Provider>
     </StateMssages.Provider>
   );

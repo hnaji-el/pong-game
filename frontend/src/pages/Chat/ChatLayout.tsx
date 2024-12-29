@@ -1,32 +1,32 @@
 import React from "react";
 
-import SettingsModal from "../modals/SettingsModal";
-import BottomBarChat from "./BottomBarChat";
-import TopBarChat from "./TopBarChat";
-import SideBarChat from "./SideBarChat";
-import SearchModal from "../modals/SearchModal";
-import SearchInput from "../SearchInput";
-import MobileSettingsModal from "../modals/MobileSettingsModal";
-import ViewSettings from "../ViewSettings";
-import AddMemberModal from "../modals/AddMemberModal";
-import FormProtected from "../FormProtected";
-import { Modal, ModalBody, ModalHeader } from "../modals/Modals";
-import MembersModal from "../modals/MembersModal";
-import CreateChannelModal from "../modals/CreateChannelModal";
+import SettingsModal from "../../components/modals/SettingsModal";
+import FooterBar from "./FooterBar";
+import HeaderBar from "./HeaderBar";
+import SideNavBar from "./SideNavBar";
+import SearchModal from "../../components/modals/SearchModal";
+import SearchInput from "../../components/SearchInput";
+import MobileSettingsModal from "../../components/modals/MobileSettingsModal";
+import ViewSettings from "../../components/ViewSettings";
+import AddMemberModal from "../../components/modals/AddMemberModal";
+import FormProtected from "../../components/FormProtected";
+import { Modal, ModalBody, ModalHeader } from "../../components/modals/Modals";
+import MembersModal from "../../components/modals/MembersModal";
+import CreateChannelModal from "../../components/modals/CreateChannelModal";
 
-import { StateMssages } from "../../pages/Chat/Chat";
+import { StateMssages } from "./Chat";
 
 /*
- * NavigationChat
- *  |— TopBarChat
- *  |— SideBarChat
+ * ChatLayout
+ *  |— HeaderBar
+ *  |— SideNavBar
  *  |—  |— DmCardList
  *  |—  |—  |— DmCard[]
  *  |—  |— ChannelCardList
  *  |—  |—  |— ChannelCard[]
  */
 
-function NavigationChat() {
+function ChatLayout({ children }: { children?: JSX.Element }) {
   const { click } = React.useContext(StateMssages);
 
   const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
@@ -41,21 +41,23 @@ function NavigationChat() {
 
   return (
     <>
-      <TopBarChat
+      <HeaderBar
         openSettingsModal={() => setIsSettingsModalOpen(true)}
         openMembersModal={() => setIsMembersModalOpen(true)}
         openAddMemberModal={() => setIsAddMemberModalOpen(true)}
       />
 
-      <SideBarChat
+      <SideNavBar
         openPasswordModal={() => setIsPasswordModalOpen(true)}
         openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
         closeSearchModal={() => setIsSearchModalOpen(false)}
         closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
       />
 
+      {children}
+
       {!click && (
-        <BottomBarChat
+        <FooterBar
           isSearchModalOpen={isSearchModalOpen}
           openSearchModal={() => setIsSearchModalOpen(true)}
           closeSearchModal={() => setIsSearchModalOpen(false)}
@@ -145,4 +147,4 @@ function NavigationChat() {
   );
 }
 
-export default NavigationChat;
+export default ChatLayout;

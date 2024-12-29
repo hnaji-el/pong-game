@@ -2,14 +2,23 @@ import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { CardChatChannel, CardChatFriend } from "../Cards";
-import { Dropdown, DropdownItem, DropdownBtn, DropdownList } from "../Dropdown";
-import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
+import { CardChatChannel, CardChatFriend } from "../../components/Cards";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownBtn,
+  DropdownList,
+} from "../../components/Dropdown";
+import {
+  ControllerIcon,
+  SettingsNavIcon,
+  LogoutIcon,
+} from "../../components/Icons";
 
 import { logout } from "../../api/API";
 
-import { StateMssages } from "../../pages/Chat/Chat";
-import { MessagesContext } from "../../pages/Chat/Chat";
+import { StateMssages } from "./Chat";
+import { MessagesContext } from "./Chat";
 
 interface PropsType {
   openSettingsModal: () => void;
@@ -17,7 +26,7 @@ interface PropsType {
   openAddMemberModal: () => void;
 }
 
-function TopBarChat({
+function HeaderBar({
   openSettingsModal,
   openMembersModal,
   openAddMemberModal,
@@ -27,8 +36,8 @@ function TopBarChat({
   const navigate = useNavigate();
 
   return (
-    <section
-      className={`z-[999] mx-3 items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:flex lg:items-start lg:justify-between lg:gap-5 lg:pt-7 ${
+    <header
+      className={`mx-[12px] items-center justify-center pt-7 lg:ml-[256px] lg:mr-[16px] lg:flex lg:items-start lg:justify-between lg:gap-5 lg:pt-[28px] ${
         !stateMessage.click ? "hidden" : ""
       }`}
     >
@@ -74,8 +83,8 @@ function TopBarChat({
           </DropdownList>
         </Dropdown>
       </div>
-    </section>
+    </header>
   );
 }
 
-export default TopBarChat;
+export default HeaderBar;

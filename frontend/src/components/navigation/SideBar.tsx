@@ -95,7 +95,7 @@ export default function SideBar({
             </li>
             <li className="lg:w-full">
               <Link
-                to="/messages"
+                to="/chat"
                 className={`flex flex-col items-center justify-center gap-1.5 lg:flex-row lg:justify-start lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
                   messages.active
                     ? "lg:border-l-[6px] lg:border-primary lg:bg-shape"

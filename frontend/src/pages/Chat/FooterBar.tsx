@@ -8,12 +8,11 @@ import {
   UserIcon,
   SearchIcon,
   ControllerIcon,
-} from "../Icons";
-import { ActiveProfile } from "../../pages/Profile/Profile";
-import ListFriendOnline from "../ListFriendOnline";
+} from "../../components/Icons";
+import { ActiveProfile } from "../Profile/Profile";
 
-import { StateMssages } from "../../pages/Chat/Chat";
-import { ActiveHome } from "../../pages/Home/Home";
+import { StateMssages } from "./Chat";
+import { ActiveHome } from "../Home/Home";
 
 interface TypeProps {
   isSearchModalOpen: boolean;
@@ -24,7 +23,7 @@ interface TypeProps {
   closeMobileSettingsModal: () => void;
 }
 
-function BottomBarChat({
+function FooterBar({
   isSearchModalOpen,
   openSearchModal,
   closeSearchModal,
@@ -37,9 +36,9 @@ function BottomBarChat({
   const profile = React.useContext(ActiveProfile);
 
   return (
-    <>
-      <section
-        className={`fixed bottom-0 z-[999] w-full flex-col px-3 pb-3 lg:hidden ${
+    <footer>
+      <div
+        className={`fixed bottom-0 z-[999] w-full px-[12px] pb-[12px] lg:hidden ${
           !isSearchModalOpen ? "bg-body" : ""
         }`}
       >
@@ -182,16 +181,15 @@ function BottomBarChat({
             </li>
           </ul>
         </nav>
-        <ListFriendOnline />
-      </section>
+      </div>
       <Link
         to="/game"
         className="fixed bottom-24 right-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full bg-primary lg:hidden"
       >
         <ControllerIcon edit="w-8" />
       </Link>
-    </>
+    </footer>
   );
 }
 
-export default BottomBarChat;
+export default FooterBar;

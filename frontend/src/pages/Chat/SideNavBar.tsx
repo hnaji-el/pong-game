@@ -2,15 +2,15 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import ChannelCardList from "../ChannelCardList";
-import DmCardList from "../DmCardList";
-import Button from "../Button";
+import ChannelCardList from "../../components/ChannelCardList";
+import DmCardList from "../../components/DmCardList";
+import Button from "../../components/Button";
 import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";
 
-import { ChannelType, DmType } from "../../pages/Chat/types";
-import { StateMssages } from "../../pages/Chat/Chat";
-import { MessagesContext } from "../../pages/Chat/Chat";
+import { ChannelType, DmType } from "./types";
+import { StateMssages } from "./Chat";
+import { MessagesContext } from "./Chat";
 
 interface PropsType {
   openPasswordModal: () => void;
@@ -19,7 +19,7 @@ interface PropsType {
   closeMobileSettingsModal: () => void;
 }
 
-function SideBarChat({
+function SideNavBar({
   openPasswordModal,
   openCreateChannelModal,
   closeSearchModal,
@@ -50,8 +50,8 @@ function SideBarChat({
   }
 
   return (
-    <section
-      className={`h-full w-full flex-col gap-12 pb-[12.95rem] pt-7 lg:fixed lg:left-0 lg:top-0 lg:z-[999] lg:flex lg:w-60 lg:bg-sideBackground lg:px-0 lg:py-7 2xl:left-auto ${
+    <aside
+      className={`h-full w-full flex-col gap-12 pb-[200px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground lg:py-[28px] 2xl:left-auto ${
         click ? "hidden" : "flex"
       } `}
     >
@@ -82,8 +82,8 @@ function SideBarChat({
           )}
         </div>
       </div>
-    </section>
+    </aside>
   );
 }
 
-export default SideBarChat;
+export default SideNavBar;

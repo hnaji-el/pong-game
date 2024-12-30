@@ -179,10 +179,10 @@ function Chat() {
         <ChatLayout>
           {chatDataBox && (
             <main className="flex grow flex-col overflow-hidden">
-              <div className="mx-[12px] grow overflow-auto pt-[28px] lg:ml-[256px] lg:mr-[16px] lg:block lg:pb-[4px]">
+              <div className="grow overflow-auto">
                 <Messages messages={chatDataBox.messages} />
               </div>
-              <div className="w-full px-[12px] pb-[12px] lg:pl-[256px] lg:pr-[16px]">
+              <div className="w-full">
                 <form className="flex items-center rounded-md bg-shape pr-2">
                   <input
                     type="text"

@@ -36,11 +36,11 @@ function FooterBar({
   const profile = React.useContext(ActiveProfile);
 
   return (
-    <footer>
+    <footer className={`${messages.click ? "hidden" : ""}`}>
       <div
         className={`fixed bottom-0 z-[999] w-full px-[12px] pb-[12px] lg:hidden ${
           !isSearchModalOpen ? "bg-body" : ""
-        } ${messages.click ? "hidden" : ""}`}
+        }`}
       >
         <nav className="rounded-lg bg-sideBackground p-2 px-3 shadow-lg">
           <ul className="flex items-center justify-between">

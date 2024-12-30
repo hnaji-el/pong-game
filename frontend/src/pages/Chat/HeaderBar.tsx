@@ -36,7 +36,7 @@ function HeaderBar({
   const navigate = useNavigate();
 
   return (
-    <header className="mx-[12px] pt-[28px] lg:ml-[256px] lg:mr-[16px] lg:flex lg:items-start lg:justify-between lg:gap-5">
+    <header className="lg:flex lg:items-start lg:justify-between lg:gap-5">
       {messageData.isDm ? (
         <CardChatFriend data={messageData.chatDataBox} />
       ) : (

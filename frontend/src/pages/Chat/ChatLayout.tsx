@@ -42,7 +42,7 @@ function ChatLayout({ children }: { children?: JSX.Element }) {
   return (
     <>
       <div
-        className={`h-full w-full flex-col ${click ? "flex" : "hidden"} lg:flex`}
+        className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
       >
         <HeaderBar
           openSettingsModal={() => setIsSettingsModalOpen(true)}

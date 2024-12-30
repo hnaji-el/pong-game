@@ -8,7 +8,7 @@ function Messages({ messages }: { messages: Message[] }) {
   const { isDm } = React.useContext(MessagesContext);
 
   return (
-    <div className="flex h-full flex-col-reverse gap-10 overflow-auto">
+    <div className="flex h-full flex-col-reverse gap-[20px] overflow-auto px-[15px] pb-[10px] pt-[20px]">
       {[...messages].reverse().map((msg, index) => {
         if (msg.userId === settings.id) {
           return (

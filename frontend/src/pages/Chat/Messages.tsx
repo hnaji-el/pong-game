@@ -12,8 +12,8 @@ function Messages({ messages }: { messages: Message[] }) {
       {[...messages].reverse().map((msg, index) => {
         if (msg.userId === settings.id) {
           return (
-            <div key={index} className="flex justify-end">
-              <div className="max-w-[20rem] rounded-xl rounded-tr-none bg-primary p-5 pb-3 lg:max-w-lg">
+            <div key={index} className="ml-[20px] flex justify-end">
+              <div className="max-w-[320px] rounded-xl rounded-tr-none bg-primary p-[15px] lg:max-w-[512px]">
                 <p className="break-words text-left text-sm font-light text-white">
                   {msg.data}
                 </p>
@@ -23,7 +23,10 @@ function Messages({ messages }: { messages: Message[] }) {
         }
 
         return (
-          <div key={index} className="flex items-start justify-start gap-2">
+          <div
+            key={index}
+            className="mr-[20px] flex items-start justify-start gap-2"
+          >
             {!isDm && (
               <img
                 src={msg.pictureURL}
@@ -31,7 +34,7 @@ function Messages({ messages }: { messages: Message[] }) {
                 className="h-12 w-12 rounded-full"
               />
             )}
-            <div className="max-w-[20rem] rounded-xl rounded-tl-none bg-shape p-5 pb-3 lg:max-w-lg">
+            <div className="max-w-[320px] rounded-xl rounded-tl-none bg-shape p-[15px] lg:max-w-[512px]">
               <p className="break-words text-left text-sm font-light text-white">
                 {msg.data}
               </p>

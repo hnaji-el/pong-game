@@ -36,11 +36,7 @@ function HeaderBar({
   const navigate = useNavigate();
 
   return (
-    <header
-      className={`mx-[12px] items-center justify-center pt-7 lg:ml-[256px] lg:mr-[16px] lg:flex lg:items-start lg:justify-between lg:gap-5 lg:pt-[28px] ${
-        !stateMessage.click ? "hidden" : ""
-      }`}
-    >
+    <header className="mx-[12px] pt-[28px] lg:ml-[256px] lg:mr-[16px] lg:flex lg:items-start lg:justify-between lg:gap-5">
       {messageData.isDm ? (
         <CardChatFriend data={messageData.chatDataBox} />
       ) : (

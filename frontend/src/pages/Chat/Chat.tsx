@@ -178,15 +178,11 @@ function Chat() {
       >
         <ChatLayout>
           {chatDataBox && (
-            <main>
-              <div
-                className={`mx-3 mb-[4.85rem] overflow-hidden pt-7 lg:relative lg:ml-64 lg:mr-4 lg:block lg:h-auto lg:w-auto lg:pb-1 ${
-                  click ? "" : "absolute h-0 w-0"
-                }`}
-              >
+            <main className="flex grow flex-col overflow-hidden">
+              <div className="mx-[12px] grow overflow-auto pt-[28px] lg:ml-[256px] lg:mr-[16px] lg:block lg:pb-[4px]">
                 <Messages messages={chatDataBox.messages} />
               </div>
-              <div className="absolute bottom-[0.9rem] w-full px-3 lg:pl-64 lg:pr-4">
+              <div className="w-full px-[12px] pb-[12px] lg:pl-[256px] lg:pr-[16px]">
                 <form className="flex items-center rounded-md bg-shape pr-2">
                   <input
                     type="text"

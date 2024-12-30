@@ -5,23 +5,11 @@ import { MessagesContext, StateMssages } from "./Chat";
 
 function Messages({ messages }: { messages: Message[] }) {
   const { settings } = React.useContext(StateMssages);
-  const { isDm, dmIndex, channelIndex, chatDataBox } =
-    React.useContext(MessagesContext);
-  const elementRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (elementRef.current) {
-      elementRef.current.scrollTop = elementRef.current.scrollHeight;
-      const hasVerticalScrollbar =
-        elementRef.current.scrollHeight > elementRef.current.clientHeight;
-      if (hasVerticalScrollbar) elementRef.current.classList.add("pr-4");
-      else elementRef.current.classList.remove("pr-4");
-    }
-  }, [dmIndex, channelIndex, chatDataBox]);
+  const { isDm } = React.useContext(MessagesContext);
 
   return (
-    <div ref={elementRef} className="flex h-full flex-col gap-10 overflow-auto">
-      {messages.map((msg, index) => {
+    <div className="flex h-full flex-col-reverse gap-10 overflow-auto">
+      {[...messages].reverse().map((msg, index) => {
         if (msg.userId === settings.id) {
           return (
             <div key={index} className="flex justify-end">

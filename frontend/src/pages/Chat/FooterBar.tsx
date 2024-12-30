@@ -40,7 +40,7 @@ function FooterBar({
       <div
         className={`fixed bottom-0 z-[999] w-full px-[12px] pb-[12px] lg:hidden ${
           !isSearchModalOpen ? "bg-body" : ""
-        }`}
+        } ${messages.click ? "hidden" : ""}`}
       >
         <nav className="rounded-lg bg-sideBackground p-2 px-3 shadow-lg">
           <ul className="flex items-center justify-between">
@@ -78,7 +78,7 @@ function FooterBar({
             </li>
             <li>
               <Link
-                to="/messages"
+                to="/chat"
                 className="flex flex-col items-center justify-center gap-1.5"
                 onClick={() => {
                   closeSearchModal();
@@ -184,7 +184,7 @@ function FooterBar({
       </div>
       <Link
         to="/game"
-        className="fixed bottom-24 right-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full bg-primary lg:hidden"
+        className="fixed bottom-[90px] right-[12px] flex h-[56px] w-[56px] items-center justify-center rounded-full bg-primary lg:hidden"
       >
         <ControllerIcon edit="w-8" />
       </Link>

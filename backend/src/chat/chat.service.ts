@@ -67,6 +67,8 @@ export class ChatService {
         },
       });
 
+      console.log(roomMsgs.messages);
+
       return {
         id: user.id,
         username: user.nickname,

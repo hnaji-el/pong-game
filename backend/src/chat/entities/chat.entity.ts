@@ -25,7 +25,7 @@ export interface WsDataType {
   isDm: boolean;
   receiverUserId?: string;
   channelId?: string;
-  message: string;
+  data: string;
 }
 
 export interface objectChannel {

@@ -13,6 +13,7 @@ import { ChatService } from './chat.service';
 import * as moment from 'moment';
 import { User } from '@prisma/client';
 import { WsDataType } from './entities/chat.entity';
+import { randomUUID } from 'crypto';
 
 @WebSocketGateway(+process.env.BACKEND_CHAT_PORT, {
   cors: {
@@ -29,7 +30,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() server: Server;
   connectedClients = [];
-  id = 0;
 
   @SubscribeMessage('msgFromClient')
   async handleMessage(
@@ -37,22 +37,23 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody() wsData: WsDataType,
   ) {
     const senderUser: User = client.user;
-    this.id += 1;
-    const wsRoomName = `<${senderUser.id}_${this.id}>`;
 
     if (wsData.isDm) {
+      const wsRoomForSenderClients = randomUUID();
+      const wsRoomForReceiverClients = randomUUID();
+
       const receiverUser = await this.prisma.user.findUnique({
         where: {
           id: wsData.receiverUserId,
         },
       });
 
+      // add the connected clients associated with either the sender or receiver user to the appropriate Web Socket room.
       for (const client of this.connectedClients) {
-        if (
-          client.user.id === senderUser.id ||
-          client.user.id === receiverUser.id
-        ) {
-          client.join(wsRoomName);
+        if (client.user.id === senderUser.id) {
+          client.join(wsRoomForSenderClients);
+        } else if (client.user.id === receiverUser.id) {
+          client.join(wsRoomForReceiverClients);
         }
       }
 
@@ -71,53 +72,37 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data: {
           roomName: room.name,
           userId: senderUser.id,
-          pictureURL: receiverUser.pictureURL,
-          data: wsData.message,
+          pictureURL: senderUser.pictureURL,
+          data: wsData.data,
         },
       });
 
-      this.server.to(wsRoomName).emit(
+      this.server.to(wsRoomForSenderClients).emit(
+        'msgFromServer',
+        await this.chatService.getDmData(room, receiverUser), // TODO: handle the case when this function throw an InternalServerErrorException
+      );
+
+      this.server.to(wsRoomForReceiverClients).emit(
         'msgFromServer',
         await this.chatService.getDmData(room, senderUser), // TODO: handle the case when this function throw an InternalServerErrorException
       );
-
-      for (const client of this.connectedClients) {
-        if (client.user.id === senderUser.id) {
-          client.emit(
-            'msgFromServer',
-            await this.chatService.getDmData(room, receiverUser), // TODO: handle the case when this function throw an InternalServerErrorException
-          );
-        }
-      }
     }
 
     if (!wsData.isDm) {
+      const wsRoom = randomUUID();
+
       const room = await this.prisma.room.findUnique({
         where: {
           id: wsData.channelId,
         },
       });
 
-      const mutedEntry = await this.prisma.muted.findFirst({
-        where: {
-          roomName: room.name,
-          receiverUser: senderUser.nickname,
-        },
-      });
-
-      if (mutedEntry) {
-        if (mutedEntry.time < moment().format('YYYY-MM-DD hh:mm:ss')) {
-          this.chatService.unmuted(senderUser, room.name);
-        } else {
-          return;
-        }
-      }
-
       if (!room) return;
 
+      // add the connected clients associated with room members to the Web Socket room (wsRoom).
       for (const client of this.connectedClients) {
         if (room.members.includes(client.user.nickname)) {
-          client.join(wsRoomName);
+          client.join(wsRoom);
         }
       }
 
@@ -126,11 +111,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           roomName: room.name,
           userId: senderUser.id,
           pictureURL: senderUser.pictureURL,
-          data: wsData.message,
+          data: wsData.data,
         },
       });
 
-      this.server.to(wsRoomName).emit(
+      this.server.to(wsRoom).emit(
         'msgFromServer',
         await this.chatService.getChannelData(room, senderUser, true), // TODO: handle the case when this function throw an InternalServerErrorException
       );

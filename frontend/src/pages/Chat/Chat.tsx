@@ -114,6 +114,8 @@ function Chat() {
 
     // TODO: check this because it's changed the chat main section directly even if they don't the person that you are talking with them.
     const handleServerMessage = (data: DmType | ChannelType) => {
+      console.log("event handler is called: ", data);
+
       data.type === "DM" ? setIsDm(true) : setIsDm(false);
       setChatDataBox(data);
     };

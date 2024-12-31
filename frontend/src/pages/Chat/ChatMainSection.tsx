@@ -23,7 +23,7 @@ function ChatMainSection({ socket }: { socket: Socket }) {
       socket.emit("msgFromClient", {
         isDm: true,
         receiverUserId: chatDataBox.id,
-        message: message,
+        data: message,
       });
 
       getAllDms((res: DmType[]) => {
@@ -33,7 +33,7 @@ function ChatMainSection({ socket }: { socket: Socket }) {
       socket.emit("msgFromClient", {
         isDm: false,
         channelId: chatDataBox.id,
-        message: message,
+        data: message,
       });
 
       getAllChannels((res: ChannelType[]) => {

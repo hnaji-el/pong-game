@@ -29,7 +29,7 @@ function ChannelCard({
 }: PropsType) {
   return (
     <div
-      className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
+      className={`flex border-b-[1px] border-b-backgroundHover px-3 hover:bg-backgroundHover lg:px-2 ${
         isHovered ? "bg-backgroundHover" : ""
       }`}
     >
@@ -43,7 +43,7 @@ function ChannelCard({
           </span>
         </div>
         {isLabeled && (
-          <div className="p-.6 relative right-2 top-[.2rem] z-[-1] w-12 rounded-full bg-primary text-center text-[.6rem] font-light capitalize text-primaryText">
+          <div className="relative right-2 top-[.2rem] z-[-1] w-12 rounded-full bg-primary text-center text-[.6rem] font-light capitalize text-primaryText">
             private
           </div>
         )}

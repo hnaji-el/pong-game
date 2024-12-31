@@ -70,7 +70,7 @@ function ChannelCardList({
   }
 
   return (
-    <div className="flex h-full flex-col gap-6">
+    <div className="flex grow flex-col gap-6 overflow-hidden">
       <div className="mx-3 flex items-center gap-2 lg:mx-2">
         <button
           className="flex w-full items-center justify-center gap-2 rounded-[.3rem] bg-primary p-2"
@@ -83,7 +83,7 @@ function ChannelCardList({
         </button>
       </div>
       {channels.length ? (
-        <div className="relative flex h-full flex-col overflow-auto">
+        <div className="flex grow flex-col overflow-auto">
           {[
             ...(channels as ChannelType[]).filter(
               (channel) => channel.isJoined,
@@ -107,7 +107,7 @@ function ChannelCardList({
           ))}
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
           No channels.
         </div>
       )}

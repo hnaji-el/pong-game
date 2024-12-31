@@ -50,18 +50,14 @@ function SideNavBar({
   }
 
   return (
-    <aside
-      className={`h-full w-full flex-col gap-12 pb-[200px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground lg:py-[28px] 2xl:left-auto ${
-        click ? "hidden" : "flex"
-      } `}
-    >
+    <aside className="flex grow flex-col gap-12 overflow-hidden">
       <div className="flex items-center justify-center">
         <Link to="/home" onClick={handleLogoClick}>
           <img src={logo} alt="pong logo" className="w-48 lg:w-44" />
         </Link>
       </div>
 
-      <div className="flex h-full flex-col gap-6 lg:overflow-hidden">
+      <div className="flex grow flex-col gap-6 overflow-hidden">
         <div className="mx-3 flex items-center text-sm lg:mx-2">
           <Button isHovered={isDm} onClick={handleDmsButtonClick}>
             Direct Messages
@@ -71,16 +67,14 @@ function SideNavBar({
           </Button>
         </div>
 
-        <div className="h-full overflow-hidden">
-          {isDm ? (
-            <DmCardList />
-          ) : (
-            <ChannelCardList
-              openPasswordModal={openPasswordModal}
-              openCreateChannelModal={openCreateChannelModal}
-            />
-          )}
-        </div>
+        {isDm ? (
+          <DmCardList />
+        ) : (
+          <ChannelCardList
+            openPasswordModal={openPasswordModal}
+            openCreateChannelModal={openCreateChannelModal}
+          />
+        )}
       </div>
     </aside>
   );

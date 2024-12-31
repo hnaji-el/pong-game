@@ -36,13 +36,17 @@ function FooterBar({
   const profile = React.useContext(ActiveProfile);
 
   return (
-    <footer className={`${messages.click ? "hidden" : ""}`}>
-      <div
-        className={`fixed bottom-0 z-[999] w-full px-[12px] pb-[12px] lg:hidden ${
-          !isSearchModalOpen ? "bg-body" : ""
-        }`}
+    <footer
+      className={`${messages.click ? "hidden" : ""} relative z-10 flex flex-col items-end gap-[10px] px-[12px] pt-[12px] lg:hidden`}
+    >
+      <Link
+        to="/game"
+        className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-primary"
       >
-        <nav className="rounded-lg bg-sideBackground p-2 px-3 shadow-lg">
+        <ControllerIcon edit="w-8" />
+      </Link>
+      <div className={`w-full ${!isSearchModalOpen ? "bg-body" : ""}`}>
+        <nav className="rounded-lg bg-sideBackground p-[8px] shadow-lg">
           <ul className="flex items-center justify-between">
             <li>
               <Link
@@ -182,12 +186,6 @@ function FooterBar({
           </ul>
         </nav>
       </div>
-      <Link
-        to="/game"
-        className="fixed bottom-[90px] right-[12px] flex h-[56px] w-[56px] items-center justify-center rounded-full bg-primary lg:hidden"
-      >
-        <ControllerIcon edit="w-8" />
-      </Link>
     </footer>
   );
 }

@@ -53,21 +53,27 @@ function ChatLayout({ children }: { children?: JSX.Element }) {
         {children}
       </div>
 
-      <SideNavBar
-        openPasswordModal={() => setIsPasswordModalOpen(true)}
-        openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
-        closeSearchModal={() => setIsSearchModalOpen(false)}
-        closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
-      />
+      <div
+        className={`h-full w-full flex-col pb-[12px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground 2xl:left-auto ${
+          click ? "hidden" : "flex"
+        } `}
+      >
+        <SideNavBar
+          openPasswordModal={() => setIsPasswordModalOpen(true)}
+          openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
+          closeSearchModal={() => setIsSearchModalOpen(false)}
+          closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
+        />
 
-      <FooterBar
-        isSearchModalOpen={isSearchModalOpen}
-        openSearchModal={() => setIsSearchModalOpen(true)}
-        closeSearchModal={() => setIsSearchModalOpen(false)}
-        isMobileSettingsModalOpen={isMobileSettingsModalOpen}
-        openMobileSettingsModal={() => setIsMobileSettingsModalOpen(true)}
-        closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
-      />
+        <FooterBar
+          isSearchModalOpen={isSearchModalOpen}
+          openSearchModal={() => setIsSearchModalOpen(true)}
+          closeSearchModal={() => setIsSearchModalOpen(false)}
+          isMobileSettingsModalOpen={isMobileSettingsModalOpen}
+          openMobileSettingsModal={() => setIsMobileSettingsModalOpen(true)}
+          closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
+        />
+      </div>
 
       {isSettingsModalOpen && (
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">

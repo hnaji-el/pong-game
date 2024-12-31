@@ -33,26 +33,24 @@ function DmCardList() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-6">
-      <div className="relative flex h-full flex-col overflow-auto">
-        {dms.length ? (
-          (dms as DmType[]).map((dm, index) => (
-            <DmCard
-              key={dm.id}
-              avatar={dm.picture}
-              title={dm.username}
-              isHovered={index === dmIndex}
-              handleCardClick={() => handleCardClick(index)}
-              handleInviteToPlayClick={() => handleInviteToPlayClick(dm.id)}
-              handleBlockClick={() => handleBlockClick(dm.id)}
-            />
-          ))
-        ) : (
-          <div className="flex h-full items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-            No messages.
-          </div>
-        )}
-      </div>
+    <div className="flex grow flex-col gap-[24px] overflow-auto">
+      {dms.length ? (
+        (dms as DmType[]).map((dm, index) => (
+          <DmCard
+            key={dm.id}
+            avatar={dm.picture}
+            title={dm.username}
+            isHovered={index === dmIndex}
+            handleCardClick={() => handleCardClick(index)}
+            handleInviteToPlayClick={() => handleInviteToPlayClick(dm.id)}
+            handleBlockClick={() => handleBlockClick(dm.id)}
+          />
+        ))
+      ) : (
+        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+          No messages.
+        </div>
+      )}
     </div>
   );
 }

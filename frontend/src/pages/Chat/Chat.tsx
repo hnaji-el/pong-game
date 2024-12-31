@@ -3,11 +3,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-import ChatLayout from "./ChatLayout";
-import Messages from "./Messages";
+import HeaderBar from "./HeaderBar";
+import ChatMainSection from "./ChatMainSection";
+import SideNavBar from "./SideNavBar";
+import FooterBar from "./FooterBar";
+import { Modal, ModalBody, ModalHeader } from "../../components/modals/Modals";
+import SettingsModal from "../../components/modals/SettingsModal";
+import SearchModal from "../../components/modals/SearchModal";
+import SearchInput from "../../components/SearchInput";
+import MobileSettingsModal from "../../components/modals/MobileSettingsModal";
+import ViewSettings from "../../components/ViewSettings";
+import CreateChannelModal from "../../components/modals/CreateChannelModal";
+import AddMemberModal from "../../components/modals/AddMemberModal";
+import MembersModal from "../../components/modals/MembersModal";
+import FormProtected from "../../components/FormProtected";
 import Spinner from "../../components/Spinner";
-import { SendIcon } from "../../components/Icons";
-
 import {
   useVerifyUserAuthenticity,
   getDataUserLogged,
@@ -38,7 +48,7 @@ const userData = {
   isTwoFactorAuthEnabled: false,
 };
 
-export const MessagesContext = React.createContext<any>({}); // TODO: type the Context values
+export const MessagesContext = React.createContext<any>({});
 export const StateMssages = React.createContext<TypeContext>({
   active: false,
   click: false,
@@ -54,24 +64,25 @@ const socket = io(DOMAIN, {
 
 function Chat() {
   const status = useVerifyUserAuthenticity();
-  const [message, setMessage] = React.useState("");
-  // [ used, getDataUserLogged(/users/logged-user), passed, passed ]
   const [settings, setSettings] = React.useState<UserType>(userData);
-
-  // [ used, socket, passed, passed ]
   const [isDm, setIsDm] = React.useState(true);
-  // [     , getAllDms(/chat/dms/dms-messages) handleMsg, passed, passed ]
   const [dms, setDms] = React.useState<DmType[]>([]);
-  // [     , getAllChannels(/chat/channels/channels-messages) handleMsg, passed, passed ]
   const [channels, setChannels] = React.useState<ChannelType[]>([]);
-
-  // [ used, getAllDms(/chat/dms/dms-messages) socket, passed, passed ]
-  // chatDataBox: DmType | ChannelType | undefined
   const [chatDataBox, setChatDataBox] = React.useState<any>();
-  const [dmIndex, setDmIndex] = React.useState(0); // used,    , passed, passed
-  const [channelIndex, setChannelIndex] = React.useState(0); //   ,    , passed, passed
+  const [dmIndex, setDmIndex] = React.useState(0);
+  const [channelIndex, setChannelIndex] = React.useState(0);
+  const [click, setClick] = React.useState(false);
 
-  const [click, setClick] = React.useState(false); // used, , passed, passed
+  // state variables for modals
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
+  const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] =
+    React.useState(false);
+  const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
+  const [isMobileSettingsModalOpen, setIsMobileSettingsModalOpen] =
+    React.useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -114,30 +125,6 @@ function Chat() {
     };
   }, []);
 
-  function sendMessage() {
-    if (isDm) {
-      socket.emit("msgFromClient", {
-        isDm: true,
-        receiverUserId: chatDataBox.id,
-        message: message,
-      });
-
-      getAllDms((res: DmType[]) => {
-        setDms(res);
-      });
-    } else {
-      socket.emit("msgFromClient", {
-        isDm: false,
-        channelId: chatDataBox.id,
-        message: message,
-      });
-
-      getAllChannels((res: ChannelType[]) => {
-        setChannels(res);
-      });
-    }
-  }
-
   if (status === "error") {
     navigate("/login");
   }
@@ -176,39 +163,116 @@ function Chat() {
           setChannelIndex: setChannelIndex,
         }}
       >
-        <ChatLayout>
-          {chatDataBox && (
-            <main className="flex grow flex-col overflow-hidden">
-              <div className="grow overflow-auto">
-                <Messages messages={chatDataBox.messages} />
-              </div>
-              <div className="w-full">
-                <form className="flex items-center rounded-md bg-shape pr-2">
-                  <input
-                    type="text"
-                    placeholder="Type a message"
-                    value={message}
-                    className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
-                    onChange={(e) => {
-                      setMessage(e.currentTarget.value);
-                    }}
-                  />
-                  <button
-                    type="submit"
-                    className="flex h-8 w-8 items-center justify-center rounded-md bg-primary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setMessage("");
-                      sendMessage();
-                    }}
-                  >
-                    <SendIcon edit="w-4 fill-white" />
-                  </button>
-                </form>
-              </div>
-            </main>
-          )}
-        </ChatLayout>
+        <div
+          className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
+        >
+          <HeaderBar
+            openSettingsModal={() => setIsSettingsModalOpen(true)}
+            openMembersModal={() => setIsMembersModalOpen(true)}
+            openAddMemberModal={() => setIsAddMemberModalOpen(true)}
+          />
+
+          {chatDataBox && <ChatMainSection socket={socket} />}
+        </div>
+
+        <div
+          className={`h-full w-full flex-col pb-[12px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground 2xl:left-auto ${
+            click ? "hidden" : "flex"
+          } `}
+        >
+          <SideNavBar
+            openPasswordModal={() => setIsPasswordModalOpen(true)}
+            openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
+            closeSearchModal={() => setIsSearchModalOpen(false)}
+            closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
+          />
+
+          <FooterBar
+            isSearchModalOpen={isSearchModalOpen}
+            openSearchModal={() => setIsSearchModalOpen(true)}
+            closeSearchModal={() => setIsSearchModalOpen(false)}
+            isMobileSettingsModalOpen={isMobileSettingsModalOpen}
+            openMobileSettingsModal={() => setIsMobileSettingsModalOpen(true)}
+            closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
+          />
+        </div>
+
+        {isSettingsModalOpen && (
+          <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+            <ModalHeader closeModal={() => setIsSettingsModalOpen(false)}>
+              Settings
+            </ModalHeader>
+            <ModalBody className="justify-center">
+              <SettingsModal closeModal={() => setIsSettingsModalOpen(false)} />
+            </ModalBody>
+          </Modal>
+        )}
+
+        {isSearchModalOpen && (
+          <SearchModal closeModal={() => setIsSearchModalOpen(false)}>
+            <SearchInput modal={true} />
+          </SearchModal>
+        )}
+
+        {isMobileSettingsModalOpen && (
+          <MobileSettingsModal
+            closeModal={() => setIsMobileSettingsModalOpen(false)}
+          >
+            <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
+          </MobileSettingsModal>
+        )}
+
+        {isCreateChannelModalOpen && (
+          <Modal className="h-[40rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+            <ModalHeader closeModal={() => setIsCreateChannelModalOpen(false)}>
+              Create channel
+            </ModalHeader>
+            <ModalBody className="justify-center">
+              <CreateChannelModal
+                closeModal={() => setIsCreateChannelModalOpen(false)}
+              />
+            </ModalBody>
+          </Modal>
+        )}
+
+        {isAddMemberModalOpen && (
+          <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
+            <ModalHeader
+              closeModal={() => setIsAddMemberModalOpen(false)}
+              className="px-4"
+            >
+              Add member
+            </ModalHeader>
+            <ModalBody className="justify-center">
+              <AddMemberModal />
+            </ModalBody>
+          </Modal>
+        )}
+
+        {isMembersModalOpen && (
+          <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
+            <ModalHeader
+              closeModal={() => setIsMembersModalOpen(false)}
+              className="px-4"
+            >
+              Members
+            </ModalHeader>
+            <ModalBody className="justify-center">
+              <MembersModal />
+            </ModalBody>
+          </Modal>
+        )}
+
+        {isPasswordModalOpen && (
+          <Modal className="h-[15rem] w-[90%] lg:h-[15rem] lg:w-[40rem]">
+            <ModalHeader closeModal={() => setIsPasswordModalOpen(false)}>
+              Password
+            </ModalHeader>
+            <ModalBody className="justify-center">
+              <FormProtected closeModal={() => setIsPasswordModalOpen(false)} />
+            </ModalBody>
+          </Modal>
+        )}
       </MessagesContext.Provider>
     </StateMssages.Provider>
   );

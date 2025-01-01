@@ -1,4 +1,10 @@
-import { Message } from '@prisma/client';
+export interface Message {
+  id: string;
+  roomName: string;
+  userId: string;
+  pictureURL: string;
+  data: string;
+}
 
 export interface DmType {
   id: string;

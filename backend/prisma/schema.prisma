@@ -55,29 +55,29 @@ model Room {
   blocked         String[]
   type            String // 'DM' | 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
   hashedPassword  String?
+  createdAt       DateTime    @default(now()) @db.Timestamptz
+  updatedAt       DateTime    @default(now()) @updatedAt @db.Timestamptz
   messages        Message[]
   muted           Muted[]
 }
 
 model Message {
-  id           String @id @default(uuid())
+  id           String   @id @default(uuid())
   roomName     String
   userId       String
   pictureURL   String
   data         String
-  room         Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
-
-  @@map("messages")
+  createdAt    DateTime @default(now()) @db.Timestamptz
+  room         Room     @relation(fields: [roomName], references: [name], onDelete: Cascade)
 }
 
 model Muted {
-  id           String @id @default(uuid())
+  id           String   @id @default(uuid())
   roomName     String
   receiverUser String
   time         String
-  room         Room   @relation(fields: [roomName], references: [name], onDelete: Cascade)
-
-  @@map("muted")
+  createdAt    DateTime @default(now()) @db.Timestamptz
+  room         Room     @relation(fields: [roomName], references: [name], onDelete: Cascade)
 }
 
 enum Status {

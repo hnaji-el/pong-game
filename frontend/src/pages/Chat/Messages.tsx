@@ -9,7 +9,7 @@ function Messages({ messages }: { messages: Message[] }) {
 
   return (
     <div className="flex h-full flex-col-reverse gap-[20px] overflow-auto px-[15px] pb-[10px] pt-[20px]">
-      {[...messages].reverse().map((msg, index) => {
+      {messages.map((msg, index) => {
         if (msg.userId === settings.id) {
           return (
             <div key={index} className="ml-[20px] flex justify-end">

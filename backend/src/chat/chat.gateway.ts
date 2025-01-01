@@ -77,6 +77,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       });
 
+      await this.prisma.room.update({
+        where: {
+          id: room.id,
+        },
+        data: {
+          updatedAt: new Date(),
+        },
+      });
+
       this.server.to(wsRoomForSenderClients).emit(
         'msgFromServer',
         await this.chatService.getDmData(room, receiverUser), // TODO: handle the case when this function throw an InternalServerErrorException
@@ -112,6 +121,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
           userId: senderUser.id,
           pictureURL: senderUser.pictureURL,
           data: wsData.data,
+        },
+      });
+
+      await this.prisma.room.update({
+        where: {
+          id: room.id,
+        },
+        data: {
+          updatedAt: new Date(),
         },
       });
 

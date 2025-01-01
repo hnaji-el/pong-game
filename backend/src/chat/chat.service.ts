@@ -63,11 +63,13 @@ export class ChatService {
           name: room.name,
         },
         select: {
-          messages: true,
+          messages: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
         },
       });
-
-      console.log(roomMsgs.messages);
 
       return {
         id: user.id,
@@ -98,6 +100,9 @@ export class ChatService {
           members: {
             has: user.nickname,
           },
+        },
+        orderBy: {
+          updatedAt: 'desc',
         },
       });
 
@@ -137,7 +142,11 @@ export class ChatService {
           name: room.name,
         },
         select: {
-          messages: true,
+          messages: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
         },
       });
 
@@ -168,6 +177,9 @@ export class ChatService {
       const rooms = await this.prisma.room.findMany({
         where: {
           OR: [{ type: 'PROTECTED' }, { type: 'PUBLIC' }, { type: 'PRIVATE' }],
+        },
+        orderBy: {
+          updatedAt: 'desc',
         },
       });
 
@@ -279,9 +291,14 @@ export class ChatService {
         name: name,
       },
       select: {
-        messages: true,
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
+
     const message_user = await this.prisma.message.findFirst({
       where: {
         roomName: name,
@@ -355,9 +372,14 @@ export class ChatService {
         name: room.data.name,
       },
       select: {
-        messages: true,
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
+
     const message_user = await this.prisma.message.findFirst({
       where: {
         roomName: room.data.name,
@@ -563,7 +585,12 @@ export class ChatService {
   async getAllRooms(user: any) {
     const allRooms: Searchchanel[] = [];
 
-    const rooms = await this.prisma.room.findMany();
+    const rooms = await this.prisma.room.findMany({
+      orderBy: {
+        updatedAt: 'desc',
+      },
+    });
+
     rooms.forEach((element) => {
       const obj = {
         id: element.id,
@@ -786,9 +813,14 @@ export class ChatService {
         name: name,
       },
       select: {
-        messages: true,
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
       },
     });
+
     const v = allmessage.messages.length;
     return allmessage.messages[v - 1];
   }
@@ -799,7 +831,11 @@ export class ChatService {
       where: {
         type: type,
       },
+      orderBy: {
+        updatedAt: 'desc',
+      },
     });
+
     for (let index = 0; index < rooms.length; index++) {
       const id1 = rooms[index].members.find(
         (login) => login === user1.nickname,
@@ -819,9 +855,14 @@ export class ChatService {
             name: rooms[index].name,
           },
           select: {
-            messages: true,
+            messages: {
+              orderBy: {
+                createdAt: 'desc',
+              },
+            },
           },
         });
+
         const message_user = await this.prisma.message.findFirst({
           where: {
             roomName: rooms[index].name,

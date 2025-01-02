@@ -38,8 +38,8 @@ function DmCardList() {
         (dms as DmType[]).map((dm, index) => (
           <DmCard
             key={dm.id}
-            avatar={dm.picture}
-            title={dm.username}
+            avatar={dm.pictureURL}
+            title={dm.nickname}
             isHovered={index === dmIndex}
             handleCardClick={() => handleCardClick(index)}
             handleInviteToPlayClick={() => handleInviteToPlayClick(dm.id)}

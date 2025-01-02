@@ -9,7 +9,6 @@ import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";
 
 import { ChannelType, DmType } from "./types";
-import { StateMssages } from "./Chat";
 import { MessagesContext } from "./Chat";
 
 interface PropsType {
@@ -25,7 +24,6 @@ function SideNavBar({
   closeSearchModal,
   closeMobileSettingsModal,
 }: PropsType) {
-  const { click } = React.useContext(StateMssages);
   const { isDm, setIsDm, setDms, setChannels } =
     React.useContext(MessagesContext);
 

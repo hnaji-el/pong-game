@@ -62,6 +62,17 @@ const socket = io(DOMAIN, {
   withCredentials: true,
 });
 
+/*
+ |— Chat
+     |— SideNavBar
+         |— ChannelCardList
+             |— ChannelCard
+         |— DmCardList
+             |— DmCard
+     |— HeaderBar
+        |— 
+ */
+
 function Chat() {
   const status = useVerifyUserAuthenticity();
   const [settings, setSettings] = React.useState<UserType>(userData);
@@ -88,9 +99,7 @@ function Chat() {
 
   React.useEffect(() => {
     document.title = "Pong - Messages";
-  }, []);
 
-  React.useEffect(() => {
     getDataUserLogged((res: UserType) => {
       setSettings(res);
     });

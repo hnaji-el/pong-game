@@ -2,7 +2,8 @@ import React from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 
-import { CardChatChannel, CardChatFriend } from "../../components/Cards";
+import UserCard from "../../components/UserCard";
+import ChannelEditCard from "../../components/ChannelEditCard";
 import {
   Dropdown,
   DropdownItem,
@@ -14,11 +15,9 @@ import {
   SettingsNavIcon,
   LogoutIcon,
 } from "../../components/Icons";
-
 import { logout } from "../../api/API";
 
-import { StateMssages } from "./Chat";
-import { MessagesContext } from "./Chat";
+import { StateMssages, MessagesContext } from "./Chat";
 
 interface PropsType {
   openSettingsModal: () => void;
@@ -31,22 +30,34 @@ function HeaderBar({
   openMembersModal,
   openAddMemberModal,
 }: PropsType) {
-  const stateMessage = React.useContext(StateMssages);
-  const messageData = React.useContext(MessagesContext);
+  const { setClick, settings } = React.useContext(StateMssages);
+  const { chatDataBox, isDm } = React.useContext(MessagesContext);
+
   const navigate = useNavigate();
 
   return (
     <header className="lg:flex lg:items-start lg:justify-between lg:gap-5">
-      {messageData.isDm ? (
-        <CardChatFriend data={messageData.chatDataBox} />
+      {!chatDataBox ? (
+        <div className="flex grow"></div>
+      ) : isDm ? (
+        <UserCard
+          id={chatDataBox.id}
+          nickname={chatDataBox.nickname}
+          avatar={chatDataBox.pictureURL}
+          isOnline={chatDataBox.status === "online"}
+          onClick={() => setClick(false)}
+        />
       ) : (
-        <CardChatChannel
-          data={messageData.chatDataBox}
+        <ChannelEditCard
+          name={chatDataBox.name}
+          type={chatDataBox.type}
+          userRole={chatDataBox.role}
+          onClick={() => setClick(false)}
           openMembersModal={openMembersModal}
           openAddMemberModal={openAddMemberModal}
         />
       )}
-      <div className="hidden items-center gap-5 lg:flex">
+      <div className="hidden lg:flex lg:items-center lg:gap-5">
         <Link
           to="/game"
           className="flex w-36 items-center justify-center gap-2.5 rounded-md bg-primary p-3 text-sm text-primaryText"
@@ -57,8 +68,8 @@ function HeaderBar({
         <Dropdown>
           <DropdownBtn
             type="text"
-            title={stateMessage.settings.nickname}
-            imgTitle={stateMessage.settings.pictureURL}
+            title={settings.nickname}
+            imgTitle={settings.pictureURL}
             arrow={true}
           />
           <DropdownList edit="top-12">

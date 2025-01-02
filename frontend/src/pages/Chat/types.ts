@@ -8,8 +8,8 @@ export interface Message {
 
 export interface DmType {
   id: string;
-  username: string;
-  picture: string;
+  nickname: string;
+  pictureURL: string;
   status: string;
   type: string; // 'DM'
   latestMessage: string;

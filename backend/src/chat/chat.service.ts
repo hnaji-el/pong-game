@@ -73,8 +73,8 @@ export class ChatService {
 
       return {
         id: user.id,
-        username: user.nickname,
-        picture: user.pictureURL,
+        nickname: user.nickname,
+        pictureURL: user.pictureURL,
         status: user.status,
         type: room.type,
         latestMessage:
@@ -871,10 +871,10 @@ export class ChatService {
         if (!message_user) continue;
         const person: DmType = {
           id: user.id,
-          username: user.nickname,
+          nickname: user.nickname,
           status: user.status,
           latestMessage: '',
-          picture: user.pictureURL,
+          pictureURL: user.pictureURL,
           messages: [],
           type: 'DM',
         };

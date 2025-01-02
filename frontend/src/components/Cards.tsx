@@ -33,12 +33,6 @@ interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface TypePropsChannel {
-  openMembersModal: () => void;
-  openAddMemberModal: () => void;
-  data: any;
-}
-
 interface TypeMember {
   data: any;
   role?: string;
@@ -73,10 +67,6 @@ interface TypedataFriend {
     nickname: string;
     pictureURL: string;
   };
-}
-
-interface TypeChat {
-  data: any;
 }
 
 interface TypeFriendChannel {
@@ -256,101 +246,6 @@ export function CardUser({ data }: TypedataFriend) {
           </MenuList>
         </Menu>
       ) : null}
-    </div>
-  );
-}
-
-export function CardChatFriend({ data }: TypeChat) {
-  const stateMessages = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
-
-  return (
-    <div className="flex flex-1 items-center gap-4">
-      {messageData.chatDataBox && (
-        <>
-          <button
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-shape lg:hidden"
-            onClick={() => stateMessages.setClick(false)}
-          >
-            <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-          </button>
-          <Link
-            to="/profile-user"
-            state={{ id: data?.id }}
-            className="flex items-center gap-2"
-          >
-            <img
-              src={data?.picture}
-              alt="Friend"
-              className="h-14 w-14 rounded-full"
-            />
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-1.5">
-                <span className="text-md max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-primaryText">
-                  {data?.username}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span
-                  className={`h-2 w-2 rounded-full ${
-                    data?.status === "offline" ? "bg-offline" : "bg-online"
-                  }`}
-                ></span>
-                <span className="text-sm font-light capitalize text-secondaryText">
-                  {data?.status === "offline" ? "offline" : "online"}
-                </span>
-              </div>
-            </div>
-          </Link>
-        </>
-      )}
-    </div>
-  );
-}
-
-export function CardChatChannel({
-  openMembersModal,
-  openAddMemberModal,
-  data,
-}: TypePropsChannel) {
-  const stateMessages = useContext(StateMssages);
-  const messageData = useContext(MessagesContext);
-
-  return (
-    <div className="flex flex-1 items-center gap-4">
-      {messageData.chatDataBox && (
-        <>
-          <button
-            className="flex h-6 w-6 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover lg:hidden"
-            onClick={() => stateMessages.setClick(false)}
-          >
-            <ArrowLeftIcon edit="w-2.5 h-2.5 fill-secondaryText" />
-          </button>
-          <div className="flex w-full items-center gap-2">
-            <div className="flex w-full items-center justify-between lg:justify-start lg:gap-4">
-              <span className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-[1.1rem] capitalize text-primaryText">
-                {data?.name}
-              </span>
-              <div className="flex items-center gap-4">
-                {data?.role !== "MEMBER" && data?.type !== "PROTECTED" ? (
-                  <button
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
-                    onClick={openAddMemberModal}
-                  >
-                    <PlusIcon edit="fill-secondaryText w-4 h-4" />
-                  </button>
-                ) : null}
-                <button
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
-                  onClick={openMembersModal}
-                >
-                  <GroupIcon edit="fill-secondaryText w-5 h-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 }

@@ -26,3 +26,11 @@ export interface ChannelType {
   messages: Message[];
   isJoined: boolean;
 }
+
+export interface MemberType {
+  id: string;
+  nickname: string;
+  status: string;
+  pictureURL: string;
+  role: string;
+}

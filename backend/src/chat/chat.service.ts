@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 import {
   ChannelType,
   DmType,
-  userchanel,
+  MemberType,
   Searchchanel,
   chanelprotected,
 } from './entities/chat.entity';
@@ -551,7 +551,7 @@ export class ChatService {
         type: true,
       },
     });
-    const obj: userchanel[] = [];
+    const obj: MemberType[] = [];
     for (let index = 0; index < rooms.members.length; index++) {
       if (rooms.members[index] === user.nickname) continue;
       const id1 = rooms.members.find((login) => login === rooms.members[index]);
@@ -570,11 +570,11 @@ export class ChatService {
           if (admin) role = 'ADMIN';
           else role = 'MEMBER';
         }
-        const person: userchanel = {
+        const person: MemberType = {
           id: user1.id,
-          username: user1.nickname,
+          nickname: user1.nickname,
           status: user1.status,
-          pictureLink: user1.pictureURL,
+          pictureURL: user1.pictureURL,
           role: role,
         };
         obj.push(person);

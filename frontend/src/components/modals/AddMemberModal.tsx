@@ -2,27 +2,26 @@ import React from "react";
 
 import FriendMember from "../FriendMember";
 import { ExclamationIcon } from "../Icons";
-import { MessagesContext } from "../../pages/Chat/Chat";
 import Spinner from "../Spinner";
-
 import { getFriendChannel } from "../../api/API";
+
+import { MessagesContext } from "../../pages/Chat/Chat";
 
 export const AddMemberContext = React.createContext<any>({});
 
-// TODO: check for [TypeError: cannot read properties of undefined `name`]
 function AddMemberModal() {
   const messageData = React.useContext(MessagesContext);
   const [friend, setFriend] = React.useState<any>([]);
-  const [render, setRender] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true); 
 
   React.useEffect(() => {
     getFriendChannel((res: any) => {
       setFriend(res);
-      setRender(true);
+      setIsLoading(false);
     }, messageData.chatDataBox.name);
   }, [messageData.chatDataBox.name]);
 
-  if (!render) {
+  if (isLoading) {
     return (
       <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
         <Spinner size={36} />

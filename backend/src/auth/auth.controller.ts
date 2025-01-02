@@ -26,7 +26,9 @@ export class AuthController {
   // Google OAuth system
   @Get('oauth2/google')
   @UseGuards(GoogleAuthGuard)
-  googleAuth() {}
+  googleAuth() {
+    return;
+  }
 
   @Get('oauth2/google/callback')
   @UseGuards(GoogleAuthGuard)
@@ -38,7 +40,9 @@ export class AuthController {
   // 42 OAuth system
   @Get('oauth2/42')
   @UseGuards(FortyTwoAuthGuard)
-  fortyTwoAuth() {}
+  fortyTwoAuth() {
+    return;
+  }
 
   @Get('oauth2/42/callback')
   @UseGuards(FortyTwoAuthGuard)

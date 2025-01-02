@@ -1,26 +1,28 @@
 import React from "react";
 
 import { ExclamationIcon } from "../Icons";
-import MembersContainer from "../MembersContainer";
-import { MessagesContext } from "../../pages/Chat/Chat";
 import Spinner from "../Spinner";
-
 import { getMembersChannel } from "../../api/API";
 
-export const MembersContext = React.createContext<any>({});
+import { ChannelType, MemberType } from "../../pages/Chat/types";
+import MemberCard from "../MemberCard";
+import { UserType } from "../../api/types";
 
-// TODO: check for [TypeError: cannot read properties of undefined `name`]
-function MembersModal() {
-  const messageData = React.useContext(MessagesContext);
-  const [members, setMembers] = React.useState<any>([]);
+interface PropsType {
+  chatDataBox: ChannelType;
+  userData: UserType;
+}
+
+function MembersModal({ chatDataBox, userData }: PropsType) {
+  const [members, setMembers] = React.useState<MemberType[]>([]);
   const [render, setRender] = React.useState(false);
 
   React.useEffect(() => {
-    getMembersChannel((res: any) => {
-      setMembers(res);
+    getMembersChannel((members) => {
+      setMembers(members);
       setRender(true);
-    }, messageData.chatDataBox.name);
-  }, [messageData.chatDataBox.name]);
+    }, chatDataBox.name);
+  }, [chatDataBox.name]);
 
   if (!render) {
     return (
@@ -31,11 +33,26 @@ function MembersModal() {
   }
 
   return members.length ? (
-    <MembersContext.Provider value={{ setMembers: setMembers }}>
-      <div className="flex w-full flex-col gap-6 pt-5">
-        <MembersContainer data={members} />
+    <div className="flex w-full flex-col gap-6 pt-5">
+      <div
+        className={`flex max-h-[34rem] flex-col overflow-auto ${
+          members.length > 4 ? "relative" : ""
+        }`}
+      >
+        <div className="flex flex-col gap-6">
+          {members.map((member) => (
+            <MemberCard
+              key={member.id}
+              member={member}
+              setMembers={setMembers}
+              channelName={chatDataBox.name}
+              channelUserRole={chatDataBox.role}
+              userData={userData}
+            />
+          ))}
+        </div>
       </div>
-    </MembersContext.Provider>
+    </div>
   ) : (
     <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
       <ExclamationIcon edit="w-5 h-4 fill-secondaryText relative top-[.1rem]" />

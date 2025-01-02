@@ -17,23 +17,35 @@ import {
 } from "../../components/Icons";
 import { logout } from "../../api/API";
 
+import { UserType } from "../../api/types";
 import { StateMssages, MessagesContext } from "./Chat";
 
 interface PropsType {
+  isDm: boolean;
+  chatDataBox: any;
+  userData: UserType;
+  setClick: React.Dispatch<React.SetStateAction<boolean>>;
   openSettingsModal: () => void;
   openMembersModal: () => void;
   openAddMemberModal: () => void;
 }
 
 function HeaderBar({
+  isDm,
+  chatDataBox,
+  userData,
+  setClick,
   openSettingsModal,
   openMembersModal,
   openAddMemberModal,
 }: PropsType) {
-  const { setClick, settings } = React.useContext(StateMssages);
-  const { chatDataBox, isDm } = React.useContext(MessagesContext);
 
   const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate("/login");
+  }
 
   return (
     <header className="lg:flex lg:items-start lg:justify-between lg:gap-5">
@@ -68,8 +80,8 @@ function HeaderBar({
         <Dropdown>
           <DropdownBtn
             type="text"
-            title={settings.nickname}
-            imgTitle={settings.pictureURL}
+            title={userData.nickname}
+            imgTitle={userData.pictureURL}
             arrow={true}
           />
           <DropdownList edit="top-12">
@@ -77,13 +89,7 @@ function HeaderBar({
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
               <span>Settings</span>
             </DropdownItem>
-            <DropdownItem
-              edit="justify-center p-2"
-              onClick={async () => {
-                await logout();
-                navigate("/login");
-              }}
-            >
+            <DropdownItem edit="justify-center p-2" onClick={handleLogout}>
               <LogoutIcon edit="w-5 h-5 fill-primaryText" />
               <span>Logout</span>
             </DropdownItem>

@@ -8,7 +8,7 @@ import {
   TypeDataProfileUser,
   TypedataFriend,
 } from "./types";
-import { ChannelType, DmType } from "../pages/Chat/types";
+import { ChannelType, DmType, MemberType } from "../pages/Chat/types";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"
@@ -42,6 +42,12 @@ export function useVerifyUserAuthenticity(isOnLoginPage = false) {
   });
 
   return status;
+}
+
+export async function logout() {
+  await fetch(`${BACKEND_ORIGIN}/auth/logout`, {
+    credentials: "include",
+  });
 }
 
 export function getDataUserLogged(getRes: (res: UserType) => void) {
@@ -222,9 +228,12 @@ export function getFriendChannel(getRes: any, nameChannel: string) {
     .catch();
 }
 
-export function getMembersChannel(getRes: any, nameChannel: string) {
+export function getMembersChannel(
+  getRes: (members: MemberType[]) => void,
+  channelName: string,
+) {
   axios
-    .get(`${BACKEND_ORIGIN}/chat/users-in-room/${nameChannel}`, {
+    .get(`${BACKEND_ORIGIN}/chat/users-in-room/${channelName}`, {
       withCredentials: true,
     })
     .then((res) => {
@@ -400,14 +409,5 @@ export function getMatchHistory(getRes: any, id: string) {
     .then((res) => {
       getRes(res.data);
     })
-    .catch();
-}
-
-export async function logout() {
-  await axios
-    .get(`${BACKEND_ORIGIN}/auth/logout`, {
-      withCredentials: true,
-    })
-    .then()
     .catch();
 }

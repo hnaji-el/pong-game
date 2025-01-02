@@ -70,7 +70,8 @@ const socket = io(DOMAIN, {
          |— DmCardList
              |— DmCard
      |— HeaderBar
-        |— 
+        |— UserCard
+        |— ChannelEditCard
  */
 
 function Chat() {
@@ -176,6 +177,10 @@ function Chat() {
           className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
         >
           <HeaderBar
+            isDm={isDm}
+            chatDataBox={chatDataBox}
+            userData={settings}
+            setClick={setClick}
             openSettingsModal={() => setIsSettingsModalOpen(true)}
             openMembersModal={() => setIsMembersModalOpen(true)}
             openAddMemberModal={() => setIsAddMemberModalOpen(true)}
@@ -267,7 +272,7 @@ function Chat() {
               Members
             </ModalHeader>
             <ModalBody className="justify-center">
-              <MembersModal />
+              <MembersModal chatDataBox={chatDataBox} userData={settings} />
             </ModalBody>
           </Modal>
         )}

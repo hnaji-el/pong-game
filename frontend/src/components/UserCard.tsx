@@ -18,7 +18,7 @@ function UserCard({ id, nickname, avatar, isOnline, onClick }: PropsType) {
       <ArrowLeftButton onClick={onClick} />
       <Link
         to="/profile-user"
-        state={{ id: id }}
+        state={{ id }}
         className="flex items-center gap-2"
       >
         <img src={avatar} alt="friend" className="h-14 w-14 rounded-full" />

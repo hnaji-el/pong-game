@@ -27,6 +27,14 @@ export interface ChannelType {
   isJoined: boolean;
 }
 
+export interface MemberType {
+  id: string;
+  nickname: string;
+  status: string;
+  pictureURL: string;
+  role: string;
+}
+
 export interface WsDataType {
   isDm: boolean;
   receiverUserId?: string;
@@ -38,14 +46,6 @@ export interface objectChannel {
   type: string;
   message: string;
   picture: string;
-}
-
-export interface userchanel {
-  id: string;
-  username: string;
-  status: string;
-  pictureLink: string;
-  role: string;
 }
 
 export interface Searchchanel {

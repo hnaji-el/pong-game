@@ -253,34 +253,23 @@ export async function addToRoom(data: any) {
     .catch();
 }
 
-export async function setAdmin(data: any) {
+export async function setAdmin(data: { channelId: string; userId: string }) {
   await axios
-    .post(
-      `${BACKEND_ORIGIN}/chat/set-admin`,
-      { data },
-      { withCredentials: true },
-    )
+    .post(`${BACKEND_ORIGIN}/chat/set-admin`, data, { withCredentials: true })
     .then()
     .catch();
 }
 
-export async function setBlock(data: any) {
+export async function blockMember(data: { channelId: string; userId: string }) {
   await axios
-    .patch(`${BACKEND_ORIGIN}/chat/ban`, { data }, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/block`, data, { withCredentials: true })
     .then()
     .catch();
 }
 
-export async function setKick(data: any) {
+export async function kickMember(data: { channelId: string; userId: string }) {
   await axios
-    .patch(`${BACKEND_ORIGIN}/chat/kick`, { data }, { withCredentials: true })
-    .then()
-    .catch();
-}
-
-export async function setMute(data: any) {
-  await axios
-    .patch(`${BACKEND_ORIGIN}/chat/muted`, { data }, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/kick`, data, { withCredentials: true })
     .then()
     .catch();
 }

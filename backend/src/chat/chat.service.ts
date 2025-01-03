@@ -618,123 +618,143 @@ export class ChatService {
     return allRooms;
   }
 
-  async adduseradmins(user: any, room: any) {
-    const user_friend = await this.prisma.user.findUnique({
+  async setAdmin(
+    user: AttachedUserEntity,
+    data: { channelId: string; userId: string },
+  ) {
+    const friend = await this.prisma.user.findUnique({
       where: {
-        nickname: room.data.login,
+        id: data.userId,
       },
     });
-    const rooms = await this.prisma.room.findUnique({
+
+    const room = await this.prisma.room.findUnique({
       where: {
-        name: room.data.name,
+        id: data.channelId,
       },
     });
-    if (rooms.owner !== user.nickname)
+
+    if (room.owner !== user.nickname)
       throw new ForbiddenException('you are not owner');
-    const id1 = rooms.admins.find((login) => login === user_friend.nickname);
+    const id1 = room.admins.find((login) => login === friend.nickname);
     if (id1) throw new ForbiddenException('already admins');
-    const id2 = rooms.members.find((login) => login === user_friend.nickname);
+    const id2 = room.members.find((login) => login === friend.nickname);
     if (!id2) throw new ForbiddenException('is not member');
+
     await this.prisma.room.update({
       where: {
-        name: room.data.name,
+        id: room.id,
       },
       data: {
         admins: {
-          push: user_friend.nickname,
+          push: friend.nickname,
         },
       },
     });
   }
 
-  async banmember(user: any, room: any) {
-    const user_friend = await this.prisma.user.findUnique({
+  async blockMember(
+    user: AttachedUserEntity,
+    data: { channelId: string; userId: string },
+  ) {
+    const friend = await this.prisma.user.findUnique({
       where: {
-        nickname: room.data.login,
+        id: data.userId,
       },
     });
-    const rooms = await this.prisma.room.findUnique({
+
+    const room = await this.prisma.room.findUnique({
       where: {
-        name: room.data.name,
+        id: data.channelId,
       },
     });
-    const id1 = rooms.admins.find((login) => login === user.nickname);
+
+    const id1 = room.admins.find((login) => login === user.nickname);
     if (!id1) throw new ForbiddenException('you are  Not admins');
-    const id2 = rooms.admins.find((login) => login === user_friend.nickname);
-    if (id2 && rooms.owner != user.nickname)
+    const id2 = room.admins.find((login) => login === friend.nickname);
+    if (id2 && room.owner != user.nickname)
       throw new ForbiddenException(
         'you are not owner, impossiple to remove admin',
       );
+
     await this.prisma.room.update({
       where: {
-        name: room.data.name,
+        id: room.id,
       },
       data: {
         members: {
-          set: rooms.members.filter((login) => login !== user_friend.nickname),
+          set: room.members.filter((login) => login !== friend.nickname),
         },
       },
     });
+
     if (id2) {
       await this.prisma.room.update({
         where: {
-          name: room.data.name,
+          id: room.id,
         },
         data: {
           admins: {
-            set: rooms.admins.filter((login) => login !== user_friend.nickname),
+            set: room.admins.filter((login) => login !== friend.nickname),
           },
         },
       });
     }
     await this.prisma.room.update({
       where: {
-        name: room.data.name,
+        id: room.id,
       },
       data: {
         blocked: {
-          push: user_friend.nickname,
+          push: friend.nickname,
         },
       },
     });
   }
 
-  async quickmember(user: any, room: any) {
-    const user_friend = await this.prisma.user.findUnique({
+  async kickMember(
+    user: AttachedUserEntity,
+    data: { channelId: string; userId: string },
+  ) {
+    const friend = await this.prisma.user.findUnique({
       where: {
-        nickname: room.data.login,
+        id: data.userId,
       },
     });
-    const rooms = await this.prisma.room.findUnique({
+
+    const room = await this.prisma.room.findUnique({
       where: {
-        name: room.data.name,
+        id: data.channelId,
       },
     });
-    const id1 = rooms.admins.find((login) => login === user.nickname);
+
+    const id1 = room.admins.find((login) => login === user.nickname);
     if (!id1) throw new ForbiddenException('you are  Not admins');
-    const id2 = rooms.admins.find((login) => login === user_friend.nickname);
-    if (id2 && rooms.owner !== user.nickname)
+    const id2 = room.admins.find((login) => login === friend.nickname);
+    if (id2 && room.owner !== user.nickname)
       throw new ForbiddenException(
         'you are not owner, impossiple to remove admin',
       );
+
     await this.prisma.room.update({
       where: {
-        name: room.data.name,
+        id: room.id,
       },
       data: {
         members: {
-          set: rooms.members.filter((login) => login !== user_friend.nickname),
+          set: room.members.filter((login) => login !== friend.nickname),
         },
       },
     });
+
     if (id2) {
       await this.prisma.room.update({
         where: {
-          name: room.data.name,
+          id: room.id,
         },
         data: {
           admins: {
-            set: rooms.admins.filter((login) => login !== user_friend.nickname),
+            set: room.admins.filter((login) => login !== friend.nickname),
           },
         },
       });
@@ -895,32 +915,37 @@ export class ChatService {
     return obj;
   }
 
-  async muted(user: any, room: any) {
-    const user_friend = await this.prisma.user.findUnique({
+  async muteMember(
+    user: AttachedUserEntity,
+    data: { channelId: string; userId: string },
+  ) {
+    const friend = await this.prisma.user.findUnique({
       where: {
-        nickname: room.data.login,
+        id: data.userId,
       },
     });
-    const rooms = await this.prisma.room.findUnique({
+
+    const room = await this.prisma.room.findUnique({
       where: {
-        name: room.data.name,
+        id: data.channelId,
       },
     });
-    const id1 = rooms.admins.find((login) => login === user.nickname);
+
+    const id1 = room.admins.find((login) => login === user.nickname);
     if (!id1) throw new ForbiddenException('you are Not admins');
-    const id2 = rooms.admins.find((login) => login === user_friend.nickname);
-    if (id2 && rooms.owner !== user.nickname)
+    const id2 = room.admins.find((login) => login === friend.nickname);
+    if (id2 && room.owner !== user.nickname)
       throw new ForbiddenException(
         'you are not owner, impossiple to mute admin',
       );
     if (id2) {
       await this.prisma.room.update({
         where: {
-          name: room.data.name,
+          id: room.id,
         },
         data: {
           admins: {
-            set: rooms.admins.filter((login) => login !== user_friend.nickname),
+            set: room.admins.filter((login) => login !== friend.nickname),
           },
         },
       });
@@ -928,8 +953,8 @@ export class ChatService {
     const time = moment().add(1, 'm').format('YYYY-MM-DD hh:mm:ss');
     await this.prisma.muted.create({
       data: {
-        roomName: room.data.name,
-        receiverUser: user_friend.nickname,
+        roomName: room.name,
+        receiverUser: friend.nickname,
         time: time,
       },
     });

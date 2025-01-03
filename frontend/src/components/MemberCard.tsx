@@ -5,9 +5,8 @@ import { PointsIcon } from "./Icons";
 import {
   getMembersChannel,
   setAdmin,
-  setBlock,
-  setKick,
-  setMute,
+  blockMember,
+  kickMember,
 } from "../api/API";
 
 import { globalSocket } from "../utilities/socket";
@@ -17,6 +16,7 @@ import { UserType } from "../api/types";
 interface PropsType {
   member: MemberType;
   setMembers: React.Dispatch<React.SetStateAction<any>>;
+  channelId: string;
   channelName: string;
   channelUserRole: string;
   userData: UserType;
@@ -25,10 +25,48 @@ interface PropsType {
 function MemberCard({
   member,
   setMembers,
+  channelId,
   channelName,
   channelUserRole,
   userData,
 }: PropsType) {
+  function handleInviteToPlay() {
+    globalSocket.emit("inviteToPlay", {
+      sender: userData,
+      receiverId: member.id,
+    });
+  }
+
+  async function handleSetAdmin() {
+    await setAdmin({
+      channelId,
+      userId: member.id,
+    });
+    getMembersChannel((members) => {
+      setMembers(members);
+    }, channelName);
+  }
+
+  async function handleBlockMember() {
+    await blockMember({
+      channelId,
+      userId: member.id,
+    });
+    getMembersChannel((members) => {
+      setMembers(members);
+    }, channelName);
+  }
+
+  async function handleKickMember() {
+    await kickMember({
+      channelId: channelId,
+      userId: member.id,
+    });
+    getMembersChannel((members) => {
+      setMembers(members);
+    }, channelName);
+  }
+
   return (
     <div className={`flex flex-1 items-center justify-between gap-0.5 px-4`}>
       <div className="flex items-center gap-2">
@@ -76,163 +114,39 @@ function MemberCard({
           <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
         </MenuButton>
 
-        {channelUserRole === "OWNER" ? (
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
+        <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
+          <MenuItem
+            className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
+            onClick={handleInviteToPlay}
+          >
+            invite to play
+          </MenuItem>
+          {channelUserRole === "OWNER" && member.role === "MEMBER" && (
             <MenuItem
-              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-              onClick={() => {
-                globalSocket.emit("inviteToPlay", {
-                  sender: userData,
-                  receiverId: member.id,
-                });
-              }}
+              className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
+              onClick={handleSetAdmin}
             >
-              Invite to play
+              set to admin
             </MenuItem>
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-              onClick={async () => {
-                let obj = {
-                  name: channelName,
-                  login: member.nickname,
-                };
-                await setAdmin(obj);
-                getMembersChannel((res: any) => {
-                  setMembers(res);
-                }, channelName);
-              }}
-            >
-              admin
-            </MenuItem>
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-              onClick={async () => {
-                let obj = {
-                  name: channelName,
-                  login: member.nickname,
-                };
-                await setBlock(obj);
-                getMembersChannel((res: any) => {
-                  setMembers(res);
-                }, channelName);
-              }}
-            >
-              block
-            </MenuItem>
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-              onClick={async () => {
-                let obj = {
-                  name: channelName,
-                  login: member.nickname,
-                };
-                await setKick(obj);
-                getMembersChannel((res: any) => {
-                  setMembers(res);
-                }, channelName);
-              }}
-            >
-              kick
-            </MenuItem>
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-              onClick={async () => {
-                let obj = {
-                  name: channelName,
-                  login: member.nickname,
-                };
-                await setMute(obj);
-                getMembersChannel((res: any) => {
-                  setMembers(res);
-                }, channelName);
-              }}
-            >
-              mute
-            </MenuItem>
-          </MenuList>
-        ) : null}
-
-        {/* Admin */}
-        {channelUserRole === "ADMIN" ? (
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-              onClick={() => {
-                globalSocket.emit("inviteToPlay", {
-                  sender: userData,
-                  receiverId: member.id,
-                });
-              }}
-            >
-              Invite to play
-            </MenuItem>
-            {member.role === "MEMBER" ? (
-              <>
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-                  onClick={async () => {
-                    let obj = {
-                      name: channelName,
-                      login: member.nickname,
-                    };
-                    await setBlock(obj);
-                    getMembersChannel((res: any) => {
-                      setMembers(res);
-                    }, channelName);
-                  }}
-                >
-                  block
-                </MenuItem>
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-                  onClick={async () => {
-                    let obj = {
-                      name: channelName,
-                      login: member.nickname,
-                    };
-                    await setKick(obj);
-                    getMembersChannel((res: any) => {
-                      setMembers(res);
-                    }, channelName);
-                  }}
-                >
-                  kick
-                </MenuItem>
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 hover:bg-backgroundHover"
-                  onClick={async () => {
-                    let obj = {
-                      name: channelName,
-                      login: member.nickname,
-                    };
-                    await setMute(obj);
-                    getMembersChannel((res: any) => {
-                      setMembers(res);
-                    }, channelName);
-                  }}
-                >
-                  mute
-                </MenuItem>
-              </>
-            ) : null}
-          </MenuList>
-        ) : null}
-        {/* Member */}
-        {channelUserRole === "MEMBER" ? (
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-              onClick={() => {
-                globalSocket.emit("inviteToPlay", {
-                  sender: userData,
-                  receiverId: member.id,
-                });
-              }}
-            >
-              Invite to play
-            </MenuItem>
-          </MenuList>
-        ) : null}
+          )}
+          {(channelUserRole === "OWNER" ||
+            (channelUserRole === "ADMIN" && member.role === "MEMBER")) && (
+            <>
+              <MenuItem
+                className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
+                onClick={handleBlockMember}
+              >
+                block
+              </MenuItem>
+              <MenuItem
+                className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
+                onClick={handleKickMember}
+              >
+                kick
+              </MenuItem>
+            </>
+          )}
+        </MenuList>
       </Menu>
     </div>
   );

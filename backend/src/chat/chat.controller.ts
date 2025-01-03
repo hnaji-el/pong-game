@@ -82,22 +82,40 @@ export class ChatController {
 
   @Post('/set-admin')
   @UseGuards(JwtAuthGuard)
-  async setuseradmins(@Req() req: Request, @Body() room) {
+  async setAdmin(
+    @Req() req: Request,
+    @Body() data: { channelId: string; userId: string },
+  ) {
     try {
-      await this.chatService.adduseradmins(req.user, room);
-    } catch (error) {}
+      await this.chatService.setAdmin(req.user, data);
+    } catch {}
   }
 
-  @Patch('/ban')
+  @Patch('/block')
   @UseGuards(JwtAuthGuard)
-  async banmember(@Req() req: Request, @Body() room) {
-    await this.chatService.banmember(req.user, room);
+  async blockMember(
+    @Req() req: Request,
+    @Body() data: { channelId: string; userId: string },
+  ) {
+    await this.chatService.blockMember(req.user, data);
   }
 
   @Patch('/kick')
   @UseGuards(JwtAuthGuard)
-  async kickmember(@Req() req: Request, @Body() room) {
-    await this.chatService.quickmember(req.user, room);
+  async kickMember(
+    @Req() req: Request,
+    @Body() data: { channelId: string; userId: string },
+  ) {
+    await this.chatService.kickMember(req.user, data);
+  }
+
+  @Patch('muted')
+  @UseGuards(JwtAuthGuard)
+  async muteMember(
+    @Req() req: Request,
+    @Body() data: { channelId: string; userId: string },
+  ) {
+    return await this.chatService.muteMember(req.user, data);
   }
 
   @Patch('/unblock-from-room')
@@ -116,12 +134,6 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   async getDM(@Req() req: Request) {
     return await this.chatService.getDM('DM', req.user);
-  }
-
-  @Patch('muted')
-  @UseGuards(JwtAuthGuard)
-  async muteduser(@Req() req: Request, @Body() room) {
-    return await this.chatService.muted(req.user, room);
   }
 
   @Patch('unmuted')

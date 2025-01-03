@@ -45,6 +45,7 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
               key={member.id}
               member={member}
               setMembers={setMembers}
+              channelId={chatDataBox.id}
               channelName={chatDataBox.name}
               channelUserRole={chatDataBox.role}
               userData={userData}

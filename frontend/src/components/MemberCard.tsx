@@ -2,71 +2,26 @@ import React from "react";
 
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { PointsIcon } from "./Icons";
-import {
-  getMembersChannel,
-  setAdmin,
-  blockMember,
-  kickMember,
-} from "../api/API";
 
-import { globalSocket } from "../utilities/socket";
 import { MemberType } from "../pages/Chat/types";
-import { UserType } from "../api/types";
 
 interface PropsType {
   member: MemberType;
-  setMembers: React.Dispatch<React.SetStateAction<any>>;
-  channelId: string;
-  channelName: string;
   channelUserRole: string;
-  userData: UserType;
+  handleInviteToPlay: () => void;
+  handleSetAdmin: () => void;
+  handleBlockMember: () => void;
+  handleKickMember: () => void;
 }
 
 function MemberCard({
   member,
-  setMembers,
-  channelId,
-  channelName,
   channelUserRole,
-  userData,
+  handleInviteToPlay,
+  handleSetAdmin,
+  handleBlockMember,
+  handleKickMember,
 }: PropsType) {
-  function handleInviteToPlay() {
-    globalSocket.emit("inviteToPlay", {
-      sender: userData,
-      receiverId: member.id,
-    });
-  }
-
-  async function handleSetAdmin() {
-    await setAdmin({
-      channelId,
-      userId: member.id,
-    });
-    getMembersChannel((members) => {
-      setMembers(members);
-    }, channelName);
-  }
-
-  async function handleBlockMember() {
-    await blockMember({
-      channelId,
-      userId: member.id,
-    });
-    getMembersChannel((members) => {
-      setMembers(members);
-    }, channelName);
-  }
-
-  async function handleKickMember() {
-    await kickMember({
-      channelId: channelId,
-      userId: member.id,
-    });
-    getMembersChannel((members) => {
-      setMembers(members);
-    }, channelName);
-  }
-
   return (
     <div className={`flex flex-1 items-center justify-between gap-0.5 px-4`}>
       <div className="flex items-center gap-2">

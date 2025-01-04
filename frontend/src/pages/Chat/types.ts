@@ -32,5 +32,5 @@ export interface MemberType {
   nickname: string;
   status: string;
   pictureURL: string;
-  role: string;
+  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | ''
 }

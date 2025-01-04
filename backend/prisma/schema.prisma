@@ -58,7 +58,6 @@ model Room {
   createdAt       DateTime    @default(now()) @db.Timestamptz
   updatedAt       DateTime    @default(now()) @updatedAt @db.Timestamptz
   messages        Message[]
-  muted           Muted[]
 }
 
 model Message {
@@ -67,15 +66,6 @@ model Message {
   userId       String
   pictureURL   String
   data         String
-  createdAt    DateTime @default(now()) @db.Timestamptz
-  room         Room     @relation(fields: [roomName], references: [name], onDelete: Cascade)
-}
-
-model Muted {
-  id           String   @id @default(uuid())
-  roomName     String
-  receiverUser String
-  time         String
   createdAt    DateTime @default(now()) @db.Timestamptz
   room         Room     @relation(fields: [roomName], references: [name], onDelete: Cascade)
 }

@@ -539,33 +539,28 @@ export class ChatService {
     });
   }
 
-  async getallUsersinRoom(user: any, name: string) {
-    const rooms = await this.prisma.room.findFirst({
+  async getChannelMembers(user: AttachedUserEntity, channelId: string) {
+    const room = await this.prisma.room.findFirst({
       where: {
-        name: name,
-      },
-      select: {
-        members: true,
-        admins: true,
-        owner: true,
-        type: true,
+        id: channelId,
       },
     });
+
     const obj: MemberType[] = [];
-    for (let index = 0; index < rooms.members.length; index++) {
-      if (rooms.members[index] === user.nickname) continue;
-      const id1 = rooms.members.find((login) => login === rooms.members[index]);
+    for (let index = 0; index < room.members.length; index++) {
+      if (room.members[index] === user.nickname) continue;
+      const id1 = room.members.find((login) => login === room.members[index]);
       if (id1) {
         const user1 = await this.prisma.user.findUnique({
           where: {
-            nickname: rooms.members[index],
+            nickname: room.members[index],
           },
         });
-        let role;
-        if (rooms.owner === rooms.members[index]) role = 'OWNER';
+        let role = '';
+        if (room.owner === room.members[index]) role = 'OWNER';
         else {
-          const admin = rooms.admins.find(
-            (login) => login === rooms.members[index],
+          const admin = room.admins.find(
+            (login) => login === room.members[index],
           );
           if (admin) role = 'ADMIN';
           else role = 'MEMBER';
@@ -582,6 +577,7 @@ export class ChatService {
     }
     return obj;
   }
+
   async getAllRooms(user: any) {
     const allRooms: Searchchanel[] = [];
 
@@ -620,11 +616,11 @@ export class ChatService {
 
   async setAdmin(
     user: AttachedUserEntity,
-    data: { channelId: string; userId: string },
+    data: { channelId: string; memberId: string },
   ) {
     const friend = await this.prisma.user.findUnique({
       where: {
-        id: data.userId,
+        id: data.memberId,
       },
     });
 
@@ -655,11 +651,11 @@ export class ChatService {
 
   async blockMember(
     user: AttachedUserEntity,
-    data: { channelId: string; userId: string },
+    data: { channelId: string; memberId: string },
   ) {
     const friend = await this.prisma.user.findUnique({
       where: {
-        id: data.userId,
+        id: data.memberId,
       },
     });
 
@@ -714,11 +710,11 @@ export class ChatService {
 
   async kickMember(
     user: AttachedUserEntity,
-    data: { channelId: string; userId: string },
+    data: { channelId: string; memberId: string },
   ) {
     const friend = await this.prisma.user.findUnique({
       where: {
-        id: data.userId,
+        id: data.memberId,
       },
     });
 
@@ -913,59 +909,6 @@ export class ChatService {
       }
     }
     return obj;
-  }
-
-  async muteMember(
-    user: AttachedUserEntity,
-    data: { channelId: string; userId: string },
-  ) {
-    const friend = await this.prisma.user.findUnique({
-      where: {
-        id: data.userId,
-      },
-    });
-
-    const room = await this.prisma.room.findUnique({
-      where: {
-        id: data.channelId,
-      },
-    });
-
-    const id1 = room.admins.find((login) => login === user.nickname);
-    if (!id1) throw new ForbiddenException('you are Not admins');
-    const id2 = room.admins.find((login) => login === friend.nickname);
-    if (id2 && room.owner !== user.nickname)
-      throw new ForbiddenException(
-        'you are not owner, impossiple to mute admin',
-      );
-    if (id2) {
-      await this.prisma.room.update({
-        where: {
-          id: room.id,
-        },
-        data: {
-          admins: {
-            set: room.admins.filter((login) => login !== friend.nickname),
-          },
-        },
-      });
-    }
-    const time = moment().add(1, 'm').format('YYYY-MM-DD hh:mm:ss');
-    await this.prisma.muted.create({
-      data: {
-        roomName: room.name,
-        receiverUser: friend.nickname,
-        time: time,
-      },
-    });
-  }
-
-  async unmuted(user: any, roomName: string) {
-    await this.prisma.muted.deleteMany({
-      where: {
-        AND: [{ receiverUser: user.nickname }, { roomName: roomName }],
-      },
-    });
   }
 
   async deleteroom(user: any, room: any) {

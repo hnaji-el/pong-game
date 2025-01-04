@@ -62,10 +62,13 @@ export class ChatController {
     return await this.chatService.getfriendNotjoinRoom(req.user, name);
   }
 
-  @Get('/users-in-room/:name')
+  @Get('/channel/members/:channelId')
   @UseGuards(JwtAuthGuard)
-  async getallUserinRoom(@Req() req: Request, @Param('name') name: string) {
-    return await this.chatService.getallUsersinRoom(req.user, name);
+  async getChannelMembers(
+    @Req() req: Request,
+    @Param('channelId') channelId: string,
+  ) {
+    return await this.chatService.getChannelMembers(req.user, channelId);
   }
 
   @Post('quite-room')
@@ -84,7 +87,7 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   async setAdmin(
     @Req() req: Request,
-    @Body() data: { channelId: string; userId: string },
+    @Body() data: { channelId: string; memberId: string },
   ) {
     try {
       await this.chatService.setAdmin(req.user, data);
@@ -95,7 +98,7 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   async blockMember(
     @Req() req: Request,
-    @Body() data: { channelId: string; userId: string },
+    @Body() data: { channelId: string; memberId: string },
   ) {
     await this.chatService.blockMember(req.user, data);
   }
@@ -104,18 +107,9 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   async kickMember(
     @Req() req: Request,
-    @Body() data: { channelId: string; userId: string },
+    @Body() data: { channelId: string; memberId: string },
   ) {
     await this.chatService.kickMember(req.user, data);
-  }
-
-  @Patch('muted')
-  @UseGuards(JwtAuthGuard)
-  async muteMember(
-    @Req() req: Request,
-    @Body() data: { channelId: string; userId: string },
-  ) {
-    return await this.chatService.muteMember(req.user, data);
   }
 
   @Patch('/unblock-from-room')
@@ -134,12 +128,6 @@ export class ChatController {
   @UseGuards(JwtAuthGuard)
   async getDM(@Req() req: Request) {
     return await this.chatService.getDM('DM', req.user);
-  }
-
-  @Patch('unmuted')
-  @UseGuards(JwtAuthGuard)
-  async unmuteduser(@Req() req: Request, @Body() room) {
-    return await this.chatService.unmuted(req.user, room);
   }
 
   @Delete('delete-room/:name')

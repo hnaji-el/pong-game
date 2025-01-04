@@ -21,14 +21,11 @@ export function useVerifyUserAuthenticity(isOnLoginPage = false) {
   React.useEffect(() => {
     const verifyAuthenticity = async () => {
       try {
-        const response = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
+        const res = await fetch(`${BACKEND_ORIGIN}/auth/validate-token`, {
           credentials: "include",
         });
 
-        if (
-          (isOnLoginPage && !response.ok) ||
-          (!isOnLoginPage && response.ok)
-        ) {
+        if ((isOnLoginPage && !res.ok) || (!isOnLoginPage && res.ok)) {
           setStatus("success");
         } else {
           setStatus("error");
@@ -42,6 +39,30 @@ export function useVerifyUserAuthenticity(isOnLoginPage = false) {
   });
 
   return status;
+}
+
+export function useChannelMembers(
+  channelId: string,
+): [boolean, MemberType[], React.Dispatch<React.SetStateAction<MemberType[]>>] {
+  const [members, setMembers] = React.useState<MemberType[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function getChannelMembers() {
+      const res = await fetch(
+        `${BACKEND_ORIGIN}/chat/channel/members/${channelId}`,
+        { credentials: "include" },
+      );
+      const body = await res.json();
+
+      setIsLoading(false);
+      setMembers(body);
+    }
+
+    getChannelMembers();
+  }, [setMembers, channelId]);
+
+  return [isLoading, members, setMembers];
 }
 
 export async function logout() {
@@ -228,20 +249,6 @@ export function getFriendChannel(getRes: any, nameChannel: string) {
     .catch();
 }
 
-export function getMembersChannel(
-  getRes: (members: MemberType[]) => void,
-  channelName: string,
-) {
-  axios
-    .get(`${BACKEND_ORIGIN}/chat/users-in-room/${channelName}`, {
-      withCredentials: true,
-    })
-    .then((res) => {
-      getRes(res.data);
-    })
-    .catch();
-}
-
 export async function addToRoom(data: any) {
   await axios
     .post(
@@ -253,21 +260,27 @@ export async function addToRoom(data: any) {
     .catch();
 }
 
-export async function setAdmin(data: { channelId: string; userId: string }) {
+export async function setAdmin(data: { channelId: string; memberId: string }) {
   await axios
     .post(`${BACKEND_ORIGIN}/chat/set-admin`, data, { withCredentials: true })
     .then()
     .catch();
 }
 
-export async function blockMember(data: { channelId: string; userId: string }) {
+export async function blockMember(data: {
+  channelId: string;
+  memberId: string;
+}) {
   await axios
     .patch(`${BACKEND_ORIGIN}/chat/block`, data, { withCredentials: true })
     .then()
     .catch();
 }
 
-export async function kickMember(data: { channelId: string; userId: string }) {
+export async function kickMember(data: {
+  channelId: string;
+  memberId: string;
+}) {
   await axios
     .patch(`${BACKEND_ORIGIN}/chat/kick`, data, { withCredentials: true })
     .then()

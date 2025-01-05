@@ -258,7 +258,7 @@ function Chat() {
               Add member
             </ModalHeader>
             <ModalBody className="justify-center">
-              <AddMemberModal />
+              <AddMemberModal chatDataBox={chatDataBox}/>
             </ModalBody>
           </Modal>
         )}

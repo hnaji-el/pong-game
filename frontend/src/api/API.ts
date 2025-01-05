@@ -44,8 +44,8 @@ export function useVerifyUserAuthenticity(isOnLoginPage = false) {
 export function useChannelMembers(
   channelId: string,
 ): [boolean, MemberType[], React.Dispatch<React.SetStateAction<MemberType[]>>] {
-  const [members, setMembers] = React.useState<MemberType[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [members, setMembers] = React.useState<MemberType[]>([]);
 
   React.useEffect(() => {
     async function getChannelMembers() {
@@ -60,9 +60,35 @@ export function useChannelMembers(
     }
 
     getChannelMembers();
-  }, [setMembers, channelId]);
+  }, [channelId]);
 
   return [isLoading, members, setMembers];
+}
+
+export function useChannelNonMemberFriends(
+  channelId: string,
+): [boolean, MemberType[], React.Dispatch<React.SetStateAction<MemberType[]>>] {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [nonMemberFriends, setNonMemberFriends] = React.useState<MemberType[]>(
+    [],
+  );
+
+  React.useEffect(() => {
+    async function getChannelMembers() {
+      const res = await fetch(
+        `${BACKEND_ORIGIN}/chat/channel/non-member-friends/${channelId}`,
+        { credentials: "include" },
+      );
+      const body = await res.json();
+
+      setIsLoading(false);
+      setNonMemberFriends(body);
+    }
+
+    getChannelMembers();
+  }, [channelId]);
+
+  return [isLoading, nonMemberFriends, setNonMemberFriends];
 }
 
 export async function logout() {
@@ -238,24 +264,15 @@ export function joinRoom(
     .catch();
 }
 
-export function getFriendChannel(getRes: any, nameChannel: string) {
-  axios
-    .get(`${BACKEND_ORIGIN}/chat/friends-in-room/${nameChannel}`, {
+export async function addMember(data: {
+  channelId: string;
+  channelType: string;
+  userId: string;
+}) {
+  await axios
+    .post(`${BACKEND_ORIGIN}/chat/channel/add-member`, data, {
       withCredentials: true,
     })
-    .then((res) => {
-      getRes(res.data);
-    })
-    .catch();
-}
-
-export async function addToRoom(data: any) {
-  await axios
-    .post(
-      `${BACKEND_ORIGIN}/chat/add-to-room`,
-      { data },
-      { withCredentials: true },
-    )
     .then()
     .catch();
 }

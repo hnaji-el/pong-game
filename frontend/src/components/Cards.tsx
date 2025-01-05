@@ -3,15 +3,11 @@ import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 import friendPicture from "../assets/friend.jpg";
-import { PlusIcon, PointsIcon, SettingsIcon } from "./Icons";
+import { PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
-import { StateMssages } from "../pages/Chat/Chat";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../pages/Profile/Profile";
 import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
-import { MessagesContext } from "../pages/Chat/Chat";
-import { AddMemberContext } from "./modals/AddMemberModal";
-import { addToRoom, getFriendChannel } from "../api/API";
 import { globalSocket } from "../utilities/socket";
 
 interface TypeCardProfile {
@@ -47,10 +43,6 @@ interface TypedataFriend {
     nickname: string;
     pictureURL: string;
   };
-}
-
-interface TypeFriendChannel {
-  data: any;
 }
 
 export function CardFriendOnline() {
@@ -226,57 +218,6 @@ export function CardUser({ data }: TypedataFriend) {
           </MenuList>
         </Menu>
       ) : null}
-    </div>
-  );
-}
-
-export function CardFriendMember({ data }: TypeFriendChannel) {
-  const messageData = useContext(MessagesContext);
-  const addMemberData = useContext(AddMemberContext);
-  return (
-    <div className={`flex flex-1 items-center justify-between gap-0.5 px-4`}>
-      <div className="flex items-center gap-2">
-        <img
-          src={data.pictureURL}
-          alt="Profile"
-          className="h-12 w-12 rounded-full"
-        />
-        <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-3">
-            <span
-              className={`text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize text-primaryText`}
-            >
-              {data.nickname}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span
-              className={`h-2 w-2 rounded-full ${
-                data?.status === "offline" ? "bg-offline" : "bg-online"
-              }`}
-            ></span>
-            <span className="text-sm font-light capitalize text-secondaryText">
-              {data?.status === "offline" ? "offline" : "online"}
-            </span>
-          </div>
-        </div>
-      </div>
-      <button
-        className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1"
-        onClick={async () => {
-          let obj = {
-            name: messageData.chatDataBox.name,
-            type: messageData.chatDataBox.type,
-            login: data.nickname,
-          };
-          await addToRoom(obj);
-          getFriendChannel((res: any) => {
-            addMemberData.setFriend(res);
-          }, messageData.chatDataBox.name);
-        }}
-      >
-        <PlusIcon edit="fill-secondaryText w-3 h-3" />
-      </button>
     </div>
   );
 }

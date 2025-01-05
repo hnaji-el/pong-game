@@ -46,20 +46,16 @@ export class ChatController {
     } catch {}
   }
 
-  @Post('/add-to-room')
+  @Post('/channel/add-member')
   @UseGuards(JwtAuthGuard)
-  async addtoroom(@Req() req: Request, @Body() room) {
+  async addMember(
+    @Req() req: Request,
+    @Body() data: { channelId: string; channelType: string; userId: string },
+  ) {
     try {
-      if (room.data.type === 'PUBLIC')
-        await this.chatService.addtoroom(req.user, room);
-      else await this.chatService.addtoroomNopublic(req.user, room);
+      if (data.channelType === 'PUBLIC') await this.chatService.addMember(data);
+      else await this.chatService.addToChannelNotPublic(req.user, data);
     } catch (error) {}
-  }
-
-  @Get('/friends-in-room/:name')
-  @UseGuards(JwtAuthGuard)
-  async getfriendNotjoinRoom(@Req() req: Request, @Param('name') name: string) {
-    return await this.chatService.getfriendNotjoinRoom(req.user, name);
   }
 
   @Get('/channel/members/:channelId')
@@ -71,16 +67,13 @@ export class ChatController {
     return await this.chatService.getChannelMembers(req.user, channelId);
   }
 
-  @Post('quite-room')
+  @Get('/channel/non-member-friends/:channelId')
   @UseGuards(JwtAuthGuard)
-  async quite_room(@Req() req: Request, @Body() rom) {
-    return await this.chatService.quite_room(req.user, rom);
-  }
-
-  @Get('all-rooms')
-  @UseGuards(JwtAuthGuard)
-  async getallRooms(@Req() req: Request) {
-    return await this.chatService.getAllRooms(req.user);
+  async getNonMemberFriends(
+    @Req() req: Request,
+    @Param('channelId') channelId: string,
+  ) {
+    return await this.chatService.getNonMemberFriends(req.user, channelId);
   }
 
   @Post('/set-admin')
@@ -110,6 +103,18 @@ export class ChatController {
     @Body() data: { channelId: string; memberId: string },
   ) {
     await this.chatService.kickMember(req.user, data);
+  }
+
+  @Post('quite-room')
+  @UseGuards(JwtAuthGuard)
+  async quite_room(@Req() req: Request, @Body() rom) {
+    return await this.chatService.quite_room(req.user, rom);
+  }
+
+  @Get('all-rooms')
+  @UseGuards(JwtAuthGuard)
+  async getallRooms(@Req() req: Request) {
+    return await this.chatService.getAllRooms(req.user);
   }
 
   @Patch('/unblock-from-room')

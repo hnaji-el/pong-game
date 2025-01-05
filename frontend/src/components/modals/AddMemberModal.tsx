@@ -1,25 +1,27 @@
 import React from "react";
 
-import FriendMember from "../FriendMember";
+import FriendCard from "../FriendCard";
 import { ExclamationIcon } from "../Icons";
 import Spinner from "../Spinner";
-import { getFriendChannel } from "../../api/API";
+import { addMember, useChannelNonMemberFriends } from "../../api/API";
 
-import { MessagesContext } from "../../pages/Chat/Chat";
+import { ChannelType } from "../../pages/Chat/types";
 
-export const AddMemberContext = React.createContext<any>({});
+function AddMemberModal({ chatDataBox }: { chatDataBox: ChannelType }) {
+  const [isLoading, nonMemberFriends, setNonMemberFriends] =
+    useChannelNonMemberFriends(chatDataBox.id);
 
-function AddMemberModal() {
-  const messageData = React.useContext(MessagesContext);
-  const [friend, setFriend] = React.useState<any>([]);
-  const [isLoading, setIsLoading] = React.useState(true); 
+  async function handleAddMember(userId: string, index: number) {
+    await addMember({
+      channelId: chatDataBox.id,
+      channelType: chatDataBox.type,
+      userId,
+    });
 
-  React.useEffect(() => {
-    getFriendChannel((res: any) => {
-      setFriend(res);
-      setIsLoading(false);
-    }, messageData.chatDataBox.name);
-  }, [messageData.chatDataBox.name]);
+    const newNonMemberFriends = [...nonMemberFriends];
+    newNonMemberFriends.splice(index, 1);
+    setNonMemberFriends(newNonMemberFriends);
+  }
 
   if (isLoading) {
     return (
@@ -29,16 +31,32 @@ function AddMemberModal() {
     );
   }
 
-  return friend.length ? (
-    <AddMemberContext.Provider value={{ setFriend: setFriend }}>
-      <div className="flex w-full flex-col gap-6 pt-5">
-        <FriendMember data={friend} />
+  if (!nonMemberFriends.length) {
+    return (
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+        <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
+        No friends available to add.
       </div>
-    </AddMemberContext.Provider>
-  ) : (
-    <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-      <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
-      No friends available to add.
+    );
+  }
+
+  return (
+    <div className="flex w-full flex-col gap-6 pt-5">
+      <div className="flex max-h-[34rem] flex-col overflow-auto">
+        <div className="flex flex-col gap-6">
+          {nonMemberFriends.map((nonMemberFriend, index) => {
+            return (
+              <FriendCard
+                key={nonMemberFriend.id}
+                nonMemberFriend={nonMemberFriend}
+                handleAddMember={() =>
+                  handleAddMember(nonMemberFriend.id, index)
+                }
+              />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

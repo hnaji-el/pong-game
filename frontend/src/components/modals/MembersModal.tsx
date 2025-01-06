@@ -9,7 +9,7 @@ import {
   kickMember,
 } from "../../api/API";
 
-import { ChannelType, MemberType } from "../../pages/Chat/types";
+import { ChannelType } from "../../pages/Chat/types";
 import MemberCard from "../MemberCard";
 import { UserType } from "../../api/types";
 import { globalSocket } from "../../utilities/socket";
@@ -35,9 +35,9 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
       memberId,
     });
 
-    const newMembers = [...members];
-    newMembers[index].role = "ADMIN";
-    setMembers(newMembers);
+    const nextMembers = [...members];
+    nextMembers[index].role = "ADMIN";
+    setMembers(nextMembers);
   }
 
   async function handleBlockMember(memberId: string, index: number) {
@@ -46,9 +46,9 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
       memberId,
     });
 
-    const newMembers = [...members];
-    newMembers.splice(index, 1);
-    setMembers(newMembers);
+    const nextMembers = [...members];
+    nextMembers.splice(index, 1);
+    setMembers(nextMembers);
   }
 
   async function handleKickMember(memberId: string, index: number) {
@@ -57,9 +57,9 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
       memberId,
     });
 
-    const newMembers = [...members];
-    newMembers.splice(index, 1);
-    setMembers(newMembers);
+    const nextMembers = [...members];
+    nextMembers.splice(index, 1);
+    setMembers(nextMembers);
   }
 
   if (isLoading) {

@@ -18,9 +18,9 @@ function AddMemberModal({ chatDataBox }: { chatDataBox: ChannelType }) {
       userId,
     });
 
-    const newNonMemberFriends = [...nonMemberFriends];
-    newNonMemberFriends.splice(index, 1);
-    setNonMemberFriends(newNonMemberFriends);
+    const nextNonMemberFriends = [...nonMemberFriends];
+    nextNonMemberFriends.splice(index, 1);
+    setNonMemberFriends(nextNonMemberFriends);
   }
 
   if (isLoading) {

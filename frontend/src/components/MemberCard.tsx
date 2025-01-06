@@ -1,5 +1,6 @@
 import React from "react";
 
+import VisuallyHidden from "./VisuallyHidden";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { PointsIcon } from "./Icons";
 
@@ -27,7 +28,7 @@ function MemberCard({
       <div className="flex items-center gap-2">
         <img
           src={member.pictureURL}
-          alt="Profile"
+          alt="avatar"
           className="h-[48px] w-[48px] rounded-full"
         />
         <div className="flex flex-col gap-0.5">
@@ -67,6 +68,7 @@ function MemberCard({
       <Menu>
         <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1">
           <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
+          <VisuallyHidden>Show more actions</VisuallyHidden>
         </MenuButton>
 
         <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">

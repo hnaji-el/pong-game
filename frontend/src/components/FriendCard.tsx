@@ -1,5 +1,6 @@
 import React from "react";
 
+import VisuallyHidden from "./VisuallyHidden";
 import { PlusIcon } from "./Icons";
 
 import { MemberType } from "../pages/Chat/types";
@@ -15,14 +16,12 @@ function FriendCard({ nonMemberFriend, handleAddMember }: PropsType) {
       <div className="flex items-center gap-2">
         <img
           src={nonMemberFriend.pictureURL}
-          alt="Profile"
+          alt="avatar"
           className="h-12 w-12 rounded-full"
         />
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-3">
-            <span
-              className={`text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize text-primaryText`}
-            >
+            <span className="text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize text-primaryText">
               {nonMemberFriend.nickname}
             </span>
           </div>
@@ -45,6 +44,7 @@ function FriendCard({ nonMemberFriend, handleAddMember }: PropsType) {
         onClick={handleAddMember}
       >
         <PlusIcon edit="fill-secondaryText w-3 h-3" />
+        <VisuallyHidden>Add Member</VisuallyHidden>
       </button>
     </div>
   );

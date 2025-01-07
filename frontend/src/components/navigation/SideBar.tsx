@@ -13,6 +13,7 @@ import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";
 import logo from "../../assets/logo.svg";
+import VisuallyHidden from "../VisuallyHidden";
 
 interface TypeProps {
   openSearch: boolean;
@@ -202,6 +203,7 @@ export default function SideBar({
         className="fixed bottom-24 right-3 z-[999] flex h-14 w-14 items-center justify-center rounded-full bg-primary lg:hidden"
       >
         <ControllerIcon edit="w-8" />
+        <VisuallyHidden>Play now</VisuallyHidden>
       </Link>
     </>
   );

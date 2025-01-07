@@ -54,7 +54,7 @@ export function ModalHeader({
           }}
         >
           <CloseIcon edit="w-full h-full fill-secondaryText" />
-          <VisuallyHidden>Close the modal</VisuallyHidden>
+          <VisuallyHidden>Close the popup</VisuallyHidden>
         </button>
       </div>
       <div className={`pt-5 ${className}`}>

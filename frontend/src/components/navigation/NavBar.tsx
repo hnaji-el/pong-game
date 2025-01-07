@@ -10,7 +10,7 @@ import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
-import PlayNowButton from "../buttons/PlayNowButton";
+import PlayNowLink from "../links/PlayNowLink";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,7 +34,7 @@ export default function NavBar({ setOpen }: TypeProps) {
       </Link>
       <SearchInput />
       <div className="hidden items-center gap-5 lg:flex">
-        <PlayNowButton />
+        <PlayNowLink />
 
         <Dropdown>
           <DropdownBtn

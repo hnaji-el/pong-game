@@ -202,12 +202,12 @@ function Chat() {
           />
 
           <FooterBar
+            click={click}
+            loggedUserAvatar={settings.pictureURL}
             isSearchModalOpen={isSearchModalOpen}
-            openSearchModal={() => setIsSearchModalOpen(true)}
-            closeSearchModal={() => setIsSearchModalOpen(false)}
+            setIsSearchModalOpen={setIsSearchModalOpen}
             isMobileSettingsModalOpen={isMobileSettingsModalOpen}
-            openMobileSettingsModal={() => setIsMobileSettingsModalOpen(true)}
-            closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
+            setIsMobileSettingsModalOpen={setIsMobileSettingsModalOpen}
           />
         </div>
 

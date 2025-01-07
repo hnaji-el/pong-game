@@ -1,5 +1,6 @@
-import { VisuallyHidden } from "@chakra-ui/react";
 import React from "react";
+
+import VisuallyHidden from "./VisuallyHidden";
 
 function Spinner({ size = 64 }: { size?: number }) {
   return (

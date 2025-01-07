@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import PlayNowButton from "../../components/buttons/PlayNowButton";
+import PlayNowLink from "../../components/links/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
 import { SettingsNavIcon, LogoutIcon } from "../../components/Icons";
@@ -66,7 +66,7 @@ function HeaderBar({
       )}
 
       <div className="hidden lg:flex lg:items-center lg:gap-5">
-        <PlayNowButton />
+        <PlayNowLink />
 
         <Dropdown>
           <DropdownBtn

@@ -39,7 +39,7 @@ function ChannelEditCard({
                 >
                   <PlusIcon edit="fill-secondaryText w-4 h-4" />
                   <VisuallyHidden>
-                    Open modal to add friends to the channel
+                    Open a popup to add friends to the channel
                   </VisuallyHidden>
                 </button>
               )}
@@ -48,7 +48,7 @@ function ChannelEditCard({
               onClick={openMembersModal}
             >
               <GroupIcon edit="fill-secondaryText w-5 h-5" />
-              <VisuallyHidden>Open modal to show the members</VisuallyHidden>
+              <VisuallyHidden>Open a popup to show the members</VisuallyHidden>
             </button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React from "react";
 
+import MemberCard from "../MemberCard";
 import { ExclamationIcon } from "../Icons";
 import Spinner from "../Spinner";
 import {
@@ -10,22 +11,21 @@ import {
   unblockMember,
 } from "../../api/API";
 
-import { ChannelType } from "../../pages/Chat/types";
-import MemberCard from "../MemberCard";
 import { UserType } from "../../api/types";
+import { ChannelType } from "../../pages/Chat/types";
 import { globalSocket } from "../../utilities/socket";
 
 interface PropsType {
   chatDataBox: ChannelType;
-  userData: UserType;
+  loggedUserData: UserType;
 }
 
-function MembersModal({ chatDataBox, userData }: PropsType) {
+function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
   const [isLoading, members, setMembers] = useChannelMembers(chatDataBox.id);
 
   function handleInviteToPlay(memberId: string) {
     globalSocket.emit("inviteToPlay", {
-      sender: userData,
+      sender: loggedUserData,
       receiverId: memberId,
     });
   }
@@ -103,7 +103,7 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
             <MemberCard
               key={member.id}
               member={member}
-              channelUserRole={chatDataBox.role}
+              loggedUserRole={chatDataBox.role}
               handleInviteToPlay={() => handleInviteToPlay(member.id)}
               handleSetAdmin={() => handleSetAdmin(member.id, index)}
               handleBlockMember={() => handleBlockMember(member.id, index)}

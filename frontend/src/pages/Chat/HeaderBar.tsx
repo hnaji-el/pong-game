@@ -1,20 +1,17 @@
 import React from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import PlayNowButton from "../../components/buttons/PlayNowButton";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
+import { SettingsNavIcon, LogoutIcon } from "../../components/Icons";
 import {
   Dropdown,
   DropdownItem,
   DropdownBtn,
   DropdownList,
 } from "../../components/Dropdown";
-import {
-  ControllerIcon,
-  SettingsNavIcon,
-  LogoutIcon,
-} from "../../components/Icons";
 import { logout } from "../../api/API";
 
 import { UserType } from "../../api/types";
@@ -22,7 +19,7 @@ import { UserType } from "../../api/types";
 interface PropsType {
   isDm: boolean;
   chatDataBox: any;
-  userData: UserType;
+  loggedUserData: UserType;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   openSettingsModal: () => void;
   openMembersModal: () => void;
@@ -32,7 +29,7 @@ interface PropsType {
 function HeaderBar({
   isDm,
   chatDataBox,
-  userData,
+  loggedUserData,
   setClick,
   openSettingsModal,
   openMembersModal,
@@ -61,7 +58,7 @@ function HeaderBar({
         <ChannelEditCard
           name={chatDataBox.name}
           type={chatDataBox.type}
-          userRole={chatDataBox.role}
+          loggedUserRole={chatDataBox.role}
           handleArrowLeftClick={() => setClick(false)}
           openMembersModal={openMembersModal}
           openAddMemberModal={openAddMemberModal}
@@ -69,18 +66,13 @@ function HeaderBar({
       )}
 
       <div className="hidden lg:flex lg:items-center lg:gap-5">
-        <Link
-          to="/game"
-          className="flex w-36 items-center justify-center gap-2.5 rounded-md bg-primary p-3 text-sm text-primaryText"
-        >
-          <ControllerIcon edit="w-7" />
-          <span>Play now</span>
-        </Link>
+        <PlayNowButton />
+
         <Dropdown>
           <DropdownBtn
             type="text"
-            title={userData.nickname}
-            imgTitle={userData.pictureURL}
+            title={loggedUserData.nickname}
+            imgTitle={loggedUserData.pictureURL}
             arrow={true}
           />
           <DropdownList edit="top-12">

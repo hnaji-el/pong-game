@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import ArrowLeftButton from "./ArrowLeftButton";
+import ArrowLeftButton from "./buttons/ArrowLeftButton";
 import StatusTag from "./StatusTag";
 import VisuallyHidden from "./VisuallyHidden";
 
@@ -39,7 +39,7 @@ function UserCard({
           </div>
           <StatusTag isOnline={isOnline} />
         </div>
-        <VisuallyHidden>{`Navigate to the profile page of ${nickname}`}</VisuallyHidden>
+        <VisuallyHidden>Navigate to the profile page</VisuallyHidden>
       </Link>
     </div>
   );

@@ -1,13 +1,13 @@
 import React from "react";
 
 import { GroupIcon, PlusIcon } from "./Icons";
-import ArrowLeftButton from "./ArrowLeftButton";
+import ArrowLeftButton from "./buttons/ArrowLeftButton";
 import VisuallyHidden from "./VisuallyHidden";
 
 interface PropsType {
   name: string;
   type: string;
-  userRole: string;
+  loggedUserRole: string;
   handleArrowLeftClick: () => void;
   openMembersModal: () => void;
   openAddMemberModal: () => void;
@@ -16,7 +16,7 @@ interface PropsType {
 function ChannelEditCard({
   name,
   type,
-  userRole,
+  loggedUserRole,
   handleArrowLeftClick,
   openMembersModal,
   openAddMemberModal,
@@ -31,7 +31,7 @@ function ChannelEditCard({
             {name}
           </span>
           <div className="flex items-center gap-4">
-            {(userRole === "OWNER" || userRole === "ADMIN") &&
+            {(loggedUserRole === "OWNER" || loggedUserRole === "ADMIN") &&
               type !== "PROTECTED" && (
                 <button
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"

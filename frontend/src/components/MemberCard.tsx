@@ -10,7 +10,7 @@ import StatusTag from "./StatusTag";
 
 interface PropsType {
   member: MemberType;
-  channelUserRole: string;
+  loggedUserRole: string;
   handleInviteToPlay: () => void;
   handleSetAdmin: () => void;
   handleBlockMember: () => void;
@@ -20,7 +20,7 @@ interface PropsType {
 
 function MemberCard({
   member,
-  channelUserRole,
+  loggedUserRole,
   handleInviteToPlay,
   handleSetAdmin,
   handleBlockMember,
@@ -49,7 +49,7 @@ function MemberCard({
       </div>
 
       {member.role === "BLOCKED" &&
-        (channelUserRole === "OWNER" || channelUserRole === "ADMIN") && (
+        (loggedUserRole === "OWNER" || loggedUserRole === "ADMIN") && (
           <Menu>
             <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1">
               <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
@@ -81,7 +81,7 @@ function MemberCard({
             >
               invite to play
             </MenuItem>
-            {channelUserRole === "OWNER" && member.role === "MEMBER" && (
+            {loggedUserRole === "OWNER" && member.role === "MEMBER" && (
               <MenuItem
                 className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
                 onClick={handleSetAdmin}
@@ -89,8 +89,8 @@ function MemberCard({
                 set to admin
               </MenuItem>
             )}
-            {(channelUserRole === "OWNER" ||
-              (channelUserRole === "ADMIN" && member.role === "MEMBER")) && (
+            {(loggedUserRole === "OWNER" ||
+              (loggedUserRole === "ADMIN" && member.role === "MEMBER")) && (
               <>
                 <MenuItem
                   className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"

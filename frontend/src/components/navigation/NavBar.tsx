@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import logo from "../../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { ControllerIcon, SettingsNavIcon, LogoutIcon } from "../Icons";
+import { SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
 import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
@@ -10,6 +10,7 @@ import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
+import PlayNowButton from "../buttons/PlayNowButton";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -33,13 +34,8 @@ export default function NavBar({ setOpen }: TypeProps) {
       </Link>
       <SearchInput />
       <div className="hidden items-center gap-5 lg:flex">
-        <Link
-          to="/game"
-          className="flex w-36 items-center justify-center gap-2.5 rounded-md bg-primary p-3 text-sm text-primaryText"
-        >
-          <ControllerIcon edit="w-7" />
-          <span>Play Now</span>
-        </Link>
+        <PlayNowButton />
+
         <Dropdown>
           <DropdownBtn
             type="text"

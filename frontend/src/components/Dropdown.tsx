@@ -5,8 +5,9 @@ import React, {
   useRef,
   useEffect,
 } from "react";
+
 import { ArrowDownIcon, ArrowUpIcon, FriendIcon } from "./Icons";
-import { VisuallyHidden } from "@chakra-ui/react";
+import VisuallyHidden from "./VisuallyHidden";
 
 interface PropsDropdown {
   children?: JSX.Element | JSX.Element[] | string;
@@ -74,26 +75,25 @@ export function DropdownBtn({
       <button
         className="flex items-center gap-2"
         onClick={() => {
-          if (changeStateDropdown.dropdown) {
-            changeStateDropdown.setDropdown(false);
-            return;
-          }
-          changeStateDropdown.setDropdown(true);
+          changeStateDropdown.dropdown
+            ? changeStateDropdown.setDropdown(false)
+            : changeStateDropdown.setDropdown(true);
         }}
       >
         <div className="flex items-center gap-2">
-          {imgTitle ? (
+          {imgTitle && (
             <img
               src={imgTitle}
               alt="avatar"
               className="h-10 w-10 rounded-full"
             />
-          ) : null}
+          )}
           <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap">
             {title ? title : null}
           </span>
         </div>
-        {arrow ? (
+
+        {arrow && (
           <span className="flex h-4 w-4 items-center justify-center rounded-full bg-shape">
             {changeStateDropdown.dropdown ? (
               <ArrowDownIcon edit="w-1.5 h-1.5 fill-secondaryText" />
@@ -101,8 +101,13 @@ export function DropdownBtn({
               <ArrowUpIcon edit="w-1.5 h-1.5 fill-secondaryText" />
             )}
           </span>
-        ) : null}
-        <VisuallyHidden>Toggle settings dropdown menu</VisuallyHidden>
+        )}
+
+        <VisuallyHidden>
+          {changeStateDropdown.dropdown
+            ? "Close settings dropdown menu"
+            : "Open settings dropdown menu"}
+        </VisuallyHidden>
       </button>
     );
 

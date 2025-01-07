@@ -58,7 +58,7 @@ export function ModalHeader({
         </button>
       </div>
       <div className={`pt-5 ${className}`}>
-        <div className={`h-[1px] w-full bg-secondaryText`}></div>
+        <div className="h-[1px] w-full bg-secondaryText"></div>
       </div>
     </>
   );

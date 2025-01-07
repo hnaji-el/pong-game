@@ -1,10 +1,10 @@
 import React from "react";
 
 import VisuallyHidden from "./VisuallyHidden";
+import StatusTag from "./StatusTag";
 import { PlusIcon } from "./Icons";
 
 import { MemberType } from "../pages/Chat/types";
-import StatusTag from "./StatusTag";
 
 interface PropsType {
   nonMemberFriend: MemberType;

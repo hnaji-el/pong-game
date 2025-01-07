@@ -179,7 +179,7 @@ function Chat() {
           <HeaderBar
             isDm={isDm}
             chatDataBox={chatDataBox}
-            userData={settings}
+            loggedUserData={settings}
             setClick={setClick}
             openSettingsModal={() => setIsSettingsModalOpen(true)}
             openMembersModal={() => setIsMembersModalOpen(true)}
@@ -258,7 +258,7 @@ function Chat() {
               Add member
             </ModalHeader>
             <ModalBody className="justify-center">
-              <AddMemberModal chatDataBox={chatDataBox}/>
+              <AddMemberModal chatDataBox={chatDataBox} />
             </ModalBody>
           </Modal>
         )}
@@ -272,7 +272,10 @@ function Chat() {
               Members
             </ModalHeader>
             <ModalBody className="justify-center">
-              <MembersModal chatDataBox={chatDataBox} userData={settings} />
+              <MembersModal
+                chatDataBox={chatDataBox}
+                loggedUserData={settings}
+              />
             </ModalBody>
           </Modal>
         )}

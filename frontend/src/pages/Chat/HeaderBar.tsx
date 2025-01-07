@@ -18,7 +18,6 @@ import {
 import { logout } from "../../api/API";
 
 import { UserType } from "../../api/types";
-import { StateMssages, MessagesContext } from "./Chat";
 
 interface PropsType {
   isDm: boolean;
@@ -39,7 +38,6 @@ function HeaderBar({
   openMembersModal,
   openAddMemberModal,
 }: PropsType) {
-
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -57,18 +55,19 @@ function HeaderBar({
           nickname={chatDataBox.nickname}
           avatar={chatDataBox.pictureURL}
           isOnline={chatDataBox.status === "online"}
-          onClick={() => setClick(false)}
+          handleArrowLeftClick={() => setClick(false)}
         />
       ) : (
         <ChannelEditCard
           name={chatDataBox.name}
           type={chatDataBox.type}
           userRole={chatDataBox.role}
-          onClick={() => setClick(false)}
+          handleArrowLeftClick={() => setClick(false)}
           openMembersModal={openMembersModal}
           openAddMemberModal={openAddMemberModal}
         />
       )}
+
       <div className="hidden lg:flex lg:items-center lg:gap-5">
         <Link
           to="/game"

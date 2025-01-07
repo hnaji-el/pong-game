@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { ArrowDownIcon, ArrowUpIcon, FriendIcon } from "./Icons";
+import { VisuallyHidden } from "@chakra-ui/react";
 
 interface PropsDropdown {
   children?: JSX.Element | JSX.Element[] | string;
@@ -51,7 +52,7 @@ export function Dropdown({ children }: PropsDropdown) {
     <DisplayContext.Provider
       value={{ dropdown: dropdown, setDropdown: setDropdown }}
     >
-      <div className="relative text-primaryText text-sm" ref={refDropDown}>
+      <div className="relative text-sm text-primaryText" ref={refDropDown}>
         {children}
       </div>
     </DisplayContext.Provider>
@@ -82,21 +83,26 @@ export function DropdownBtn({
       >
         <div className="flex items-center gap-2">
           {imgTitle ? (
-            <img src={imgTitle} alt="User" className="w-10 h-10 rounded-full" />
+            <img
+              src={imgTitle}
+              alt="avatar"
+              className="h-10 w-10 rounded-full"
+            />
           ) : null}
-          <span className="max-w-[9.6rem] overflow-hidden text-ellipsis	whitespace-nowrap">
+          <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap">
             {title ? title : null}
           </span>
         </div>
         {arrow ? (
-          <span className="bg-shape w-4 h-4 rounded-full flex justify-center items-center">
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-shape">
             {changeStateDropdown.dropdown ? (
-              <ArrowUpIcon edit="w-1.5 h-1.5 fill-secondaryText" />
-            ) : (
               <ArrowDownIcon edit="w-1.5 h-1.5 fill-secondaryText" />
+            ) : (
+              <ArrowUpIcon edit="w-1.5 h-1.5 fill-secondaryText" />
             )}
           </span>
         ) : null}
+        <VisuallyHidden>Toggle settings dropdown menu</VisuallyHidden>
       </button>
     );
 
@@ -119,7 +125,7 @@ export function DropdownBtn({
   if (type === "button")
     return (
       <button
-        className="w-36 p-2 rounded-md bg-shape gap-6 flex items-center justify-center"
+        className="flex w-36 items-center justify-center gap-6 rounded-md bg-shape p-2"
         onClick={() => {
           if (changeStateDropdown.dropdown) {
             changeStateDropdown.setDropdown(false);
@@ -130,7 +136,7 @@ export function DropdownBtn({
       >
         <div className="flex gap-2">
           <FriendIcon edit="w-5 fill-primaryText" />
-          <span className="text-primaryText text-sm">{title}</span>
+          <span className="text-sm text-primaryText">{title}</span>
         </div>
         <span className="rounded-full">
           {arrow ? (
@@ -153,7 +159,7 @@ export function DropdownList({ children, edit }: PropsDropdown) {
   if (changeStateDropdown.dropdown)
     return (
       <div
-        className={`absolute rounded-md bg-body shadow right-0 w-36 flex flex-col py-5 gap-2 z-[999] list-dropdown cursor-default  ${edit}`}
+        className={`list-dropdown absolute right-0 z-[999] flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 shadow ${edit}`}
       >
         {children}
       </div>
@@ -166,7 +172,7 @@ export function DropdownItem({ children, edit, onClick }: PropsDropdown) {
   let changeStateDropdown = useContext(DisplayContext);
   return (
     <button
-      className={`flex gap-2 hover:bg-backgroundHover items-center ${edit}`}
+      className={`flex items-center gap-2 hover:bg-backgroundHover ${edit}`}
       onClick={(e) => {
         if (onClick) onClick();
         e.preventDefault();

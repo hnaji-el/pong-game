@@ -1,6 +1,7 @@
 import React from "react";
 
 import { CloseIcon } from "../Icons";
+import VisuallyHidden from "../VisuallyHidden";
 
 interface ModalPropsType {
   children: JSX.Element[];
@@ -53,6 +54,7 @@ export function ModalHeader({
           }}
         >
           <CloseIcon edit="w-full h-full fill-secondaryText" />
+          <VisuallyHidden>Close the modal</VisuallyHidden>
         </button>
       </div>
       <div className={`pt-5 ${className}`}>

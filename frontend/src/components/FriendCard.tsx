@@ -4,6 +4,7 @@ import VisuallyHidden from "./VisuallyHidden";
 import { PlusIcon } from "./Icons";
 
 import { MemberType } from "../pages/Chat/types";
+import StatusTag from "./StatusTag";
 
 interface PropsType {
   nonMemberFriend: MemberType;
@@ -21,24 +22,14 @@ function FriendCard({ nonMemberFriend, handleAddMember }: PropsType) {
         />
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-3">
-            <span className="text-md name-member overflow-hidden text-ellipsis whitespace-nowrap capitalize text-primaryText">
+            <span className="text-md name-member overflow-hidden text-ellipsis whitespace-nowrap text-primaryText">
               {nonMemberFriend.nickname}
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span
-              className={`h-2 w-2 rounded-full ${
-                nonMemberFriend.status === "offline"
-                  ? "bg-offline"
-                  : "bg-online"
-              }`}
-            ></span>
-            <span className="text-sm font-light capitalize text-secondaryText">
-              {nonMemberFriend.status === "offline" ? "offline" : "online"}
-            </span>
-          </div>
+          <StatusTag isOnline={nonMemberFriend.status === "online"} />
         </div>
       </div>
+
       <button
         className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1"
         onClick={handleAddMember}

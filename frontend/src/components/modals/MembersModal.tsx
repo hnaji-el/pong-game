@@ -7,6 +7,7 @@ import {
   setAdmin,
   blockMember,
   kickMember,
+  unblockMember,
 } from "../../api/API";
 
 import { ChannelType } from "../../pages/Chat/types";
@@ -47,7 +48,18 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
     });
 
     const nextMembers = [...members];
-    nextMembers.splice(index, 1);
+    nextMembers[index].role = "BLOCKED";
+    setMembers(nextMembers);
+  }
+
+  async function handleUnblockMember(memberId: string, index: number) {
+    await unblockMember({
+      channelId: chatDataBox.id,
+      memberId,
+    });
+
+    const nextMembers = [...members];
+    nextMembers[index].role = "MEMBER";
     setMembers(nextMembers);
   }
 
@@ -95,6 +107,7 @@ function MembersModal({ chatDataBox, userData }: PropsType) {
               handleInviteToPlay={() => handleInviteToPlay(member.id)}
               handleSetAdmin={() => handleSetAdmin(member.id, index)}
               handleBlockMember={() => handleBlockMember(member.id, index)}
+              handleUnblockMember={() => handleUnblockMember(member.id, index)}
               handleKickMember={() => handleKickMember(member.id, index)}
             />
           ))}

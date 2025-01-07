@@ -22,6 +22,18 @@ export class ChatController {
     );
   }
 
+  @Post('/channel/join-channel')
+  @UseGuards(JwtAuthGuard)
+  async joinRoom(@Req() req: Request, @Body() room) {
+    try {
+      if (room.data.type === 'PUBLIC') {
+        return await this.chatService.joinRoom(req.user, room.data.name);
+      } else if (room.data.type === 'PROTECTED') {
+        return await this.chatService.joinProtectedRoom(req.user, room);
+      }
+    } catch {}
+  }
+
   @Get('/dms/dms-messages')
   @UseGuards(JwtAuthGuard)
   async getDmsData(@Req() req: Request) {
@@ -34,16 +46,25 @@ export class ChatController {
     return await this.chatService.getChannelsData(req.user);
   }
 
-  @Post('/join-room')
+  @Get('/channel/members/:channelId')
   @UseGuards(JwtAuthGuard)
-  async joinRoom(@Req() req: Request, @Body() room) {
-    try {
-      if (room.data.type === 'PUBLIC') {
-        return await this.chatService.joinRoom(req.user, room.data.name);
-      } else if (room.data.type === 'PROTECTED') {
-        return await this.chatService.joinProtectedRoom(req.user, room);
-      }
-    } catch {}
+  async getChannelMembers(
+    @Req() req: Request,
+    @Param('channelId') channelId: string,
+  ) {
+    return await this.chatService.getChannelMembers(req.user, channelId);
+  }
+
+  @Get('/channel/non-member-friends/:channelId')
+  @UseGuards(JwtAuthGuard)
+  async getChannelNonMemberFriends(
+    @Req() req: Request,
+    @Param('channelId') channelId: string,
+  ) {
+    return await this.chatService.getChannelNonMemberFriends(
+      req.user,
+      channelId,
+    );
   }
 
   @Post('/channel/add-member')
@@ -58,25 +79,7 @@ export class ChatController {
     } catch (error) {}
   }
 
-  @Get('/channel/members/:channelId')
-  @UseGuards(JwtAuthGuard)
-  async getChannelMembers(
-    @Req() req: Request,
-    @Param('channelId') channelId: string,
-  ) {
-    return await this.chatService.getChannelMembers(req.user, channelId);
-  }
-
-  @Get('/channel/non-member-friends/:channelId')
-  @UseGuards(JwtAuthGuard)
-  async getNonMemberFriends(
-    @Req() req: Request,
-    @Param('channelId') channelId: string,
-  ) {
-    return await this.chatService.getNonMemberFriends(req.user, channelId);
-  }
-
-  @Post('/set-admin')
+  @Post('/channel/set-admin')
   @UseGuards(JwtAuthGuard)
   async setAdmin(
     @Req() req: Request,
@@ -87,7 +90,7 @@ export class ChatController {
     } catch {}
   }
 
-  @Patch('/block')
+  @Patch('/channel/block-member')
   @UseGuards(JwtAuthGuard)
   async blockMember(
     @Req() req: Request,
@@ -96,7 +99,16 @@ export class ChatController {
     await this.chatService.blockMember(req.user, data);
   }
 
-  @Patch('/kick')
+  @Patch('/channel/unblock-member')
+  @UseGuards(JwtAuthGuard)
+  async unblockMember(
+    @Req() req: Request,
+    @Body() data: { channelId: string; memberId: string },
+  ) {
+    await this.chatService.unblockMember(req.user, data);
+  }
+
+  @Patch('/channel/kick-member')
   @UseGuards(JwtAuthGuard)
   async kickMember(
     @Req() req: Request,
@@ -105,39 +117,15 @@ export class ChatController {
     await this.chatService.kickMember(req.user, data);
   }
 
-  @Post('quite-room')
+  @Post('/channel/leave-channel')
   @UseGuards(JwtAuthGuard)
-  async quite_room(@Req() req: Request, @Body() rom) {
-    return await this.chatService.quite_room(req.user, rom);
+  async leaveChannel(@Req() req: Request, @Body() rom) {
+    return await this.chatService.leaveChannel(req.user, rom);
   }
 
-  @Get('all-rooms')
+  @Delete('/channel/delete-room/:name')
   @UseGuards(JwtAuthGuard)
-  async getallRooms(@Req() req: Request) {
-    return await this.chatService.getAllRooms(req.user);
-  }
-
-  @Patch('/unblock-from-room')
-  @UseGuards(JwtAuthGuard)
-  async unblock(@Req() req: Request, @Body() room) {
-    await this.chatService.unblockfromroom(req.user, room);
-  }
-
-  @Get('all-messages')
-  @UseGuards(JwtAuthGuard)
-  async getMessage(@Body() room) {
-    return await this.chatService.getMessage(room.name);
-  }
-
-  @Get('DM')
-  @UseGuards(JwtAuthGuard)
-  async getDM(@Req() req: Request) {
-    return await this.chatService.getDM('DM', req.user);
-  }
-
-  @Delete('delete-room/:name')
-  @UseGuards(JwtAuthGuard)
-  async DeleteRoom(@Req() req: Request, @Param() room) {
-    return this.chatService.deleteroom(req.user, room);
+  async deleteChannel(@Req() req: Request, @Param() room) {
+    return this.chatService.deleteChannel(req.user, room);
   }
 }

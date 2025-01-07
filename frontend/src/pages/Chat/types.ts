@@ -19,7 +19,7 @@ export interface DmType {
 export interface ChannelType {
   id: string;
   name: string;
-  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | ''
+  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | 'BLOCKED' | ''
   members: number;
   type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
   latestMessage: string;
@@ -32,5 +32,5 @@ export interface MemberType {
   nickname: string;
   status: string;
   pictureURL: string;
-  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | ''
+  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | 'BLOCKED' | ''
 }

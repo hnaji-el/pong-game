@@ -254,7 +254,7 @@ export function joinRoom(
 ) {
   axios
     .post(
-      `${BACKEND_ORIGIN}/chat/join-room`,
+      `${BACKEND_ORIGIN}/chat/channel/join-channel`,
       { data },
       { withCredentials: true },
     )
@@ -279,7 +279,9 @@ export async function addMember(data: {
 
 export async function setAdmin(data: { channelId: string; memberId: string }) {
   await axios
-    .post(`${BACKEND_ORIGIN}/chat/set-admin`, data, { withCredentials: true })
+    .post(`${BACKEND_ORIGIN}/chat/channel/set-admin`, data, {
+      withCredentials: true,
+    })
     .then()
     .catch();
 }
@@ -289,7 +291,21 @@ export async function blockMember(data: {
   memberId: string;
 }) {
   await axios
-    .patch(`${BACKEND_ORIGIN}/chat/block`, data, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/channel/block-member`, data, {
+      withCredentials: true,
+    })
+    .then()
+    .catch();
+}
+
+export async function unblockMember(data: {
+  channelId: string;
+  memberId: string;
+}) {
+  await axios
+    .patch(`${BACKEND_ORIGIN}/chat/channel/unblock-member`, data, {
+      withCredentials: true,
+    })
     .then()
     .catch();
 }
@@ -299,7 +315,9 @@ export async function kickMember(data: {
   memberId: string;
 }) {
   await axios
-    .patch(`${BACKEND_ORIGIN}/chat/kick`, data, { withCredentials: true })
+    .patch(`${BACKEND_ORIGIN}/chat/channel/kick-member`, data, {
+      withCredentials: true,
+    })
     .then()
     .catch();
 }
@@ -307,7 +325,7 @@ export async function kickMember(data: {
 export async function leaveRoom(name: string) {
   await axios
     .post(
-      `${BACKEND_ORIGIN}/chat/quite-room`,
+      `${BACKEND_ORIGIN}/chat/channel/leave-channel`,
       { name },
       { withCredentials: true },
     )
@@ -317,7 +335,7 @@ export async function leaveRoom(name: string) {
 
 export async function deleteRoom(name: string) {
   await axios
-    .delete(`${BACKEND_ORIGIN}/chat/delete-room/${name}`, {
+    .delete(`${BACKEND_ORIGIN}/chat/channel/delete-room/${name}`, {
       withCredentials: true,
     })
     .then()

@@ -44,17 +44,13 @@ function AddMemberModal({ chatDataBox }: { chatDataBox: ChannelType }) {
     <div className="flex w-full flex-col gap-6 pt-5">
       <div className="flex max-h-[34rem] flex-col overflow-auto">
         <div className="flex flex-col gap-6">
-          {nonMemberFriends.map((nonMemberFriend, index) => {
-            return (
-              <FriendCard
-                key={nonMemberFriend.id}
-                nonMemberFriend={nonMemberFriend}
-                handleAddMember={() =>
-                  handleAddMember(nonMemberFriend.id, index)
-                }
-              />
-            );
-          })}
+          {nonMemberFriends.map((nonMemberFriend, index) => (
+            <FriendCard
+              key={nonMemberFriend.id}
+              nonMemberFriend={nonMemberFriend}
+              handleAddMember={() => handleAddMember(nonMemberFriend.id, index)}
+            />
+          ))}
         </div>
       </div>
     </div>

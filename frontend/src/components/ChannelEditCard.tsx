@@ -29,14 +29,15 @@ function ChannelEditCard({
             {name}
           </span>
           <div className="flex items-center gap-4">
-            {userRole !== "MEMBER" && type !== "PROTECTED" && (
-              <button
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
-                onClick={openAddMemberModal}
-              >
-                <PlusIcon edit="fill-secondaryText w-4 h-4" />
-              </button>
-            )}
+            {(userRole === "OWNER" || userRole === "ADMIN") &&
+              type !== "PROTECTED" && (
+                <button
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
+                  onClick={openAddMemberModal}
+                >
+                  <PlusIcon edit="fill-secondaryText w-4 h-4" />
+                </button>
+              )}
             <button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
               onClick={openMembersModal}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 interface TypeProps {
-  children: JSX.Element | JSX.Element[] | string;
+  children: React.ReactNode;
   closeModal: () => void;
 }
 

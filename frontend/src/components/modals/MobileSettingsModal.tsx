@@ -1,15 +1,16 @@
 import React from "react";
 interface TypeProps {
-  children: JSX.Element | JSX.Element[] | string;
+  children: React.ReactNode;
   closeModal: () => void;
 }
 
 function MobileSettingsModal({ children, closeModal }: TypeProps) {
-  const modalSettings = React.useRef<HTMLDivElement>(null);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
-  const setWindowDimensions = () => {
+  const modalSettings = React.useRef<HTMLDivElement>(null);
+
+  function setWindowDimensions() {
     setWindowWidth(window.innerWidth);
-  };
+  }
 
   function checkEquale(e: HTMLButtonElement): boolean {
     let buttonsModal = modalSettings.current?.querySelectorAll("button");

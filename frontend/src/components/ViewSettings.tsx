@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import { LogoutIcon, SettingsNavIcon } from "./Icons";
 import { logout } from "../api/API";
+import VisuallyHidden from "./VisuallyHidden";
 
 function ViewSettings({ openModal }: { openModal: () => void }) {
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ function ViewSettings({ openModal }: { openModal: () => void }) {
     <>
       <Link to="/home" className="flex w-full justify-center lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
+        <VisuallyHidden>Go to home page</VisuallyHidden>
       </Link>
+
       <div className="text-md flex w-full flex-col items-center justify-center gap-8 pt-10 text-primaryText">
         <button className="flex gap-2 p-2" onClick={openModal}>
           <SettingsNavIcon edit="w-7 h-7 fill-primaryText" />

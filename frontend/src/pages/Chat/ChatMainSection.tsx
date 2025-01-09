@@ -1,18 +1,35 @@
 import React from "react";
 
 import Messages from "./Messages";
+import VisuallyHidden from "../../components/VisuallyHidden";
 import { SendIcon } from "../../components/Icons";
 import { getAllChannels, getAllDms } from "../../api/API";
 
-import { MessagesContext } from "./Chat";
 import { ChannelType, DmType } from "./types";
 import { Socket } from "socket.io-client";
+import { UserType } from "../../api/types";
 
-function ChatMainSection({ socket }: { socket: Socket }) {
-  const { isDm, setDms, setChannels, chatDataBox } =
-    React.useContext(MessagesContext);
+interface PropsType {
+  chatDataBox: any;
+  loggedUserData: UserType;
+  isDm: boolean;
+  setDms: React.Dispatch<React.SetStateAction<DmType[]>>;
+  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
+  socket: Socket;
+}
 
+function ChatMainSection({
+  chatDataBox,
+  loggedUserData,
+  isDm,
+  setDms,
+  setChannels,
+  socket,
+}: PropsType) {
   const [message, setMessage] = React.useState("");
+  const id = React.useId();
+
+  const inputId = `${id}-message`;
 
   function handleMessageSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,21 +64,32 @@ function ChatMainSection({ socket }: { socket: Socket }) {
   return (
     <main className="flex grow flex-col overflow-hidden">
       <div className="grow overflow-auto">
-        <Messages messages={chatDataBox.messages} />
+        <Messages
+          messages={chatDataBox.messages}
+          loggedUserId={loggedUserData.id}
+          isDm={isDm}
+        />
       </div>
+
       <form
         onSubmit={(event) => handleMessageSubmit(event)}
         className="flex items-center rounded-md bg-shape pr-2"
       >
+        <label htmlFor={inputId}>
+          <VisuallyHidden>Message</VisuallyHidden>
+        </label>
         <input
           type="text"
+          id={inputId}
           placeholder="Type a message"
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           className="placeholder-secondary-text flex-1 bg-transparent p-4 pl-3 pr-2 text-sm font-light text-primaryText placeholder:text-sm placeholder:font-light focus:outline-none"
         />
+
         <button className="flex h-[32px] w-[32px] items-center justify-center rounded-md bg-primary">
           <SendIcon edit="w-[16px] fill-white" />
+          <VisuallyHidden>Send the message</VisuallyHidden>
         </button>
       </form>
     </main>

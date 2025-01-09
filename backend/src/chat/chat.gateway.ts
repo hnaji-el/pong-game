@@ -10,7 +10,6 @@ import {
 import { Server } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
-import * as moment from 'moment';
 import { User } from '@prisma/client';
 import { WsDataType } from './entities/chat.entity';
 import { randomUUID } from 'crypto';

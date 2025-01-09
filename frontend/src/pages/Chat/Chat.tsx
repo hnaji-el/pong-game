@@ -186,7 +186,16 @@ function Chat() {
             openAddMemberModal={() => setIsAddMemberModalOpen(true)}
           />
 
-          {chatDataBox && <ChatMainSection socket={socket} />}
+          {chatDataBox && (
+            <ChatMainSection
+              chatDataBox={chatDataBox}
+              loggedUserData={settings}
+              isDm={isDm}
+              setDms={setDms}
+              setChannels={setChannels}
+              socket={socket}
+            />
+          )}
         </div>
 
         <div

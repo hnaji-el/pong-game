@@ -2,7 +2,7 @@ import React from "react";
 
 import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
-import InputForm from "./InputForm";
+import InputForm from "./inputs/InputForm";
 import { getAllChannels } from "../api/API";
 
 import { MessagesContext } from "../pages/Chat/Chat";

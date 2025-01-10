@@ -1,5 +1,6 @@
 import React from "react";
-import { ExclamationIcon } from "./Icons";
+
+import { ExclamationIcon } from "../Icons";
 
 interface TypeProps {
   edit?: string;
@@ -12,7 +13,7 @@ interface TypeProps {
   backgroundColor?: string;
 }
 
-export default function InputForm({
+function InputForm({
   edit,
   editError,
   value,
@@ -22,23 +23,27 @@ export default function InputForm({
   setErrorMessage,
   backgroundColor,
 }: TypeProps) {
+  const inputId = React.useId();
+
   return (
     <div className={`flex flex-col gap-1.5 ${edit}`}>
-      <label htmlFor={label} className="text-sm capitalize text-primaryText">
+      <label htmlFor={inputId} className="text-sm capitalize text-primaryText">
         {label}
       </label>
       <input
         type="text"
-        className={`${backgroundColor} placeholder-secondary-text rounded-md bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light ${
-          errorMessage.length ? "border-[1px] border-error" : ""
-        }`}
+        id={inputId}
         placeholder={`Enter ${label}`}
         value={value}
         onChange={(e) => {
           setErrorMessage("");
           setValue(e.currentTarget.value);
         }}
+        className={`${backgroundColor} placeholder-secondary-text rounded-md bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light ${
+          errorMessage.length ? "border-[1px] border-error" : ""
+        }`}
       />
+
       {errorMessage.length > 0 && (
         <div
           className={`flex gap-1.5 fill-error text-xs font-medium text-error ${editError}`}
@@ -50,3 +55,5 @@ export default function InputForm({
     </div>
   );
 }
+
+export default InputForm;

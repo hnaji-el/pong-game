@@ -5,18 +5,26 @@ import ProtectedChannel from "../ProtectedChannel";
 import PublicChannel from "../PublicChannel";
 import { CheckIcon } from "../Icons";
 
-type ChannelType = "PUBLIC" | "PRIVATE" | "PROTECTED";
-type CreateChannelModalPropsType = {
+import { ChannelType } from "../../pages/Chat/types";
+
+interface CreateChannelModalPropsType {
+  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
   closeModal: () => void;
-};
-type ButtonPropsType = {
-  children: string;
+}
+
+interface ButtonPropsType {
+  children: React.ReactNode;
   isClicked: boolean;
   onClick: () => void;
-};
+}
 
-function CreateChannelModal({ closeModal }: CreateChannelModalPropsType) {
-  const [type, setType] = React.useState<ChannelType>("PUBLIC");
+function CreateChannelModal({
+  setChannels,
+  closeModal,
+}: CreateChannelModalPropsType) {
+  const [type, setType] = React.useState<"PUBLIC" | "PRIVATE" | "PROTECTED">(
+    "PUBLIC",
+  );
 
   return (
     <div className="flex w-full items-center">
@@ -42,7 +50,9 @@ function CreateChannelModal({ closeModal }: CreateChannelModalPropsType) {
           </Button>
         </div>
 
-        {type === "PUBLIC" && <PublicChannel closeModal={closeModal} />}
+        {type === "PUBLIC" && (
+          <PublicChannel setChannels={setChannels} closeModal={closeModal} />
+        )}
         {type === "PRIVATE" && <PrivateChannel closeModal={closeModal} />}
         {type === "PROTECTED" && <ProtectedChannel closeModal={closeModal} />}
       </div>
@@ -57,7 +67,6 @@ function Button({ children, isClicked, onClick }: ButtonPropsType) {
       onClick={onClick}
     >
       <span
-        aria-label="Check"
         className={`flex h-7 w-7 items-center justify-center rounded-full ${
           isClicked ? "bg-primary" : "border-2 border-primary"
         }`}

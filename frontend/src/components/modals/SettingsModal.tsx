@@ -1,7 +1,7 @@
 import React from "react";
 
 import { EditAvatarIcon } from "../Icons";
-import InputForm from "../InputForm";
+import InputForm from "../inputs/InputForm";
 import {
   checkDisableCode,
   checkEnableCode,

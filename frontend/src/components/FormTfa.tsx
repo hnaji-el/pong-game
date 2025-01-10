@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { QrcodeValidation } from "../api/API";
 import { checkDisableCode } from "../utilities/helpers";
 import { KeyIcon } from "./Icons";
-import InputForm from "./InputForm";
+import InputForm from "./inputs/InputForm";
 import { useNavigate } from "react-router-dom";
 
 export default function FormTfa() {
@@ -11,9 +11,9 @@ export default function FormTfa() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [value, setValue] = useState<string>("");
   return (
-    <form className="flex flex-col justify-center items-center gap-16">
+    <form className="flex flex-col items-center justify-center gap-16">
       <KeyIcon edit="w-28 h-28 fill-primary relative right-4" />
-      <div className="w-80 flex flex-col gap-5">
+      <div className="flex w-80 flex-col gap-5">
         <InputForm
           label="Enter 2FA code"
           value={value}

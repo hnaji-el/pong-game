@@ -1,7 +1,7 @@
 import React from "react";
 
 import { checkChannelName } from "../utilities/helpers";
-import InputForm from "./InputForm";
+import InputForm from "./inputs/InputForm";
 import InputPasswordForm from "./InputPasswordForm";
 import { getAllChannels } from "../api/API";
 

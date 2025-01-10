@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { checkNickname } from "../utilities/helpers";
-import InputForm from "./InputForm";
+import InputForm from "./inputs/InputForm";
 import { EditAvatarIcon } from "./Icons";
 import { useNavigate } from "react-router-dom";
 import { editNickname, editPicture } from "../api/API";
@@ -24,7 +24,7 @@ export default function FormEdit({ data }: TypeProps) {
   let navigate = useNavigate();
   return (
     <form className="flex items-center">
-      <div className="flex gap-10 lg:gap-12 flex-col lg:flex-row items-center">
+      <div className="flex flex-col items-center gap-10 lg:flex-row lg:gap-12">
         <div className="flex flex-col items-center gap-6">
           <img
             src={pictureUser}
@@ -66,7 +66,7 @@ export default function FormEdit({ data }: TypeProps) {
             />
           </button>
         </div>
-        <div className="flex gap-5 flex-col w-80">
+        <div className="flex w-80 flex-col gap-5">
           <InputForm
             label="username"
             value={value}
@@ -75,7 +75,7 @@ export default function FormEdit({ data }: TypeProps) {
             setErrorMessage={setErrorMessage}
             backgroundColor="bg-shape"
           />
-          <div className="flex w-full items-center flex-col lg:flex-row gap-3">
+          <div className="flex w-full flex-col items-center gap-3 lg:flex-row">
             <button
               type="button"
               className="w-full rounded-md bg-backgroundHover p-2 text-sm text-primaryText shadow"

@@ -263,6 +263,7 @@ function Chat() {
             </ModalHeader>
             <ModalBody className="justify-center">
               <CreateChannelModal
+                setChannels={setChannels}
                 closeModal={() => setIsCreateChannelModalOpen(false)}
               />
             </ModalBody>

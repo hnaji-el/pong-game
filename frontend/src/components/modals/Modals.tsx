@@ -4,18 +4,18 @@ import { CloseIcon } from "../Icons";
 import VisuallyHidden from "../VisuallyHidden";
 
 interface ModalPropsType {
-  children: JSX.Element[];
+  children: React.ReactNode;
   className: string;
 }
 
 interface ModalHeaderPropsType {
-  children: string;
+  children: React.ReactNode;
   className?: string;
   closeModal: () => void;
 }
 
 interface ModalBodyPropsType {
-  children: JSX.Element;
+  children: React.ReactNode;
   className: string;
 }
 

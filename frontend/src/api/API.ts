@@ -250,6 +250,7 @@ export function joinRoom(
   data: {
     name: string;
     type: string;
+    password?: string;
   },
 ) {
   axios

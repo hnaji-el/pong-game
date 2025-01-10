@@ -87,10 +87,7 @@ function ChannelCardList({
 
       {channels.length ? (
         <div className="flex grow flex-col overflow-auto">
-          {[
-            ...channels.filter((channel) => channel.isJoined),
-            ...channels.filter((channel) => !channel.isJoined),
-          ].map((channel, index) => (
+          {channels.map((channel, index) => (
             <ChannelCard
               key={channel.id}
               title={channel.name}

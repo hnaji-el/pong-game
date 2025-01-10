@@ -200,7 +200,10 @@ export class ChatService {
         )
       ).filter((data) => data !== undefined);
 
-      return channelsData;
+      return [
+        ...channelsData.filter((channel) => channel.isJoined),
+        ...channelsData.filter((channel) => !channel.isJoined),
+      ];
     } catch (error) {
       // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
       if (error instanceof InternalServerErrorException) {

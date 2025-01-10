@@ -16,7 +16,7 @@ import ViewSettings from "../../components/ViewSettings";
 import CreateChannelModal from "../../components/modals/CreateChannelModal";
 import AddMemberModal from "../../components/modals/AddMemberModal";
 import MembersModal from "../../components/modals/MembersModal";
-import FormProtected from "../../components/FormProtected";
+import PasswordCheckModal from "../../components/modals/PasswordCheckModal";
 import Spinner from "../../components/Spinner";
 import {
   useVerifyUserAuthenticity,
@@ -307,7 +307,14 @@ function Chat() {
               Password
             </ModalHeader>
             <ModalBody className="justify-center">
-              <FormProtected closeModal={() => setIsPasswordModalOpen(false)} />
+              <PasswordCheckModal
+                setChatDataBox={setChatDataBox}
+                channels={channels}
+                setChannels={setChannels}
+                channelIndex={channelIndex}
+                setClick={setClick}
+                closeModal={() => setIsPasswordModalOpen(false)}
+              />
             </ModalBody>
           </Modal>
         )}

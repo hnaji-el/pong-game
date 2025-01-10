@@ -3,6 +3,7 @@ import React from "react";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 
 import { LockIcon, PointsIcon } from "./Icons";
+import VisuallyHidden from "./VisuallyHidden";
 
 interface PropsType {
   title: string;
@@ -47,36 +48,38 @@ function ChannelCard({
             private
           </div>
         )}
+        <VisuallyHidden>Open the conversation</VisuallyHidden>
       </button>
 
       {isJoined && (
-        <span className="flex items-center justify-center">
-          <Menu>
-            <MenuButton className="group flex items-center justify-center rounded-full p-0">
-              <PointsIcon edit="w-3 h-3 fill-secondaryText" />
-            </MenuButton>
-            <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-              {isOwner && (
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-                  onClick={handleDeleteClick}
-                >
-                  delete
-                </MenuItem>
-              )}
+        <Menu>
+          <MenuButton className="group flex items-center justify-center rounded-full p-0">
+            <PointsIcon edit="w-3 h-3 fill-secondaryText" />
+            <VisuallyHidden>Show more actions</VisuallyHidden>
+          </MenuButton>
+          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
+            {isOwner && (
               <MenuItem
                 className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-                onClick={handleLeaveClick}
+                onClick={handleDeleteClick}
               >
-                leave
+                delete
               </MenuItem>
-            </MenuList>
-          </Menu>
-        </span>
+            )}
+            <MenuItem
+              className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
+              onClick={handleLeaveClick}
+            >
+              leave
+            </MenuItem>
+          </MenuList>
+        </Menu>
       )}
+
       {!isJoined && isProtected && (
         <div className="flex items-center justify-center">
           <LockIcon edit="w-4 h-4 fill-secondaryText" />
+          <VisuallyHidden>Locked Icon</VisuallyHidden>
         </div>
       )}
     </div>

@@ -204,10 +204,21 @@ function Chat() {
           } `}
         >
           <SideNavBar
+            loggedUserData={settings}
+            setChatDataBox={setChatDataBox}
+            isDm={isDm}
+            setIsDm={setIsDm}
+            dmIndex={dmIndex}
+            setDmIndex={setDmIndex}
+            channelIndex={channelIndex}
+            setChannelIndex={setChannelIndex}
+            dms={dms}
+            setDms={setDms}
+            channels={channels}
+            setChannels={setChannels}
+            setClick={setClick}
             openPasswordModal={() => setIsPasswordModalOpen(true)}
             openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
-            closeSearchModal={() => setIsSearchModalOpen(false)}
-            closeMobileSettingsModal={() => setIsMobileSettingsModalOpen(false)}
           />
 
           <FooterBar

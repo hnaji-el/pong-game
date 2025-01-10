@@ -4,35 +4,49 @@ import { Link } from "react-router-dom";
 
 import ChannelCardList from "../../components/ChannelCardList";
 import DmCardList from "../../components/DmCardList";
-import Button from "../../components/Button";
+import Button from "../../components/buttons/Button";
+import VisuallyHidden from "../../components/VisuallyHidden";
 import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";
 
 import { ChannelType, DmType } from "./types";
-import { MessagesContext } from "./Chat";
+import { UserType } from "../../api/types";
 
 interface PropsType {
+  loggedUserData: UserType;
+  setChatDataBox: React.Dispatch<React.SetStateAction<any>>;
+  isDm: boolean;
+  setIsDm: React.Dispatch<React.SetStateAction<boolean>>;
+  dmIndex: number;
+  setDmIndex: React.Dispatch<React.SetStateAction<number>>;
+  channelIndex: number;
+  setChannelIndex: React.Dispatch<React.SetStateAction<number>>;
+  dms: DmType[];
+  setDms: React.Dispatch<React.SetStateAction<DmType[]>>;
+  channels: ChannelType[];
+  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
+  setClick: React.Dispatch<React.SetStateAction<boolean>>;
   openPasswordModal: () => void;
   openCreateChannelModal: () => void;
-  closeSearchModal: () => void;
-  closeMobileSettingsModal: () => void;
 }
 
 function SideNavBar({
+  loggedUserData,
+  setChatDataBox,
+  isDm,
+  setIsDm,
+  dmIndex,
+  setDmIndex,
+  channelIndex,
+  setChannelIndex,
+  dms,
+  setDms,
+  channels,
+  setChannels,
+  setClick,
   openPasswordModal,
   openCreateChannelModal,
-  closeSearchModal,
-  closeMobileSettingsModal,
 }: PropsType) {
-  const { isDm, setIsDm, setDms, setChannels } =
-    React.useContext(MessagesContext);
-
-  function handleLogoClick() {
-    closeSearchModal();
-    closeMobileSettingsModal();
-    document.body.style.overflow = "auto";
-  }
-
   function handleDmsButtonClick() {
     setIsDm(true);
     getAllDms((res: DmType[]) => {
@@ -49,11 +63,10 @@ function SideNavBar({
 
   return (
     <aside className="flex grow flex-col gap-12 overflow-hidden">
-      <div className="flex items-center justify-center">
-        <Link to="/home" onClick={handleLogoClick}>
-          <img src={logo} alt="pong logo" className="w-48 lg:w-44" />
-        </Link>
-      </div>
+      <Link to="/home" className="flex items-center justify-center">
+        <img src={logo} alt="pong logo" className="w-48 lg:w-44" />
+        <VisuallyHidden>Go to the home page</VisuallyHidden>
+      </Link>
 
       <div className="flex grow flex-col gap-6 overflow-hidden">
         <div className="mx-3 flex items-center text-sm lg:mx-2">
@@ -66,9 +79,23 @@ function SideNavBar({
         </div>
 
         {isDm ? (
-          <DmCardList />
+          <DmCardList
+            loggedUserData={loggedUserData}
+            setChatDataBox={setChatDataBox}
+            dmIndex={dmIndex}
+            setDmIndex={setDmIndex}
+            dms={dms}
+            setDms={setDms}
+            setClick={setClick}
+          />
         ) : (
           <ChannelCardList
+            setChatDataBox={setChatDataBox}
+            channels={channels}
+            setChannels={setChannels}
+            channelIndex={channelIndex}
+            setChannelIndex={setChannelIndex}
+            setClick={setClick}
             openPasswordModal={openPasswordModal}
             openCreateChannelModal={openCreateChannelModal}
           />

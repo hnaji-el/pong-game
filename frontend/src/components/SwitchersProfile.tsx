@@ -3,7 +3,7 @@ import React from "react";
 import Achievements from "./Achievements";
 import Friends from "./Friends";
 import MatchHistory from "./MatchHistory";
-import Button from "./Button";
+import Button from "./buttons/Button";
 
 interface TabState {
   isAchievements: boolean;

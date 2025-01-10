@@ -275,7 +275,10 @@ export class UsersService {
     });
   }
 
-  async blockUser(requesterUser: any, addresseeUserId: string) {
+  async blockFriend(
+    requesterUser: AttachedUserEntity,
+    addresseeUserId: string,
+  ) {
     const addresseeUser = await this.prisma.user.findUnique({
       where: { id: addresseeUserId },
       include: { requester: true, addressee: true },
@@ -293,6 +296,7 @@ export class UsersService {
         ],
       },
     });
+
     await this.prisma.relationShip.create({
       data: {
         requesterId: requesterUser.id,

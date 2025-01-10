@@ -5,26 +5,28 @@ import { PlusIcon } from "./Icons";
 import { deleteRoom, getAllChannels, joinRoom, leaveRoom } from "../api/API";
 
 import { ChannelType } from "../pages/Chat/types";
-import { MessagesContext, StateMssages } from "../pages/Chat/Chat";
 
 interface PropsType {
+  setChatDataBox: React.Dispatch<React.SetStateAction<ChannelType>>;
+  channels: ChannelType[];
+  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
+  channelIndex: number;
+  setChannelIndex: React.Dispatch<React.SetStateAction<number>>;
+  setClick: React.Dispatch<React.SetStateAction<boolean>>;
   openPasswordModal: () => void;
   openCreateChannelModal: () => void;
 }
 
 function ChannelCardList({
+  setChatDataBox,
+  channels,
+  setChannels,
+  channelIndex,
+  setChannelIndex,
+  setClick,
   openPasswordModal,
   openCreateChannelModal,
 }: PropsType) {
-  const { setClick } = React.useContext(StateMssages);
-  const {
-    channels,
-    setChannels,
-    channelIndex,
-    setChannelIndex,
-    setChatDataBox,
-  } = React.useContext(MessagesContext);
-
   function handleCardClick(channelData: ChannelType, index: number) {
     if (channelData.isJoined) {
       setClick(true);
@@ -82,15 +84,12 @@ function ChannelCardList({
           </span>
         </button>
       </div>
+
       {channels.length ? (
         <div className="flex grow flex-col overflow-auto">
           {[
-            ...(channels as ChannelType[]).filter(
-              (channel) => channel.isJoined,
-            ),
-            ...(channels as ChannelType[]).filter(
-              (channel) => !channel.isJoined,
-            ),
+            ...channels.filter((channel) => channel.isJoined),
+            ...channels.filter((channel) => !channel.isJoined),
           ].map((channel, index) => (
             <ChannelCard
               key={channel.id}

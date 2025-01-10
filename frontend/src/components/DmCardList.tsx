@@ -5,13 +5,27 @@ import { blockFriend, getAllDms } from "../api/API";
 
 import { globalSocket } from "../utilities/socket";
 import { DmType } from "../pages/Chat/types";
-import { StateMssages, MessagesContext } from "../pages/Chat/Chat";
+import { UserType } from "../api/types";
 
-function DmCardList() {
-  const { setClick, settings } = React.useContext(StateMssages);
-  const { dms, dmIndex, setDmIndex, setChatDataBox, setDms } =
-    React.useContext(MessagesContext);
+interface PropsType {
+  loggedUserData: UserType;
+  setChatDataBox: React.Dispatch<React.SetStateAction<DmType>>;
+  dmIndex: number;
+  setDmIndex: React.Dispatch<React.SetStateAction<number>>;
+  dms: DmType[];
+  setDms: React.Dispatch<React.SetStateAction<DmType[]>>;
+  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+function DmCardList({
+  loggedUserData,
+  setChatDataBox,
+  dmIndex,
+  setDmIndex,
+  dms,
+  setDms,
+  setClick,
+}: PropsType) {
   function handleCardClick(index: number) {
     setDmIndex(index);
     setChatDataBox(dms[index]);
@@ -20,7 +34,7 @@ function DmCardList() {
 
   function handleInviteToPlayClick(userId: string) {
     globalSocket.emit("inviteToPlay", {
-      sender: settings,
+      sender: loggedUserData,
       receiverId: userId,
     });
   }
@@ -35,7 +49,7 @@ function DmCardList() {
   return (
     <div className="flex grow flex-col gap-[24px] overflow-auto">
       {dms.length ? (
-        (dms as DmType[]).map((dm, index) => (
+        dms.map((dm, index) => (
           <DmCard
             key={dm.id}
             avatar={dm.pictureURL}

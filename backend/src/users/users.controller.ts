@@ -104,8 +104,8 @@ export class UsersController {
 
   @Patch('/users/block-friend/:id')
   @UseGuards(JwtAuthGuard)
-  async blockUser(@Req() req: Request, @Param('id') id: string) {
-    await this.usersService.blockUser(req.user, id);
+  async blockFriend(@Req() req: Request, @Param('id') id: string) {
+    await this.usersService.blockFriend(req.user, id);
   }
 
   @Patch('/users/unblock-friend/:id')

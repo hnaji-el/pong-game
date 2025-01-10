@@ -14,7 +14,7 @@ function ViewSettings({ openModal }: { openModal: () => void }) {
     <>
       <Link to="/home" className="flex w-full justify-center lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
-        <VisuallyHidden>Go to home page</VisuallyHidden>
+        <VisuallyHidden>Go to the home page</VisuallyHidden>
       </Link>
 
       <div className="text-md flex w-full flex-col items-center justify-center gap-8 pt-10 text-primaryText">

@@ -2,21 +2,61 @@ import React from "react";
 
 import { checkChannelName } from "../utilities/helpers";
 import InputForm from "./inputs/InputForm";
-import InputPasswordForm from "./InputPasswordForm";
+import InputPasswordForm from "./inputs/InputPasswordForm";
 import { getAllChannels } from "../api/API";
 
-import { MessagesContext } from "../pages/Chat/Chat";
 import { ChannelType } from "../pages/Chat/types";
 
-function ProtectedChannel({ closeModal }: { closeModal: () => void }) {
-  const { setChannels } = React.useContext(MessagesContext);
+interface PropsType {
+  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
+  closeModal: () => void;
+}
+
+function ProtectedChannel({ setChannels, closeModal }: PropsType) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [errorPassword, setErrorPassowrd] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    let error = false;
+
+    if (!channelName.trim().length) {
+      setErrorMessage("Zone text empty");
+      error = true;
+    }
+
+    if (!password.trim().length) {
+      error = true;
+      setErrorPassowrd("Zone text empty");
+    }
+
+    if (error) return;
+
+    checkChannelName(
+      (res: any) => {
+        if (res === "error") {
+          setErrorMessage("Name already exists");
+        } else {
+          getAllChannels((channelsData: ChannelType[]) => {
+            setChannels(channelsData);
+            closeModal();
+            document.body.style.overflow = "auto";
+          });
+        }
+      },
+      {
+        name: channelName,
+        type: "PROTECTED",
+        password: password,
+      },
+    );
+  }
+
   return (
-    <form className="flex flex-col gap-5 lg:gap-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5 lg:gap-5">
       <div className="flex flex-col items-center gap-5 lg:flex-row lg:items-start">
         <InputForm
           edit="w-80 lg:w-full"
@@ -34,45 +74,9 @@ function ProtectedChannel({ closeModal }: { closeModal: () => void }) {
           setErrorPassword={setErrorPassowrd}
         />
       </div>
+
       <div className="flex justify-center lg:justify-end">
-        <button
-          type="submit"
-          className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32"
-          onClick={(e) => {
-            e.preventDefault();
-            const data = {
-              name: channelName,
-              type: "PROTECTED",
-              password: password,
-            };
-
-            let error = false;
-
-            if (!channelName.trim().length) {
-              setErrorMessage("Zone text empty");
-              error = true;
-            }
-
-            if (!password.trim().length) {
-              error = true;
-              setErrorPassowrd("Zone text empty");
-            }
-
-            if (error) return;
-
-            checkChannelName((res: any) => {
-              if (res === "error") {
-                setErrorMessage("Name already exists");
-              } else {
-                getAllChannels((channelsData: ChannelType[]) => {
-                  setChannels(channelsData);
-                  closeModal();
-                  document.body.style.overflow = "auto";
-                });
-              }
-            }, data);
-          }}
-        >
+        <button className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32">
           Create
         </button>
       </div>

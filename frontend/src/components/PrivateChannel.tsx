@@ -5,16 +5,47 @@ import { ExclamationIcon } from "./Icons";
 import InputForm from "./inputs/InputForm";
 import { getAllChannels } from "../api/API";
 
-import { MessagesContext } from "../pages/Chat/Chat";
 import { ChannelType } from "../pages/Chat/types";
 
-function PrivateChannel({ closeModal }: { closeModal: () => void }) {
-  const { setChannels } = React.useContext(MessagesContext);
-  const [value, setValue] = React.useState<string>("");
-  const [errorMessage, setErrorMessage] = React.useState<string>("");
+interface PropsType {
+  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
+  closeModal: () => void;
+}
+
+function PrivateChannel({ setChannels, closeModal }: PropsType) {
+  const [value, setValue] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState("");
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!value.trim().length) {
+      setErrorMessage("Zone text empty");
+      return;
+    }
+
+    checkChannelName(
+      (res: any) => {
+        if (res === "error") {
+          setErrorMessage("Name already exists");
+        } else {
+          getAllChannels((channelsData: ChannelType[]) => {
+            setChannels(channelsData);
+            closeModal();
+            document.body.style.overflow = "auto";
+          });
+        }
+      },
+      {
+        name: value,
+        type: "PRIVATE",
+        password: "",
+      },
+    );
+  }
 
   return (
-    <form className="flex flex-col gap-1">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-1">
       <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-end">
         <div className="flex w-80 flex-col gap-1.5 lg:w-full">
           <InputForm
@@ -27,37 +58,11 @@ function PrivateChannel({ closeModal }: { closeModal: () => void }) {
             setErrorMessage={setErrorMessage}
           />
         </div>
-        <button
-          type="submit"
-          className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32"
-          onClick={(e) => {
-            e.preventDefault();
-            let data = {
-              name: value,
-              type: "PRIVATE",
-              password: "",
-            };
-
-            if (!value.trim().length) {
-              setErrorMessage("Zone text empty");
-              return;
-            }
-            checkChannelName((res: any) => {
-              if (res === "error") {
-                setErrorMessage("Name already exists");
-              } else {
-                getAllChannels((channelsData: ChannelType[]) => {
-                  setChannels(channelsData);
-                  closeModal();
-                  document.body.style.overflow = "auto";
-                });
-              }
-            }, data);
-          }}
-        >
+        <button className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32">
           Create
         </button>
       </div>
+
       {errorMessage.length > 0 && (
         <div
           className={`mt-1 hidden gap-1.5 fill-error text-xs font-medium text-error lg:flex`}

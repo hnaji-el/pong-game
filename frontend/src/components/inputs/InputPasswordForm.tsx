@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
+
 import {
   ExclamationIcon,
   EyeOffPasswordIcon,
   EyeOnPasswordIcon,
-} from "./Icons";
+} from "../Icons";
+import VisuallyHidden from "../VisuallyHidden";
 
 interface TypeProps {
   password: string;
@@ -20,30 +22,37 @@ export default function InputPasswordForm({
   errorPassword,
   setErrorPassword,
 }: TypeProps) {
-  const [passwordBtn, setPasswordBtn] = useState<boolean>(false);
+  const [passwordBtn, setPasswordBtn] = React.useState(false);
+  const inputId = React.useId();
+
   return (
-    <div className="flex flex-col w-80 lg:w-full gap-1">
+    <div className="flex w-80 flex-col gap-1 lg:w-full">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor={label} className="text-sm text-primaryText capitalize">
+        <label
+          htmlFor={inputId}
+          className="text-sm capitalize text-primaryText"
+        >
           {label}
         </label>
         <div className="flex">
           <input
             type={`${passwordBtn ? "text" : "password"}`}
-            className={`placeholder-secondary-text flex-1 rounded-md rounded-r-none bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light ${
-              errorPassword.length ? "border-[1px] border-error border-r-0" : ""
-            }`}
+            id={inputId}
             placeholder={`Enter ${label}`}
             value={password}
             onChange={(e) => {
               setErrorPassword("");
               setPassword(e.currentTarget.value);
             }}
+            className={`placeholder-secondary-text flex-1 rounded-md rounded-r-none bg-body p-3 text-xs text-primaryText outline-none placeholder:text-xs placeholder:font-light ${
+              errorPassword.length ? "border-[1px] border-r-0 border-error" : ""
+            }`}
           />
+
           <button
             type="button"
             className={`rounded-md rounded-l-none bg-secondaryText p-3 ${
-              errorPassword.length ? "border-[1px] border-error border-l-0" : ""
+              errorPassword.length ? "border-[1px] border-l-0 border-error" : ""
             }`}
             onClick={() => {
               passwordBtn ? setPasswordBtn(false) : setPasswordBtn(true);
@@ -54,14 +63,18 @@ export default function InputPasswordForm({
             ) : (
               <EyeOnPasswordIcon edit="w-4 h-4 fill-shape" />
             )}
+            <VisuallyHidden>
+              {passwordBtn ? "Hide password" : "Show password"}
+            </VisuallyHidden>
           </button>
         </div>
-        {errorPassword.length ? (
-          <div className="text-error text-xs font-medium fill-error flex gap-1.5">
+
+        {errorPassword.length > 0 && (
+          <div className="flex gap-1.5 fill-error text-xs font-medium text-error">
             <ExclamationIcon edit="w-3 h-3 relative top-[.1rem]" />
             <span>{errorPassword}</span>
           </div>
-        ) : null}
+        )}
       </div>
     </div>
   );

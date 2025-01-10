@@ -53,8 +53,12 @@ function CreateChannelModal({
         {type === "PUBLIC" && (
           <PublicChannel setChannels={setChannels} closeModal={closeModal} />
         )}
-        {type === "PRIVATE" && <PrivateChannel closeModal={closeModal} />}
-        {type === "PROTECTED" && <ProtectedChannel closeModal={closeModal} />}
+        {type === "PRIVATE" && (
+          <PrivateChannel setChannels={setChannels} closeModal={closeModal} />
+        )}
+        {type === "PROTECTED" && (
+          <ProtectedChannel setChannels={setChannels} closeModal={closeModal} />
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 
-import InputPasswordForm from "./InputPasswordForm";
+import InputPasswordForm from "./inputs/InputPasswordForm";
 import { getAllChannels, joinRoom } from "../api/API";
 
 import { MessagesContext, StateMssages } from "../pages/Chat/Chat";

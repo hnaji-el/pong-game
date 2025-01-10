@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
+
 import {
   HomeIcon,
   MessagesIcon,
@@ -8,7 +9,6 @@ import {
 } from "../Icons";
 import { Link } from "react-router-dom";
 import { ActiveHome } from "../../pages/Home/Home";
-import { StateMssages } from "../../pages/Chat/Chat";
 import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";
@@ -28,14 +28,13 @@ export default function SideBar({
   openSettings,
   setOpenSettings,
 }: TypeProps) {
-  const home = useContext(ActiveHome);
-  const messages = useContext(StateMssages);
-  const profile = useContext(ActiveProfile);
+  const home = React.useContext(ActiveHome);
+  const profile = React.useContext(ActiveProfile);
 
-  let dataUserLogged = useContext(ActiveHome);
-  let dataUserLoggedProfile = useContext(ActiveProfile);
-  let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
-  let game = useContext(GameContext);
+  let dataUserLogged = React.useContext(ActiveHome);
+  let dataUserLoggedProfile = React.useContext(ActiveProfile);
+  let dataUserLoggedProfileUser = React.useContext(ActiveProfileUser);
+  let game = React.useContext(GameContext);
 
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
@@ -97,31 +96,15 @@ export default function SideBar({
             <li className="lg:w-full">
               <Link
                 to="/chat"
-                className={`flex flex-col items-center justify-center gap-1.5 lg:flex-row lg:justify-start lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape ${
-                  messages.active
-                    ? "lg:border-l-[6px] lg:border-primary lg:bg-shape"
-                    : ""
-                }`}
+                className="flex flex-col items-center justify-center gap-1.5 lg:flex-row lg:justify-start lg:gap-4 lg:p-3 lg:pl-8 lg:hover:bg-shape"
                 onClick={() => {
                   setOpenSearch(false);
                   setOpenSettings(false);
                   document.body.style.overflow = "auto";
                 }}
               >
-                <MessagesIcon
-                  edit={`w-6 h-6  lg:fill-primary lg:w-7 lg:h-7  ${
-                    messages.active && !openSearch && !openSettings
-                      ? "fill-primary"
-                      : "fill-secondaryText"
-                  }`}
-                />
-                <span
-                  className={`text-xs lg:text-sm lg:text-primaryText ${
-                    messages.active && !openSearch && !openSettings
-                      ? "text-primary"
-                      : "text-secondaryText"
-                  }`}
-                >
+                <MessagesIcon edit="w-6 h-6  lg:fill-primary lg:w-7 lg:h-7 fill-secondaryText" />
+                <span className="text-xs text-secondaryText lg:text-sm lg:text-primaryText">
                   Messages
                 </span>
               </Link>

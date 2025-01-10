@@ -17,11 +17,7 @@ import {
   turOnTfa,
 } from "../../api/API";
 
-import { StateMssages } from "../../pages/Chat/Chat";
-import { ActiveHome } from "../../pages/Home/Home";
-import { ActiveProfile } from "../../pages/Profile/Profile";
-import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
-import { GameContext } from "../../pages/Game/Game";
+import { UserType } from "../../api/types";
 
 interface SettingsPropsType {
   closeModal: () => void;
@@ -35,7 +31,7 @@ interface SettingsPropsType {
   setSendPicture: React.Dispatch<React.SetStateAction<{}>>;
   setTfa: React.Dispatch<React.SetStateAction<boolean>>;
   enable: boolean;
-  dataUserLogged: any;
+  setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 interface QrCodePropsType {
@@ -43,42 +39,26 @@ interface QrCodePropsType {
   setEnable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface TypeData {
-  id: string;
-  pictureURL: string;
-  nickname: string;
-  isTwoFactorAuthEnabled: boolean;
-  status: string;
+interface SettingsModalPropsType {
+  loggedUserData: UserType;
+  setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
+  closeModal: () => void;
 }
 
-function SettingsModal({ closeModal }: { closeModal: () => void }) {
-  let dataUserLogged = React.useContext(ActiveHome);
-  let dataUserLoggedProfile = React.useContext(ActiveProfile);
-  let dataUserLoggedProfileUser = React.useContext(ActiveProfileUser);
-  let dataUserLoggedMessages = React.useContext(StateMssages);
-  let dataGame = React.useContext(GameContext);
-
-  if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfile;
-  if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
-  if (!dataUserLogged.value) dataUserLogged = dataGame;
-
-  const [pictureUser, setPictureUser] = React.useState(
-    dataUserLogged.value
-      ? dataUserLogged.settings.pictureURL
-      : dataUserLoggedMessages.settings.pictureURL,
-  );
+function SettingsModal({
+  loggedUserData,
+  setLoggedUserData,
+  closeModal,
+}: SettingsModalPropsType) {
   const [tmpPicture, setTmpPicture] = React.useState("");
   const [sendPicture, setSendPicture] = React.useState<{}>({});
-  const [value, setValue] = React.useState(
-    dataUserLogged.value
-      ? dataUserLogged.settings.nickname
-      : dataUserLoggedMessages.settings.nickname,
-  );
   const [tfa, setTfa] = React.useState(false);
+  const [value, setValue] = React.useState(loggedUserData.nickname);
   const [enable, setEnable] = React.useState(
-    dataUserLogged.value
-      ? dataUserLogged.settings.isTwoFactorAuthEnabled
-      : dataUserLoggedMessages.settings.isTwoFactorAuthEnabled,
+    loggedUserData.isTwoFactorAuthEnabled,
+  );
+  const [pictureUser, setPictureUser] = React.useState(
+    loggedUserData.pictureURL,
   );
 
   if (!tfa)
@@ -95,9 +75,7 @@ function SettingsModal({ closeModal }: { closeModal: () => void }) {
         setTmpPicture={setTmpPicture}
         value={value}
         setValue={setValue}
-        dataUserLogged={
-          dataUserLogged.value ? dataUserLogged : dataUserLoggedMessages
-        }
+        setLoggedUserData={setLoggedUserData}
       />
     );
   if (!enable) return <QrCodeEnable setTfa={setTfa} setEnable={setEnable} />;
@@ -116,7 +94,7 @@ function Settings({
   setSendPicture,
   setTfa,
   enable,
-  dataUserLogged,
+  setLoggedUserData,
 }: SettingsPropsType) {
   const [errorMessage, setErrorMessage] = React.useState("");
 
@@ -223,8 +201,8 @@ function Settings({
                 if (enable) turOnTfa();
                 else turnOffTfa();
 
-                getDataUserLogged((res: TypeData) => {
-                  dataUserLogged.updateSettings(res);
+                getDataUserLogged((res: UserType) => {
+                  setLoggedUserData(res);
                   closeModal();
                   document.body.style.overflow = "auto";
                 });

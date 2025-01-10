@@ -31,14 +31,6 @@ import { UserType } from "../../api/types";
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
-interface TypeContext {
-  active: boolean;
-  click: boolean;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
-  settings: UserType;
-  updateSettings: React.Dispatch<React.SetStateAction<UserType>>;
-}
-
 const userData = {
   id: "",
   email: "",
@@ -47,15 +39,6 @@ const userData = {
   status: "",
   isTwoFactorAuthEnabled: false,
 };
-
-export const MessagesContext = React.createContext<any>({});
-export const StateMssages = React.createContext<TypeContext>({
-  active: false,
-  click: false,
-  setClick: () => {},
-  settings: userData,
-  updateSettings: () => {},
-});
 
 const socket = io(DOMAIN, {
   path: SOCKET_CHAT_PATH,
@@ -76,7 +59,8 @@ const socket = io(DOMAIN, {
 
 function Chat() {
   const status = useVerifyUserAuthenticity();
-  const [settings, setSettings] = React.useState<UserType>(userData);
+  const [loggedUserData, setLoggedUserData] =
+    React.useState<UserType>(userData);
   const [isDm, setIsDm] = React.useState(true);
   const [dms, setDms] = React.useState<DmType[]>([]);
   const [channels, setChannels] = React.useState<ChannelType[]>([]);
@@ -101,19 +85,19 @@ function Chat() {
   React.useEffect(() => {
     document.title = "Pong - Messages";
 
-    getDataUserLogged((res: UserType) => {
-      setSettings(res);
+    getDataUserLogged((userData) => {
+      setLoggedUserData(userData);
     });
   }, []);
 
   React.useEffect(() => {
-    getAllDms((res: DmType[]) => {
-      setDms(res);
-      setChatDataBox(res[dmIndex]);
+    getAllDms((dms) => {
+      setDms(dms);
+      setChatDataBox(dms[dmIndex]);
     });
 
-    getAllChannels((res: ChannelType[]) => {
-      setChannels(res);
+    getAllChannels((channels) => {
+      setChannels(channels);
     });
   }, [dmIndex]);
 
@@ -139,7 +123,7 @@ function Chat() {
     navigate("/login");
   }
 
-  if (status === "pending" || !settings.nickname.length) {
+  if (status === "pending" || !loggedUserData.nickname.length) {
     return (
       <div className="mx-3 flex h-full items-center justify-center">
         <Spinner />
@@ -148,178 +132,157 @@ function Chat() {
   }
 
   return (
-    <StateMssages.Provider
-      value={{
-        active: true,
-        click: click,
-        setClick: setClick,
-        settings: settings,
-        updateSettings: setSettings,
-      }}
-    >
-      <MessagesContext.Provider
-        value={{
-          dms: dms,
-          setDms: setDms,
-          channels: channels,
-          setChannels: setChannels,
-          isDm: isDm,
-          setIsDm: setIsDm,
-          chatDataBox: chatDataBox,
-          setChatDataBox: setChatDataBox,
-          dmIndex: dmIndex,
-          setDmIndex: setDmIndex,
-          channelIndex: channelIndex,
-          setChannelIndex: setChannelIndex,
-        }}
+    <>
+      <div
+        className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
       >
-        <div
-          className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
-        >
-          <HeaderBar
-            isDm={isDm}
+        <HeaderBar
+          isDm={isDm}
+          chatDataBox={chatDataBox}
+          loggedUserData={loggedUserData}
+          setClick={setClick}
+          openSettingsModal={() => setIsSettingsModalOpen(true)}
+          openMembersModal={() => setIsMembersModalOpen(true)}
+          openAddMemberModal={() => setIsAddMemberModalOpen(true)}
+        />
+
+        {chatDataBox && (
+          <ChatMainSection
             chatDataBox={chatDataBox}
-            loggedUserData={settings}
-            setClick={setClick}
-            openSettingsModal={() => setIsSettingsModalOpen(true)}
-            openMembersModal={() => setIsMembersModalOpen(true)}
-            openAddMemberModal={() => setIsAddMemberModalOpen(true)}
-          />
-
-          {chatDataBox && (
-            <ChatMainSection
-              chatDataBox={chatDataBox}
-              loggedUserData={settings}
-              isDm={isDm}
-              setDms={setDms}
-              setChannels={setChannels}
-              socket={socket}
-            />
-          )}
-        </div>
-
-        <div
-          className={`h-full w-full flex-col pb-[12px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground 2xl:left-auto ${
-            click ? "hidden" : "flex"
-          } `}
-        >
-          <SideNavBar
-            loggedUserData={settings}
-            setChatDataBox={setChatDataBox}
+            loggedUserData={loggedUserData}
             isDm={isDm}
-            setIsDm={setIsDm}
-            dmIndex={dmIndex}
-            setDmIndex={setDmIndex}
-            channelIndex={channelIndex}
-            setChannelIndex={setChannelIndex}
-            dms={dms}
             setDms={setDms}
-            channels={channels}
             setChannels={setChannels}
-            setClick={setClick}
-            openPasswordModal={() => setIsPasswordModalOpen(true)}
-            openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
+            socket={socket}
           />
-
-          <FooterBar
-            click={click}
-            loggedUserAvatar={settings.pictureURL}
-            isSearchModalOpen={isSearchModalOpen}
-            setIsSearchModalOpen={setIsSearchModalOpen}
-            isMobileSettingsModalOpen={isMobileSettingsModalOpen}
-            setIsMobileSettingsModalOpen={setIsMobileSettingsModalOpen}
-          />
-        </div>
-
-        {isSettingsModalOpen && (
-          <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
-            <ModalHeader closeModal={() => setIsSettingsModalOpen(false)}>
-              Settings
-            </ModalHeader>
-            <ModalBody className="justify-center">
-              <SettingsModal closeModal={() => setIsSettingsModalOpen(false)} />
-            </ModalBody>
-          </Modal>
         )}
+      </div>
 
-        {isSearchModalOpen && (
-          <SearchModal closeModal={() => setIsSearchModalOpen(false)}>
-            <SearchInput modal={true} />
-          </SearchModal>
-        )}
+      <div
+        className={`h-full w-full flex-col pb-[12px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground 2xl:left-auto ${
+          click ? "hidden" : "flex"
+        } `}
+      >
+        <SideNavBar
+          loggedUserData={loggedUserData}
+          setChatDataBox={setChatDataBox}
+          isDm={isDm}
+          setIsDm={setIsDm}
+          dmIndex={dmIndex}
+          setDmIndex={setDmIndex}
+          channelIndex={channelIndex}
+          setChannelIndex={setChannelIndex}
+          dms={dms}
+          setDms={setDms}
+          channels={channels}
+          setChannels={setChannels}
+          setClick={setClick}
+          openPasswordModal={() => setIsPasswordModalOpen(true)}
+          openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
+        />
 
-        {isMobileSettingsModalOpen && (
-          <MobileSettingsModal
-            closeModal={() => setIsMobileSettingsModalOpen(false)}
+        <FooterBar
+          click={click}
+          loggedUserAvatar={loggedUserData.pictureURL}
+          isSearchModalOpen={isSearchModalOpen}
+          setIsSearchModalOpen={setIsSearchModalOpen}
+          isMobileSettingsModalOpen={isMobileSettingsModalOpen}
+          setIsMobileSettingsModalOpen={setIsMobileSettingsModalOpen}
+        />
+      </div>
+
+      {isSettingsModalOpen && (
+        <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setIsSettingsModalOpen(false)}>
+            Settings
+          </ModalHeader>
+          <ModalBody className="justify-center">
+            <SettingsModal
+              loggedUserData={loggedUserData}
+              setLoggedUserData={setLoggedUserData}
+              closeModal={() => setIsSettingsModalOpen(false)}
+            />
+          </ModalBody>
+        </Modal>
+      )}
+
+      {isSearchModalOpen && (
+        <SearchModal closeModal={() => setIsSearchModalOpen(false)}>
+          <SearchInput modal={true} />
+        </SearchModal>
+      )}
+
+      {isMobileSettingsModalOpen && (
+        <MobileSettingsModal
+          closeModal={() => setIsMobileSettingsModalOpen(false)}
+        >
+          <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
+        </MobileSettingsModal>
+      )}
+
+      {isCreateChannelModalOpen && (
+        <Modal className="h-[40rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setIsCreateChannelModalOpen(false)}>
+            Create channel
+          </ModalHeader>
+          <ModalBody className="justify-center">
+            <CreateChannelModal
+              setChannels={setChannels}
+              closeModal={() => setIsCreateChannelModalOpen(false)}
+            />
+          </ModalBody>
+        </Modal>
+      )}
+
+      {isAddMemberModalOpen && (
+        <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
+          <ModalHeader
+            closeModal={() => setIsAddMemberModalOpen(false)}
+            className="px-4"
           >
-            <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
-          </MobileSettingsModal>
-        )}
+            Add member
+          </ModalHeader>
+          <ModalBody className="justify-center">
+            <AddMemberModal chatDataBox={chatDataBox} />
+          </ModalBody>
+        </Modal>
+      )}
 
-        {isCreateChannelModalOpen && (
-          <Modal className="h-[40rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
-            <ModalHeader closeModal={() => setIsCreateChannelModalOpen(false)}>
-              Create channel
-            </ModalHeader>
-            <ModalBody className="justify-center">
-              <CreateChannelModal
-                setChannels={setChannels}
-                closeModal={() => setIsCreateChannelModalOpen(false)}
-              />
-            </ModalBody>
-          </Modal>
-        )}
+      {isMembersModalOpen && (
+        <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
+          <ModalHeader
+            closeModal={() => setIsMembersModalOpen(false)}
+            className="px-4"
+          >
+            Members
+          </ModalHeader>
+          <ModalBody className="justify-center">
+            <MembersModal
+              chatDataBox={chatDataBox}
+              loggedUserData={loggedUserData}
+            />
+          </ModalBody>
+        </Modal>
+      )}
 
-        {isAddMemberModalOpen && (
-          <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
-            <ModalHeader
-              closeModal={() => setIsAddMemberModalOpen(false)}
-              className="px-4"
-            >
-              Add member
-            </ModalHeader>
-            <ModalBody className="justify-center">
-              <AddMemberModal chatDataBox={chatDataBox} />
-            </ModalBody>
-          </Modal>
-        )}
-
-        {isMembersModalOpen && (
-          <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
-            <ModalHeader
-              closeModal={() => setIsMembersModalOpen(false)}
-              className="px-4"
-            >
-              Members
-            </ModalHeader>
-            <ModalBody className="justify-center">
-              <MembersModal
-                chatDataBox={chatDataBox}
-                loggedUserData={settings}
-              />
-            </ModalBody>
-          </Modal>
-        )}
-
-        {isPasswordModalOpen && (
-          <Modal className="h-[15rem] w-[90%] lg:h-[15rem] lg:w-[40rem]">
-            <ModalHeader closeModal={() => setIsPasswordModalOpen(false)}>
-              Password
-            </ModalHeader>
-            <ModalBody className="justify-center">
-              <PasswordCheckModal
-                setChatDataBox={setChatDataBox}
-                channels={channels}
-                setChannels={setChannels}
-                channelIndex={channelIndex}
-                setClick={setClick}
-                closeModal={() => setIsPasswordModalOpen(false)}
-              />
-            </ModalBody>
-          </Modal>
-        )}
-      </MessagesContext.Provider>
-    </StateMssages.Provider>
+      {isPasswordModalOpen && (
+        <Modal className="h-[15rem] w-[90%] lg:h-[15rem] lg:w-[40rem]">
+          <ModalHeader closeModal={() => setIsPasswordModalOpen(false)}>
+            Password
+          </ModalHeader>
+          <ModalBody className="justify-center">
+            <PasswordCheckModal
+              setChatDataBox={setChatDataBox}
+              channels={channels}
+              setChannels={setChannels}
+              channelIndex={channelIndex}
+              setClick={setClick}
+              closeModal={() => setIsPasswordModalOpen(false)}
+            />
+          </ModalBody>
+        </Modal>
+      )}
+    </>
   );
 }
 

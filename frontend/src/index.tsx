@@ -10,9 +10,9 @@ const container = document.querySelector("#root") as HTMLElement;
 const root = createRoot(container);
 
 root.render(
-  // <React.StrictMode>
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  // </React.StrictMode>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
 );

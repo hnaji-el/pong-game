@@ -8,6 +8,7 @@ import { Request } from 'express';
 import { Express } from 'express';
 import { diskStorage } from 'multer';
 import { PictureValidatorPipe } from './picture-validator.pipe';
+import { UserType } from './entities/user.entity';
 
 @Controller()
 export class UsersController {
@@ -21,8 +22,8 @@ export class UsersController {
 
   @Get('/users/logged-user')
   @UseGuards(JwtAuthGuard)
-  getLoggedUser(@Req() req: Request) {
-    const user = {
+  getLoggedUser(@Req() req: Request): UserType {
+    return {
       id: req.user.id,
       email: req.user.email,
       nickname: req.user.nickname,
@@ -30,8 +31,6 @@ export class UsersController {
       status: req.user.status,
       isTwoFactorAuthEnabled: req.user.isTwoFactorAuthEnabled,
     };
-
-    return user;
   }
 
   @Patch('/users/update_nickname')

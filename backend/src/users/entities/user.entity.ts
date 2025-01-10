@@ -10,3 +10,12 @@ export interface UserEntity {
   isBlockedByLoggedUser?: boolean;
   is_2FA_Enabled?: boolean;
 }
+
+export interface UserType {
+  id: string;
+  email: string;
+  nickname: string;
+  pictureURL: string;
+  status: string;
+  isTwoFactorAuthEnabled: boolean;
+}

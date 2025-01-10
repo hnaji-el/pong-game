@@ -1,7 +1,7 @@
 import React from "react";
 
 import InputPasswordForm from "../inputs/InputPasswordForm";
-import { getAllChannels, joinRoom } from "../../api/API";
+import { getAllChannels, joinChannel } from "../../api/API";
 
 import { ChannelType } from "../../pages/Chat/types";
 
@@ -33,9 +33,9 @@ function PasswordCheckModal({
       return;
     }
 
-    joinRoom(
-      (chnlData: any) => {
-        if (chnlData.status === "invalide") {
+    joinChannel(
+      (chnlData: ChannelType) => {
+        if (!chnlData.isPasswordValid) {
           setErrorPassowrd("Password incorrect");
           return;
         } else {
@@ -50,7 +50,7 @@ function PasswordCheckModal({
         }
       },
       {
-        name: channels[channelIndex].name,
+        id: channels[channelIndex].id,
         type: "PROTECTED",
         password: password,
       },

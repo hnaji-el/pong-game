@@ -25,6 +25,7 @@ export interface ChannelType {
   latestMessage: string;
   messages: Message[];
   isJoined: boolean;
+  isPasswordValid?: boolean;
 }
 
 export interface MemberType {

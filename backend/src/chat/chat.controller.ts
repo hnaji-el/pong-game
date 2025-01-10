@@ -24,14 +24,15 @@ export class ChatController {
 
   @Post('/channel/join-channel')
   @UseGuards(JwtAuthGuard)
-  async joinRoom(@Req() req: Request, @Body() room) {
-    try {
-      if (room.data.type === 'PUBLIC') {
-        return await this.chatService.joinRoom(req.user, room.data.name);
-      } else if (room.data.type === 'PROTECTED') {
-        return await this.chatService.joinProtectedRoom(req.user, room);
-      }
-    } catch {}
+  async joinChannel(
+    @Req() req: Request,
+    @Body() data: { id: string; type: string; password?: string },
+  ) {
+    if (data.type === 'PUBLIC') {
+      return await this.chatService.joinChannel(req.user, data.id);
+    } else if (data.type === 'PROTECTED') {
+      return await this.chatService.joinProtectedChannel(req.user, data);
+    }
   }
 
   @Get('/dms/dms-messages')

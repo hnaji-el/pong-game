@@ -25,6 +25,7 @@ export interface ChannelType {
   latestMessage: string;
   messages: Message[];
   isJoined: boolean;
+  isPasswordValid?: boolean;
 }
 
 export interface MemberType {
@@ -42,25 +43,8 @@ export interface WsDataType {
   data: string;
 }
 
-export interface objectChannel {
-  type: string;
-  message: string;
-  picture: string;
-}
-
 export interface Searchchanel {
   name: string;
   type: string;
   isJoined: boolean;
-}
-
-export interface chanelprotected {
-  id: string;
-  name: string;
-  members: number;
-  latestMessage: string;
-  role: string;
-  type: string;
-  conversation: objectChannel[];
-  status: string;
 }

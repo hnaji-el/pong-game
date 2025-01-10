@@ -2,7 +2,7 @@ import React from "react";
 
 import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
-import { deleteRoom, getAllChannels, joinRoom, leaveRoom } from "../api/API";
+import { deleteRoom, getAllChannels, joinChannel, leaveRoom } from "../api/API";
 
 import { ChannelType } from "../pages/Chat/types";
 
@@ -40,7 +40,7 @@ function ChannelCardList({
     }
 
     if (!channelData.isJoined && channelData.type === "PUBLIC") {
-      joinRoom(
+      joinChannel(
         (chnlData: ChannelType) => {
           setClick(true);
           setChannelIndex(index);
@@ -50,7 +50,7 @@ function ChannelCardList({
           });
         },
         {
-          name: channelData.name,
+          id: channelData.id,
           type: "PUBLIC",
         },
       );

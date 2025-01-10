@@ -5,15 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import {
-  ChannelType,
-  DmType,
-  MemberType,
-  Searchchanel,
-  chanelprotected,
-} from './entities/chat.entity';
+import { ChannelType, DmType, MemberType } from './entities/chat.entity';
 import { JwtService } from '@nestjs/jwt';
-import * as moment from 'moment';
 import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Prisma, Room } from '@prisma/client';
@@ -348,38 +341,30 @@ export class ChatService {
     return nonMemberFriends;
   }
 
-  async joinRoom(user: any, name: string) {
+  async joinChannel(
+    user: AttachedUserEntity,
+    channelId: string,
+  ): Promise<ChannelType> {
     const room = await this.prisma.room.findUnique({
-      where: {
-        name: name,
-      },
+      where: { id: channelId },
     });
 
     if (!room) return;
-    if (room.blocked) {
-      const id_ban = room.blocked.find((login) => login === user.nickname);
-      if (id_ban) throw new ForbiddenException('you are  banned');
-    }
 
-    const id1 = room.members.find((login) => login === user.nickname);
-    if (id1) throw new ForbiddenException('already members');
+    if (room.blocked.includes(user.nickname))
+      throw new ForbiddenException('user already blocked');
 
-    const userUpdate = await this.prisma.room.update({
-      where: {
-        name: name,
-      },
+    if (room.members.includes(user.nickname))
+      throw new ForbiddenException('user already member');
+
+    const updatedRoom = await this.prisma.room.update({
+      where: { id: room.id },
       data: {
         members: {
           push: user.nickname,
         },
       },
-    });
-
-    const allmessage = await this.prisma.room.findUnique({
-      where: {
-        name: name,
-      },
-      select: {
+      include: {
         messages: {
           orderBy: {
             createdAt: 'desc',
@@ -388,79 +373,60 @@ export class ChatService {
       },
     });
 
-    const message_user = await this.prisma.message.findFirst({
-      where: {
-        roomName: name,
-      },
-    });
-
-    const person: ChannelType = {
-      id: userUpdate.id,
-      name: userUpdate.name,
-      members: userUpdate.members.length,
-      latestMessage: '',
+    return {
+      id: updatedRoom.id,
+      name: updatedRoom.name,
+      members: updatedRoom.members.length,
+      latestMessage:
+        updatedRoom.messages[updatedRoom.messages.length - 1]?.data ?? '',
       role: 'MEMBER',
-      type: userUpdate.type,
-      messages: [],
-      isJoined: true,
-    };
-    if (message_user) {
-      person.latestMessage =
-        allmessage.messages[allmessage.messages.length - 1]?.data ?? '';
-      person.messages = allmessage.messages.map((msg) => ({
+      type: updatedRoom.type,
+      messages: updatedRoom.messages.map((msg) => ({
         id: msg.id,
         roomName: msg.roomName,
         userId: msg.userId,
         pictureURL: msg.pictureURL,
         data: msg.data,
-      }));
-    }
-    return person;
+      })),
+      isJoined: true,
+    };
   }
 
-  async joinProtectedRoom(user: any, room: any) {
-    const rooms = await this.prisma.room.findUnique({
-      where: {
-        name: room.data.name,
-      },
+  async joinProtectedChannel(
+    user: AttachedUserEntity,
+    data: { id: string; type: string; password?: string },
+  ): Promise<ChannelType> {
+    const room = await this.prisma.room.findUnique({
+      where: { id: data.id },
     });
 
-    const matched = bcrypt.compareSync(
-      room.data.password,
-      rooms.hashedPassword,
-    );
-    if (!matched) {
-      const person: chanelprotected = {
+    if (!bcrypt.compareSync(data.password, room.hashedPassword)) {
+      return {
         id: '',
         name: '',
-        members: 0,
-        latestMessage: '',
         role: '',
+        members: 0,
         type: '',
-        conversation: [],
-        status: 'invalide',
+        latestMessage: '',
+        messages: [],
+        isJoined: false,
+        isPasswordValid: false,
       };
-      return person;
     }
-    const id_ban = rooms.blocked.find((login) => login === user.nickname);
-    if (id_ban) throw new ForbiddenException('user banned');
-    const id1 = rooms.members.find((login) => login === user.nickname);
-    if (id1) throw new ForbiddenException('already members');
-    const userUpdate = await this.prisma.room.update({
-      where: {
-        name: room.data.name,
-      },
+
+    if (room.blocked.includes(user.nickname))
+      throw new ForbiddenException('user already blocked');
+    if (room.members.includes(user.nickname))
+      throw new ForbiddenException('user already member');
+
+    const updatedRoom = await this.prisma.room.update({
+      where: { id: room.id },
       data: {
         members: {
           push: user.nickname,
         },
       },
-    });
-    const allmessage = await this.prisma.room.findUnique({
-      where: {
-        name: room.data.name,
-      },
-      select: {
+      include: {
         messages: {
           orderBy: {
             createdAt: 'desc',
@@ -469,44 +435,24 @@ export class ChatService {
       },
     });
 
-    const message_user = await this.prisma.message.findFirst({
-      where: {
-        roomName: room.data.name,
-      },
-    });
-    const person: chanelprotected = {
-      id: userUpdate.id,
-      name: userUpdate.name,
-      members: userUpdate.members.length,
-      latestMessage: '',
+    return {
+      id: updatedRoom.id,
+      name: updatedRoom.name,
       role: 'MEMBER',
-      type: userUpdate.type,
-      conversation: [],
-      status: 'valide',
+      members: updatedRoom.members.length,
+      type: updatedRoom.type,
+      latestMessage:
+        updatedRoom.messages[updatedRoom.messages.length - 1]?.data ?? '',
+      messages: updatedRoom.messages.map((msg) => ({
+        id: msg.id,
+        roomName: msg.roomName,
+        userId: msg.userId,
+        pictureURL: msg.pictureURL,
+        data: msg.data,
+      })),
+      isJoined: true,
+      isPasswordValid: true,
     };
-    if (message_user) {
-      person.latestMessage =
-        allmessage.messages[allmessage.messages.length - 1]?.data;
-      person.conversation = allmessage.messages.map((x) => ({
-        type: '',
-        message: x.data,
-        picture: '',
-      }));
-      for (let i = allmessage.messages.length - 1; i >= 0; i--) {
-        const user_chanel = await this.prisma.user.findUnique({
-          where: {
-            nickname: allmessage.messages[i].userId,
-          },
-        });
-        if (user.nickname === allmessage.messages[i].userId)
-          person.conversation[i].type = 'user';
-        else {
-          person.conversation[i].type = 'MEMBER';
-          person.conversation[i].picture = user_chanel.pictureURL;
-        }
-      }
-    }
-    return person;
   }
 
   async addToChannelNotPublic(

@@ -45,18 +45,6 @@ const socket = io(DOMAIN, {
   withCredentials: true,
 });
 
-/*
- |— Chat
-     |— SideNavBar
-         |— ChannelCardList
-             |— ChannelCard
-         |— DmCardList
-             |— DmCard
-     |— HeaderBar
-        |— UserCard
-        |— ChannelEditCard
- */
-
 function Chat() {
   const status = useVerifyUserAuthenticity();
   const [loggedUserData, setLoggedUserData] =
@@ -93,13 +81,18 @@ function Chat() {
   React.useEffect(() => {
     getAllDms((dms) => {
       setDms(dms);
-      setChatDataBox(dms[dmIndex]);
+      if (isDm) {
+        setChatDataBox(dms[dmIndex]);
+      }
     });
 
     getAllChannels((channels) => {
       setChannels(channels);
+      if (!isDm) {
+        setChatDataBox(channels[channelIndex]);
+      }
     });
-  }, [dmIndex]);
+  }, [dmIndex, channelIndex, isDm]);
 
   React.useEffect(() => {
     if (!socket.connected) {

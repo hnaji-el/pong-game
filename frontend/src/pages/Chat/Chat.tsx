@@ -124,6 +124,12 @@ function Chat() {
     );
   }
 
+  // TODO: rename these:
+  // Chat -> ChatPage
+  // HeaderBar -> Header
+  // ChatMainSection -> MainContent
+  // FooterBar -> Footer
+
   return (
     <>
       <div

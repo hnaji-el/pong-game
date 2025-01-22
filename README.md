@@ -29,7 +29,7 @@ This app is built using a modern tech stack including:
 
 The development environment is built using Docker Compose, consisting of three containers: one for the front-end, one for the back-end, and another for the PostgreSQL database. To run the application locally, you need **Docker** and **Docker Compose** installed on your machine.
 
-I'm using:
+We are using:
 
 - Docker version 20.10.20
 - Docker Compose version v2.12.1

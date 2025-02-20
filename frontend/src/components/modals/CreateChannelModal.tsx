@@ -13,9 +13,9 @@ interface CreateChannelModalPropsType {
 }
 
 interface ButtonPropsType {
-  children: React.ReactNode;
   isClicked: boolean;
   onClick: () => void;
+  children: React.ReactNode;
 }
 
 function CreateChannelModal({
@@ -27,47 +27,42 @@ function CreateChannelModal({
   );
 
   return (
-    <div className="flex w-full items-center">
-      <div className="flex w-full flex-col gap-11">
-        <div className="flex flex-col items-center justify-between gap-8 lg:flex-row lg:gap-0">
-          <Button
-            isClicked={type === "PUBLIC"}
-            onClick={() => setType("PUBLIC")}
-          >
-            public
-          </Button>
-          <Button
-            isClicked={type === "PRIVATE"}
-            onClick={() => setType("PRIVATE")}
-          >
-            private
-          </Button>
-          <Button
-            isClicked={type === "PROTECTED"}
-            onClick={() => setType("PROTECTED")}
-          >
-            protected
-          </Button>
-        </div>
-
-        {type === "PUBLIC" && (
-          <PublicChannel setChannels={setChannels} closeModal={closeModal} />
-        )}
-        {type === "PRIVATE" && (
-          <PrivateChannel setChannels={setChannels} closeModal={closeModal} />
-        )}
-        {type === "PROTECTED" && (
-          <ProtectedChannel setChannels={setChannels} closeModal={closeModal} />
-        )}
+    <div className="flex flex-col gap-[46px] pb-[30px] pt-[46px]">
+      <div className="flex flex-col items-center gap-[32px] lg:flex-row">
+        <Button isClicked={type === "PUBLIC"} onClick={() => setType("PUBLIC")}>
+          public
+        </Button>
+        <Button
+          isClicked={type === "PRIVATE"}
+          onClick={() => setType("PRIVATE")}
+        >
+          private
+        </Button>
+        <Button
+          isClicked={type === "PROTECTED"}
+          onClick={() => setType("PROTECTED")}
+        >
+          protected
+        </Button>
       </div>
+
+      {type === "PUBLIC" && (
+        <PublicChannel setChannels={setChannels} closeModal={closeModal} />
+      )}
+      {type === "PRIVATE" && (
+        <PrivateChannel setChannels={setChannels} closeModal={closeModal} />
+      )}
+      {type === "PROTECTED" && (
+        <ProtectedChannel setChannels={setChannels} closeModal={closeModal} />
+      )}
     </div>
   );
 }
 
-function Button({ children, isClicked, onClick }: ButtonPropsType) {
+function Button({ isClicked, onClick, children }: ButtonPropsType) {
   return (
     <button
-      className="flex w-80 items-center gap-3 rounded-md bg-body p-2.5 lg:w-40"
+      className="flex w-full max-w-[320px] items-center gap-[12px] rounded-md bg-body p-[10px] lg:w-[160px]"
       onClick={onClick}
     >
       <span

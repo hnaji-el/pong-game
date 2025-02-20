@@ -56,10 +56,10 @@ function ProtectedChannel({ setChannels, closeModal }: PropsType) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5 lg:gap-5">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <div className="flex flex-col items-center gap-5 lg:flex-row lg:items-start">
         <InputForm
-          edit="w-80 lg:w-full"
+          edit="w-full max-w-[320px] lg:w-full lg:max-w-full"
           value={channelName}
           setValue={setChannelName}
           label="name channel"
@@ -76,7 +76,7 @@ function ProtectedChannel({ setChannels, closeModal }: PropsType) {
       </div>
 
       <div className="flex justify-center lg:justify-end">
-        <button className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32">
+        <button className="w-[320px] rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-[128px]">
           Create
         </button>
       </div>

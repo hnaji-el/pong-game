@@ -25,8 +25,11 @@ import {
   getAllDms,
 } from "../../api/API";
 
+import Modall from "../../components/Modal/Modal";
+
 import { DmType, ChannelType } from "./types";
 import { UserType } from "../../api/types";
+import useToggle from "../../hooks/use-toggle";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
@@ -57,10 +60,12 @@ function Chat() {
   const [channelIndex, setChannelIndex] = React.useState(0);
   const [click, setClick] = React.useState(false);
 
+  const [isModalOpen, toggleIsModalOpen] = useToggle(true);
+
   // state variables for modals
   const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
-  const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] =
-    React.useState(false);
+  const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
+    useToggle(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
@@ -177,7 +182,7 @@ function Chat() {
           setChannels={setChannels}
           setClick={setClick}
           openPasswordModal={() => setIsPasswordModalOpen(true)}
-          openCreateChannelModal={() => setIsCreateChannelModalOpen(true)}
+          openCreateChannelModal={toggleIsCreateChannelModalOpen}
         />
 
         <FooterBar
@@ -189,6 +194,15 @@ function Chat() {
           setIsMobileSettingsModalOpen={setIsMobileSettingsModalOpen}
         />
       </div>
+
+      {isCreateChannelModalOpen && (
+        <Modall title="Create channel" handleDismiss={toggleIsCreateChannelModalOpen}>
+          <CreateChannelModal
+            setChannels={setChannels}
+            closeModal={toggleIsCreateChannelModalOpen}
+          />
+        </Modall>
+      )}
 
       {isSettingsModalOpen && (
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
@@ -217,20 +231,6 @@ function Chat() {
         >
           <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
         </MobileSettingsModal>
-      )}
-
-      {isCreateChannelModalOpen && (
-        <Modal className="h-[40rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
-          <ModalHeader closeModal={() => setIsCreateChannelModalOpen(false)}>
-            Create channel
-          </ModalHeader>
-          <ModalBody className="justify-center">
-            <CreateChannelModal
-              setChannels={setChannels}
-              closeModal={() => setIsCreateChannelModalOpen(false)}
-            />
-          </ModalBody>
-        </Modal>
       )}
 
       {isAddMemberModalOpen && (

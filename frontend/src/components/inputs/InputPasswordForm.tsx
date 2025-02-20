@@ -26,7 +26,7 @@ export default function InputPasswordForm({
   const inputId = React.useId();
 
   return (
-    <div className="flex w-80 flex-col gap-1 lg:w-full">
+    <div className="flex w-full max-w-[320px] flex-col gap-1 lg:w-full lg:max-w-full">
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor={inputId}

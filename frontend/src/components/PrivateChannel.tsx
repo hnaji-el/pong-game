@@ -47,7 +47,7 @@ function PrivateChannel({ setChannels, closeModal }: PropsType) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-1">
       <div className="flex flex-col items-center gap-3 lg:flex-row lg:items-end">
-        <div className="flex w-80 flex-col gap-1.5 lg:w-full">
+        <div className="flex w-full max-w-[320px] flex-col gap-1.5 lg:w-full lg:max-w-full">
           <InputForm
             edit="w-full"
             editError="lg:hidden"
@@ -58,7 +58,7 @@ function PrivateChannel({ setChannels, closeModal }: PropsType) {
             setErrorMessage={setErrorMessage}
           />
         </div>
-        <button className="w-80 rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-32">
+        <button className="w-full max-w-[320px] rounded-md bg-primary p-2.5 text-sm text-primaryText lg:w-[128px]">
           Create
         </button>
       </div>

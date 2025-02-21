@@ -13,10 +13,9 @@ import SearchModal from "../../components/modals/SearchModal";
 import SearchInput from "../../components/SearchInput";
 import MobileSettingsModal from "../../components/modals/MobileSettingsModal";
 import ViewSettings from "../../components/ViewSettings";
-import CreateChannelModal from "../../components/modals/CreateChannelModal";
 import AddMemberModal from "../../components/modals/AddMemberModal";
 import MembersModal from "../../components/modals/MembersModal";
-import PasswordCheckModal from "../../components/modals/PasswordCheckModal";
+import PasswordModal from "../../components/modals/PasswordModal";
 import Spinner from "../../components/Spinner";
 import {
   useVerifyUserAuthenticity,
@@ -63,9 +62,6 @@ function Chat() {
   const [isModalOpen, toggleIsModalOpen] = useToggle(true);
 
   // state variables for modals
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = React.useState(false);
-  const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
-    useToggle(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
@@ -181,8 +177,6 @@ function Chat() {
           channels={channels}
           setChannels={setChannels}
           setClick={setClick}
-          openPasswordModal={() => setIsPasswordModalOpen(true)}
-          openCreateChannelModal={toggleIsCreateChannelModalOpen}
         />
 
         <FooterBar
@@ -194,15 +188,6 @@ function Chat() {
           setIsMobileSettingsModalOpen={setIsMobileSettingsModalOpen}
         />
       </div>
-
-      {isCreateChannelModalOpen && (
-        <Modall title="Create channel" handleDismiss={toggleIsCreateChannelModalOpen}>
-          <CreateChannelModal
-            setChannels={setChannels}
-            closeModal={toggleIsCreateChannelModalOpen}
-          />
-        </Modall>
-      )}
 
       {isSettingsModalOpen && (
         <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
@@ -259,24 +244,6 @@ function Chat() {
             <MembersModal
               chatDataBox={chatDataBox}
               loggedUserData={loggedUserData}
-            />
-          </ModalBody>
-        </Modal>
-      )}
-
-      {isPasswordModalOpen && (
-        <Modal className="h-[15rem] w-[90%] lg:h-[15rem] lg:w-[40rem]">
-          <ModalHeader closeModal={() => setIsPasswordModalOpen(false)}>
-            Password
-          </ModalHeader>
-          <ModalBody className="justify-center">
-            <PasswordCheckModal
-              setChatDataBox={setChatDataBox}
-              channels={channels}
-              setChannels={setChannels}
-              channelIndex={channelIndex}
-              setClick={setClick}
-              closeModal={() => setIsPasswordModalOpen(false)}
             />
           </ModalBody>
         </Modal>

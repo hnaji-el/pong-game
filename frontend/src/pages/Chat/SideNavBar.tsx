@@ -26,8 +26,6 @@ interface PropsType {
   channels: ChannelType[];
   setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
-  openPasswordModal: () => void;
-  openCreateChannelModal: () => void;
 }
 
 function SideNavBar({
@@ -44,8 +42,6 @@ function SideNavBar({
   channels,
   setChannels,
   setClick,
-  openPasswordModal,
-  openCreateChannelModal,
 }: PropsType) {
   function handleDmsButtonClick() {
     setIsDm(true);
@@ -96,8 +92,6 @@ function SideNavBar({
             channelIndex={channelIndex}
             setChannelIndex={setChannelIndex}
             setClick={setClick}
-            openPasswordModal={openPasswordModal}
-            openCreateChannelModal={openCreateChannelModal}
           />
         )}
       </div>

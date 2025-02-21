@@ -31,7 +31,7 @@ function Modal({ title, handleDismiss, children }: PropsType) {
   return (
     <FocusLock returnFocus={true}>
       <RemoveScroll>
-        <div className="fixed inset-0 z-[10] flex items-center justify-center p-[16px] sm:p-[32px]">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center p-[16px] sm:p-[32px]">
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={handleDismiss}

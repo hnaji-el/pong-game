@@ -9,7 +9,7 @@ import { ChannelType } from "../../pages/Chat/types";
 
 interface CreateChannelModalPropsType {
   setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
-  closeModal: () => void;
+  handleDismiss: () => void;
 }
 
 interface ButtonPropsType {
@@ -20,7 +20,7 @@ interface ButtonPropsType {
 
 function CreateChannelModal({
   setChannels,
-  closeModal,
+  handleDismiss,
 }: CreateChannelModalPropsType) {
   const [type, setType] = React.useState<"PUBLIC" | "PRIVATE" | "PROTECTED">(
     "PUBLIC",
@@ -47,13 +47,13 @@ function CreateChannelModal({
       </div>
 
       {type === "PUBLIC" && (
-        <PublicChannel setChannels={setChannels} closeModal={closeModal} />
+        <PublicChannel setChannels={setChannels} handleDismiss={handleDismiss} />
       )}
       {type === "PRIVATE" && (
-        <PrivateChannel setChannels={setChannels} closeModal={closeModal} />
+        <PrivateChannel setChannels={setChannels} handleDismiss={handleDismiss} />
       )}
       {type === "PROTECTED" && (
-        <ProtectedChannel setChannels={setChannels} closeModal={closeModal} />
+        <ProtectedChannel setChannels={setChannels} handleDismiss={handleDismiss} />
       )}
     </div>
   );

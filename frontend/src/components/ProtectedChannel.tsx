@@ -9,10 +9,10 @@ import { ChannelType } from "../pages/Chat/types";
 
 interface PropsType {
   setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
-  closeModal: () => void;
+  handleDismiss: () => void;
 }
 
-function ProtectedChannel({ setChannels, closeModal }: PropsType) {
+function ProtectedChannel({ setChannels, handleDismiss }: PropsType) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [errorPassword, setErrorPassowrd] = React.useState("");
@@ -42,7 +42,7 @@ function ProtectedChannel({ setChannels, closeModal }: PropsType) {
         } else {
           getAllChannels((channelsData: ChannelType[]) => {
             setChannels(channelsData);
-            closeModal();
+            handleDismiss();
             document.body.style.overflow = "auto";
           });
         }

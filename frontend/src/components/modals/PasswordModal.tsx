@@ -11,16 +11,16 @@ interface PropsType {
   setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
   channelIndex: number;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
-  closeModal: () => void;
+  handleDismiss: () => void;
 }
 
-function PasswordCheckModal({
+function PasswordModal({
   setChatDataBox,
   channels,
   setChannels,
   channelIndex,
   setClick,
-  closeModal,
+  handleDismiss,
 }: PropsType) {
   const [errorPassword, setErrorPassowrd] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -44,7 +44,7 @@ function PasswordCheckModal({
           console.log(chnlData);
           getAllChannels((chnlsData: ChannelType[]) => {
             setChannels(chnlsData);
-            closeModal();
+            handleDismiss();
             document.body.style.overflow = "auto";
           });
         }
@@ -59,24 +59,22 @@ function PasswordCheckModal({
 
   return (
     <form
+      className="flex flex-col items-center gap-[20px] pb-[4px] pt-[20px] lg:px-[120px]"
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center gap-16"
     >
-      <div className="flex w-80 flex-col gap-5">
-        <InputPasswordForm
-          password={password}
-          setPassword={setPassword}
-          label="password"
-          errorPassword={errorPassword}
-          setErrorPassword={setErrorPassowrd}
-        />
+      <InputPasswordForm
+        password={password}
+        setPassword={setPassword}
+        label="password"
+        errorPassword={errorPassword}
+        setErrorPassword={setErrorPassowrd}
+      />
 
-        <button className="w-full rounded-md bg-primary p-2 text-sm text-primaryText">
-          Confirm
-        </button>
-      </div>
+      <button className="w-full max-w-[320px] rounded-md bg-primary p-2 text-sm text-primaryText lg:w-[320px]">
+        Confirm
+      </button>
     </form>
   );
 }
 
-export default PasswordCheckModal;
+export default PasswordModal;

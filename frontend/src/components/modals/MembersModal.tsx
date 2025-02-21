@@ -76,7 +76,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
 
   if (isLoading) {
     return (
-      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+      <div className="flex w-full items-center justify-center p-8 pb-[1rem] text-sm text-secondaryText lg:w-[640px]">
         <Spinner size={36} />
       </div>
     );
@@ -84,35 +84,27 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
 
   if (!members.length) {
     return (
-      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-        <ExclamationIcon edit="w-5 h-4 fill-secondaryText relative top-[.1rem]" />
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText lg:w-[640px]">
+        <ExclamationIcon edit="w-[20px] h-[20px] min-w-[20px] min-h-[20px] fill-secondaryText" />
         You are the only one in this room.
       </div>
     );
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 pt-5">
-      <div
-        className={`flex max-h-[34rem] flex-col overflow-auto ${
-          members.length > 4 ? "relative" : ""
-        }`}
-      >
-        <div className="flex flex-col gap-6">
-          {members.map((member, index) => (
-            <MemberCard
-              key={member.id}
-              member={member}
-              loggedUserRole={chatDataBox.role}
-              handleInviteToPlay={() => handleInviteToPlay(member.id)}
-              handleSetAdmin={() => handleSetAdmin(member.id, index)}
-              handleBlockMember={() => handleBlockMember(member.id, index)}
-              handleUnblockMember={() => handleUnblockMember(member.id, index)}
-              handleKickMember={() => handleKickMember(member.id, index)}
-            />
-          ))}
-        </div>
-      </div>
+    <div className="flex max-h-[400px] w-full flex-col gap-6 overflow-auto pt-5 lg:w-[640px]">
+      {members.map((member, index) => (
+        <MemberCard
+          key={member.id}
+          member={member}
+          loggedUserRole={chatDataBox.role}
+          handleInviteToPlay={() => handleInviteToPlay(member.id)}
+          handleSetAdmin={() => handleSetAdmin(member.id, index)}
+          handleBlockMember={() => handleBlockMember(member.id, index)}
+          handleUnblockMember={() => handleUnblockMember(member.id, index)}
+          handleKickMember={() => handleKickMember(member.id, index)}
+        />
+      ))}
     </div>
   );
 }

@@ -25,7 +25,7 @@ function AddMemberModal({ chatDataBox }: { chatDataBox: ChannelType }) {
 
   if (isLoading) {
     return (
-      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
+      <div className="flex w-full items-center justify-center p-8 pb-[1rem] text-sm text-secondaryText lg:w-[640px]">
         <Spinner size={36} />
       </div>
     );
@@ -33,26 +33,22 @@ function AddMemberModal({ chatDataBox }: { chatDataBox: ChannelType }) {
 
   if (!nonMemberFriends.length) {
     return (
-      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText">
-        <ExclamationIcon edit="w-5 h-4 fill-secondaryText" />
+      <div className="flex w-full items-center justify-center gap-1 p-8 pb-[1rem] text-sm text-secondaryText lg:w-[640px]">
+        <ExclamationIcon edit="w-[20px] h-[20px] min-w-[20px] min-h-[20px] fill-secondaryText" />
         No friends available to add.
       </div>
     );
   }
 
   return (
-    <div className="flex w-full flex-col gap-6 pt-5">
-      <div className="flex max-h-[34rem] flex-col overflow-auto">
-        <div className="flex flex-col gap-6">
-          {nonMemberFriends.map((nonMemberFriend, index) => (
-            <FriendCard
-              key={nonMemberFriend.id}
-              nonMemberFriend={nonMemberFriend}
-              handleAddMember={() => handleAddMember(nonMemberFriend.id, index)}
-            />
-          ))}
-        </div>
-      </div>
+    <div className="flex max-h-[400px] w-full flex-col gap-6 overflow-auto pt-5 lg:w-[640px]">
+      {nonMemberFriends.map((nonMemberFriend, index) => (
+        <FriendCard
+          key={nonMemberFriend.id}
+          nonMemberFriend={nonMemberFriend}
+          handleAddMember={() => handleAddMember(nonMemberFriend.id, index)}
+        />
+      ))}
     </div>
   );
 }

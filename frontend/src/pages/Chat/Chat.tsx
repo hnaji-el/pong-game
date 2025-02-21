@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
-import HeaderBar from "./HeaderBar";
+import Header from "./Header";
 import ChatMainSection from "./ChatMainSection";
 import SideNavBar from "./SideNavBar";
 import FooterBar from "./FooterBar";
@@ -13,9 +13,6 @@ import SearchModal from "../../components/modals/SearchModal";
 import SearchInput from "../../components/SearchInput";
 import MobileSettingsModal from "../../components/modals/MobileSettingsModal";
 import ViewSettings from "../../components/ViewSettings";
-import AddMemberModal from "../../components/modals/AddMemberModal";
-import MembersModal from "../../components/modals/MembersModal";
-import PasswordModal from "../../components/modals/PasswordModal";
 import Spinner from "../../components/Spinner";
 import {
   useVerifyUserAuthenticity,
@@ -59,11 +56,7 @@ function Chat() {
   const [channelIndex, setChannelIndex] = React.useState(0);
   const [click, setClick] = React.useState(false);
 
-  const [isModalOpen, toggleIsModalOpen] = useToggle(true);
-
   // state variables for modals
-  const [isMembersModalOpen, setIsMembersModalOpen] = React.useState(false);
-  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = React.useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
   const [isMobileSettingsModalOpen, setIsMobileSettingsModalOpen] =
     React.useState(false);
@@ -136,14 +129,12 @@ function Chat() {
       <div
         className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
       >
-        <HeaderBar
+        <Header
           isDm={isDm}
           chatDataBox={chatDataBox}
           loggedUserData={loggedUserData}
           setClick={setClick}
           openSettingsModal={() => setIsSettingsModalOpen(true)}
-          openMembersModal={() => setIsMembersModalOpen(true)}
-          openAddMemberModal={() => setIsAddMemberModalOpen(true)}
         />
 
         {chatDataBox && (
@@ -216,37 +207,6 @@ function Chat() {
         >
           <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
         </MobileSettingsModal>
-      )}
-
-      {isAddMemberModalOpen && (
-        <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
-          <ModalHeader
-            closeModal={() => setIsAddMemberModalOpen(false)}
-            className="px-4"
-          >
-            Add member
-          </ModalHeader>
-          <ModalBody className="justify-center">
-            <AddMemberModal chatDataBox={chatDataBox} />
-          </ModalBody>
-        </Modal>
-      )}
-
-      {isMembersModalOpen && (
-        <Modal className="h-auto w-[90%] px-0 lg:w-[40rem]">
-          <ModalHeader
-            closeModal={() => setIsMembersModalOpen(false)}
-            className="px-4"
-          >
-            Members
-          </ModalHeader>
-          <ModalBody className="justify-center">
-            <MembersModal
-              chatDataBox={chatDataBox}
-              loggedUserData={loggedUserData}
-            />
-          </ModalBody>
-        </Modal>
       )}
     </>
   );

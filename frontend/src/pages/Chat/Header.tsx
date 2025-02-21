@@ -22,18 +22,14 @@ interface PropsType {
   loggedUserData: UserType;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   openSettingsModal: () => void;
-  openMembersModal: () => void;
-  openAddMemberModal: () => void;
 }
 
-function HeaderBar({
+function Header({
   isDm,
   chatDataBox,
   loggedUserData,
   setClick,
   openSettingsModal,
-  openMembersModal,
-  openAddMemberModal,
 }: PropsType) {
   const navigate = useNavigate();
 
@@ -56,12 +52,12 @@ function HeaderBar({
         />
       ) : (
         <ChannelEditCard
+          chatDataBox={chatDataBox}
+          loggedUserData={loggedUserData}
           name={chatDataBox.name}
           type={chatDataBox.type}
           loggedUserRole={chatDataBox.role}
           handleArrowLeftClick={() => setClick(false)}
-          openMembersModal={openMembersModal}
-          openAddMemberModal={openAddMemberModal}
         />
       )}
 
@@ -91,4 +87,4 @@ function HeaderBar({
   );
 }
 
-export default HeaderBar;
+export default Header;

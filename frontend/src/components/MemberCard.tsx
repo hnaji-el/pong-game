@@ -28,7 +28,7 @@ function MemberCard({
   handleKickMember,
 }: PropsType) {
   return (
-    <div className={`flex flex-1 items-center justify-between gap-0.5 px-4`}>
+    <div className={`flex flex-1 items-center justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
         <img
           src={member.pictureURL}

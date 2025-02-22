@@ -18,7 +18,7 @@ interface PropsType {
   socket: Socket;
 }
 
-function ChatMainSection({
+function MainContent({
   chatDataBox,
   loggedUserData,
   isDm,
@@ -96,4 +96,4 @@ function ChatMainSection({
   );
 }
 
-export default ChatMainSection;
+export default MainContent;

@@ -20,7 +20,7 @@ interface TypeProps {
   setIsMobileSettingsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function FooterBar({
+function Footer({
   click,
   loggedUserAvatar,
   isSearchModalOpen,
@@ -135,4 +135,4 @@ function FooterBar({
   );
 }
 
-export default FooterBar;
+export default Footer;

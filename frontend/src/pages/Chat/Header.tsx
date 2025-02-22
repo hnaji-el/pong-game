@@ -71,6 +71,7 @@ function Header({
             imgTitle={loggedUserData.pictureURL}
             arrow={true}
           />
+          
           <DropdownList edit="top-12">
             <DropdownItem edit="justify-center p-2" onClick={openSettingsModal}>
               <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />

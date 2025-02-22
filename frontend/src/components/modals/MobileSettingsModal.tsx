@@ -1,10 +1,10 @@
 import React from "react";
 interface TypeProps {
-  children: React.ReactNode;
   closeModal: () => void;
+  children: React.ReactNode;
 }
 
-function MobileSettingsModal({ children, closeModal }: TypeProps) {
+function MobileSettingsModal({ closeModal, children }: TypeProps) {
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const modalSettings = React.useRef<HTMLDivElement>(null);
 

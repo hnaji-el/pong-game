@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Header from "./Header";
-import ChatMainSection from "./ChatMainSection";
+import MainContent from "./MainContent";
 import SideNavBar from "./SideNavBar";
-import FooterBar from "./FooterBar";
-import { Modal, ModalBody, ModalHeader } from "../../components/modals/Modals";
+import Footer from "./Footer";
+import Modal from "../../components/Modal/Modal";
 import SettingsModal from "../../components/modals/SettingsModal";
 import SearchModal from "../../components/modals/SearchModal";
 import SearchInput from "../../components/SearchInput";
@@ -20,8 +20,6 @@ import {
   getAllChannels,
   getAllDms,
 } from "../../api/API";
-
-import Modall from "../../components/Modal/Modal";
 
 import { DmType, ChannelType } from "./types";
 import { UserType } from "../../api/types";
@@ -57,10 +55,10 @@ function Chat() {
   const [click, setClick] = React.useState(false);
 
   // state variables for modals
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = React.useState(false);
-  const [isMobileSettingsModalOpen, setIsMobileSettingsModalOpen] =
-    React.useState(false);
-  const [isSearchModalOpen, setIsSearchModalOpen] = React.useState(false);
+  const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
+  const [isMobileSettingsModalOpen, toggleIsMobileSettingsModalOpen] =
+    useToggle(false);
+  const [isSearchModalOpen, toggleIsSearchModalOpen] = useToggle(false);
 
   const navigate = useNavigate();
 
@@ -118,12 +116,6 @@ function Chat() {
     );
   }
 
-  // TODO: rename these:
-  // Chat -> ChatPage
-  // HeaderBar -> Header
-  // ChatMainSection -> MainContent
-  // FooterBar -> Footer
-
   return (
     <>
       <div
@@ -134,11 +126,11 @@ function Chat() {
           chatDataBox={chatDataBox}
           loggedUserData={loggedUserData}
           setClick={setClick}
-          openSettingsModal={() => setIsSettingsModalOpen(true)}
+          openSettingsModal={toggleIsSettingsModalOpen}
         />
 
         {chatDataBox && (
-          <ChatMainSection
+          <MainContent
             chatDataBox={chatDataBox}
             loggedUserData={loggedUserData}
             isDm={isDm}
@@ -170,43 +162,36 @@ function Chat() {
           setClick={setClick}
         />
 
-        <FooterBar
+        <Footer
           click={click}
           loggedUserAvatar={loggedUserData.pictureURL}
           isSearchModalOpen={isSearchModalOpen}
-          setIsSearchModalOpen={setIsSearchModalOpen}
+          setIsSearchModalOpen={toggleIsSearchModalOpen}
           isMobileSettingsModalOpen={isMobileSettingsModalOpen}
-          setIsMobileSettingsModalOpen={setIsMobileSettingsModalOpen}
+          setIsMobileSettingsModalOpen={toggleIsMobileSettingsModalOpen}
         />
       </div>
 
       {isSettingsModalOpen && (
-        <Modal className="h-[34rem] w-[90%] lg:h-[21.5rem] lg:w-[40rem]">
-          <ModalHeader closeModal={() => setIsSettingsModalOpen(false)}>
-            Settings
-          </ModalHeader>
-          <ModalBody className="justify-center">
-            <SettingsModal
-              loggedUserData={loggedUserData}
-              setLoggedUserData={setLoggedUserData}
-              closeModal={() => setIsSettingsModalOpen(false)}
-            />
-          </ModalBody>
+        <Modal title="Settings" handleDismiss={toggleIsSettingsModalOpen}>
+          <SettingsModal
+            loggedUserData={loggedUserData}
+            setLoggedUserData={setLoggedUserData}
+            closeModal={toggleIsSettingsModalOpen}
+          />
         </Modal>
       )}
 
-      {isSearchModalOpen && (
-        <SearchModal closeModal={() => setIsSearchModalOpen(false)}>
-          <SearchInput modal={true} />
-        </SearchModal>
+      {isMobileSettingsModalOpen && (
+        <MobileSettingsModal closeModal={toggleIsMobileSettingsModalOpen}>
+          <ViewSettings openModal={toggleIsSettingsModalOpen} />
+        </MobileSettingsModal>
       )}
 
-      {isMobileSettingsModalOpen && (
-        <MobileSettingsModal
-          closeModal={() => setIsMobileSettingsModalOpen(false)}
-        >
-          <ViewSettings openModal={() => setIsSettingsModalOpen(true)} />
-        </MobileSettingsModal>
+      {isSearchModalOpen && (
+        <SearchModal closeModal={toggleIsSearchModalOpen}>
+          <SearchInput modal={true} />
+        </SearchModal>
       )}
     </>
   );

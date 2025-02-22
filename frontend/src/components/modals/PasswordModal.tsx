@@ -59,7 +59,7 @@ function PasswordModal({
 
   return (
     <form
-      className="flex flex-col items-center gap-[20px] pb-[4px] pt-[20px] lg:px-[120px]"
+      className="flex w-full flex-col items-center gap-[20px] pb-[4px] pt-[20px] lg:w-[640px]"
       onSubmit={handleSubmit}
     >
       <InputPasswordForm

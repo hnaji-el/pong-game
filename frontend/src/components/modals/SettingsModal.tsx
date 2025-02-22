@@ -99,8 +99,8 @@ function Settings({
   const [errorMessage, setErrorMessage] = React.useState("");
 
   return (
-    <form className="flex flex-col justify-between py-6">
-      <div>
+    <form className="flex w-full justify-center py-[24px] lg:w-[640px]">
+      <div className="flex w-full max-w-[256px] flex-col gap-[36px] lg:w-auto lg:max-w-full">
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
           <div className="flex flex-col items-center gap-3">
             <img
@@ -145,13 +145,14 @@ function Settings({
           </div>
           <div className="flex flex-col justify-start gap-6">
             <InputForm
-              edit="w-full lg:w-64"
+              edit="w-full max-w-[256px] lg:w-[256px]"
               value={value}
               setValue={setValue}
               label="username"
               errorMessage={errorMessage}
               setErrorMessage={setErrorMessage}
             />
+
             <div className="flex items-center justify-between">
               <span className="text-sm text-primaryText">
                 <span>{enable ? "Disable" : "Enable"}</span> 2FA
@@ -170,48 +171,49 @@ function Settings({
             </div>
           </div>
         </div>
-      </div>
-      <div className="flex w-full items-center justify-end gap-3">
-        <button
-          className="w-32 rounded-md bg-shape p-2 text-sm text-primaryText shadow"
-          type="button"
-          onClick={() => {
-            closeModal();
-            document.body.style.overflow = "auto";
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="w-32 rounded-md bg-primary p-2 text-sm text-primaryText"
-          onClick={async (e) => {
-            e.preventDefault();
-            let errorMessage = checkNickname(value);
+        <div className="flex w-full items-center justify-end gap-3">
+          <button
+            className="w-32 rounded-md bg-shape p-2 text-sm text-primaryText shadow"
+            type="button"
+            onClick={() => {
+              closeModal();
+              document.body.style.overflow = "auto";
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="w-32 rounded-md bg-primary p-2 text-sm text-primaryText"
+            onClick={async (e) => {
+              e.preventDefault();
+              let errorMessage = checkNickname(value);
 
-            if (errorMessage.length) {
-              setErrorMessage(errorMessage);
-              return;
-            }
-
-            if (tmpPicture.length) await editPicture(sendPicture);
-            await editNickname((res: any) => {
-              if (res === "invalid") setErrorMessage("Username already exists");
-              else {
-                if (enable) turOnTfa();
-                else turnOffTfa();
-
-                getDataUserLogged((res: UserType) => {
-                  setLoggedUserData(res);
-                  closeModal();
-                  document.body.style.overflow = "auto";
-                });
+              if (errorMessage.length) {
+                setErrorMessage(errorMessage);
+                return;
               }
-            }, value);
-          }}
-        >
-          Save
-        </button>
+
+              if (tmpPicture.length) await editPicture(sendPicture);
+              await editNickname((res: any) => {
+                if (res === "invalid")
+                  setErrorMessage("Username already exists");
+                else {
+                  if (enable) turOnTfa();
+                  else turnOffTfa();
+
+                  getDataUserLogged((res: UserType) => {
+                    setLoggedUserData(res);
+                    closeModal();
+                    document.body.style.overflow = "auto";
+                  });
+                }
+              }, value);
+            }}
+          >
+            Save
+          </button>
+        </div>
       </div>
     </form>
   );

@@ -11,12 +11,15 @@ import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
 import PlayNowLink from "../links/PlayNowLink";
+import useToggle from "../../hooks/use-toggle";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function NavBar({ setOpen }: TypeProps) {
+  const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
+
   let dataUserLogged = useContext(ActiveHome);
   let dataUserLoggedProfile = useContext(ActiveProfile);
   let dataUserLoggedProfileUser = useContext(ActiveProfileUser);
@@ -36,34 +39,40 @@ export default function NavBar({ setOpen }: TypeProps) {
       <div className="hidden items-center gap-5 lg:flex">
         <PlayNowLink />
 
-        <Dropdown>
+        <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
           <DropdownBtn
+            isOpen={isDropdownOpen}
+            toggleIsOpen={toggleIsDropdownOpen}
             type="text"
             title={dataUserLogged.settings.nickname}
             imgTitle={dataUserLogged.settings.pictureURL}
-            arrow={true}
           />
-          <DropdownList edit="top-12">
-            <DropdownItem
-              edit="justify-center p-2"
-              onClick={() => {
-                if (setOpen) setOpen(true);
-              }}
-            >
-              <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
-              <span>Settings</span>
-            </DropdownItem>
-            <DropdownItem
-              edit="justify-center p-2"
-              onClick={async () => {
-                await logout();
-                navigate("/login");
-              }}
-            >
-              <LogoutIcon edit="w-5 h-5 fill-primaryText" />
-              <span>Logout</span>
-            </DropdownItem>
-          </DropdownList>
+
+          {isDropdownOpen && (
+            <DropdownList className="top-12">
+              <DropdownItem
+                handleClose={toggleIsDropdownOpen}
+                className="justify-center p-2"
+                onClick={() => {
+                  if (setOpen) setOpen(true);
+                }}
+              >
+                <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
+                <span>Settings</span>
+              </DropdownItem>
+              <DropdownItem
+                handleClose={toggleIsDropdownOpen}
+                className="justify-center p-2"
+                onClick={async () => {
+                  await logout();
+                  navigate("/login");
+                }}
+              >
+                <LogoutIcon edit="w-5 h-5 fill-primaryText" />
+                <span>Logout</span>
+              </DropdownItem>
+            </DropdownList>
+          )}
         </Dropdown>
       </div>
     </section>

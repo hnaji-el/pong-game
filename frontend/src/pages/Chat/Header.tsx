@@ -15,6 +15,7 @@ import {
 import { logout } from "../../api/API";
 
 import { UserType } from "../../api/types";
+import useToggle from "../../hooks/use-toggle";
 
 interface PropsType {
   isDm: boolean;
@@ -31,6 +32,7 @@ function Header({
   setClick,
   openSettingsModal,
 }: PropsType) {
+  const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -64,24 +66,35 @@ function Header({
       <div className="hidden lg:flex lg:items-center lg:gap-5">
         <PlayNowLink />
 
-        <Dropdown>
+        <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
           <DropdownBtn
+            isOpen={isDropdownOpen}
+            toggleIsOpen={toggleIsDropdownOpen}
             type="text"
             title={loggedUserData.nickname}
             imgTitle={loggedUserData.pictureURL}
-            arrow={true}
           />
-          
-          <DropdownList edit="top-12">
-            <DropdownItem edit="justify-center p-2" onClick={openSettingsModal}>
-              <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
-              <span>Settings</span>
-            </DropdownItem>
-            <DropdownItem edit="justify-center p-2" onClick={handleLogout}>
-              <LogoutIcon edit="w-5 h-5 fill-primaryText" />
-              <span>Logout</span>
-            </DropdownItem>
-          </DropdownList>
+
+          {isDropdownOpen && (
+            <DropdownList className="top-12">
+              <DropdownItem
+                handleClose={toggleIsDropdownOpen}
+                className="justify-center p-2"
+                onClick={openSettingsModal}
+              >
+                <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
+                <span>Settings</span>
+              </DropdownItem>
+              <DropdownItem
+                handleClose={toggleIsDropdownOpen}
+                className="justify-center p-2"
+                onClick={handleLogout}
+              >
+                <LogoutIcon edit="w-5 h-5 fill-primaryText" />
+                <span>Logout</span>
+              </DropdownItem>
+            </DropdownList>
+          )}
         </Dropdown>
       </div>
     </header>

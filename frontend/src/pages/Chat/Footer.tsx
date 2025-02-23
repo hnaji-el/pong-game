@@ -2,7 +2,6 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import VisuallyHidden from "../../components/VisuallyHidden";
 import {
   HomeIcon,
   MessagesIcon,
@@ -10,28 +9,36 @@ import {
   SearchIcon,
   ControllerIcon,
 } from "../../components/Icons";
+import useToggle from "../../hooks/use-toggle";
+import VisuallyHidden from "../../components/VisuallyHidden";
+import SearchModal from "../../components/modals/SearchModal";
+import SearchInput from "../../components/SearchInput";
 
 interface TypeProps {
   click: boolean;
   loggedUserAvatar: string;
-  isSearchModalOpen: boolean;
-  setIsSearchModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isMobileSettingsModalOpen: boolean;
-  setIsMobileSettingsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  toggleIsMobileSettingsModalOpen: () => void;
 }
 
 function Footer({
   click,
   loggedUserAvatar,
-  isSearchModalOpen,
-  setIsSearchModalOpen,
   isMobileSettingsModalOpen,
-  setIsMobileSettingsModalOpen,
+  toggleIsMobileSettingsModalOpen,
 }: TypeProps) {
+  const [isSearchModalOpen, toggleIsSearchModalOpen] = useToggle(false);
+
   return (
     <footer
       className={`${click ? "hidden" : ""} relative z-10 flex flex-col items-end gap-[10px] px-[12px] pt-[12px] lg:hidden`}
     >
+      {isSearchModalOpen && (
+        <SearchModal closeModal={toggleIsSearchModalOpen}>
+          <SearchInput modal={true} />
+        </SearchModal>
+      )}
+
       <Link
         to="/game"
         className="flex h-[56px] w-[56px] items-center justify-center rounded-full bg-primary"
@@ -57,10 +64,6 @@ function Footer({
               <Link
                 to="/chat"
                 className="flex flex-col items-center justify-center gap-1.5"
-                onClick={() => {
-                  setIsSearchModalOpen(false);
-                  setIsMobileSettingsModalOpen(false);
-                }}
               >
                 <MessagesIcon
                   edit={`w-6 h-6 ${
@@ -94,7 +97,7 @@ function Footer({
             <li>
               <button
                 className="flex flex-col items-center justify-center gap-1.5"
-                onClick={() => setIsSearchModalOpen(true)}
+                onClick={toggleIsSearchModalOpen}
               >
                 <SearchIcon
                   edit={`w-5 h-6 ${
@@ -118,7 +121,7 @@ function Footer({
                     ? "rounded-full border-[2px] border-primary"
                     : ""
                 }`}
-                onClick={() => setIsMobileSettingsModalOpen(true)}
+                onClick={toggleIsMobileSettingsModalOpen}
               >
                 <img
                   src={loggedUserAvatar}

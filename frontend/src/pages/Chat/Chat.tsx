@@ -9,8 +9,6 @@ import SideNavBar from "./SideNavBar";
 import Footer from "./Footer";
 import Modal from "../../components/Modal/Modal";
 import SettingsModal from "../../components/modals/SettingsModal";
-import SearchModal from "../../components/modals/SearchModal";
-import SearchInput from "../../components/SearchInput";
 import MobileSettingsModal from "../../components/modals/MobileSettingsModal";
 import ViewSettings from "../../components/ViewSettings";
 import Spinner from "../../components/Spinner";
@@ -58,7 +56,6 @@ function Chat() {
   const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
   const [isMobileSettingsModalOpen, toggleIsMobileSettingsModalOpen] =
     useToggle(false);
-  const [isSearchModalOpen, toggleIsSearchModalOpen] = useToggle(false);
 
   const navigate = useNavigate();
 
@@ -165,10 +162,8 @@ function Chat() {
         <Footer
           click={click}
           loggedUserAvatar={loggedUserData.pictureURL}
-          isSearchModalOpen={isSearchModalOpen}
-          setIsSearchModalOpen={toggleIsSearchModalOpen}
           isMobileSettingsModalOpen={isMobileSettingsModalOpen}
-          setIsMobileSettingsModalOpen={toggleIsMobileSettingsModalOpen}
+          toggleIsMobileSettingsModalOpen={toggleIsMobileSettingsModalOpen}
         />
       </div>
 
@@ -186,12 +181,6 @@ function Chat() {
         <MobileSettingsModal closeModal={toggleIsMobileSettingsModalOpen}>
           <ViewSettings openModal={toggleIsSettingsModalOpen} />
         </MobileSettingsModal>
-      )}
-
-      {isSearchModalOpen && (
-        <SearchModal closeModal={toggleIsSearchModalOpen}>
-          <SearchInput modal={true} />
-        </SearchModal>
       )}
     </>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { GroupIcon, PlusIcon } from "./Icons";
-import ArrowLeftButton from "./buttons/ArrowLeftButton";
+import ArrowLeftButton from "./buttons/ArrowLeftButton/ArrowLeftButton";
 import VisuallyHidden from "./VisuallyHidden";
 import Modal from "./Modal/Modal";
 import MembersModal from "./modals/MembersModal";

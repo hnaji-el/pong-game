@@ -9,13 +9,13 @@ import { SettingsNavIcon, LogoutIcon } from "../../components/Icons";
 import {
   Dropdown,
   DropdownItem,
-  DropdownBtn,
   DropdownList,
 } from "../../components/Dropdown";
 import { logout } from "../../api/API";
 
 import { UserType } from "../../api/types";
 import useToggle from "../../hooks/use-toggle";
+import SettingsButton from "../../components/buttons/SettingsButton/SettingsButton";
 
 interface PropsType {
   isDm: boolean;
@@ -67,12 +67,11 @@ function Header({
         <PlayNowLink />
 
         <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
-          <DropdownBtn
+          <SettingsButton
             isOpen={isDropdownOpen}
             toggleIsOpen={toggleIsDropdownOpen}
-            type="text"
             title={loggedUserData.nickname}
-            imgTitle={loggedUserData.pictureURL}
+            imgURL={loggedUserData.pictureURL}
           />
 
           {isDropdownOpen && (

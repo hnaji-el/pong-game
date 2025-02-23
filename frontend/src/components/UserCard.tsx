@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import ArrowLeftButton from "./buttons/ArrowLeftButton";
+import ArrowLeftButton from "./buttons/ArrowLeftButton/ArrowLeftButton";
 import StatusTag from "./StatusTag";
 import VisuallyHidden from "./VisuallyHidden";
 

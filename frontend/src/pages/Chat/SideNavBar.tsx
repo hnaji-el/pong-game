@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import ChannelCardList from "../../components/ChannelCardList";
 import DmCardList from "../../components/DmCardList";
-import Button from "../../components/buttons/Button";
+import Button from "../../components/buttons/Button/Button";
 import VisuallyHidden from "../../components/VisuallyHidden";
 import logo from "../../assets/logo.svg";
 import { getAllChannels, getAllDms } from "../../api/API";

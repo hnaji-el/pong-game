@@ -1,7 +1,7 @@
 import React from "react";
 
-import { ArrowLeftIcon } from "../Icons";
-import VisuallyHidden from "../VisuallyHidden";
+import { ArrowLeftIcon } from "../../Icons";
+import VisuallyHidden from "../../VisuallyHidden";
 
 function ArrowLeftButton({ onClick }: { onClick: () => void }) {
   return (

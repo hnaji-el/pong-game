@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
-import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "../Dropdown";
+import { Dropdown, DropdownItem, DropdownList } from "../Dropdown";
 import { ActiveHome } from "../../pages/Home/Home";
 import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
@@ -12,6 +12,7 @@ import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
 import PlayNowLink from "../links/PlayNowLink";
 import useToggle from "../../hooks/use-toggle";
+import SettingsButton from "../buttons/SettingsButton/SettingsButton";
 
 interface TypeProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,12 +41,11 @@ export default function NavBar({ setOpen }: TypeProps) {
         <PlayNowLink />
 
         <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
-          <DropdownBtn
+          <SettingsButton
             isOpen={isDropdownOpen}
             toggleIsOpen={toggleIsDropdownOpen}
-            type="text"
             title={dataUserLogged.settings.nickname}
-            imgTitle={dataUserLogged.settings.pictureURL}
+            imgURL={dataUserLogged.settings.pictureURL}
           />
 
           {isDropdownOpen && (

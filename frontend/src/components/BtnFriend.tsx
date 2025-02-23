@@ -1,28 +1,29 @@
-import React, { useContext } from "react";
+import React from "react";
+
 import { blockFriend, getOneUser, unfriend } from "../api/API";
-import { Dropdown, DropdownBtn, DropdownItem, DropdownList } from "./Dropdown";
+import { Dropdown, DropdownItem, DropdownList } from "./Dropdown";
 import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
 import { globalSocket } from "../utilities/socket";
 import { UpdateDataProfileUser } from "../pages/ProfileUser/ProfileUser";
 import useToggle from "../hooks/use-toggle";
+import FriendButton from "./buttons/FriendButton/FriendButton";
 
 interface TypeProps {
   id: string;
   setTypeUser: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export default function BtnFriend({ id, setTypeUser }: TypeProps) {
+function BtnFriend({ id, setTypeUser }: TypeProps) {
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
 
-  const dataUserLogged = useContext(ActiveProfileUser);
-  const update = useContext(UpdateDataProfileUser);
+  const dataUserLogged = React.useContext(ActiveProfileUser);
+  const update = React.useContext(UpdateDataProfileUser);
 
   return (
     <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
-      <DropdownBtn
+      <FriendButton
         isOpen={isDropdownOpen}
         toggleIsOpen={toggleIsDropdownOpen}
-        type="button"
         title="Friend"
       />
 
@@ -71,3 +72,5 @@ export default function BtnFriend({ id, setTypeUser }: TypeProps) {
     </Dropdown>
   );
 }
+
+export default BtnFriend;

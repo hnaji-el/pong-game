@@ -15,57 +15,62 @@ interface TypeProps {
 
 function BtnFriend({ id, setTypeUser }: TypeProps) {
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
-
   const dataUserLogged = React.useContext(ActiveProfileUser);
   const update = React.useContext(UpdateDataProfileUser);
+
+  async function handleUnfriend() {
+    setTypeUser("notFriend");
+    await unfriend(id);
+
+    getOneUser((res: any) => {
+      update.setDataUser(res);
+    }, id);
+  }
+
+  function handleInviteToPlay() {
+    globalSocket.emit("inviteToPlay", {
+      sender: dataUserLogged.settings,
+      receiverId: id,
+    });
+  }
+
+  async function handleBlock() {
+    setTypeUser("blocked");
+    await blockFriend(id);
+
+    getOneUser((res: any) => {
+      update.setDataUser(res);
+    }, id);
+  }
 
   return (
     <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
       <FriendButton
         isOpen={isDropdownOpen}
         toggleIsOpen={toggleIsDropdownOpen}
-        title="Friend"
       />
 
       {isDropdownOpen && (
-        <DropdownList className="top-12 w-full">
+        <DropdownList className="right-0 top-full w-full translate-y-[10px]">
           <DropdownItem
             handleClose={toggleIsDropdownOpen}
-            className="items-center px-3 py-2 capitalize"
-            onClick={async () => {
-              setTypeUser("notFriend");
-              await unfriend(id);
-              getOneUser((res: any) => {
-                update.setDataUser(res);
-              }, id);
-            }}
+            onClick={handleUnfriend}
           >
-            <span className="font-light">unfriend</span>
+            <span className="capitalize">unfriend</span>
           </DropdownItem>
+
           <DropdownItem
             handleClose={toggleIsDropdownOpen}
-            className="items-center px-3 py-2"
-            onClick={() => {
-              globalSocket.emit("inviteToPlay", {
-                sender: dataUserLogged.settings,
-                receiverId: id,
-              });
-            }}
+            onClick={handleInviteToPlay}
           >
-            <span className="font-light">Invite to play</span>
+            <span className="capitalize">invite to play</span>
           </DropdownItem>
+
           <DropdownItem
             handleClose={toggleIsDropdownOpen}
-            className="items-center px-3 py-2 capitalize"
-            onClick={async () => {
-              setTypeUser("blocked");
-              await blockFriend(id);
-              getOneUser((res: any) => {
-                update.setDataUser(res);
-              }, id);
-            }}
+            onClick={handleBlock}
           >
-            <span className="font-light">Block</span>
+            <span className="capitalize">block</span>
           </DropdownItem>
         </DropdownList>
       )}

@@ -79,7 +79,7 @@ function ChannelCardList({
     <>
       {isCreateChannelModalOpen && (
         <Modal
-          title="Create channel"
+          title="create channel"
           handleDismiss={toggleIsCreateChannelModalOpen}
         >
           <CreateChannelModal
@@ -90,7 +90,7 @@ function ChannelCardList({
       )}
 
       {isPasswordModalOpen && (
-        <Modal title="Password" handleDismiss={toggleIsPasswordModalOpen}>
+        <Modal title="password" handleDismiss={toggleIsPasswordModalOpen}>
           <PasswordModal
             setChatDataBox={setChatDataBox}
             channels={channels}

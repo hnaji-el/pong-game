@@ -168,7 +168,7 @@ function Chat() {
       </div>
 
       {isSettingsModalOpen && (
-        <Modal title="Settings" handleDismiss={toggleIsSettingsModalOpen}>
+        <Modal title="settings" handleDismiss={toggleIsSettingsModalOpen}>
           <SettingsModal
             loggedUserData={loggedUserData}
             setLoggedUserData={setLoggedUserData}

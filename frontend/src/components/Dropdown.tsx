@@ -6,6 +6,17 @@ interface DropdownPropsType {
   children: React.ReactNode;
 }
 
+interface DropdownListPropsType {
+  className: string;
+  children: React.ReactNode;
+}
+
+interface DropdownItemPropsType {
+  handleClose: () => void;
+  onClick: () => void;
+  children: React.ReactNode;
+}
+
 export function Dropdown({ isOpen, handleClose, children }: DropdownPropsType) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -34,16 +45,10 @@ export function Dropdown({ isOpen, handleClose, children }: DropdownPropsType) {
   );
 }
 
-export function DropdownList({
-  className,
-  children,
-}: {
-  className: string;
-  children: React.ReactNode;
-}) {
+export function DropdownList({ className, children }: DropdownListPropsType) {
   return (
     <div
-      className={`list-dropdown absolute right-0 z-[999] flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 shadow ${className}`}
+      className={`absolute z-[999] flex cursor-default flex-col rounded-md bg-body py-[10px] shadow-[0_4px_10px_rgba(255,255,255,0.2)] ${className}`}
     >
       {children}
     </div>
@@ -52,22 +57,14 @@ export function DropdownList({
 
 export function DropdownItem({
   handleClose,
-  className,
   onClick,
   children,
-}: {
-  handleClose: () => void;
-  className: string;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+}: DropdownItemPropsType) {
   return (
     <button
-      className={`flex items-center gap-2 hover:bg-backgroundHover ${className}`}
-      onClick={(e) => {
+      className="flex items-center gap-[8px] px-[16px] py-[10px] hover:bg-backgroundHover"
+      onClick={() => {
         onClick();
-        e.preventDefault();
-        e.stopPropagation();
         handleClose();
       }}
     >

@@ -33,7 +33,7 @@ function ChannelEditCard({
   return (
     <>
       {isMembersModalOpen && (
-        <Modal title="Members" handleDismiss={toggleIsMembersModalOpen}>
+        <Modal title="members" handleDismiss={toggleIsMembersModalOpen}>
           <MembersModal
             chatDataBox={chatDataBox}
             loggedUserData={loggedUserData}
@@ -42,7 +42,7 @@ function ChannelEditCard({
       )}
 
       {isAddMemberModalOpen && (
-        <Modal title="Add member" handleDismiss={toggleIsAddMemberModalOpen}>
+        <Modal title="add member" handleDismiss={toggleIsAddMemberModalOpen}>
           <AddMemberModal chatDataBox={chatDataBox} />
         </Modal>
       )}

@@ -5,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 import PlayNowLink from "../../components/links/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
-import { SettingsNavIcon, LogoutIcon } from "../../components/Icons";
 import {
   Dropdown,
   DropdownItem,
   DropdownList,
 } from "../../components/Dropdown";
 import { logout } from "../../api/API";
-
 import { UserType } from "../../api/types";
 import useToggle from "../../hooks/use-toggle";
 import SettingsButton from "../../components/buttons/SettingsButton/SettingsButton";
+import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
+import { LuLogOut as LogoutIcon } from "react-icons/lu";
 
 interface PropsType {
   isDm: boolean;
@@ -75,22 +75,21 @@ function Header({
           />
 
           {isDropdownOpen && (
-            <DropdownList className="top-12">
+            <DropdownList className="right-0 top-full translate-y-[10px]">
               <DropdownItem
                 handleClose={toggleIsDropdownOpen}
-                className="justify-center p-2"
                 onClick={openSettingsModal}
               >
-                <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
-                <span>Settings</span>
+                <SettingsIcon size={20} />
+                <span className="capitalize">settings</span>
               </DropdownItem>
+
               <DropdownItem
                 handleClose={toggleIsDropdownOpen}
-                className="justify-center p-2"
                 onClick={handleLogout}
               >
-                <LogoutIcon edit="w-5 h-5 fill-primaryText" />
-                <span>Logout</span>
+                <LogoutIcon size={20} />
+                <span className="capitalize">logout</span>
               </DropdownItem>
             </DropdownList>
           )}

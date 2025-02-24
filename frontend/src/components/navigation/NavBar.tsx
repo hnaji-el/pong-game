@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import logo from "../../assets/logo.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { SettingsNavIcon, LogoutIcon } from "../Icons";
 
 import SearchInput from "../SearchInput";
 import { Dropdown, DropdownItem, DropdownList } from "../Dropdown";
@@ -12,6 +11,8 @@ import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
 import PlayNowLink from "../links/PlayNowLink";
 import useToggle from "../../hooks/use-toggle";
+import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
+import { LuLogOut as LogoutIcon } from "react-icons/lu";
 import SettingsButton from "../buttons/SettingsButton/SettingsButton";
 
 interface TypeProps {
@@ -31,6 +32,11 @@ export default function NavBar({ setOpen }: TypeProps) {
   if (!dataUserLogged.value) dataUserLogged = dataUserLoggedProfileUser;
   if (!dataUserLogged.value) dataUserLogged = dataGame;
 
+  async function handleLogout() {
+    await logout();
+    navigate("/login");
+  }
+
   return (
     <section className="flex items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:items-start lg:justify-between lg:gap-5 lg:pt-7">
       <Link to="/home" className="lg:hidden">
@@ -49,27 +55,21 @@ export default function NavBar({ setOpen }: TypeProps) {
           />
 
           {isDropdownOpen && (
-            <DropdownList className="top-12">
+            <DropdownList className="right-0 top-full translate-y-[10px]">
               <DropdownItem
                 handleClose={toggleIsDropdownOpen}
-                className="justify-center p-2"
-                onClick={() => {
-                  if (setOpen) setOpen(true);
-                }}
+                onClick={() => setOpen(true)}
               >
-                <SettingsNavIcon edit="w-5 h-5 fill-primaryText" />
-                <span>Settings</span>
+                <SettingsIcon size={20} />
+                <span className="capitalize">settings</span>
               </DropdownItem>
+
               <DropdownItem
                 handleClose={toggleIsDropdownOpen}
-                className="justify-center p-2"
-                onClick={async () => {
-                  await logout();
-                  navigate("/login");
-                }}
+                onClick={handleLogout}
               >
-                <LogoutIcon edit="w-5 h-5 fill-primaryText" />
-                <span>Logout</span>
+                <LogoutIcon size={20} />
+                <span className="capitalize">logout</span>
               </DropdownItem>
             </DropdownList>
           )}

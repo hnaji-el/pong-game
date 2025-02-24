@@ -8,17 +8,16 @@ import VisuallyHidden from "../../VisuallyHidden";
 interface PropsType {
   isOpen: boolean;
   toggleIsOpen: () => void;
-  title: string;
 }
 
-function FriendButton({ isOpen, toggleIsOpen, title }: PropsType) {
+function FriendButton({ isOpen, toggleIsOpen }: PropsType) {
   return (
     <button
       className="flex items-center gap-[12px] rounded-md bg-shape px-[12px] py-[8px] text-sm text-primaryText"
       onClick={toggleIsOpen}
     >
       <LuUserCheck size={20} />
-      <span>{title}</span>
+      <span className="capitalize">friend</span>
       <span
         className="rounded-full"
         onClick={(e) => {

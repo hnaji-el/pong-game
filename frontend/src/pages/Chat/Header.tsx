@@ -5,11 +5,8 @@ import { useNavigate } from "react-router-dom";
 import PlayNowLink from "../../components/links/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-} from "../../components/Dropdown";
+import Dropdown from "../../components/Dropdown/Dropdown";
+
 import { logout } from "../../api/API";
 import { UserType } from "../../api/types";
 import useToggle from "../../hooks/use-toggle";
@@ -66,33 +63,25 @@ function Header({
       <div className="hidden lg:flex lg:items-center lg:gap-5">
         <PlayNowLink />
 
-        <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
+        <Dropdown
+          isOpen={isDropdownOpen}
+          toggleIsOpen={toggleIsDropdownOpen}
+          options={[
+            { label: "settings", icon: <SettingsIcon size={20} /> },
+            { label: "logout", icon: <LogoutIcon size={20} /> },
+          ]}
+          handleSelect={(option) => {
+            if (option === "settings") openSettingsModal();
+            if (option === "logout") handleLogout();
+          }}
+          className="right-0 top-full translate-y-[10px]"
+        >
           <SettingsButton
             isOpen={isDropdownOpen}
             toggleIsOpen={toggleIsDropdownOpen}
             title={loggedUserData.nickname}
             imgURL={loggedUserData.pictureURL}
           />
-
-          {isDropdownOpen && (
-            <DropdownList className="right-0 top-full translate-y-[10px]">
-              <DropdownItem
-                handleClose={toggleIsDropdownOpen}
-                onClick={openSettingsModal}
-              >
-                <SettingsIcon size={20} />
-                <span className="capitalize">settings</span>
-              </DropdownItem>
-
-              <DropdownItem
-                handleClose={toggleIsDropdownOpen}
-                onClick={handleLogout}
-              >
-                <LogoutIcon size={20} />
-                <span className="capitalize">logout</span>
-              </DropdownItem>
-            </DropdownList>
-          )}
         </Dropdown>
       </div>
     </header>

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { blockFriend, getOneUser, unfriend } from "../api/API";
-import { Dropdown, DropdownItem, DropdownList } from "./Dropdown";
+import Dropdown from "./Dropdown/Dropdown";
 import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
 import { globalSocket } from "../utilities/socket";
 import { UpdateDataProfileUser } from "../pages/ProfileUser/ProfileUser";
@@ -44,36 +44,25 @@ function BtnFriend({ id, setTypeUser }: TypeProps) {
   }
 
   return (
-    <Dropdown isOpen={isDropdownOpen} handleClose={toggleIsDropdownOpen}>
+    <Dropdown
+      isOpen={isDropdownOpen}
+      toggleIsOpen={toggleIsDropdownOpen}
+      options={[
+        { label: "unfriend" },
+        { label: "invite to play" },
+        { label: "block" },
+      ]}
+      handleSelect={(option) => {
+        if (option === "unfriend") handleUnfriend();
+        if (option === "invite to play") handleInviteToPlay();
+        if (option === "block") handleBlock();
+      }}
+      className="right-0 top-full w-full translate-y-[10px]"
+    >
       <FriendButton
         isOpen={isDropdownOpen}
         toggleIsOpen={toggleIsDropdownOpen}
       />
-
-      {isDropdownOpen && (
-        <DropdownList className="right-0 top-full w-full translate-y-[10px]">
-          <DropdownItem
-            handleClose={toggleIsDropdownOpen}
-            onClick={handleUnfriend}
-          >
-            <span className="capitalize">unfriend</span>
-          </DropdownItem>
-
-          <DropdownItem
-            handleClose={toggleIsDropdownOpen}
-            onClick={handleInviteToPlay}
-          >
-            <span className="capitalize">invite to play</span>
-          </DropdownItem>
-
-          <DropdownItem
-            handleClose={toggleIsDropdownOpen}
-            onClick={handleBlock}
-          >
-            <span className="capitalize">block</span>
-          </DropdownItem>
-        </DropdownList>
-      )}
     </Dropdown>
   );
 }

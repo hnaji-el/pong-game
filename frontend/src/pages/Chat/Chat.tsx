@@ -7,21 +7,15 @@ import Header from "./Header";
 import MainContent from "./MainContent";
 import SideNavBar from "./SideNavBar";
 import Footer from "./Footer";
-import Modal from "../../components/Modal/Modal";
-import SettingsModal from "../../components/modals/SettingsModal";
-import MobileSettingsModal from "../../components/modals/MobileSettingsModal";
-import ViewSettings from "../../components/ViewSettings";
 import Spinner from "../../components/Spinner";
+import { DmType, ChannelType } from "./types";
+import { UserType } from "../../api/types";
 import {
   useVerifyUserAuthenticity,
   getDataUserLogged,
   getAllChannels,
   getAllDms,
 } from "../../api/API";
-
-import { DmType, ChannelType } from "./types";
-import { UserType } from "../../api/types";
-import useToggle from "../../hooks/use-toggle";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
@@ -51,11 +45,6 @@ function Chat() {
   const [dmIndex, setDmIndex] = React.useState(0);
   const [channelIndex, setChannelIndex] = React.useState(0);
   const [click, setClick] = React.useState(false);
-
-  // state variables for modals
-  const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
-  const [isMobileSettingsModalOpen, toggleIsMobileSettingsModalOpen] =
-    useToggle(false);
 
   const navigate = useNavigate();
 
@@ -122,8 +111,8 @@ function Chat() {
           isDm={isDm}
           chatDataBox={chatDataBox}
           loggedUserData={loggedUserData}
+          setLoggedUserData={setLoggedUserData}
           setClick={setClick}
-          openSettingsModal={toggleIsSettingsModalOpen}
         />
 
         {chatDataBox && (
@@ -160,28 +149,10 @@ function Chat() {
         />
 
         <Footer
-          click={click}
-          loggedUserAvatar={loggedUserData.pictureURL}
-          isMobileSettingsModalOpen={isMobileSettingsModalOpen}
-          toggleIsMobileSettingsModalOpen={toggleIsMobileSettingsModalOpen}
+          loggedUserData={loggedUserData}
+          setLoggedUserData={setLoggedUserData}
         />
       </div>
-
-      {isSettingsModalOpen && (
-        <Modal title="settings" handleDismiss={toggleIsSettingsModalOpen}>
-          <SettingsModal
-            loggedUserData={loggedUserData}
-            setLoggedUserData={setLoggedUserData}
-            closeModal={toggleIsSettingsModalOpen}
-          />
-        </Modal>
-      )}
-
-      {isMobileSettingsModalOpen && (
-        <MobileSettingsModal closeModal={toggleIsMobileSettingsModalOpen}>
-          <ViewSettings openModal={toggleIsSettingsModalOpen} />
-        </MobileSettingsModal>
-      )}
     </>
   );
 }

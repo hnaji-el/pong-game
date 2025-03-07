@@ -6,30 +6,33 @@ import PlayNowLink from "../../components/links/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
 import Dropdown from "../../components/Dropdown/Dropdown";
-
 import { logout } from "../../api/API";
 import { UserType } from "../../api/types";
 import useToggle from "../../hooks/use-toggle";
 import SettingsButton from "../../components/buttons/SettingsButton/SettingsButton";
 import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
 import { LuLogOut as LogoutIcon } from "react-icons/lu";
+import Modal from "../../components/Modal/Modal";
+import SettingsModal from "../../components/modals/SettingsModal";
 
 interface PropsType {
   isDm: boolean;
   chatDataBox: any;
   loggedUserData: UserType;
+  setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
-  openSettingsModal: () => void;
 }
 
 function Header({
   isDm,
   chatDataBox,
   loggedUserData,
+  setLoggedUserData,
   setClick,
-  openSettingsModal,
 }: PropsType) {
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
+  const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
+
   const navigate = useNavigate();
 
   async function handleLogout() {
@@ -39,6 +42,16 @@ function Header({
 
   return (
     <header className="lg:flex lg:items-start lg:justify-between lg:gap-5">
+      {isSettingsModalOpen && (
+        <Modal title="settings" handleDismiss={toggleIsSettingsModalOpen}>
+          <SettingsModal
+            loggedUserData={loggedUserData}
+            setLoggedUserData={setLoggedUserData}
+            handleDismiss={toggleIsSettingsModalOpen}
+          />
+        </Modal>
+      )}
+
       {!chatDataBox ? (
         <div className="flex grow"></div>
       ) : isDm ? (
@@ -71,7 +84,7 @@ function Header({
             { label: "logout", icon: <LogoutIcon size={20} /> },
           ]}
           handleSelect={(option) => {
-            if (option === "settings") openSettingsModal();
+            if (option === "settings") toggleIsSettingsModalOpen();
             if (option === "logout") handleLogout();
           }}
           className="right-0 top-full translate-y-[10px]"

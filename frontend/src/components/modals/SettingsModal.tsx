@@ -42,13 +42,13 @@ interface QrCodePropsType {
 interface SettingsModalPropsType {
   loggedUserData: UserType;
   setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
-  closeModal: () => void;
+  handleDismiss: () => void;
 }
 
 function SettingsModal({
   loggedUserData,
   setLoggedUserData,
-  closeModal,
+  handleDismiss,
 }: SettingsModalPropsType) {
   const [tmpPicture, setTmpPicture] = React.useState("");
   const [sendPicture, setSendPicture] = React.useState<{}>({});
@@ -64,7 +64,7 @@ function SettingsModal({
   if (!tfa)
     return (
       <Settings
-        closeModal={closeModal}
+        closeModal={handleDismiss}
         setTfa={setTfa}
         enable={enable}
         pictureUser={pictureUser}

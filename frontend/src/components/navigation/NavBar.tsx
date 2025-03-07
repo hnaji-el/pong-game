@@ -14,12 +14,12 @@ import useToggle from "../../hooks/use-toggle";
 import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
 import { LuLogOut as LogoutIcon } from "react-icons/lu";
 import SettingsButton from "../buttons/SettingsButton/SettingsButton";
+import Modal from "../Modal/Modal";
+import SettingsModal from "../modals/SettingsModal";
+import VisuallyHidden from "../VisuallyHidden";
 
-interface TypeProps {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function NavBar({ setOpen }: TypeProps) {
+export default function NavBar() {
+  const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
 
   let dataUserLogged = useContext(ActiveHome);
@@ -39,10 +39,23 @@ export default function NavBar({ setOpen }: TypeProps) {
 
   return (
     <section className="flex items-center justify-center pt-7 lg:ml-64 lg:mr-4 lg:items-start lg:justify-between lg:gap-5 lg:pt-7">
+      {isSettingsModalOpen && (
+        <Modal title="settings" handleDismiss={toggleIsSettingsModalOpen}>
+          <SettingsModal
+            loggedUserData={dataUserLogged.settings}
+            setLoggedUserData={dataUserLogged.updateSettings}
+            handleDismiss={toggleIsSettingsModalOpen}
+          />
+        </Modal>
+      )}
+
       <Link to="/home" className="lg:hidden">
         <img src={logo} alt="Pong logo" className="w-48" />
+        <VisuallyHidden>Go to the home page</VisuallyHidden>
       </Link>
+
       <SearchInput />
+
       <div className="hidden items-center gap-5 lg:flex">
         <PlayNowLink />
 
@@ -54,7 +67,7 @@ export default function NavBar({ setOpen }: TypeProps) {
             { label: "logout", icon: <LogoutIcon size={20} /> },
           ]}
           handleSelect={(option) => {
-            if (option === "settings") setOpen(true);
+            if (option === "settings") toggleIsSettingsModalOpen();
             if (option === "logout") handleLogout();
           }}
           className="right-0 top-full translate-y-[10px]"

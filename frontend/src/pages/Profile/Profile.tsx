@@ -115,7 +115,7 @@ function Profile() {
             <SettingsModal
               loggedUserData={settings}
               setLoggedUserData={setSettings}
-              closeModal={() => setOpen(false)}
+              handleDismiss={() => setOpen(false)}
             />
           </ModalBody>
         </Modal>

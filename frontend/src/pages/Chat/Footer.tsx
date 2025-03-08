@@ -5,12 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import useToggle from "../../hooks/use-toggle";
 import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
 import { LuLogOut as LogoutIcon } from "react-icons/lu";
-
 import VisuallyHidden from "../../components/VisuallyHidden";
 import SearchModal from "../../components/modals/SearchModal";
 import SearchInput from "../../components/SearchInput";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { logout } from "../../api/API";
+import Modal from "../../components/Modal/Modal";
+import SettingsModal from "../../components/modals/SettingsModal";
+import { UserType } from "../../api/types";
 import {
   HomeIcon,
   MessagesIcon,
@@ -18,9 +20,6 @@ import {
   SearchIcon,
   ControllerIcon,
 } from "../../components/Icons";
-import Modal from "../../components/Modal/Modal";
-import SettingsModal from "../../components/modals/SettingsModal";
-import { UserType } from "../../api/types";
 
 interface PropsType {
   loggedUserData: UserType;
@@ -53,7 +52,7 @@ function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
 
       {isSearchModalOpen && (
         <SearchModal closeModal={toggleIsSearchModalOpen}>
-          <SearchInput modal={true} />
+          <SearchInput closeModal={toggleIsSearchModalOpen} modal={true} />
         </SearchModal>
       )}
 

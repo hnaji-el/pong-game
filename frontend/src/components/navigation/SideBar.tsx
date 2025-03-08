@@ -68,7 +68,7 @@ export default function SideBar() {
 
         {isSearchModalOpen && (
           <SearchModal closeModal={toggleIsSearchModalOpen}>
-            <SearchInput setOpenSearch={toggleIsSearchModalOpen} modal={true} />
+            <SearchInput closeModal={toggleIsSearchModalOpen} setOpenSearch={toggleIsSearchModalOpen} modal={true} />
           </SearchModal>
         )}
 

@@ -20,15 +20,6 @@ import {
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
-const userData = {
-  id: "",
-  email: "",
-  nickname: "",
-  pictureURL: "",
-  status: "",
-  isTwoFactorAuthEnabled: false,
-};
-
 const socket = io(DOMAIN, {
   path: SOCKET_CHAT_PATH,
   withCredentials: true,
@@ -36,8 +27,14 @@ const socket = io(DOMAIN, {
 
 function Chat() {
   const status = useVerifyUserAuthenticity();
-  const [loggedUserData, setLoggedUserData] =
-    React.useState<UserType>(userData);
+  const [loggedUserData, setLoggedUserData] = React.useState<UserType>({
+    id: "",
+    email: "",
+    nickname: "",
+    pictureURL: "",
+    status: "",
+    isTwoFactorAuthEnabled: false,
+  });
   const [isDm, setIsDm] = React.useState(true);
   const [dms, setDms] = React.useState<DmType[]>([]);
   const [channels, setChannels] = React.useState<ChannelType[]>([]);

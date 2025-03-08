@@ -1,12 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
+
 interface TypeProps {
   children: React.ReactNode;
   closeModal: () => void;
 }
 
 function SearchModal({ children, closeModal }: TypeProps) {
-  const modalSearch = useRef<HTMLDivElement>(null);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const modalSearch = React.useRef<HTMLDivElement>(null);
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const setWindowDimensions = () => {
     setWindowWidth(window.innerWidth);
   };
@@ -26,7 +27,7 @@ function SearchModal({ children, closeModal }: TypeProps) {
     return true;
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     document.body.style.overflow = "hidden";
     window.addEventListener("resize", setWindowDimensions);
     let allButton = document.querySelectorAll("button");

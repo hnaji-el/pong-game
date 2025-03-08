@@ -2,11 +2,12 @@ import React from "react";
 
 import VisuallyHidden from "./VisuallyHidden";
 import RoleTag from "./RoleTag";
-import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { PointsIcon } from "./Icons";
 
 import { MemberType } from "../pages/Chat/types";
 import StatusTag from "./StatusTag";
+import Dropdown from "./Dropdown/Dropdown";
+import useToggle from "../hooks/use-toggle";
 
 interface PropsType {
   member: MemberType;
@@ -27,6 +28,37 @@ function MemberCard({
   handleUnblockMember,
   handleKickMember,
 }: PropsType) {
+  const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
+
+  const options = [];
+
+  if (member.role === "BLOCKED") {
+    if (loggedUserRole === "OWNER" || loggedUserRole === "ADMIN") {
+      options.push({ label: "unblock" });
+    }
+  } else {
+    options.push({ label: "invite to play" });
+
+    if (loggedUserRole === "OWNER" && member.role === "MEMBER") {
+      options.push({ label: "set to admin" });
+    }
+
+    if (
+      loggedUserRole === "OWNER" ||
+      (loggedUserRole === "ADMIN" && member.role === "MEMBER")
+    ) {
+      options.push({ label: "block" }, { label: "kick" });
+    }
+  }
+
+  function handleSelect(option: string) {
+    if (option === "invite to play") handleInviteToPlay();
+    if (option === "set to admin") handleSetAdmin();
+    if (option === "block") handleBlockMember();
+    if (option === "unblock") handleUnblockMember();
+    if (option === "kick") handleKickMember();
+  }
+
   return (
     <div className={`flex flex-1 items-center justify-between gap-0.5`}>
       <div className="flex items-center gap-2">
@@ -48,66 +80,22 @@ function MemberCard({
         </div>
       </div>
 
-      {member.role === "BLOCKED" &&
-        (loggedUserRole === "OWNER" || loggedUserRole === "ADMIN") && (
-          <Menu>
-            <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1">
-              <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
-              <VisuallyHidden>Show more actions</VisuallyHidden>
-            </MenuButton>
-
-            <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-              <MenuItem
-                className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-                onClick={handleUnblockMember}
-              >
-                unblock
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        )}
-
-      {member.role !== "BLOCKED" && (
-        <Menu>
-          <MenuButton className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1">
-            <PointsIcon edit="fill-secondaryText w-3 h-3 mx-auto" />
+      {options.length > 0 && (
+        <Dropdown
+          className="right-0 top-full translate-y-[8px]"
+          isOpen={isDropdownOpen}
+          toggleIsOpen={toggleIsDropdownOpen}
+          options={options}
+          handleSelect={handleSelect}
+        >
+          <button
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-body p-1"
+            onClick={toggleIsDropdownOpen}
+          >
+            <PointsIcon edit="w-3 h-3 fill-secondaryText" />
             <VisuallyHidden>Show more actions</VisuallyHidden>
-          </MenuButton>
-
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-              onClick={handleInviteToPlay}
-            >
-              invite to play
-            </MenuItem>
-            {loggedUserRole === "OWNER" && member.role === "MEMBER" && (
-              <MenuItem
-                className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-                onClick={handleSetAdmin}
-              >
-                set to admin
-              </MenuItem>
-            )}
-            {(loggedUserRole === "OWNER" ||
-              (loggedUserRole === "ADMIN" && member.role === "MEMBER")) && (
-              <>
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-                  onClick={handleBlockMember}
-                >
-                  block
-                </MenuItem>
-                <MenuItem
-                  className="flex items-center gap-2 px-3 py-2 font-light capitalize hover:bg-backgroundHover"
-                  onClick={handleKickMember}
-                >
-                  kick
-                </MenuItem>
-              </>
-            )}
-          </MenuList>
-        </Menu>
+          </button>
+        </Dropdown>
       )}
     </div>
   );

@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-
 import { PointsIcon } from "./Icons";
 import VisuallyHidden from "./VisuallyHidden";
+import useToggle from "../hooks/use-toggle";
+import Dropdown from "./Dropdown/Dropdown";
 
 interface PropsType {
   avatar: string;
@@ -22,6 +22,15 @@ function DmCard({
   handleInviteToPlayClick,
   handleBlockClick,
 }: PropsType) {
+  const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
+
+  const options = [{ label: "invite to play" }, { label: "block" }];
+
+  function handleSelect(option: string) {
+    if (option === "invite to play") handleInviteToPlayClick();
+    if (option === "block") handleBlockClick();
+  }
+
   return (
     <div
       className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
@@ -33,11 +42,7 @@ function DmCard({
         onClick={handleCardClick}
       >
         <div className="flex items-center gap-2">
-          <img
-            src={avatar}
-            alt="friend avatar"
-            className="h-10 w-10 rounded-full"
-          />
+          <img src={avatar} alt="avatar" className="h-10 w-10 rounded-full" />
           <div className="flex items-center gap-1.5">
             <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm text-primaryText">
               {title}
@@ -47,26 +52,21 @@ function DmCard({
         <VisuallyHidden>Open the conversation</VisuallyHidden>
       </button>
 
-      <Menu>
-        <MenuButton className="group flex items-center justify-center rounded-full p-0">
+      <Dropdown
+        className="right-0 top-[80%]"
+        isOpen={isDropdownOpen}
+        toggleIsOpen={toggleIsDropdownOpen}
+        options={options}
+        handleSelect={handleSelect}
+      >
+        <button
+          className="flex h-full items-center justify-center rounded-full"
+          onClick={toggleIsDropdownOpen}
+        >
           <PointsIcon edit="w-3 h-3 fill-secondaryText" />
           <VisuallyHidden>Show more actions</VisuallyHidden>
-        </MenuButton>
-        <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-          <MenuItem
-            className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-            onClick={handleInviteToPlayClick}
-          >
-            invite to play
-          </MenuItem>
-          <MenuItem
-            className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-            onClick={handleBlockClick}
-          >
-            block
-          </MenuItem>
-        </MenuList>
-      </Menu>
+        </button>
+      </Dropdown>
     </div>
   );
 }

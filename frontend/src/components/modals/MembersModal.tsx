@@ -92,7 +92,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
   }
 
   return (
-    <div className="flex max-h-[400px] w-full flex-col gap-6 overflow-auto pt-5 lg:w-[640px]">
+    <div className="flex max-h-[400px] w-full flex-col gap-6 pt-5 lg:w-[640px]">
       {members.map((member, index) => (
         <MemberCard
           key={member.id}

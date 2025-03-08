@@ -51,7 +51,7 @@ function Dropdown({
           {options.map((option) => (
             <li
               key={option.label}
-              className="flex items-center gap-[8px] px-[16px] py-[10px] hover:bg-backgroundHover"
+              className="flex items-center gap-[8px] text-nowrap px-[16px] py-[10px] hover:bg-backgroundHover"
               onClick={() => {
                 handleSelect(option.label);
                 toggleIsOpen();

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import PlayNowLink from "../../components/links/PlayNowLink";
+import PlayNowLink from "../../components/links/PlayNowLink/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
 import Dropdown from "../../components/Dropdown/Dropdown";

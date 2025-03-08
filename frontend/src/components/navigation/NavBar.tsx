@@ -9,7 +9,7 @@ import { ActiveProfile } from "../../pages/Profile/Profile";
 import { ActiveProfileUser } from "../../pages/ProfileUser/ProfileUser";
 import { GameContext } from "../../pages/Game/Game";
 import { logout } from "../../api/API";
-import PlayNowLink from "../links/PlayNowLink";
+import PlayNowLink from "../links/PlayNowLink/PlayNowLink";
 import useToggle from "../../hooks/use-toggle";
 import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
 import { LuLogOut as LogoutIcon } from "react-icons/lu";

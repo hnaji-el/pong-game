@@ -73,7 +73,9 @@ function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
               className="flex flex-col items-center justify-center gap-1.5"
             >
               <HomeIcon edit="w-6 h-6 fill-secondaryText" />
-              <span className="text-xs text-secondaryText">Home</span>
+              <span className="text-xs capitalize text-secondaryText">
+                home
+              </span>
             </Link>
           </li>
 
@@ -83,7 +85,7 @@ function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
               className="flex flex-col items-center justify-center gap-1.5"
             >
               <MessagesIcon edit="w-6 h-6 fill-primary" />
-              <span className="text-xs text-primary">Messages</span>
+              <span className="text-xs capitalize text-primary">messages</span>
             </Link>
           </li>
 
@@ -93,7 +95,9 @@ function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
               className="flex flex-col items-center justify-center gap-1.5"
             >
               <UserIcon edit="w-6 h-6 fill-secondaryText" />
-              <span className="text-xs text-secondaryText">Profile</span>
+              <span className="text-xs capitalize text-secondaryText">
+                profile
+              </span>
             </Link>
           </li>
 
@@ -103,7 +107,9 @@ function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
               onClick={toggleIsSearchModalOpen}
             >
               <SearchIcon edit="w-5 h-6 fill-secondaryText" />
-              <span className="text-xs text-secondaryText">Search</span>
+              <span className="text-xs capitalize text-secondaryText">
+                search
+              </span>
             </button>
           </li>
 

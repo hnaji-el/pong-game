@@ -5,10 +5,12 @@ import { Link } from "react-router-dom";
 import friendPicture from "../assets/friend.jpg";
 import { PointsIcon, SettingsIcon } from "./Icons";
 import CircleAchievements from "./CircleAchievements";
-import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { ActiveProfile } from "../pages/Profile/Profile";
 import { ActiveProfileUser } from "../pages/ProfileUser/ProfileUser";
 import { globalSocket } from "../utilities/socket";
+import VisuallyHidden from "./VisuallyHidden";
+import Dropdown from "./Dropdown/Dropdown";
+import useToggle from "../hooks/use-toggle";
 
 interface TypeCardProfile {
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -164,7 +166,16 @@ export function CardAchievments() {
 }
 
 export function CardUser({ data }: TypedataFriend) {
+  const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
   const dataUser = useContext(ActiveProfileUser);
+
+  function handleInviteToPlay() {
+    globalSocket.emit("inviteToPlay", {
+      sender: dataUser.settings,
+      receiverId: data.id,
+    });
+  }
+
   return (
     <div className="flex w-full items-center justify-between rounded-xl bg-body p-4 shadow lg:w-[30.8%]">
       {data.id === dataUser.settings.id ? (
@@ -198,26 +209,26 @@ export function CardUser({ data }: TypedataFriend) {
           </span>
         </Link>
       )}
-      {data.id !== dataUser.settings.id ? (
-        <Menu>
-          <MenuButton className="flex h-4 w-4 items-center justify-center rounded-full bg-shape p-1 hover:bg-backgroundHover">
-            <PointsIcon edit="w-2 h-2 fill-secondaryText" />
-          </MenuButton>
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            <MenuItem
-              className="flex items-center justify-center gap-2 px-3 py-2 font-light hover:bg-backgroundHover"
-              onClick={() => {
-                globalSocket.emit("inviteToPlay", {
-                  sender: dataUser.settings,
-                  receiverId: data.id,
-                });
-              }}
-            >
-              Invite to play
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      ) : null}
+
+      {data.id !== dataUser.settings.id && (
+        <Dropdown
+          className="right-0 top-full translate-y-[8px]"
+          isOpen={isDropdownOpen}
+          toggleIsOpen={toggleIsDropdownOpen}
+          options={[{ label: "invite to play" }]}
+          handleSelect={(option) => {
+            if (option === "invite to play") handleInviteToPlay();
+          }}
+        >
+          <button
+            className="flex h-7 w-7 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
+            onClick={toggleIsDropdownOpen}
+          >
+            <PointsIcon edit="w-3 h-3 fill-secondaryText" />
+            <VisuallyHidden>Show more actions</VisuallyHidden>
+          </button>
+        </Dropdown>
+      )}
     </div>
   );
 }

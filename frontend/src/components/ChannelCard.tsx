@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
-
 import { LockIcon, PointsIcon } from "./Icons";
 import VisuallyHidden from "./VisuallyHidden";
+import Dropdown from "./Dropdown/Dropdown";
+import useToggle from "../hooks/use-toggle";
 
 interface PropsType {
   title: string;
@@ -28,6 +28,16 @@ function ChannelCard({
   handleDeleteClick,
   handleLeaveClick,
 }: PropsType) {
+  const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
+
+  const options = [{ label: "leave" }];
+  if (isOwner) options.unshift({ label: "delete" });
+
+  function handleSelect(option: string) {
+    if (option === "delete") handleDeleteClick();
+    if (option === "leave") handleLeaveClick();
+  }
+
   return (
     <div
       className={`flex border-b-[1px] border-b-backgroundHover px-3 hover:bg-backgroundHover lg:px-2 ${
@@ -52,28 +62,21 @@ function ChannelCard({
       </button>
 
       {isJoined && (
-        <Menu>
-          <MenuButton className="group flex items-center justify-center rounded-full p-0">
+        <Dropdown
+          className="right-0 top-[80%]"
+          isOpen={isDropdownOpen}
+          toggleIsOpen={toggleIsDropdownOpen}
+          options={options}
+          handleSelect={handleSelect}
+        >
+          <button
+            className="flex h-full items-center justify-center rounded-full"
+            onClick={toggleIsDropdownOpen}
+          >
             <PointsIcon edit="w-3 h-3 fill-secondaryText" />
             <VisuallyHidden>Show more actions</VisuallyHidden>
-          </MenuButton>
-          <MenuList className="list-dropdown right-0 flex w-36 cursor-default flex-col gap-2 rounded-md bg-body py-5 text-sm text-primaryText shadow">
-            {isOwner && (
-              <MenuItem
-                className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-                onClick={handleDeleteClick}
-              >
-                delete
-              </MenuItem>
-            )}
-            <MenuItem
-              className="flex items-center gap-2 px-3 py-2 capitalize hover:bg-backgroundHover"
-              onClick={handleLeaveClick}
-            >
-              leave
-            </MenuItem>
-          </MenuList>
-        </Menu>
+          </button>
+        </Dropdown>
       )}
 
       {!isJoined && isProtected && (

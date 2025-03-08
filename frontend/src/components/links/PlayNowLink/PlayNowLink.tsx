@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import { ControllerIcon } from "../Icons";
+import { ControllerIcon } from "../../Icons";
 
 function PlayNowLink() {
   return (

@@ -64,11 +64,11 @@ function Header({
         />
       ) : (
         <ChannelEditCard
-          chatDataBox={chatDataBox}
-          loggedUserData={loggedUserData}
-          name={chatDataBox.name}
-          type={chatDataBox.type}
+          channelId={chatDataBox.id}
+          channelName={chatDataBox.name}
+          channelType={chatDataBox.type}
           loggedUserRole={chatDataBox.role}
+          loggedUserData={loggedUserData}
           handleArrowLeftClick={() => setClick(false)}
         />
       )}

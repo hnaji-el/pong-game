@@ -6,25 +6,24 @@ import VisuallyHidden from "./VisuallyHidden";
 import Modal from "./Modal/Modal";
 import MembersModal from "./modals/MembersModal";
 import useToggle from "../hooks/use-toggle";
-import { ChannelType } from "../pages/Chat/types";
 import { UserType } from "../api/types";
 import AddMemberModal from "./modals/AddMemberModal";
 
 interface PropsType {
-  chatDataBox: ChannelType;
-  loggedUserData: UserType;
-  name: string;
-  type: string;
+  channelId: string;
+  channelName: string;
+  channelType: string;
   loggedUserRole: string;
+  loggedUserData: UserType;
   handleArrowLeftClick: () => void;
 }
 
 function ChannelEditCard({
-  chatDataBox,
-  loggedUserData,
-  name,
-  type,
+  channelId,
+  channelName,
+  channelType,
   loggedUserRole,
+  loggedUserData,
   handleArrowLeftClick,
 }: PropsType) {
   const [isMembersModalOpen, toggleIsMembersModalOpen] = useToggle(false);
@@ -35,7 +34,8 @@ function ChannelEditCard({
       {isMembersModalOpen && (
         <Modal title="members" handleDismiss={toggleIsMembersModalOpen}>
           <MembersModal
-            chatDataBox={chatDataBox}
+            channelId={channelId}
+            loggedUserRole={loggedUserRole}
             loggedUserData={loggedUserData}
           />
         </Modal>
@@ -43,7 +43,7 @@ function ChannelEditCard({
 
       {isAddMemberModalOpen && (
         <Modal title="add member" handleDismiss={toggleIsAddMemberModalOpen}>
-          <AddMemberModal chatDataBox={chatDataBox} />
+          <AddMemberModal channelId={channelId} channelType={channelType} />
         </Modal>
       )}
 
@@ -53,11 +53,11 @@ function ChannelEditCard({
         <div className="flex w-full items-center gap-2">
           <div className="flex w-full items-center justify-between lg:justify-start lg:gap-4">
             <span className="max-w-sm overflow-hidden text-ellipsis whitespace-nowrap text-[1.1rem] capitalize text-primaryText">
-              {name}
+              {channelName}
             </span>
             <div className="flex items-center gap-4">
               {(loggedUserRole === "OWNER" || loggedUserRole === "ADMIN") &&
-                type !== "PROTECTED" && (
+                channelType !== "PROTECTED" && (
                   <button
                     className="flex h-10 w-10 items-center justify-center rounded-full bg-shape hover:bg-backgroundHover"
                     onClick={toggleIsAddMemberModalOpen}

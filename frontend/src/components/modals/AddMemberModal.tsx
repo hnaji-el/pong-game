@@ -5,16 +5,19 @@ import { ExclamationIcon } from "../Icons";
 import Spinner from "../Spinner";
 import { addMember, useChannelNonMemberFriends } from "../../api/API";
 
-import { ChannelType } from "../../pages/Chat/types";
+interface PropsType {
+  channelId: string;
+  channelType: string;
+}
 
-function AddMemberModal({ chatDataBox }: { chatDataBox: ChannelType }) {
+function AddMemberModal({ channelId, channelType }: PropsType) {
   const [isLoading, nonMemberFriends, setNonMemberFriends] =
-    useChannelNonMemberFriends(chatDataBox.id);
+    useChannelNonMemberFriends(channelId);
 
   async function handleAddMember(userId: string, index: number) {
     await addMember({
-      channelId: chatDataBox.id,
-      channelType: chatDataBox.type,
+      channelId: channelId,
+      channelType: channelType,
       userId,
     });
 

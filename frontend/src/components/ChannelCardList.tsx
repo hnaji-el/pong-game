@@ -36,28 +36,28 @@ function ChannelCardList({
       setClick(true);
       setChannelIndex(index);
       setChatDataBox(channels[index]);
-    }
+    } else {
+      if (channelData.type === "PROTECTED") {
+        setChannelIndex(index);
+        toggleIsPasswordModalOpen();
+      }
 
-    if (!channelData.isJoined && channelData.type === "PROTECTED") {
-      setChannelIndex(index);
-      toggleIsPasswordModalOpen();
-    }
-
-    if (!channelData.isJoined && channelData.type === "PUBLIC") {
-      joinChannel(
-        (chnlData: ChannelType) => {
-          setClick(true);
-          setChannelIndex(index);
-          setChatDataBox(chnlData);
-          getAllChannels((chnlsData: ChannelType[]) => {
-            setChannels(chnlsData);
-          });
-        },
-        {
-          id: channelData.id,
-          type: "PUBLIC",
-        },
-      );
+      if (channelData.type === "PUBLIC") {
+        joinChannel(
+          (chnlData: ChannelType) => {
+            setClick(true);
+            setChannelIndex(index);
+            setChatDataBox(chnlData);
+            getAllChannels((chnlsData: ChannelType[]) => {
+              setChannels(chnlsData);
+            });
+          },
+          {
+            id: channelData.id,
+            type: "PUBLIC",
+          },
+        );
+      }
     }
   }
 

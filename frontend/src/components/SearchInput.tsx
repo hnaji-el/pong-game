@@ -37,14 +37,21 @@ export default function SearchInput({
         setData(res);
       });
     }
-    document.addEventListener("click", (e) => {
+
+    function handleClick(event: MouseEvent) {
       if (
         refDropDown.current &&
         dropdown &&
-        !refDropDown.current.contains(e.target as HTMLDivElement)
+        !refDropDown.current.contains(event.target as HTMLDivElement)
       )
         setDropdown(false);
-    });
+    }
+
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
   }, [dropdown]);
 
   return (

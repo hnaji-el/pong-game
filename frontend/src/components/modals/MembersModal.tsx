@@ -12,16 +12,20 @@ import {
 } from "../../api/API";
 
 import { UserType } from "../../api/types";
-import { ChannelType } from "../../pages/Chat/types";
 import { globalSocket } from "../../utilities/socket";
 
 interface PropsType {
-  chatDataBox: ChannelType;
+  channelId: string;
+  loggedUserRole: string;
   loggedUserData: UserType;
 }
 
-function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
-  const [isLoading, members, setMembers] = useChannelMembers(chatDataBox.id);
+function MembersModal({
+  channelId,
+  loggedUserRole,
+  loggedUserData,
+}: PropsType) {
+  const [isLoading, members, setMembers] = useChannelMembers(channelId);
 
   function handleInviteToPlay(memberId: string) {
     globalSocket.emit("inviteToPlay", {
@@ -32,7 +36,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
 
   async function handleSetAdmin(memberId: string, index: number) {
     await setAdmin({
-      channelId: chatDataBox.id,
+      channelId: channelId,
       memberId,
     });
 
@@ -43,7 +47,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
 
   async function handleBlockMember(memberId: string, index: number) {
     await blockMember({
-      channelId: chatDataBox.id,
+      channelId: channelId,
       memberId,
     });
 
@@ -54,7 +58,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
 
   async function handleUnblockMember(memberId: string, index: number) {
     await unblockMember({
-      channelId: chatDataBox.id,
+      channelId: channelId,
       memberId,
     });
 
@@ -65,7 +69,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
 
   async function handleKickMember(memberId: string, index: number) {
     await kickMember({
-      channelId: chatDataBox.id,
+      channelId: channelId,
       memberId,
     });
 
@@ -97,7 +101,7 @@ function MembersModal({ chatDataBox, loggedUserData }: PropsType) {
         <MemberCard
           key={member.id}
           member={member}
-          loggedUserRole={chatDataBox.role}
+          loggedUserRole={loggedUserRole}
           handleInviteToPlay={() => handleInviteToPlay(member.id)}
           handleSetAdmin={() => handleSetAdmin(member.id, index)}
           handleBlockMember={() => handleBlockMember(member.id, index)}

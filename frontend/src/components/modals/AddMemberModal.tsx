@@ -4,10 +4,11 @@ import FriendCard from "../FriendCard";
 import { ExclamationIcon } from "../Icons";
 import Spinner from "../Spinner";
 import { addMember, useChannelNonMemberFriends } from "../../api/API";
+import { ChannelType_ } from "../../pages/Chat/types";
 
 interface PropsType {
   channelId: string;
-  channelType: string;
+  channelType: ChannelType_;
 }
 
 function AddMemberModal({ channelId, channelType }: PropsType) {

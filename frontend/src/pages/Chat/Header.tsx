@@ -1,31 +1,34 @@
 import React from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import PlayNowLink from "../../components/links/PlayNowLink/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { logout } from "../../api/API";
-import { UserType } from "../../api/types";
-import useToggle from "../../hooks/use-toggle";
 import SettingsButton from "../../components/buttons/SettingsButton/SettingsButton";
 import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
 import { LuLogOut as LogoutIcon } from "react-icons/lu";
 import Modal from "../../components/Modal/Modal";
 import SettingsModal from "../../components/modals/SettingsModal";
+import useToggle from "../../hooks/use-toggle";
+import { UserType } from "../../api/types";
+import { Rooms, Status } from "./types";
 
 interface PropsType {
+  rooms: Rooms;
+  roomsStatus: Status;
   isDm: boolean;
-  chatDataBox: any;
   loggedUserData: UserType;
   setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Header({
+  rooms,
+  roomsStatus,
   isDm,
-  chatDataBox,
   loggedUserData,
   setLoggedUserData,
   setClick,
@@ -33,7 +36,11 @@ function Header({
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
   const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
 
+  const { chatId } = useParams();
   const navigate = useNavigate();
+
+  const dm = rooms.dms.find((element) => element.id === chatId);
+  const channel = rooms.channels.find((element) => element.id === chatId);
 
   async function handleLogout() {
     await logout();
@@ -52,26 +59,26 @@ function Header({
         </Modal>
       )}
 
-      {!chatDataBox ? (
+      {roomsStatus !== "success" || !chatId ? (
         <div className="flex grow"></div>
-      ) : isDm ? (
+      ) : isDm && dm ? (
         <UserCard
-          id={chatDataBox.id}
-          nickname={chatDataBox.nickname}
-          avatar={chatDataBox.pictureURL}
-          isOnline={chatDataBox.status === "online"}
+          id={dm.userId}
+          nickname={dm.nickname}
+          avatar={dm.pictureURL}
+          isOnline={dm.isOnline}
           handleArrowLeftClick={() => setClick(false)}
         />
-      ) : (
+      ) : !isDm && channel ? (
         <ChannelEditCard
-          channelId={chatDataBox.id}
-          channelName={chatDataBox.name}
-          channelType={chatDataBox.type}
-          loggedUserRole={chatDataBox.role}
+          channelId={channel.id}
+          channelName={channel.name}
+          channelType={channel.type}
+          loggedUserRole={channel.role}
           loggedUserData={loggedUserData}
           handleArrowLeftClick={() => setClick(false)}
         />
-      )}
+      ) : null}
 
       <div className="hidden lg:flex lg:items-center lg:gap-5">
         <PlayNowLink />

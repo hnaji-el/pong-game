@@ -4,14 +4,14 @@ import VisuallyHidden from "./VisuallyHidden";
 import RoleTag from "./RoleTag";
 import { PointsIcon } from "./Icons";
 
-import { MemberType } from "../pages/Chat/types";
+import { MemberType, UserRole } from "../pages/Chat/types";
 import StatusTag from "./StatusTag";
 import Dropdown from "./Dropdown/Dropdown";
 import useToggle from "../hooks/use-toggle";
 
 interface PropsType {
   member: MemberType;
-  loggedUserRole: string;
+  loggedUserRole: UserRole;
   handleInviteToPlay: () => void;
   handleSetAdmin: () => void;
   handleBlockMember: () => void;

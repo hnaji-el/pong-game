@@ -13,10 +13,11 @@ import {
 
 import { UserType } from "../../api/types";
 import { globalSocket } from "../../utilities/socket";
+import { UserRole } from "../../pages/Chat/types";
 
 interface PropsType {
   channelId: string;
-  loggedUserRole: string;
+  loggedUserRole: UserRole;
   loggedUserData: UserType;
 }
 

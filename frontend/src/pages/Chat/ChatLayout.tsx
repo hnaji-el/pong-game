@@ -7,7 +7,7 @@ import Header from "./Header";
 import SideNavBar from "./SideNavBar";
 import Footer from "./Footer";
 import Spinner from "../../components/Spinner";
-import { DmType, ChannelType, Rooms } from "./types";
+import { DmType, ChannelType, Rooms, Status } from "./types";
 import { UserType } from "../../api/types";
 import {
   useVerifyUserAuthenticity,
@@ -54,8 +54,8 @@ function ChatLayout() {
   // error: 4xx, 5xx [ 401 Unauthorized, 500 Internal Server Error ]
 
   const [isDm, setIsDm] = React.useState(true);
-  const [roomsStatus, setRoomsStatus] = React.useState("idle"); // 'idle' | 'loading' | 'success' | 'error'
   const [rooms, setRooms] = React.useState<Rooms>({ dms: [], channels: [] });
+  const [roomsStatus, setRoomsStatus] = React.useState<Status>("idle");
 
   React.useEffect(() => {
     const fetcher = async () => {
@@ -147,8 +147,9 @@ function ChatLayout() {
         className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
       >
         <Header
+          rooms={rooms}
+          roomsStatus={roomsStatus}
           isDm={isDm}
-          chatDataBox={chatDataBox}
           loggedUserData={loggedUserData}
           setLoggedUserData={setLoggedUserData}
           setClick={setClick}

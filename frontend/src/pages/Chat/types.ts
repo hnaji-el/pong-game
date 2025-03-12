@@ -1,6 +1,9 @@
 export type UserRole = "OWNER" | "ADMIN" | "MEMBER" | "BLOCKED" | "NONE";
 
+// we will change it with ChannelType after removing ChannelType
 export type ChannelType_ = "PUBLIC" | "PROTECTED" | "PRIVATE";
+
+export type Status = "idle" | "loading" | "success" | "error";
 
 export interface Dm {
   id: string;

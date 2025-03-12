@@ -246,7 +246,7 @@ export async function CreateChannel(getRes: any, data: any) {
 }
 
 export function joinChannel(
-  getRes: (channelData: ChannelType) => void,
+  getRes: (channelData?: ChannelType) => void,
   data: {
     id: string;
     type: string;

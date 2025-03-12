@@ -7,54 +7,33 @@ import DmCardList from "../../components/DmCardList";
 import Button from "../../components/buttons/Button/Button";
 import VisuallyHidden from "../../components/VisuallyHidden";
 import logo from "../../assets/logo.svg";
-import { getAllChannels, getAllDms } from "../../api/API";
 
-import { ChannelType, DmType } from "./types";
 import { UserType } from "../../api/types";
+import { Rooms } from "./types";
 
 interface PropsType {
-  loggedUserData: UserType;
-  setChatDataBox: React.Dispatch<React.SetStateAction<any>>;
+  rooms: Rooms;
+  isLoading: boolean;
   isDm: boolean;
   setIsDm: React.Dispatch<React.SetStateAction<boolean>>;
-  dmIndex: number;
-  setDmIndex: React.Dispatch<React.SetStateAction<number>>;
-  channelIndex: number;
-  setChannelIndex: React.Dispatch<React.SetStateAction<number>>;
-  dms: DmType[];
-  setDms: React.Dispatch<React.SetStateAction<DmType[]>>;
-  channels: ChannelType[];
-  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
+  loggedUserData: UserType;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function SideNavBar({
-  loggedUserData,
-  setChatDataBox,
+  rooms,
+  isLoading,
   isDm,
   setIsDm,
-  dmIndex,
-  setDmIndex,
-  channelIndex,
-  setChannelIndex,
-  dms,
-  setDms,
-  channels,
-  setChannels,
+  loggedUserData,
   setClick,
 }: PropsType) {
   function handleDmsButtonClick() {
     setIsDm(true);
-    getAllDms((res: DmType[]) => {
-      setDms(res);
-    });
   }
 
   function handleChannelsButtonClick() {
     setIsDm(false);
-    getAllChannels((res: ChannelType[]) => {
-      setChannels(res);
-    });
   }
 
   return (
@@ -76,21 +55,15 @@ function SideNavBar({
 
         {isDm ? (
           <DmCardList
+            dms={rooms.dms}
+            isLoading={isLoading}
             loggedUserData={loggedUserData}
-            setChatDataBox={setChatDataBox}
-            dmIndex={dmIndex}
-            setDmIndex={setDmIndex}
-            dms={dms}
-            setDms={setDms}
             setClick={setClick}
           />
         ) : (
           <ChannelCardList
-            setChatDataBox={setChatDataBox}
-            channels={channels}
-            setChannels={setChannels}
-            channelIndex={channelIndex}
-            setChannelIndex={setChannelIndex}
+            channels={rooms.channels}
+            isLoading={isLoading}
             setClick={setClick}
           />
         )}

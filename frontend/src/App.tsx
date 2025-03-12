@@ -8,12 +8,14 @@ import { popOutFunc } from "./components/eventListener";
 import Login from "./pages/Login/Login";
 import Edit from "./pages/Edit/Edit";
 import Home from "./pages/Home/Home";
-import Chat from "./pages/Chat/Chat";
+import ChatLayout from "./pages/Chat/ChatLayout";
 import Profile from "./pages/Profile/Profile";
 import ProfileUser from "./pages/ProfileUser/ProfileUser";
 import Game from "./pages/Game/Game";
 import Tfa from "./pages/Tfa/Tfa";
 import NotFound from "./pages/NotFound/NotFound";
+import SideNavBar from "./pages/Chat/SideNavBar";
+import MainContent from "./pages/Chat/MainContent";
 
 function App() {
   const navigate = useNavigate();
@@ -45,15 +47,17 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route path="/login" element={<Login />} caseSensitive />
-      <Route path="/edit" element={<Edit />} caseSensitive />
-      <Route path="/tfa" element={<Tfa />} caseSensitive />
-      <Route path="/home" element={<Home />} caseSensitive />
-      <Route path="/chat" element={<Chat />} caseSensitive />
-      <Route path="/profile" element={<Profile />} caseSensitive />
-      <Route path="/profile-user" element={<ProfileUser />} caseSensitive />
-      <Route path="/game" element={<Game />} caseSensitive />
-      <Route path="*" element={<NotFound />} caseSensitive />
+      <Route path="/login" element={<Login />} />
+      <Route path="/edit" element={<Edit />} />
+      <Route path="/tfa" element={<Tfa />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/chat" element={<ChatLayout />} >
+        <Route path=":chatId" element={<MainContent />} />
+      </Route>
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile-user" element={<ProfileUser />} />
+      <Route path="/game" element={<Game />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

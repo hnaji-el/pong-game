@@ -1,27 +1,18 @@
 import React from "react";
 
+import { useParams } from "react-router-dom";
+
 import InputPasswordForm from "../inputs/InputPasswordForm";
 import { getAllChannels, joinChannel } from "../../api/API";
-
 import { ChannelType } from "../../pages/Chat/types";
 
 interface PropsType {
-  setChatDataBox: React.Dispatch<React.SetStateAction<ChannelType>>;
-  channels: ChannelType[];
-  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
-  channelIndex: number;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   handleDismiss: () => void;
 }
 
-function PasswordModal({
-  setChatDataBox,
-  channels,
-  setChannels,
-  channelIndex,
-  setClick,
-  handleDismiss,
-}: PropsType) {
+function PasswordModal({ setClick, handleDismiss }: PropsType) {
+  const { chatId } = useParams();
   const [errorPassword, setErrorPassowrd] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -34,23 +25,20 @@ function PasswordModal({
     }
 
     joinChannel(
-      (chnlData: ChannelType) => {
-        if (!chnlData.isPasswordValid) {
+      (chnlData?: ChannelType) => {
+        if (!chnlData?.isPasswordValid) {
           setErrorPassowrd("Password incorrect");
           return;
         } else {
           setClick(true);
-          setChatDataBox(chnlData);
-          console.log(chnlData);
           getAllChannels((chnlsData: ChannelType[]) => {
-            setChannels(chnlsData);
             handleDismiss();
             document.body.style.overflow = "auto";
           });
         }
       },
       {
-        id: channels[channelIndex].id,
+        id: chatId as string,
         type: "PROTECTED",
         password: password,
       },

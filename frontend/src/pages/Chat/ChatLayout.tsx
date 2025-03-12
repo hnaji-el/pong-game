@@ -1,14 +1,13 @@
 import React from "react";
 
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Header from "./Header";
-import MainContent from "./MainContent";
 import SideNavBar from "./SideNavBar";
 import Footer from "./Footer";
 import Spinner from "../../components/Spinner";
-import { DmType, ChannelType } from "./types";
+import { DmType, ChannelType, Rooms } from "./types";
 import { UserType } from "../../api/types";
 import {
   useVerifyUserAuthenticity,
@@ -25,7 +24,7 @@ const socket = io(DOMAIN, {
   withCredentials: true,
 });
 
-function Chat() {
+function ChatLayout() {
   const status = useVerifyUserAuthenticity();
   const [loggedUserData, setLoggedUserData] = React.useState<UserType>({
     id: "",
@@ -35,7 +34,6 @@ function Chat() {
     status: "",
     isTwoFactorAuthEnabled: false,
   });
-  const [isDm, setIsDm] = React.useState(true);
   const [dms, setDms] = React.useState<DmType[]>([]);
   const [channels, setChannels] = React.useState<ChannelType[]>([]);
   const [chatDataBox, setChatDataBox] = React.useState<any>();
@@ -44,6 +42,50 @@ function Chat() {
   const [click, setClick] = React.useState(false);
 
   const navigate = useNavigate();
+
+  // rooms: dms { DM } + channels { PUBLIC | PRIVATE | PROTECTED }
+
+  // API: GET /chat/rooms?type=dm (?type=channel)
+  // payload : {
+  //   dms: { id: string, nickname: string, pictureURL: string, isOnline: boolean }[],
+  //   channels: { id: string, name: string, type: string, role: string, isJoined: boolean }[],
+  // }
+  // success: 200 Ok
+  // error: 4xx, 5xx [ 401 Unauthorized, 500 Internal Server Error ]
+
+  const [isDm, setIsDm] = React.useState(true);
+  const [roomsStatus, setRoomsStatus] = React.useState("idle"); // 'idle' | 'loading' | 'success' | 'error'
+  const [rooms, setRooms] = React.useState<Rooms>({ dms: [], channels: [] });
+
+  React.useEffect(() => {
+    const fetcher = async () => {
+      try {
+        setRoomsStatus("loading");
+        const res = await fetch(
+          `http://localhost:5000/chat/rooms?type=${isDm ? "dm" : "channel"}`,
+          { credentials: "include" },
+        );
+
+        const body = await res.json();
+
+        if (res.ok) {
+          setRoomsStatus("success");
+          setRooms(body);
+        } else {
+          setRoomsStatus("error");
+          res.status === 401
+            ? navigate("/login")
+            : window.alert("Something Went Wrong");
+        }
+      } catch (err) {
+        const error = err as Error;
+        setRoomsStatus("error");
+        window.alert(error.message);
+      }
+    };
+
+    fetcher();
+  }, [isDm, navigate]);
 
   React.useEffect(() => {
     document.title = "Pong - Messages";
@@ -112,16 +154,16 @@ function Chat() {
           setClick={setClick}
         />
 
-        {chatDataBox && (
-          <MainContent
-            chatDataBox={chatDataBox}
-            loggedUserData={loggedUserData}
-            isDm={isDm}
-            setDms={setDms}
-            setChannels={setChannels}
-            socket={socket}
-          />
-        )}
+        <Outlet
+          context={{
+            chatDataBox: chatDataBox,
+            loggedUserData: loggedUserData,
+            isDm: isDm,
+            setDms: setDms,
+            setChannels: setChannels,
+            socket: socket,
+          }}
+        />
       </div>
 
       <div
@@ -130,18 +172,11 @@ function Chat() {
         } `}
       >
         <SideNavBar
-          loggedUserData={loggedUserData}
-          setChatDataBox={setChatDataBox}
+          rooms={rooms}
+          isLoading={roomsStatus === "loading"}
           isDm={isDm}
           setIsDm={setIsDm}
-          dmIndex={dmIndex}
-          setDmIndex={setDmIndex}
-          channelIndex={channelIndex}
-          setChannelIndex={setChannelIndex}
-          dms={dms}
-          setDms={setDms}
-          channels={channels}
-          setChannels={setChannels}
+          loggedUserData={loggedUserData}
           setClick={setClick}
         />
 
@@ -154,4 +189,4 @@ function Chat() {
   );
 }
 
-export default Chat;
+export default ChatLayout;

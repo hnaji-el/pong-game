@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useOutletContext } from "react-router-dom";
+
 import Messages from "./Messages";
 import VisuallyHidden from "../../components/VisuallyHidden";
 import { SendIcon } from "../../components/Icons";
@@ -9,7 +11,7 @@ import { ChannelType, DmType } from "./types";
 import { Socket } from "socket.io-client";
 import { UserType } from "../../api/types";
 
-interface PropsType {
+interface ContextType {
   chatDataBox: any;
   loggedUserData: UserType;
   isDm: boolean;
@@ -18,16 +20,11 @@ interface PropsType {
   socket: Socket;
 }
 
-function MainContent({
-  chatDataBox,
-  loggedUserData,
-  isDm,
-  setDms,
-  setChannels,
-  socket,
-}: PropsType) {
+function MainContent() {
   const [message, setMessage] = React.useState("");
   const id = React.useId();
+  const { chatDataBox, loggedUserData, isDm, setDms, setChannels, socket } =
+    useOutletContext<ContextType>();
 
   const inputId = `${id}-message`;
 

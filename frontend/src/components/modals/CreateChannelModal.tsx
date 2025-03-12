@@ -8,7 +8,6 @@ import { CheckIcon } from "../Icons";
 import { ChannelType } from "../../pages/Chat/types";
 
 interface CreateChannelModalPropsType {
-  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
   handleDismiss: () => void;
 }
 
@@ -18,10 +17,7 @@ interface ButtonPropsType {
   children: React.ReactNode;
 }
 
-function CreateChannelModal({
-  setChannels,
-  handleDismiss,
-}: CreateChannelModalPropsType) {
+function CreateChannelModal({ handleDismiss }: CreateChannelModalPropsType) {
   const [type, setType] = React.useState<"PUBLIC" | "PRIVATE" | "PROTECTED">(
     "PUBLIC",
   );
@@ -46,14 +42,10 @@ function CreateChannelModal({
         </Button>
       </div>
 
-      {type === "PUBLIC" && (
-        <PublicChannel setChannels={setChannels} handleDismiss={handleDismiss} />
-      )}
-      {type === "PRIVATE" && (
-        <PrivateChannel setChannels={setChannels} handleDismiss={handleDismiss} />
-      )}
+      {type === "PUBLIC" && <PublicChannel handleDismiss={handleDismiss} />}
+      {type === "PRIVATE" && <PrivateChannel handleDismiss={handleDismiss} />}
       {type === "PROTECTED" && (
-        <ProtectedChannel setChannels={setChannels} handleDismiss={handleDismiss} />
+        <ProtectedChannel handleDismiss={handleDismiss} />
       )}
     </div>
   );

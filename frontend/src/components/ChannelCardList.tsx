@@ -2,55 +2,38 @@ import React from "react";
 
 import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
-import { deleteRoom, getAllChannels, joinChannel, leaveRoom } from "../api/API";
-
-import { ChannelType } from "../pages/Chat/types";
+import { deleteRoom, joinChannel, leaveRoom } from "../api/API";
+import { Channel } from "../pages/Chat/types";
 import Modal from "../components/Modal/Modal";
 import useToggle from "../hooks/use-toggle";
 import CreateChannelModal from "./modals/CreateChannelModal";
 import PasswordModal from "./modals/PasswordModal";
+import { useParams } from "react-router-dom";
 
 interface PropsType {
-  setChatDataBox: React.Dispatch<React.SetStateAction<ChannelType>>;
-  channels: ChannelType[];
-  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
-  channelIndex: number;
-  setChannelIndex: React.Dispatch<React.SetStateAction<number>>;
+  channels: Channel[];
+  isLoading: boolean;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ChannelCardList({
-  setChatDataBox,
-  channels,
-  setChannels,
-  channelIndex,
-  setChannelIndex,
-  setClick,
-}: PropsType) {
+function ChannelCardList({ channels, isLoading, setClick }: PropsType) {
+  const { chatId } = useParams();
   const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
     useToggle(false);
   const [isPasswordModalOpen, toggleIsPasswordModalOpen] = useToggle(false);
 
-  function handleCardClick(channelData: ChannelType, index: number) {
+  function handleCardClick(channelData: Channel) {
     if (channelData.isJoined) {
       setClick(true);
-      setChannelIndex(index);
-      setChatDataBox(channels[index]);
     } else {
       if (channelData.type === "PROTECTED") {
-        setChannelIndex(index);
         toggleIsPasswordModalOpen();
       }
 
       if (channelData.type === "PUBLIC") {
         joinChannel(
-          (chnlData: ChannelType) => {
+          () => {
             setClick(true);
-            setChannelIndex(index);
-            setChatDataBox(chnlData);
-            getAllChannels((chnlsData: ChannelType[]) => {
-              setChannels(chnlsData);
-            });
           },
           {
             id: channelData.id,
@@ -61,18 +44,12 @@ function ChannelCardList({
     }
   }
 
-  async function handleDeleteClick(channelData: ChannelType) {
+  async function handleDeleteClick(channelData: Channel) {
     await deleteRoom(channelData.name);
-    getAllChannels((chnlsData: ChannelType[]) => {
-      setChannels(chnlsData);
-    });
   }
 
-  async function handleLeaveClick(channelData: ChannelType) {
+  async function handleLeaveClick(channelData: Channel) {
     await leaveRoom(channelData.name);
-    getAllChannels((chnlsData: ChannelType[]) => {
-      setChannels(chnlsData);
-    });
   }
 
   return (
@@ -82,20 +59,13 @@ function ChannelCardList({
           title="create channel"
           handleDismiss={toggleIsCreateChannelModalOpen}
         >
-          <CreateChannelModal
-            setChannels={setChannels}
-            handleDismiss={toggleIsCreateChannelModalOpen}
-          />
+          <CreateChannelModal handleDismiss={toggleIsCreateChannelModalOpen} />
         </Modal>
       )}
 
       {isPasswordModalOpen && (
         <Modal title="password" handleDismiss={toggleIsPasswordModalOpen}>
           <PasswordModal
-            setChatDataBox={setChatDataBox}
-            channels={channels}
-            setChannels={setChannels}
-            channelIndex={channelIndex}
             setClick={setClick}
             handleDismiss={toggleIsPasswordModalOpen}
           />
@@ -115,26 +85,32 @@ function ChannelCardList({
           </button>
         </div>
 
-        {channels.length ? (
-          <div className="flex grow flex-col overflow-auto">
-            {channels.map((channel, index) => (
-              <ChannelCard
-                key={channel.id}
-                title={channel.name}
-                isLabeled={channel.type === "PRIVATE"}
-                isHovered={index === channelIndex}
-                isJoined={channel.isJoined}
-                isOwner={channel.role === "OWNER"}
-                isProtected={channel.type === "PROTECTED"}
-                handleCardClick={() => handleCardClick(channel, index)}
-                handleDeleteClick={() => handleDeleteClick(channel)}
-                handleLeaveClick={() => handleLeaveClick(channel)}
-              />
-            ))}
-          </div>
+        {!isLoading ? (
+          channels.length ? (
+            <div className="flex grow flex-col overflow-auto">
+              {channels.map((channel) => (
+                <ChannelCard
+                  key={channel.id}
+                  title={channel.name}
+                  isLabeled={channel.type === "PRIVATE"}
+                  isHovered={channel.id === chatId}
+                  isJoined={channel.isJoined}
+                  isOwner={channel.role === "OWNER"}
+                  isProtected={channel.type === "PROTECTED"}
+                  handleCardClick={() => handleCardClick(channel)}
+                  handleDeleteClick={() => handleDeleteClick(channel)}
+                  handleLeaveClick={() => handleLeaveClick(channel)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+              No channels.
+            </div>
+          )
         ) : (
           <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-            No channels.
+            loading ...
           </div>
         )}
       </div>

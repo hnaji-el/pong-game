@@ -8,11 +8,10 @@ import { getAllChannels } from "../api/API";
 import { ChannelType } from "../pages/Chat/types";
 
 interface PropsType {
-  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
   handleDismiss: () => void;
 }
 
-function ProtectedChannel({ setChannels, handleDismiss }: PropsType) {
+function ProtectedChannel({ handleDismiss }: PropsType) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [errorPassword, setErrorPassowrd] = React.useState("");
@@ -41,7 +40,6 @@ function ProtectedChannel({ setChannels, handleDismiss }: PropsType) {
           setErrorMessage("Name already exists");
         } else {
           getAllChannels((channelsData: ChannelType[]) => {
-            setChannels(channelsData);
             handleDismiss();
             document.body.style.overflow = "auto";
           });

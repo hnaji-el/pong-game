@@ -1,34 +1,24 @@
 import React from "react";
 
-import DmCard from "./DmCard";
-import { blockFriend, getAllDms } from "../api/API";
+import { useParams } from "react-router-dom";
 
+import DmCard from "./DmCard";
+import { blockFriend } from "../api/API";
 import { globalSocket } from "../utilities/socket";
-import { DmType } from "../pages/Chat/types";
+import { Dm } from "../pages/Chat/types";
 import { UserType } from "../api/types";
 
 interface PropsType {
+  dms: Dm[];
+  isLoading: boolean;
   loggedUserData: UserType;
-  setChatDataBox: React.Dispatch<React.SetStateAction<DmType>>;
-  dmIndex: number;
-  setDmIndex: React.Dispatch<React.SetStateAction<number>>;
-  dms: DmType[];
-  setDms: React.Dispatch<React.SetStateAction<DmType[]>>;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function DmCardList({
-  loggedUserData,
-  setChatDataBox,
-  dmIndex,
-  setDmIndex,
-  dms,
-  setDms,
-  setClick,
-}: PropsType) {
-  function handleCardClick(index: number) {
-    setDmIndex(index);
-    setChatDataBox(dms[index]);
+function DmCardList({ dms, isLoading, loggedUserData, setClick }: PropsType) {
+  const { chatId } = useParams();
+
+  function handleCardClick() {
     setClick(true);
   }
 
@@ -41,28 +31,31 @@ function DmCardList({
 
   async function handleBlockClick(userId: string) {
     await blockFriend(userId);
-    getAllDms((dmsData: DmType[]) => {
-      setDms(dmsData);
-    });
   }
 
   return (
     <div className="flex grow flex-col gap-[24px] overflow-auto">
-      {dms.length ? (
-        dms.map((dm, index) => (
-          <DmCard
-            key={dm.id}
-            avatar={dm.pictureURL}
-            title={dm.nickname}
-            isHovered={index === dmIndex}
-            handleCardClick={() => handleCardClick(index)}
-            handleInviteToPlayClick={() => handleInviteToPlayClick(dm.id)}
-            handleBlockClick={() => handleBlockClick(dm.id)}
-          />
-        ))
+      {!isLoading ? (
+        dms.length ? (
+          dms.map((dm) => (
+            <DmCard
+              key={dm.id}
+              avatar={dm.pictureURL}
+              title={dm.nickname}
+              isHovered={dm.id === chatId}
+              handleCardClick={() => handleCardClick()}
+              handleInviteToPlayClick={() => handleInviteToPlayClick(dm.userId)}
+              handleBlockClick={() => handleBlockClick(dm.userId)}
+            />
+          ))
+        ) : (
+          <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+            No messages.
+          </div>
+        )
       ) : (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-          No messages.
+          loading ...
         </div>
       )}
     </div>

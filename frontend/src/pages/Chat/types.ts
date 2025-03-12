@@ -1,3 +1,30 @@
+export type UserRole = "OWNER" | "ADMIN" | "MEMBER" | "BLOCKED" | "NONE";
+
+export type ChannelType_ = "PUBLIC" | "PROTECTED" | "PRIVATE";
+
+export interface Dm {
+  id: string;
+  userId: string;
+  nickname: string;
+  pictureURL: string;
+  isOnline: boolean;
+}
+
+export interface Channel {
+  id: string;
+  name: string;
+  type: ChannelType_;
+  role: UserRole;
+  isJoined: boolean;
+}
+
+export interface Rooms {
+  dms: Dm[];
+  channels: Channel[];
+}
+
+////////////////////////////////////////////
+
 export interface Message {
   id: string;
   roomName: string;

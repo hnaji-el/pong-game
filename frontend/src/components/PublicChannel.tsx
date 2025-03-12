@@ -8,11 +8,10 @@ import { ExclamationIcon } from "./Icons";
 import { ChannelType } from "../pages/Chat/types";
 
 interface PropsType {
-  setChannels: React.Dispatch<React.SetStateAction<ChannelType[]>>;
   handleDismiss: () => void;
 }
 
-function PublicChannel({ setChannels, handleDismiss}: PropsType) {
+function PublicChannel({ handleDismiss }: PropsType) {
   const [value, setValue] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
 
@@ -30,7 +29,6 @@ function PublicChannel({ setChannels, handleDismiss}: PropsType) {
           setErrorMessage("Name already exists");
         } else {
           getAllChannels((channelsData: ChannelType[]) => {
-            setChannels(channelsData);
             handleDismiss();
             document.body.style.overflow = "auto";
           });

@@ -9,11 +9,11 @@ import VisuallyHidden from "../../components/VisuallyHidden";
 import logo from "../../assets/logo.svg";
 
 import { UserType } from "../../api/types";
-import { Rooms } from "./types";
+import { Rooms, Status } from "./types";
 
 interface PropsType {
   rooms: Rooms;
-  isLoading: boolean;
+  roomsStatus: Status;
   isDm: boolean;
   setIsDm: React.Dispatch<React.SetStateAction<boolean>>;
   loggedUserData: UserType;
@@ -22,7 +22,7 @@ interface PropsType {
 
 function SideNavBar({
   rooms,
-  isLoading,
+  roomsStatus,
   isDm,
   setIsDm,
   loggedUserData,
@@ -56,14 +56,14 @@ function SideNavBar({
         {isDm ? (
           <DmCardList
             dms={rooms.dms}
-            isLoading={isLoading}
+            roomsStatus={roomsStatus}
             loggedUserData={loggedUserData}
             setClick={setClick}
           />
         ) : (
           <ChannelCardList
             channels={rooms.channels}
-            isLoading={isLoading}
+            roomsStatus={roomsStatus}
             setClick={setClick}
           />
         )}

@@ -14,11 +14,10 @@ import Modal from "../../components/Modal/Modal";
 import SettingsModal from "../../components/modals/SettingsModal";
 import useToggle from "../../hooks/use-toggle";
 import { UserType } from "../../api/types";
-import { Rooms, Status } from "./types";
+import { Rooms } from "./types";
 
 interface PropsType {
   rooms: Rooms;
-  roomsStatus: Status;
   isDm: boolean;
   loggedUserData: UserType;
   setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
@@ -27,7 +26,6 @@ interface PropsType {
 
 function Header({
   rooms,
-  roomsStatus,
   isDm,
   loggedUserData,
   setLoggedUserData,
@@ -59,7 +57,7 @@ function Header({
         </Modal>
       )}
 
-      {roomsStatus !== "success" || !chatId ? (
+      {!chatId ? (
         <div className="flex grow"></div>
       ) : isDm && dm ? (
         <UserCard

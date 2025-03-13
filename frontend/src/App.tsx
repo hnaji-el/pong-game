@@ -14,8 +14,7 @@ import ProfileUser from "./pages/ProfileUser/ProfileUser";
 import Game from "./pages/Game/Game";
 import Tfa from "./pages/Tfa/Tfa";
 import NotFound from "./pages/NotFound/NotFound";
-import SideNavBar from "./pages/Chat/SideNavBar";
-import MainContent from "./pages/Chat/MainContent";
+import Chat from "./pages/Chat/Chat";
 
 function App() {
   const navigate = useNavigate();
@@ -51,8 +50,8 @@ function App() {
       <Route path="/edit" element={<Edit />} />
       <Route path="/tfa" element={<Tfa />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/chat" element={<ChatLayout />} >
-        <Route path=":chatId" element={<MainContent />} />
+      <Route path="/chat" element={<ChatLayout />}>
+        <Route path=":chatId" element={<Chat />} />
       </Route>
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile-user" element={<ProfileUser />} />

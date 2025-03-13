@@ -43,10 +43,8 @@ function ChatLayout() {
 
   const navigate = useNavigate();
 
-  // rooms: dms { DM } + channels { PUBLIC | PRIVATE | PROTECTED }
-
   // API: GET /chat/rooms?type=dm (?type=channel)
-  // payload : {
+  // payload: {
   //   dms: { id: string, nickname: string, pictureURL: string, isOnline: boolean }[],
   //   channels: { id: string, name: string, type: string, role: string, isJoined: boolean }[],
   // }
@@ -61,6 +59,7 @@ function ChatLayout() {
     const fetcher = async () => {
       try {
         setRoomsStatus("loading");
+
         const res = await fetch(
           `http://localhost:5000/chat/rooms?type=${isDm ? "dm" : "channel"}`,
           { credentials: "include" },
@@ -73,14 +72,10 @@ function ChatLayout() {
           setRooms(body);
         } else {
           setRoomsStatus("error");
-          res.status === 401
-            ? navigate("/login")
-            : window.alert("Something Went Wrong");
+          if (res.status === 401) navigate("/login");
         }
-      } catch (err) {
-        const error = err as Error;
+      } catch {
         setRoomsStatus("error");
-        window.alert(error.message);
       }
     };
 
@@ -148,7 +143,6 @@ function ChatLayout() {
       >
         <Header
           rooms={rooms}
-          roomsStatus={roomsStatus}
           isDm={isDm}
           loggedUserData={loggedUserData}
           setLoggedUserData={setLoggedUserData}
@@ -157,16 +151,12 @@ function ChatLayout() {
 
         <Outlet
           context={{
-            chatDataBox: chatDataBox,
-            loggedUserData: loggedUserData,
             isDm: isDm,
-            setDms: setDms,
-            setChannels: setChannels,
+            loggedUserData: loggedUserData,
             socket: socket,
           }}
         />
       </div>
-
       <div
         className={`h-full w-full flex-col pb-[12px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground 2xl:left-auto ${
           click ? "hidden" : "flex"
@@ -174,7 +164,7 @@ function ChatLayout() {
       >
         <SideNavBar
           rooms={rooms}
-          isLoading={roomsStatus === "loading"}
+          roomsStatus={roomsStatus}
           isDm={isDm}
           setIsDm={setIsDm}
           loggedUserData={loggedUserData}

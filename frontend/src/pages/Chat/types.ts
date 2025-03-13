@@ -26,15 +26,15 @@ export interface Rooms {
   channels: Channel[];
 }
 
-////////////////////////////////////////////
-
 export interface Message {
   id: string;
   roomName: string;
-  userId: string;
-  pictureURL: string;
+  ownerId: string;
+  ownerPictureURL: string;
   data: string;
 }
+
+////////////////////////////////////////////
 
 export interface DmType {
   id: string;

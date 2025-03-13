@@ -3,7 +3,7 @@ import React from "react";
 import ChannelCard from "./ChannelCard";
 import { PlusIcon } from "./Icons";
 import { deleteRoom, joinChannel, leaveRoom } from "../api/API";
-import { Channel } from "../pages/Chat/types";
+import { Channel, Status } from "../pages/Chat/types";
 import Modal from "../components/Modal/Modal";
 import useToggle from "../hooks/use-toggle";
 import CreateChannelModal from "./modals/CreateChannelModal";
@@ -12,11 +12,11 @@ import { useParams } from "react-router-dom";
 
 interface PropsType {
   channels: Channel[];
-  isLoading: boolean;
+  roomsStatus: Status;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ChannelCardList({ channels, isLoading, setClick }: PropsType) {
+function ChannelCardList({ channels, roomsStatus, setClick }: PropsType) {
   const { chatId } = useParams();
   const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
     useToggle(false);
@@ -79,14 +79,26 @@ function ChannelCardList({ channels, isLoading, setClick }: PropsType) {
             onClick={toggleIsCreateChannelModalOpen}
           >
             <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
-            <span className="text-sm font-light text-primaryText">
-              Add channel
+            <span className="text-sm font-light capitalize text-primaryText">
+              add channel
             </span>
           </button>
         </div>
 
-        {!isLoading ? (
-          channels.length ? (
+        {roomsStatus === "loading" && (
+          <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+            loading...
+          </div>
+        )}
+
+        {roomsStatus && "error" && (
+          <div className="flex capitalize grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+            something went wrong
+          </div>
+        )}
+
+        {roomsStatus === "success" &&
+          (channels.length ? (
             <div className="flex grow flex-col overflow-auto">
               {channels.map((channel) => (
                 <ChannelCard
@@ -105,14 +117,9 @@ function ChannelCardList({ channels, isLoading, setClick }: PropsType) {
             </div>
           ) : (
             <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-              No channels.
+              no channels.
             </div>
-          )
-        ) : (
-          <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-            loading ...
-          </div>
-        )}
+          ))}
       </div>
     </>
   );

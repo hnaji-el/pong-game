@@ -5,17 +5,17 @@ import { useParams } from "react-router-dom";
 import DmCard from "./DmCard";
 import { blockFriend } from "../api/API";
 import { globalSocket } from "../utilities/socket";
-import { Dm } from "../pages/Chat/types";
+import { Dm, Status } from "../pages/Chat/types";
 import { UserType } from "../api/types";
 
 interface PropsType {
   dms: Dm[];
-  isLoading: boolean;
+  roomsStatus: Status;
   loggedUserData: UserType;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function DmCardList({ dms, isLoading, loggedUserData, setClick }: PropsType) {
+function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
   const { chatId } = useParams();
 
   function handleCardClick() {
@@ -35,8 +35,20 @@ function DmCardList({ dms, isLoading, loggedUserData, setClick }: PropsType) {
 
   return (
     <div className="flex grow flex-col gap-[24px] overflow-auto">
-      {!isLoading ? (
-        dms.length ? (
+      {roomsStatus === "loading" && (
+        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+          loading...
+        </div>
+      )}
+
+      {roomsStatus === "error" && (
+        <div className="flex capitalize grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+          something went wrong
+        </div>
+      )}
+
+      {roomsStatus === "success" &&
+        (dms.length ? (
           dms.map((dm) => (
             <DmCard
               key={dm.id}
@@ -50,14 +62,9 @@ function DmCardList({ dms, isLoading, loggedUserData, setClick }: PropsType) {
           ))
         ) : (
           <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-            No messages.
+            no messages.
           </div>
-        )
-      ) : (
-        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-          loading ...
-        </div>
-      )}
+        ))}
     </div>
   );
 }

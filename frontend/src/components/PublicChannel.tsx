@@ -1,15 +1,16 @@
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import InputForm from "./inputs/InputForm";
-import { getAllChannels } from "../api/API";
 import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
-
-import { ChannelType } from "../pages/Chat/types";
 
 function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
   const [value, setValue] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
+
+  const navigate = useNavigate();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,10 +25,8 @@ function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
         if (res === "error") {
           setErrorMessage("Name already exists");
         } else {
-          getAllChannels((channelsData: ChannelType[]) => {
-            handleDismiss();
-            document.body.style.overflow = "auto";
-          });
+          navigate(`/chat/${res.id}`);
+          handleDismiss();
         }
       },
       {

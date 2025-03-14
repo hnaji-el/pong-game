@@ -1,10 +1,11 @@
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import { checkChannelName } from "../utilities/helpers";
 import InputForm from "./inputs/InputForm";
 import InputPasswordForm from "./inputs/InputPasswordForm";
 import { getAllChannels } from "../api/API";
-
 import { ChannelType } from "../pages/Chat/types";
 
 interface PropsType {
@@ -16,6 +17,8 @@ function ProtectedChannel({ handleDismiss }: PropsType) {
   const [channelName, setChannelName] = React.useState("");
   const [errorPassword, setErrorPassowrd] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const navigate = useNavigate();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -39,10 +42,8 @@ function ProtectedChannel({ handleDismiss }: PropsType) {
         if (res === "error") {
           setErrorMessage("Name already exists");
         } else {
-          getAllChannels((channelsData: ChannelType[]) => {
-            handleDismiss();
-            document.body.style.overflow = "auto";
-          });
+          navigate(`/chat/${res.id}`);
+          handleDismiss();
         }
       },
       {

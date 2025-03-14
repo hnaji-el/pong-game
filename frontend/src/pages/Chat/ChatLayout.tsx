@@ -9,12 +9,7 @@ import Footer from "./Footer";
 import Spinner from "../../components/Spinner";
 import { DmType, ChannelType, Rooms, Status } from "./types";
 import { UserType } from "../../api/types";
-import {
-  useVerifyUserAuthenticity,
-  getDataUserLogged,
-  getAllChannels,
-  getAllDms,
-} from "../../api/API";
+import { useVerifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
@@ -34,11 +29,6 @@ function ChatLayout() {
     status: "",
     isTwoFactorAuthEnabled: false,
   });
-  const [dms, setDms] = React.useState<DmType[]>([]);
-  const [channels, setChannels] = React.useState<ChannelType[]>([]);
-  const [chatDataBox, setChatDataBox] = React.useState<any>();
-  const [dmIndex, setDmIndex] = React.useState(0);
-  const [channelIndex, setChannelIndex] = React.useState(0);
   const [click, setClick] = React.useState(false);
 
   // API: GET /chat/rooms?type=dm (?type=channel)
@@ -108,22 +98,6 @@ function ChatLayout() {
   }, []);
 
   React.useEffect(() => {
-    getAllDms((dms) => {
-      setDms(dms);
-      if (isDm) {
-        setChatDataBox(dms[dmIndex]);
-      }
-    });
-
-    getAllChannels((channels) => {
-      setChannels(channels);
-      if (!isDm) {
-        setChatDataBox(channels[channelIndex]);
-      }
-    });
-  }, [dmIndex, channelIndex, isDm]);
-
-  React.useEffect(() => {
     if (!socket.connected) {
       socket.connect();
     }
@@ -131,7 +105,7 @@ function ChatLayout() {
     // TODO: check this because it's changed the chat main section directly even if they don't the person that you are talking with them.
     const handleServerMessage = (data: DmType | ChannelType) => {
       data.type === "DM" ? setIsDm(true) : setIsDm(false);
-      setChatDataBox(data);
+      // setChatDataBox(data);
     };
 
     socket.on("msgFromServer", handleServerMessage);

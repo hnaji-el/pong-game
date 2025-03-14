@@ -240,7 +240,7 @@ export async function CreateChannel(getRes: any, data: any) {
     .then((res) => {
       getRes(res);
     })
-    .catch((error) => {
+    .catch(() => {
       getRes("error");
     });
 }

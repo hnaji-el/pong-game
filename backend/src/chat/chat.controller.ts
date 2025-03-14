@@ -10,6 +10,7 @@ import { ChatService } from './chat.service';
 export class ChatController {
   constructor(private chatService: ChatService) {}
 
+  // TODO: [CHAT] return channel entity
   @Post('/channels/create-channel')
   @UseGuards(JwtAuthGuard)
   async createChannel(@Req() req: Request, @Body() channel) {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import DmCard from "./DmCard";
 import { blockFriend } from "../api/API";
@@ -17,9 +17,11 @@ interface PropsType {
 
 function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
   const { chatId } = useParams();
+  const navigate = useNavigate();
 
-  function handleCardClick() {
+  function handleCardClick(cardChatId: string) {
     setClick(true);
+    navigate(`/chat/${cardChatId}`);
   }
 
   function handleInviteToPlayClick(userId: string) {
@@ -29,8 +31,10 @@ function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
     });
   }
 
-  async function handleBlockClick(userId: string) {
-    await blockFriend(userId);
+  function handleBlockClick(userId: string) {
+    blockFriend(userId);
+
+    // TODO: [CHAT] adjust the logic when the user blocked
   }
 
   return (
@@ -42,7 +46,7 @@ function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
       )}
 
       {roomsStatus === "error" && (
-        <div className="flex capitalize grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm capitalize text-primaryText">
           something went wrong
         </div>
       )}
@@ -55,7 +59,7 @@ function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
               avatar={dm.pictureURL}
               title={dm.nickname}
               isHovered={dm.id === chatId}
-              handleCardClick={() => handleCardClick()}
+              handleCardClick={() => handleCardClick(dm.id)}
               handleInviteToPlayClick={() => handleInviteToPlayClick(dm.userId)}
               handleBlockClick={() => handleBlockClick(dm.userId)}
             />

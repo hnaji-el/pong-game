@@ -7,11 +7,7 @@ import { ExclamationIcon } from "./Icons";
 
 import { ChannelType } from "../pages/Chat/types";
 
-interface PropsType {
-  handleDismiss: () => void;
-}
-
-function PublicChannel({ handleDismiss }: PropsType) {
+function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
   const [value, setValue] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
 

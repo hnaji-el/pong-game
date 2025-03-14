@@ -38,7 +38,7 @@ function Header({
   const navigate = useNavigate();
 
   const dm = rooms.dms.find((element) => element.id === chatId);
-  const channel = rooms.channels.find((element) => element.id === chatId);
+  const channel = rooms.joinedChannels.find((element) => element.id === chatId);
 
   async function handleLogout() {
     await logout();

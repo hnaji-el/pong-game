@@ -1,126 +1,132 @@
 import React from "react";
 
 import ChannelCard from "./ChannelCard";
-import { PlusIcon } from "./Icons";
-import { deleteRoom, joinChannel, leaveRoom } from "../api/API";
 import { Channel, Status } from "../pages/Chat/types";
-import Modal from "../components/Modal/Modal";
 import useToggle from "../hooks/use-toggle";
-import CreateChannelModal from "./modals/CreateChannelModal";
+import Modal from "./Modal/Modal";
 import PasswordModal from "./modals/PasswordModal";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { deleteRoom, joinChannel, leaveRoom } from "../api/API";
 
 interface PropsType {
+  title: string;
   channels: Channel[];
   roomsStatus: Status;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ChannelCardList({ channels, roomsStatus, setClick }: PropsType) {
-  const { chatId } = useParams();
-  const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
-    useToggle(false);
+function ChannelCardList({
+  title,
+  channels,
+  roomsStatus,
+  setClick,
+}: PropsType) {
   const [isPasswordModalOpen, toggleIsPasswordModalOpen] = useToggle(false);
 
-  function handleCardClick(channelData: Channel) {
-    if (channelData.isJoined) {
+  const navigate = useNavigate();
+  const { chatId } = useParams();
+
+  const [nextChatId, setNextChatId] = React.useState("");
+
+  function handleCardClick(channel: Channel) {
+    if (channel.isJoined) {
       setClick(true);
+      navigate(`/chat/${channel.id}`);
     } else {
-      if (channelData.type === "PROTECTED") {
+      if (channel.type === "PROTECTED") {
+        setNextChatId(channel.id);
         toggleIsPasswordModalOpen();
       }
 
-      if (channelData.type === "PUBLIC") {
+      if (channel.type === "PUBLIC") {
         joinChannel(
+          {
+            id: channel.id,
+            type: "PUBLIC",
+          },
           () => {
             setClick(true);
-          },
-          {
-            id: channelData.id,
-            type: "PUBLIC",
+            navigate(`/chat/${channel.id}`);
           },
         );
       }
     }
   }
 
-  async function handleDeleteClick(channelData: Channel) {
-    await deleteRoom(channelData.name);
+  function handleDeleteClick(channel: Channel) {
+    deleteRoom(channel.name);
+
+    if (channel.id === chatId) navigateToNewChat(channel);
   }
 
-  async function handleLeaveClick(channelData: Channel) {
-    await leaveRoom(channelData.name);
+  function handleLeaveClick(channel: Channel) {
+    leaveRoom(channel.name);
+
+    if (channel.id === chatId) navigateToNewChat(channel);
+  }
+
+  function navigateToNewChat(channel: Channel) {
+    if (channels.length === 1) {
+      navigate("/chat");
+    } else {
+      const deletedChatIndex = channels.findIndex(
+        (element) => element.id === channel.id,
+      );
+      navigate(
+        `/chat/${deletedChatIndex === 0 ? channels[1].id : channels[deletedChatIndex - 1].id}`,
+      );
+    }
   }
 
   return (
     <>
-      {isCreateChannelModalOpen && (
-        <Modal
-          title="create channel"
-          handleDismiss={toggleIsCreateChannelModalOpen}
-        >
-          <CreateChannelModal handleDismiss={toggleIsCreateChannelModalOpen} />
-        </Modal>
-      )}
-
       {isPasswordModalOpen && (
         <Modal title="password" handleDismiss={toggleIsPasswordModalOpen}>
           <PasswordModal
+            nextChatId={nextChatId}
             setClick={setClick}
             handleDismiss={toggleIsPasswordModalOpen}
           />
         </Modal>
       )}
 
-      <div className="flex grow flex-col gap-6 overflow-hidden">
-        <div className="mx-3 flex items-center gap-2 lg:mx-2">
-          <button
-            className="flex w-full items-center justify-center gap-2 rounded-[.3rem] bg-primary p-2"
-            onClick={toggleIsCreateChannelModalOpen}
-          >
-            <PlusIcon edit="w-2.5 h-2.5 fill-primaryText" />
-            <span className="text-sm font-light capitalize text-primaryText">
-              add channel
-            </span>
-          </button>
+      <h3 className="capitalize">{title}</h3>
+
+      {roomsStatus === "loading" && (
+        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+          loading...
         </div>
+      )}
 
-        {roomsStatus === "loading" && (
+      {roomsStatus && "error" && (
+        <div className="flex grow items-center justify-center pb-[7.3rem] text-sm capitalize text-primaryText">
+          something went wrong
+        </div>
+      )}
+
+      {roomsStatus === "success" &&
+        (channels.length ? (
+          <div className="flex grow flex-col overflow-auto">
+            {channels.map((channel) => (
+              <ChannelCard
+                key={channel.id}
+                title={channel.name}
+                isLabeled={channel.type === "PRIVATE"}
+                isHovered={channel.id === chatId}
+                isJoined={channel.isJoined}
+                isOwner={channel.role === "OWNER"}
+                isProtected={channel.type === "PROTECTED"}
+                handleCardClick={() => handleCardClick(channel)}
+                handleDeleteClick={() => handleDeleteClick(channel)}
+                handleLeaveClick={() => handleLeaveClick(channel)}
+              />
+            ))}
+          </div>
+        ) : (
           <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-            loading...
+            no channels.
           </div>
-        )}
-
-        {roomsStatus && "error" && (
-          <div className="flex capitalize grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-            something went wrong
-          </div>
-        )}
-
-        {roomsStatus === "success" &&
-          (channels.length ? (
-            <div className="flex grow flex-col overflow-auto">
-              {channels.map((channel) => (
-                <ChannelCard
-                  key={channel.id}
-                  title={channel.name}
-                  isLabeled={channel.type === "PRIVATE"}
-                  isHovered={channel.id === chatId}
-                  isJoined={channel.isJoined}
-                  isOwner={channel.role === "OWNER"}
-                  isProtected={channel.type === "PROTECTED"}
-                  handleCardClick={() => handleCardClick(channel)}
-                  handleDeleteClick={() => handleDeleteClick(channel)}
-                  handleLeaveClick={() => handleLeaveClick(channel)}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-              no channels.
-            </div>
-          ))}
-      </div>
+        ))}
     </>
   );
 }

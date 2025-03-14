@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import ChannelCardList from "../../components/ChannelCardList";
+import Channels from "../../components/Channels";
 import DmCardList from "../../components/DmCardList";
 import Button from "../../components/buttons/Button/Button";
 import VisuallyHidden from "../../components/VisuallyHidden";
@@ -61,8 +61,9 @@ function SideNavBar({
             setClick={setClick}
           />
         ) : (
-          <ChannelCardList
-            channels={rooms.channels}
+          <Channels
+            joinedChannels={rooms.joinedChannels}
+            notJoinedChannels={rooms.notJoinedChannels}
             roomsStatus={roomsStatus}
             setClick={setClick}
           />

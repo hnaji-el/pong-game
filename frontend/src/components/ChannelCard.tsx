@@ -30,8 +30,9 @@ function ChannelCard({
 }: PropsType) {
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
 
-  const options = [{ label: "leave" }];
-  if (isOwner) options.unshift({ label: "delete" });
+  const options = [];
+  if (isOwner) options.push({ label: "delete" });
+  if (!isOwner) options.push({ label: "leave" });
 
   function handleSelect(option: string) {
     if (option === "delete") handleDeleteClick();

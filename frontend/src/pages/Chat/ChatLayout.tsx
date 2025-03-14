@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 import Header from "./Header";
@@ -41,19 +41,25 @@ function ChatLayout() {
   const [channelIndex, setChannelIndex] = React.useState(0);
   const [click, setClick] = React.useState(false);
 
-  const navigate = useNavigate();
-
   // API: GET /chat/rooms?type=dm (?type=channel)
   // payload: {
-  //   dms: { id: string, nickname: string, pictureURL: string, isOnline: boolean }[],
-  //   channels: { id: string, name: string, type: string, role: string, isJoined: boolean }[],
+  //   dms:               { id: string, nickname: string, pictureURL: string, isOnline: boolean }[],
+  //   joinedChannels:    { id: string, name: string, type: string, role: string, isJoined: boolean }[],
+  //   notJoinedChannels: { id: string, name: string, type: string, role: string, isJoined: boolean }[],
   // }
   // success: 200 Ok
   // error: 4xx, 5xx [ 401 Unauthorized, 500 Internal Server Error ]
 
   const [isDm, setIsDm] = React.useState(true);
-  const [rooms, setRooms] = React.useState<Rooms>({ dms: [], channels: [] });
+  const [rooms, setRooms] = React.useState<Rooms>({
+    dms: [],
+    joinedChannels: [],
+    notJoinedChannels: [],
+  });
   const [roomsStatus, setRoomsStatus] = React.useState<Status>("idle");
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   React.useEffect(() => {
     const fetcher = async () => {
@@ -65,11 +71,22 @@ function ChatLayout() {
           { credentials: "include" },
         );
 
-        const body = await res.json();
+        const body: Rooms = await res.json();
 
         if (res.ok) {
+          let initialChatId = "";
+          if (isDm && body.dms.length) initialChatId = body.dms[0].id;
+          if (!isDm && body.joinedChannels.length)
+            initialChatId = body.joinedChannels[0].id;
+
           setRoomsStatus("success");
           setRooms(body);
+
+          if (location.pathname === "/chat" && initialChatId) {
+            navigate(`/chat/${initialChatId}`, {
+              replace: true,
+            });
+          }
         } else {
           setRoomsStatus("error");
           if (res.status === 401) navigate("/login");
@@ -80,7 +97,7 @@ function ChatLayout() {
     };
 
     fetcher();
-  }, [isDm, navigate]);
+  }, [isDm, location.pathname, navigate]);
 
   React.useEffect(() => {
     document.title = "Pong - Messages";

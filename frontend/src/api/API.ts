@@ -246,19 +246,19 @@ export async function CreateChannel(getRes: any, data: any) {
 }
 
 export function joinChannel(
-  getRes: (channelData?: ChannelType) => void,
   data: {
     id: string;
     type: string;
     password?: string;
   },
+  getRes?: (channelData?: ChannelType) => void,
 ) {
   axios
     .post(`${BACKEND_ORIGIN}/chat/channel/join-channel`, data, {
       withCredentials: true,
     })
     .then((res) => {
-      getRes(res.data);
+      getRes?.(res.data);
     })
     .catch();
 }

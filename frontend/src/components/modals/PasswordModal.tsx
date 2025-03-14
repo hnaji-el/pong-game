@@ -1,20 +1,21 @@
 import React from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import InputPasswordForm from "../inputs/InputPasswordForm";
-import { getAllChannels, joinChannel } from "../../api/API";
-import { ChannelType } from "../../pages/Chat/types";
+import { joinChannel } from "../../api/API";
 
 interface PropsType {
+  nextChatId: string;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
   handleDismiss: () => void;
 }
 
-function PasswordModal({ setClick, handleDismiss }: PropsType) {
-  const { chatId } = useParams();
+function PasswordModal({ nextChatId, setClick, handleDismiss }: PropsType) {
   const [errorPassword, setErrorPassowrd] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const navigate = useNavigate();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -25,22 +26,20 @@ function PasswordModal({ setClick, handleDismiss }: PropsType) {
     }
 
     joinChannel(
-      (chnlData?: ChannelType) => {
+      {
+        id: nextChatId,
+        type: "PROTECTED",
+        password: password,
+      },
+      (chnlData) => {
         if (!chnlData?.isPasswordValid) {
           setErrorPassowrd("Password incorrect");
           return;
         } else {
           setClick(true);
-          getAllChannels((chnlsData: ChannelType[]) => {
-            handleDismiss();
-            document.body.style.overflow = "auto";
-          });
+          navigate(`/chat/${nextChatId}`);
+          handleDismiss();
         }
-      },
-      {
-        id: chatId as string,
-        type: "PROTECTED",
-        password: password,
       },
     );
   }

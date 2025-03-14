@@ -23,7 +23,8 @@ export interface Channel {
 
 export interface Rooms {
   dms: Dm[];
-  channels: Channel[];
+  joinedChannels: Channel[];
+  notJoinedChannels: Channel[];
 }
 
 export interface Message {

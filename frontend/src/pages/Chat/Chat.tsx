@@ -64,24 +64,31 @@ function Chat() {
     fetcher();
   }, [chatId, navigate]);
 
-  function handleMessageSubmit(event: React.FormEvent<HTMLFormElement>) {
+  React.useEffect(() => {
+    if (!socket) return;
+
+    function handleReceiveMessage(msg: Message) {
+      if (msg.roomId === chatId) {
+        setMessages((currentValue) => [...currentValue, msg]);
+      }
+    }
+
+    socket.on("FromServer", handleReceiveMessage);
+
+    return () => {
+      socket.off("FromServer", handleReceiveMessage);
+    };
+  }, [socket, chatId, loggedUserData]);
+
+  function handleSendMessage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!value || status !== "success") return;
+    if (!value.trim() || status !== "success") return;
 
-    if (isDm) {
-      socket.emit("msgFromClient", {
-        isDm: true,
-        roomId: chatId,
-        data: value,
-      });
-    } else {
-      socket.emit("msgFromClient", {
-        isDm: false,
-        roomId: chatId,
-        data: value,
-      });
-    }
+    socket.emit("FromClient", {
+      roomId: chatId,
+      data: value,
+    });
 
     setValue("");
   }
@@ -104,7 +111,7 @@ function Chat() {
       </div>
 
       <form
-        onSubmit={(event) => handleMessageSubmit(event)}
+        onSubmit={(event) => handleSendMessage(event)}
         className="flex items-center rounded-md bg-shape pr-2"
       >
         <label htmlFor={inputId}>

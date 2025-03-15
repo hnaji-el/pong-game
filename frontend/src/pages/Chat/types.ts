@@ -29,9 +29,9 @@ export interface Rooms {
 
 export interface Message {
   id: string;
-  roomName: string;
-  ownerId: string;
-  ownerPictureURL: string;
+  roomId: string;
+  senderId: string;
+  senderPictureURL: string;
   data: string;
 }
 

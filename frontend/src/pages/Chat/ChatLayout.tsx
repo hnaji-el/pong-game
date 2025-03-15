@@ -1,23 +1,18 @@
 import React from "react";
 
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import Header from "./Header";
 import SideNavBar from "./SideNavBar";
 import Footer from "./Footer";
 import Spinner from "../../components/Spinner";
-import { DmType, ChannelType, Rooms, Status } from "./types";
+import { Rooms, Status } from "./types";
 import { UserType } from "../../api/types";
 import { useVerifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
-
-const socket = io(DOMAIN, {
-  path: SOCKET_CHAT_PATH,
-  withCredentials: true,
-});
 
 function ChatLayout() {
   const status = useVerifyUserAuthenticity();
@@ -39,6 +34,7 @@ function ChatLayout() {
   // }
   // success: 200 Ok
   // error: 4xx, 5xx [ 401 Unauthorized, 500 Internal Server Error ]
+  const [socket, setSocket] = React.useState<Socket | null>(null);
 
   const [isDm, setIsDm] = React.useState(true);
   const [rooms, setRooms] = React.useState<Rooms>({
@@ -50,6 +46,19 @@ function ChatLayout() {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  React.useEffect(() => {
+    const newSocket = io(DOMAIN, {
+      path: SOCKET_CHAT_PATH,
+      withCredentials: true,
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   React.useEffect(() => {
     const fetcher = async () => {
@@ -95,24 +104,6 @@ function ChatLayout() {
     getDataUserLogged((userData) => {
       setLoggedUserData(userData);
     });
-  }, []);
-
-  React.useEffect(() => {
-    if (!socket.connected) {
-      socket.connect();
-    }
-
-    // TODO: check this because it's changed the chat main section directly even if they don't the person that you are talking with them.
-    const handleServerMessage = (data: DmType | ChannelType) => {
-      data.type === "DM" ? setIsDm(true) : setIsDm(false);
-      // setChatDataBox(data);
-    };
-
-    socket.on("msgFromServer", handleServerMessage);
-
-    return () => {
-      socket.off("msgFromServer", handleServerMessage);
-    };
   }, []);
 
   if (status === "error") {

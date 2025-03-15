@@ -12,7 +12,7 @@ function Messages({ messages, loggedUserId, isDm }: PropsType) {
   return (
     <div className="flex h-full flex-col-reverse gap-[20px] overflow-auto px-[15px] pb-[10px] pt-[20px]">
       {messages.map((msg) =>
-        msg.ownerId === loggedUserId ? (
+        msg.senderId === loggedUserId ? (
           <div key={msg.id} className="ml-[20px] flex justify-end">
             <div className="max-w-[320px] rounded-xl rounded-tr-none bg-primary p-[15px] lg:max-w-[512px]">
               <p className="break-words text-left text-sm font-light text-white">
@@ -27,7 +27,7 @@ function Messages({ messages, loggedUserId, isDm }: PropsType) {
           >
             {!isDm && (
               <img
-                src={msg.ownerPictureURL}
+                src={msg.senderPictureURL}
                 alt="avatar"
                 className="h-12 w-12 rounded-full"
               />

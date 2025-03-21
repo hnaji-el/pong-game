@@ -53,6 +53,19 @@ export class UsersService {
     });
   }
 
+  async isFriends(userId1: string, userId2: string): Promise<boolean> {
+    const count = await this.prisma.relationship.count({
+      where: {
+        OR: [
+          { requesterId: userId1, addresseeId: userId2, type: 'FRIENDSHIP' },
+          { requesterId: userId2, addresseeId: userId1, type: 'FRIENDSHIP' },
+        ],
+      },
+    });
+
+    return count > 0;
+  }
+
   async getMatchHistory(userId: string): Promise<GameEntity[]> {
     const entities: GameEntity[] = [];
     const user = await this.prisma.user.findUnique({

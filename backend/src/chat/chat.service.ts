@@ -12,6 +12,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { Prisma, Room } from '@prisma/client';
 import { User } from '@prisma/client';
 import { AttachedUserEntity } from 'src/users/entities/attachedUser.entity';
+import { Socket } from 'socket.io';
 
 // TODO: delete the `pictureURL` from `Message` Model, and instead of that query for it from `User` Model.
 
@@ -19,18 +20,10 @@ import { AttachedUserEntity } from 'src/users/entities/attachedUser.entity';
 export class ChatService {
   constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-  getJwtTokenFromClient(client: any) {
-    const cookies: { [key: string]: string } = cookie.parse(
-      client.handshake.headers.cookie || '',
-    );
+  async getUserFromJwtToken(jwtToken?: string): Promise<User | null> {
+    if (!jwtToken) return null;
 
-    return cookies.jwt;
-  }
-
-  async getUserFromJwtToken(jwtToken?: string): Promise<User | undefined> {
-    if (!jwtToken) return;
-
-    let user: User | undefined;
+    let user: User;
 
     try {
       const payload = this.jwt.verify(jwtToken, {
@@ -43,7 +36,7 @@ export class ChatService {
         },
       });
     } catch {
-      return;
+      return null;
     }
 
     return user;

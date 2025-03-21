@@ -7,12 +7,18 @@ import {
   MessageBody,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
+import { UsersService } from 'src/users/users.service';
+import * as cookie from 'cookie';
 import { User } from '@prisma/client';
-import { WsDataType } from './entities/chat.entity';
 import { randomUUID } from 'crypto';
+import { Message } from './entities/chat.entity';
+
+interface AuthenticatedSocket extends Socket {
+  user?: User;
+}
 
 @WebSocketGateway(+process.env.BACKEND_CHAT_PORT, {
   cors: {
@@ -25,198 +31,210 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
     private chatService: ChatService,
+    private usersService: UsersService,
   ) {}
 
   @WebSocketServer() server: Server;
-  connectedClients = [];
+  connectedClients: AuthenticatedSocket[] = [];
 
-  @SubscribeMessage('msgFromClient')
+  @SubscribeMessage('FromClient')
   async handleMessage(
-    @ConnectedSocket() client: any,
-    @MessageBody() wsData: WsDataType,
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody()
+    msgData: {
+      isDm: boolean;
+      chatId: string;
+      content: string;
+    },
   ) {
-    const senderUser: User = client.user;
+    const senderUser = client.user;
 
-    if (wsData.isDm) {
-      const wsRoomForSenderClients = randomUUID();
-      const wsRoomForReceiverClients = randomUUID();
-
-      const receiverUser = await this.prisma.user.findUnique({
-        where: {
-          id: wsData.receiverUserId,
-        },
+    if (msgData.isDm) {
+      const dm = await this.prisma.dM.findUnique({
+        where: { id: msgData.chatId },
       });
 
-      // add the connected clients associated with either the sender or receiver user to the appropriate Web Socket room.
-      for (const client of this.connectedClients) {
-        if (client.user.id === senderUser.id) {
-          client.join(wsRoomForSenderClients);
-        } else if (client.user.id === receiverUser.id) {
-          client.join(wsRoomForReceiverClients);
-        }
+      const receiverId = dm.user1Id === senderUser.id ? dm.user2Id : dm.user1Id;
+
+      if (!(await this.usersService.isFriends(senderUser.id, receiverId))) {
+        return;
       }
 
-      const room = await this.prisma.room.findUnique({
-        where: {
-          name: this.chatService.generateDMRoomName(
-            receiverUser.id,
-            senderUser.id,
-          ),
-        },
-      });
-
-      if (!room) return;
-
-      await this.prisma.message.create({
+      const message = await this.prisma.dMMessage.create({
         data: {
-          roomName: room.name,
-          userId: senderUser.id,
-          pictureURL: senderUser.pictureURL,
-          data: wsData.data,
+          dmId: dm.id,
+          senderId: senderUser.id,
+          content: msgData.content,
         },
       });
-
-      await this.prisma.room.update({
+      await this.prisma.dM.update({
         where: {
-          id: room.id,
+          id: dm.id,
         },
         data: {
           updatedAt: new Date(),
         },
       });
 
-      this.server.to(wsRoomForSenderClients).emit(
-        'msgFromServer',
-        await this.chatService.getDmData(room, receiverUser), // TODO: handle the case when this function throw an InternalServerErrorException
-      );
-
-      this.server.to(wsRoomForReceiverClients).emit(
-        'msgFromServer',
-        await this.chatService.getDmData(room, senderUser), // TODO: handle the case when this function throw an InternalServerErrorException
-      );
-    }
-
-    if (!wsData.isDm) {
       const wsRoom = randomUUID();
 
-      const room = await this.prisma.room.findUnique({
-        where: {
-          id: wsData.channelId,
-        },
-      });
-
-      if (!room) return;
-
-      // add the connected clients associated with room members to the Web Socket room (wsRoom).
+      // add the connected clients associated with either the sender or receiver user to the WebSocket room.
       for (const client of this.connectedClients) {
-        if (room.members.includes(client.user.nickname)) {
+        if (client.user.id === senderUser.id || client.user.id === receiverId) {
           client.join(wsRoom);
         }
       }
 
-      await this.prisma.message.create({
-        data: {
-          roomName: room.name,
-          userId: senderUser.id,
-          pictureURL: senderUser.pictureURL,
-          data: wsData.data,
+      this.server.to(wsRoom).emit('FromServer', {
+        id: message.id,
+        chatId: dm.id,
+        senderId: senderUser.id,
+        senderPictureUrl: senderUser.pictureUrl,
+        content: message.content,
+        sentAt: message.sentAt.toISOString(),
+      } as Message);
+    } else {
+      const channel = await this.prisma.channel.findUnique({
+        where: {
+          id: msgData.chatId,
+        },
+        select: {
+          id: true,
+          memberships: {
+            where: {
+              role: { not: 'BLOCKED' },
+            },
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  pictureUrl: true,
+                },
+              },
+            },
+          },
         },
       });
 
-      await this.prisma.room.update({
+      if (!channel) return;
+
+      const usersInChannel = channel.memberships.map((m) => m.user);
+
+      const message = await this.prisma.channelMessage.create({
+        data: {
+          channelId: channel.id,
+          senderId: senderUser.id,
+          content: msgData.content,
+        },
+      });
+      await this.prisma.channel.update({
         where: {
-          id: room.id,
+          id: channel.id,
         },
         data: {
           updatedAt: new Date(),
         },
       });
 
-      this.server.to(wsRoom).emit(
-        'msgFromServer',
-        await this.chatService.getChannelData(room, senderUser, true), // TODO: handle the case when this function throw an InternalServerErrorException
-      );
+      const wsRoom = randomUUID();
+
+      // add the connected clients associated with room members to the Web Socket room (wsRoom).
+      for (const user of usersInChannel) {
+        for (const client of this.connectedClients) {
+          if (user.id === client.user.id) {
+            client.join(wsRoom);
+            break;
+          }
+        }
+      }
+
+      this.server.to(wsRoom).emit('FromServer', {
+        id: message.id,
+        chatId: channel.id,
+        senderId: senderUser.id,
+        senderPictureUrl: senderUser.pictureUrl,
+        content: message.content,
+        sentAt: message.sentAt.toISOString(),
+      } as Message);
     }
+
+    // if (!wsData.isDm) {
+    //   const wsRoom = randomUUID();
+    //   const room = await this.prisma.room.findUnique({
+    //     where: {
+    //       id: wsData.channelId,
+    //     },
+    //   });
+    //   if (!room) return;
+    //   // add the connected clients associated with room members to the Web Socket room (wsRoom).
+    //   for (const client of this.connectedClients) {
+    //     if (room.members.includes(client.user.nickname)) {
+    //       client.join(wsRoom);
+    //     }
+    //   }
+    //   await this.prisma.message.create({
+    //     data: {
+    //       roomName: room.name,
+    //       userId: senderUser.id,
+    //       pictureURL: senderUser.pictureURL,
+    //       data: wsData.data,
+    //     },
+    //   });
+    //   await this.prisma.room.update({
+    //     where: {
+    //       id: room.id,
+    //     },
+    //     data: {
+    //       updatedAt: new Date(),
+    //     },
+    //   });
+    //   this.server.to(wsRoom).emit(
+    //     'msgFromServer',
+    //     await this.chatService.getChannelData(room, senderUser, true), // TODO: handle the case when this function throw an InternalServerErrorException
+    //   );
+    // }
   }
 
-  async handleDisconnect(@ConnectedSocket() client: any) {
-    const jwtToken = this.chatService.getJwtTokenFromClient(client);
-    const user = await this.chatService.getUserFromJwtToken(jwtToken);
+  async handleDisconnect(@ConnectedSocket() client: AuthenticatedSocket) {
+    const { jwt } = cookie.parse(client.handshake.headers.cookie || '');
+    const user = await this.chatService.getUserFromJwtToken(jwt);
+
+    const index = this.connectedClients.findIndex(
+      (element) => element.id === client.id,
+    );
 
     // Clean up the client
-    for (let index = 0; index < this.connectedClients.length; index++) {
-      if (this.connectedClients[index].id === client.id) {
-        this.connectedClients.splice(index, 1);
-        break;
-      }
-    }
+    if (index !== -1) this.connectedClients.splice(index, 1);
 
     if (!user) {
-      console.warn(
+      console.log(
         `[Chat]: Unauthorized disconnection happend from client: ${client.id}`,
       );
       return;
     }
 
-    try {
-      if (user.status === 'online') {
-        await this.prisma.user.update({
-          where: {
-            id: user.id,
-          },
-          data: {
-            status: 'offline',
-          },
-        });
-      }
-      console.log(
-        `[Chat]: Client disconnected: ${client.id} (user: ${user.nickname})`,
-      );
-    } catch (error) {
-      console.error(
-        `[Chat]: Error during disconnection handling for client ${client.id} (user: ${user.nickname}):`,
-        error,
-      );
-    }
+    console.log(
+      `[Chat]: Client disconnected: ${client.id} (user: ${user.nickname})`,
+    );
   }
 
-  async handleConnection(@ConnectedSocket() client: any) {
-    const jwtToken = this.chatService.getJwtTokenFromClient(client);
-    const user = await this.chatService.getUserFromJwtToken(jwtToken);
+  async handleConnection(@ConnectedSocket() client: AuthenticatedSocket) {
+    const { jwt } = cookie.parse(client.handshake.headers.cookie || '');
+    const user = await this.chatService.getUserFromJwtToken(jwt);
 
     if (!user) {
-      client.emit('error', 'unauthorized');
       client.disconnect();
-      console.warn(
+      console.log(
         `[Chat]: Unauthorized connection attempt from client: ${client.id}`,
       );
       return;
     }
 
     client.user = user;
+    this.connectedClients.push(client);
 
-    try {
-      if (user.status === 'offline') {
-        await this.prisma.user.update({
-          where: {
-            id: user.id,
-          },
-          data: {
-            status: 'online',
-          },
-        });
-      }
-      this.connectedClients.push(client); // TODO: This line needs further checkes...
-      console.log(
-        `[Chat]: Client connected: ${client.id} (user: ${user.nickname})`,
-      );
-    } catch (error) {
-      client.emit('error', 'unauthorized');
-      client.disconnect();
-      console.error(
-        `[Chat]: Error during connection handling for client ${client.id} (user: ${user.nickname}):`,
-        error,
-      );
-    }
+    console.log(
+      `[Chat]: Client connected: ${client.id} (user: ${user.nickname})`,
+    );
   }
 }

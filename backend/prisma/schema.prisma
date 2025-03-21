@@ -11,29 +11,118 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                       String         @id @default(uuid())
-  email                    String         @unique
-  nickname                 String         @unique
-  pictureURL               String
-  status                   String         @default("offline")
-  firstTimeLogged          Boolean        @default(true)
-  twoFactorAuthSecret      String?
-  isTwoFactorAuthEnabled   Boolean        @default(false)
-  isTwoFactorAuthValidated Boolean        @default(false)
-  requester                RelationShip[] @relation("Requester")
-  addressee                RelationShip[] @relation("Addressee")
-  winGames                 Game[]         @relation("winGames")
-  loseGames                Game[]         @relation("loseGames")
+enum ChannelType {
+  PUBLIC
+  PROTECTED
+  PRIVATE
 }
 
-model RelationShip {
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  BLOCKED
+}
+
+enum RelationshipType {
+  FRIENDSHIP
+  BLOCK
+}
+
+model User {
+  id                       String   @id @default(uuid())
+  email                    String   @unique
+  nickname                 String   @db.VarChar(20)
+  pictureUrl               String
+  isOnline                 Boolean  @default(true)
+  firstTimeLogged          Boolean  @default(true)
+  twoFactorAuthSecret      String?
+  isTwoFactorAuthEnabled   Boolean  @default(false)
+  isTwoFactorAuthValidated Boolean  @default(false)
+  createdAt                DateTime @db.Timestamptz @default(now()) 
+
+  channelMemberships ChannelMembership[]
+  channelMessages    ChannelMessage[]
+
+  dms1               DM[] @relation("DMUser1")
+  dms2               DM[] @relation("DMUser2")
+  dmMessages         DMMessage[]
+
+  requester          Relationship[] @relation("Requester")
+  addressee          Relationship[] @relation("Addressee")
+
+  winGames           Game[] @relation("winGames")
+  loseGames          Game[] @relation("loseGames")
+}
+
+model Relationship {
   id          String @id @default(uuid())
   requesterId String
   addresseeId String
-  type        Status // FRIENDSHIP or BLOCK
-  requester   User   @relation(name: "Requester", fields: [requesterId], references: [id])
-  addressee   User   @relation(name: "Addressee", fields: [addresseeId], references: [id])
+  type        RelationshipType
+
+  requester   User   @relation(name: "Requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee   User   @relation(name: "Addressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+}
+
+model Channel {
+  id             String      @id @default(uuid())
+  name           String      @db.VarChar(20) @unique
+  type           ChannelType
+  hashedPassword String?     @db.VarChar(20)
+  createdAt      DateTime    @db.Timestamptz @default(now())
+  updatedAt      DateTime    @db.Timestamptz @default(now()) @updatedAt
+
+  memberships ChannelMembership[]
+  messages    ChannelMessage[]
+}
+
+model ChannelMembership {
+  userId    String
+  channelId String
+  role      UserRole
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, channelId])
+}
+
+model ChannelMessage {
+  id         String   @id @default(uuid())
+  channelId  String
+  senderId   String
+  content    String
+  sentAt     DateTime @db.Timestamptz @default(now())
+
+  sender  User    @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+}
+
+model DM {
+  id        String   @id @default(uuid())
+  user1Id   String
+  user2Id   String
+  createdAt DateTime @db.Timestamptz @default(now())
+  updatedAt DateTime @db.Timestamptz @default(now()) @updatedAt
+
+  user1 User @relation("DMUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("DMUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  messages DMMessage[]
+
+  @@unique([user1Id, user2Id])
+}
+
+model DMMessage {
+  id        String   @id @default(uuid())
+  dmId      String
+  senderId  String
+  content   String
+  sentAt    DateTime @db.Timestamptz @default(now())
+
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  dm     DM   @relation(fields: [dmId], references: [id], onDelete: Cascade)
 }
 
 model Game {
@@ -42,35 +131,7 @@ model Game {
   loserId    String
   winScore   Int
   loseScore  Int
-  winnerUser User   @relation(name: "winGames", fields: [winnerId], references: [id])
-  loserUser  User   @relation(name: "loseGames", fields: [loserId], references: [id])
-}
 
-model Room {
-  id              String     @id @default(uuid())
-  name            String     @unique
-  owner           String
-  admins          String[]
-  members         String[]
-  blocked         String[]
-  type            String // 'DM' | 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
-  hashedPassword  String?
-  createdAt       DateTime    @default(now()) @db.Timestamptz
-  updatedAt       DateTime    @default(now()) @updatedAt @db.Timestamptz
-  messages        Message[]
-}
-
-model Message {
-  id           String   @id @default(uuid())
-  roomName     String
-  userId       String
-  pictureURL   String
-  data         String
-  createdAt    DateTime @default(now()) @db.Timestamptz
-  room         Room     @relation(fields: [roomName], references: [name], onDelete: Cascade)
-}
-
-enum Status {
-  FRIENDSHIP
-  BLOCK
+  winnerUser User   @relation(name: "winGames", fields: [winnerId], references: [id], onDelete: Cascade)
+  loserUser  User   @relation(name: "loseGames", fields: [loserId], references: [id], onDelete: Cascade)
 }

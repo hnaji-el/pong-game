@@ -86,8 +86,9 @@ function Chat() {
     if (!value.trim() || status !== "success") return;
 
     socket.emit("FromClient", {
-      roomId: chatId,
-      data: value,
+      isDm,
+      chatId,
+      content: value,
     });
 
     setValue("");

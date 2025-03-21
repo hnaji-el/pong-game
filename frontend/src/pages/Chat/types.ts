@@ -1,9 +1,17 @@
-export type UserRole = "OWNER" | "ADMIN" | "MEMBER" | "BLOCKED" | "NONE";
+export type ChannelType = "PUBLIC" | "PROTECTED" | "PRIVATE";
 
-// we will change it with ChannelType after removing ChannelType
-export type ChannelType_ = "PUBLIC" | "PROTECTED" | "PRIVATE";
+export type UserRole = "OWNER" | "ADMIN" | "MEMBER" | "BLOCKED";
 
 export type Status = "idle" | "loading" | "success" | "error";
+
+export interface Message {
+  id: string;
+  chatId: string;
+  senderId: string;
+  senderPictureUrl: string;
+  content: string;
+  sentAt: string;
+}
 
 export interface Dm {
   id: string;
@@ -16,7 +24,7 @@ export interface Dm {
 export interface Channel {
   id: string;
   name: string;
-  type: ChannelType_;
+  type: ChannelType;
   role: UserRole;
   isJoined: boolean;
 }
@@ -25,38 +33,6 @@ export interface Rooms {
   dms: Dm[];
   joinedChannels: Channel[];
   notJoinedChannels: Channel[];
-}
-
-export interface Message {
-  id: string;
-  roomId: string;
-  senderId: string;
-  senderPictureURL: string;
-  data: string;
-}
-
-////////////////////////////////////////////
-
-export interface DmType {
-  id: string;
-  nickname: string;
-  pictureURL: string;
-  status: string;
-  type: string; // 'DM'
-  latestMessage: string;
-  messages: Message[];
-}
-
-export interface ChannelType {
-  id: string;
-  name: string;
-  role: string; // 'OWNER' | 'ADMIN' | 'MEMBER' | 'BLOCKED' | ''
-  members: number;
-  type: string; // 'PUBLIC' | 'PROTECTED' | 'PRIVATE'
-  latestMessage: string;
-  messages: Message[];
-  isJoined: boolean;
-  isPasswordValid?: boolean;
 }
 
 export interface MemberType {

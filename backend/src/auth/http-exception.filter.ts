@@ -7,9 +7,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(host: ArgumentsHost) {
     const exectionContex = host.switchToHttp();
     const response: Response = exectionContex.getResponse<Response>();
-    response.redirect(
-      301,
-      `${process.env.FRONTEND_ORIGIN}/login`,
-    );
+    response.redirect(301, `${process.env.FRONTEND_ORIGIN}/login`);
   }
 }

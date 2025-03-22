@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
+import { Request } from 'express';
 import { authenticator } from 'otplib';
 import * as qrcode from 'qrcode';
 
@@ -80,7 +81,7 @@ export class AuthService {
     return isCodeValid;
   }
 
-  async logout(req: any, res: Response) {
+  async logout(req: Request, res: Response) {
     res.clearCookie('jwt');
     await this.usersService.setFirstTimeLoggedToFalse(req.user);
   }

@@ -14,7 +14,7 @@ import { UsersService } from 'src/users/users.service';
 import * as cookie from 'cookie';
 import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
-import { Message } from './entities/chat.entity';
+import { ClientMessage, Message } from './entities/chat.entity';
 
 interface AuthenticatedSocket extends Socket {
   user?: User;
@@ -40,12 +40,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('FromClient')
   async handleMessage(
     @ConnectedSocket() client: AuthenticatedSocket,
-    @MessageBody()
-    msgData: {
-      isDm: boolean;
-      chatId: string;
-      content: string;
-    },
+    @MessageBody() msgData: ClientMessage,
   ) {
     const senderUser = client.user;
 
@@ -53,6 +48,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const dm = await this.prisma.dM.findUnique({
         where: { id: msgData.chatId },
       });
+
+      if (!dm) return;
 
       const receiverId = dm.user1Id === senderUser.id ? dm.user2Id : dm.user1Id;
 
@@ -77,12 +74,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       const wsRoom = randomUUID();
+      const usersInDM = [{ id: senderUser.id }, { id: receiverId }];
 
       // add the connected clients associated with either the sender or receiver user to the WebSocket room.
-      for (const client of this.connectedClients) {
-        if (client.user.id === senderUser.id || client.user.id === receiverId) {
-          client.join(wsRoom);
-        }
+      for (const user of usersInDM) {
+        const client = this.connectedClients.find(
+          (client) => client.user.id === user.id,
+        );
+        if (client) client.join(wsRoom);
       }
 
       this.server.to(wsRoom).emit('FromServer', {
@@ -108,7 +107,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
               user: {
                 select: {
                   id: true,
-                  pictureUrl: true,
                 },
               },
             },
@@ -117,8 +115,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       if (!channel) return;
-
-      const usersInChannel = channel.memberships.map((m) => m.user);
 
       const message = await this.prisma.channelMessage.create({
         data: {
@@ -137,15 +133,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       });
 
       const wsRoom = randomUUID();
+      const usersInChannel = channel.memberships.map((m) => m.user);
 
       // add the connected clients associated with room members to the Web Socket room (wsRoom).
       for (const user of usersInChannel) {
-        for (const client of this.connectedClients) {
-          if (user.id === client.user.id) {
-            client.join(wsRoom);
-            break;
-          }
-        }
+        const client = this.connectedClients.find(
+          (client) => client.user.id === user.id,
+        );
+        if (client) client.join(wsRoom);
       }
 
       this.server.to(wsRoom).emit('FromServer', {
@@ -157,42 +152,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         sentAt: message.sentAt.toISOString(),
       } as Message);
     }
-
-    // if (!wsData.isDm) {
-    //   const wsRoom = randomUUID();
-    //   const room = await this.prisma.room.findUnique({
-    //     where: {
-    //       id: wsData.channelId,
-    //     },
-    //   });
-    //   if (!room) return;
-    //   // add the connected clients associated with room members to the Web Socket room (wsRoom).
-    //   for (const client of this.connectedClients) {
-    //     if (room.members.includes(client.user.nickname)) {
-    //       client.join(wsRoom);
-    //     }
-    //   }
-    //   await this.prisma.message.create({
-    //     data: {
-    //       roomName: room.name,
-    //       userId: senderUser.id,
-    //       pictureURL: senderUser.pictureURL,
-    //       data: wsData.data,
-    //     },
-    //   });
-    //   await this.prisma.room.update({
-    //     where: {
-    //       id: room.id,
-    //     },
-    //     data: {
-    //       updatedAt: new Date(),
-    //     },
-    //   });
-    //   this.server.to(wsRoom).emit(
-    //     'msgFromServer',
-    //     await this.chatService.getChannelData(room, senderUser, true), // TODO: handle the case when this function throw an InternalServerErrorException
-    //   );
-    // }
   }
 
   async handleDisconnect(@ConnectedSocket() client: AuthenticatedSocket) {

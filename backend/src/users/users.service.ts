@@ -8,6 +8,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserEntity } from './entities/user.entity';
 import { GameEntity } from './entities/game.entity';
 import { AttachedUserEntity } from './entities/attachedUser.entity';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,7 @@ export class UsersService {
     private chatService: ChatService,
   ) {}
 
-  async create(nickname: string, email: string, pictureURL: string) {
+  async create(nickname: string, email: string, pictureUrl: string) {
     let user = await this.prisma.user.findUnique({
       where: { email: email },
       include: { requester: true, addressee: true },
@@ -24,7 +25,7 @@ export class UsersService {
 
     if (!user) {
       user = await this.prisma.user.create({
-        data: { nickname: nickname, email: email, pictureURL: pictureURL },
+        data: { nickname: nickname, email: email, pictureUrl: pictureUrl },
         include: { requester: true, addressee: true },
       });
     }
@@ -80,7 +81,7 @@ export class UsersService {
       entities.push({
         id: loser.id,
         nickname: loser.nickname,
-        pictureURL: loser.pictureURL,
+        pictureURL: loser.pictureUrl,
         score: `${x.loseScore}-${x.winScore}`,
         gameState: 'WIN',
         winsNumber: user.winGames.length,
@@ -94,7 +95,7 @@ export class UsersService {
       entities.push({
         id: winner.id,
         nickname: winner.nickname,
-        pictureURL: winner.pictureURL,
+        pictureURL: winner.pictureUrl,
         score: `${x.winScore}-${x.loseScore}`,
         gameState: 'LOSE',
         winsNumber: user.winGames.length,
@@ -104,7 +105,7 @@ export class UsersService {
     return entities;
   }
 
-  async getAchievement(userId: any): Promise<boolean> {
+  async getAchievement(userId: string): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { winGames: true },
@@ -112,7 +113,7 @@ export class UsersService {
     return user.winGames.length >= 4 ? true : false;
   }
 
-  async getAllUsers(loggedUser: any): Promise<UserEntity[]> {
+  async getAllUsers(loggedUser: AttachedUserEntity): Promise<UserEntity[]> {
     const entities: UserEntity[] = [];
     const users = await this.prisma.user.findMany({
       where: { NOT: { id: loggedUser.id } },
@@ -124,8 +125,8 @@ export class UsersService {
       entities.push({
         id: user.id,
         nickname: user.nickname,
-        pictureURL: user.pictureURL,
-        status: user.status,
+        pictureURL: user.pictureUrl,
+        status: user.isOnline ? 'online' : 'offline',
         isFriendToLoggedUser: this.isFriend(loggedUser, user),
         isBlockedByLoggedUser: this.isBlocked(loggedUser, user),
         friendsNumber: this.getNumberOfFriends(user),
@@ -134,7 +135,10 @@ export class UsersService {
     return entities;
   }
 
-  async getOneUser(loggedUser: any, userId: string): Promise<UserEntity> {
+  async getOneUser(
+    loggedUser: AttachedUserEntity,
+    userId: string,
+  ): Promise<UserEntity> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
@@ -151,8 +155,8 @@ export class UsersService {
     const entity: UserEntity = {
       id: user.id,
       nickname: user.nickname,
-      pictureURL: user.pictureURL,
-      status: user.status,
+      pictureURL: user.pictureUrl,
+      status: user.isOnline ? 'online' : 'offline',
       friendsNumber: this.getNumberOfFriends(user),
       winsNumber: user.winGames.length,
       losesNumber: user.loseGames.length,
@@ -177,15 +181,18 @@ export class UsersService {
     }
   }
 
-  async updateUserPictureURL(user: any, file: Express.Multer.File) {
-    const newPictureURL = `${process.env.BACKEND_ORIGIN}/users/profile-picture/${file.filename}`;
+  async updateUserPictureURL(
+    user: AttachedUserEntity,
+    file: Express.Multer.File,
+  ) {
+    const newPictureUrl = `${process.env.BACKEND_ORIGIN}/users/profile-picture/${file.filename}`;
 
     await this.prisma.user.update({
       where: { id: user.id },
-      data: { pictureURL: newPictureURL },
+      data: { pictureUrl: newPictureUrl },
     });
 
-    return { pictureURL: newPictureURL };
+    return { pictureURL: newPictureUrl };
   }
 
   async getFriends(userId: string): Promise<UserEntity[]> {
@@ -194,6 +201,7 @@ export class UsersService {
       where: { id: userId },
       include: { requester: true, addressee: true },
     });
+
     if (!user) throw new ForbiddenException();
     const FriendsNumber = this.getNumberOfFriends(user);
 
@@ -212,6 +220,7 @@ export class UsersService {
       });
       this.pushToEntities(entities, user, FriendsNumber);
     }
+
     return entities;
   }
 
@@ -232,7 +241,7 @@ export class UsersService {
         throw new ForbiddenException('The user is already on the blocked list');
       }
 
-      await this.prisma.relationShip.create({
+      await this.prisma.relationship.create({
         data: {
           requesterId: requesterUser.id,
           addresseeId: addresseeUser.id,
@@ -266,7 +275,10 @@ export class UsersService {
     }
   }
 
-  async removeFriend(requesterUser: any, addresseeUserId: string) {
+  async removeFriend(
+    requesterUser: AttachedUserEntity,
+    addresseeUserId: string,
+  ) {
     const addresseeUser = await this.prisma.user.findUnique({
       where: { id: addresseeUserId },
       include: { requester: true, addressee: true },
@@ -278,7 +290,7 @@ export class UsersService {
     if (!this.isFriend(requesterUser, addresseeUser))
       throw new ForbiddenException('User without any relationship');
 
-    await this.prisma.relationShip.deleteMany({
+    await this.prisma.relationship.deleteMany({
       where: {
         OR: [
           { requesterId: requesterUser.id, addresseeId: addresseeUser.id },
@@ -301,7 +313,7 @@ export class UsersService {
     if (this.isBlocked(requesterUser, addresseeUser))
       throw new ForbiddenException('user already blocked');
 
-    await this.prisma.relationShip.deleteMany({
+    await this.prisma.relationship.deleteMany({
       where: {
         OR: [
           { requesterId: requesterUser.id, addresseeId: addresseeUser.id },
@@ -310,7 +322,7 @@ export class UsersService {
       },
     });
 
-    await this.prisma.relationShip.create({
+    await this.prisma.relationship.create({
       data: {
         requesterId: requesterUser.id,
         addresseeId: addresseeUser.id,
@@ -319,7 +331,10 @@ export class UsersService {
     });
   }
 
-  async unblockUser(requesterUser: any, addresseeUserId: string) {
+  async unblockUser(
+    requesterUser: AttachedUserEntity,
+    addresseeUserId: string,
+  ) {
     const addresseeUser = await this.prisma.user.findUnique({
       where: { id: addresseeUserId },
       include: { requester: true, addressee: true },
@@ -331,7 +346,7 @@ export class UsersService {
     if (!this.isBlocked(requesterUser, addresseeUser))
       throw new ForbiddenException('user is not blocked');
     if (this.isBlocked(requesterUser, addresseeUser)) {
-      await this.prisma.relationShip.deleteMany({
+      await this.prisma.relationship.deleteMany({
         where: {
           OR: [
             { requesterId: requesterUser.id, addresseeId: addresseeUser.id },
@@ -344,7 +359,7 @@ export class UsersService {
 
   // HELPER METHODS
 
-  async setFirstTimeLoggedToFalse(user: any) {
+  async setFirstTimeLoggedToFalse(user: AttachedUserEntity) {
     if (user.firstTimeLogged) {
       await this.prisma.user.update({
         where: { id: user.id },
@@ -353,21 +368,26 @@ export class UsersService {
     }
   }
 
-  pushToEntities(entities: UserEntity[], user: any, FriendsNumber: number) {
+  pushToEntities(entities: UserEntity[], user: User, FriendsNumber: number) {
     entities.push({
       id: user.id,
       nickname: user.nickname,
-      pictureURL: user.pictureURL,
-      status: user.status,
+      pictureURL: user.pictureUrl,
+      status: user.isOnline ? 'online' : 'offline',
       friendsNumber: FriendsNumber,
     });
   }
 
-  isLoggedUserBlockedByUser(loggedUser: any, user: any): boolean {
+  isLoggedUserBlockedByUser(
+    loggedUser: AttachedUserEntity,
+    user: AttachedUserEntity,
+  ): boolean {
     const addressee = loggedUser.addressee;
+
     for (const x of addressee) {
       if (x.requesterId === user.id && x.type === 'BLOCK') return true;
     }
+
     return false;
   }
 
@@ -403,7 +423,7 @@ export class UsersService {
     return false;
   }
 
-  getNumberOfFriends(user: any): number {
+  getNumberOfFriends(user: AttachedUserEntity): number {
     let count = 0;
 
     for (const elem of user.requester) {

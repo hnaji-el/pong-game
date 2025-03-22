@@ -16,7 +16,7 @@ function Messages({ messages, loggedUserId, isDm }: PropsType) {
           <div key={msg.id} className="ml-[20px] flex justify-end">
             <div className="max-w-[320px] rounded-xl rounded-tr-none bg-primary p-[15px] lg:max-w-[512px]">
               <p className="break-words text-left text-sm font-light text-white">
-                {msg.data}
+                {msg.content}
               </p>
             </div>
           </div>
@@ -27,14 +27,14 @@ function Messages({ messages, loggedUserId, isDm }: PropsType) {
           >
             {!isDm && (
               <img
-                src={msg.senderPictureURL}
+                src={msg.senderPictureUrl}
                 alt="avatar"
                 className="h-12 w-12 rounded-full"
               />
             )}
             <div className="max-w-[320px] rounded-xl rounded-tl-none bg-shape p-[15px] lg:max-w-[512px]">
               <p className="break-words text-left text-sm font-light text-white">
-                {msg.data}
+                {msg.content}
               </p>
             </div>
           </div>

@@ -27,8 +27,8 @@ export class UsersController {
       id: req.user.id,
       email: req.user.email,
       nickname: req.user.nickname,
-      pictureURL: req.user.pictureURL,
-      status: req.user.status,
+      pictureURL: req.user.pictureUrl,
+      status: req.user.isOnline ? 'online' : 'offline',
       isTwoFactorAuthEnabled: req.user.isTwoFactorAuthEnabled,
     };
   }

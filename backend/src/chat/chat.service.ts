@@ -510,12 +510,12 @@ export class ChatService {
     });
   }
 
-  pushToEntities(entities: UserEntity[], user: any) {
+  pushToEntities(entities: UserEntity[], user: User) {
     entities.push({
       id: user.id,
       nickname: user.nickname,
-      pictureURL: user.pictureURL,
-      status: user.status,
+      pictureURL: user.pictureUrl,
+      status: user.isOnline ? 'online' : 'offline',
       isFriendToLoggedUser: true,
       friendsNumber: 0,
     });

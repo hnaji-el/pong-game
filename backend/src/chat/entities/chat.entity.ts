@@ -2,6 +2,12 @@ export type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE';
 
 export type UserRole = 'OWNER' | 'ADMIN' | 'MEMBER' | 'BLOCKED';
 
+export interface ClientMessage {
+  isDm: boolean;
+  chatId: string;
+  content: string;
+}
+
 export interface Message {
   id: string;
   chatId: string;

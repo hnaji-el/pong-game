@@ -7,7 +7,7 @@ import VisuallyHidden from "../../components/VisuallyHidden";
 import { SendIcon } from "../../components/Icons";
 import { Socket } from "socket.io-client";
 import { UserType } from "../../api/types";
-import { Message, Status } from "./types";
+import { ClientMessage, Message, Status } from "./types";
 
 interface ContextType {
   loggedUserData: UserType;
@@ -68,7 +68,7 @@ function Chat() {
     if (!socket) return;
 
     function handleReceiveMessage(msg: Message) {
-      if (msg.roomId === chatId) {
+      if (msg.chatId === chatId) {
         setMessages((currentValue) => [...currentValue, msg]);
       }
     }
@@ -89,7 +89,7 @@ function Chat() {
       isDm,
       chatId,
       content: value,
-    });
+    } as ClientMessage);
 
     setValue("");
   }

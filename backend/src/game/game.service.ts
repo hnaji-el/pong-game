@@ -26,11 +26,12 @@ export class GameService {
   private clientIdToRoomId: Map<string, string> = new Map();
   private roomIdToGameState: Map<string, GameState> = new Map();
   private userToSocket: UserToSocket[] = [];
+
   async updateUserStatus(userId: string, status: string) {
     try {
       await this.prisma.user.update({
         where: { id: userId },
-        data: { status: status },
+        data: { isOnline: status === 'online' ? true : false },
       });
     } catch (e) {}
   }

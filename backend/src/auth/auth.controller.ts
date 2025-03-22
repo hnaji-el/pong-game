@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { Post, Get, Req, Res, UseInterceptors } from '@nestjs/common';
 import { UseFilters, UseGuards, Controller, Body } from '@nestjs/common';
+import { Request } from 'express';
 import { Response } from 'express';
 
 import { AuthService } from './auth.service';
@@ -61,7 +62,7 @@ export class AuthController {
   // Logout
   @Get('auth/logout')
   @UseGuards(JwtAuthGuard)
-  async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(req, res);
   }
 

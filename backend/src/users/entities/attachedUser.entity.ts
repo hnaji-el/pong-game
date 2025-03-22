@@ -1,7 +1,7 @@
 import { User } from '@prisma/client';
-import { RelationShip } from '@prisma/client';
+import { Relationship } from '@prisma/client';
 
 export interface AttachedUserEntity extends User {
-  requester: RelationShip[];
-  addressee: RelationShip[];
+  requester: Relationship[];
+  addressee: Relationship[];
 }

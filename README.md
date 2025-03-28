@@ -1,12 +1,12 @@
-# Welcome to Pong Game Web App Project 🎉
+# Welcome to Pong Game Web App Project
 
 Pong Game project is a web application for playing real-time multiplayer ping-pong, chatting, and having fun with friends.
 
-## Project Link 🔗
+## Project Link
 
 To explore the full experience, we invite you to visit our website through the application link: [Pong Game Web App](https://pingpongpro.me)
 
-## Key Features (Functionalities) 🎯
+## Key Features (Functionalities)
 
 Here are the key functionalities of the project:
 
@@ -16,7 +16,7 @@ Here are the key functionalities of the project:
 - User profile
 - Match history
 
-## Technologies ⚙️
+## Technologies
 
 This app is built using a modern tech stack including:
 
@@ -25,7 +25,7 @@ This app is built using a modern tech stack including:
 - Back-End Development: NestJS | PostgreSQL | Prisma
 - Tools: Nginx | Docker | Docker Compose | Git
 
-## Running the Project Locally 🚀
+## Running the Project Locally
 
 The development environment is built using Docker Compose, consisting of three containers: one for the front-end, one for the back-end, and another for the PostgreSQL database. To run the application locally, you need **Docker** and **Docker Compose** installed on your machine.
 
@@ -46,6 +46,6 @@ Follow these steps to get a local copy up and running:
 
    `docker compose up --build`
 
-## Contributing 🤝
+## Contributing
 
 Contributions are welcome! If you'd like to improve the Pong Game Platform, feel free to fork the repository, make changes, and submit a pull request. Please ensure your changes are tested before submitting. We appreciate your input in making this project better!

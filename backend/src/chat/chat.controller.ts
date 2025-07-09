@@ -5,22 +5,40 @@ import { Request } from 'express';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
+import { ChannelType } from '@prisma/client';
+
+// /chat/channel/join-channel
+// /chat/channel/members/:channelId
+// /chat/channel/non-member-friends/:channelId
+// /chat/channel/add-member
+// /chat/channel/set-admin
+// /chat/channel/block-member
+// /chat/channel/unblock-member
+// /chat/channel/kick-member
+// /chat/channel/leave-channel
+// /chat/channel/delete-room/:name
 
 @Controller('chat')
 export class ChatController {
   constructor(private chatService: ChatService) {}
 
-  // TODO: [CHAT] return channel entity
-  @Post('/channels/create-channel')
+  // POST   /chat/channels
+  // GET    /chat/channels
+  // GET    /chat/channels/{id}
+  // PATCH  /chat/channels/{id}
+  // DELETE /chat/channels/{id}
+
+  @Post('/channels')
   @UseGuards(JwtAuthGuard)
-  async createChannel(@Req() req: Request, @Body() channel) {
-    await this.chatService.createRoom(
-      channel.data.name,
-      req.user.nickname,
-      [],
-      channel.data.type,
-      channel.data.password,
-    );
+  async createChannel(
+    @Body()
+    channelData: {
+      name: string;
+      type: ChannelType;
+      hashedPassword?: string;
+    },
+  ) {
+    await this.chatService.createChannel(channelData);
   }
 
   @Post('/channel/join-channel')
@@ -36,17 +54,17 @@ export class ChatController {
     }
   }
 
-  @Get('/dms/dms-messages')
-  @UseGuards(JwtAuthGuard)
-  async getDmsData(@Req() req: Request) {
-    return await this.chatService.getDmsData(req.user);
-  }
+  // @Get('/dms/dms-messages')
+  // @UseGuards(JwtAuthGuard)
+  // async getDmsData(@Req() req: Request) {
+  //   return await this.chatService.getDmsData(req.user);
+  // }
 
-  @Get('/channels/channels-messages')
-  @UseGuards(JwtAuthGuard)
-  async getChannelsData(@Req() req: Request) {
-    return await this.chatService.getChannelsData(req.user);
-  }
+  // @Get('/channels/channels-messages')
+  // @UseGuards(JwtAuthGuard)
+  // async getChannelsData(@Req() req: Request) {
+  //   return await this.chatService.getChannelsData(req.user);
+  // }
 
   @Get('/channel/members/:channelId')
   @UseGuards(JwtAuthGuard)

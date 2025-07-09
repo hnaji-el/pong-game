@@ -1,7 +1,9 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { ChatService } from 'src/chat/chat.service';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -232,13 +234,18 @@ export class UsersService {
       });
 
       if (!addresseeUser) {
-        throw new ForbiddenException('The user does not exit');
+        throw new NotFoundException('User not found');
+      }
+      if (requesterUser.id === addresseeUser.id) {
+        throw new ConflictException(
+          'You cannot send a friend request to yourself',
+        );
       }
       if (this.isFriend(requesterUser, addresseeUser)) {
-        throw new ForbiddenException('The user is already a friend');
+        throw new ConflictException('Users are already friends');
       }
       if (this.isBlocked(requesterUser, addresseeUser)) {
-        throw new ForbiddenException('The user is already on the blocked list');
+        throw new ForbiddenException('User is already on the blocked list');
       }
 
       await this.prisma.relationship.create({
@@ -249,21 +256,17 @@ export class UsersService {
         },
       });
 
-      await this.chatService.createRoom(
-        this.chatService.generateDMRoomName(requesterUser.id, addresseeUser.id),
-        requesterUser.nickname,
-        [addresseeUser.nickname],
-        'DM',
-      );
+      await this.chatService.createDM(requesterUser.id, addresseeUser.id);
     } catch (error) {
       if (
+        error instanceof NotFoundException ||
+        error instanceof ConflictException ||
         error instanceof ForbiddenException ||
         error instanceof InternalServerErrorException
       ) {
         throw error;
       }
 
-      // handle database connection error or other unexpected error
       console.error(
         'Database connection error or other unexpected error:',
         error.stack,

@@ -15,7 +15,7 @@ const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
 function ChatLayout() {
-  const status = useVerifyUserAuthenticity();
+  // const status = useVerifyUserAuthenticity();
   const [loggedUserData, setLoggedUserData] = React.useState<UserType>({
     id: "",
     email: "",
@@ -106,17 +106,17 @@ function ChatLayout() {
     });
   }, []);
 
-  if (status === "error") {
-    navigate("/login");
-  }
+  // if (status === "error") {
+  //   navigate("/login");
+  // }
 
-  if (status === "pending" || !loggedUserData.nickname.length) {
-    return (
-      <div className="mx-3 flex h-full items-center justify-center">
-        <Spinner />
-      </div>
-    );
-  }
+  // if (status === "pending" || !loggedUserData.nickname.length) {
+  //   return (
+  //     <div className="mx-3 flex h-full items-center justify-center">
+  //       <Spinner />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>

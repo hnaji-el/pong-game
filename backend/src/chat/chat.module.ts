@@ -6,12 +6,7 @@ import { ChatGateway } from './chat.gateway';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  providers: [
-    ChatService,
-    PrismaService,
-    ChatGateway,
-    JwtService,
-  ],
+  providers: [ChatService, PrismaService, ChatGateway, JwtService],
   controllers: [ChatController],
 })
 export class ChatModule {}

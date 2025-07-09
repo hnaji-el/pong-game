@@ -5,16 +5,12 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { ChannelType, DmType, MemberType } from './entities/chat.entity';
 import { JwtService } from '@nestjs/jwt';
 import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { Prisma, Room } from '@prisma/client';
+import { ChannelType, Prisma } from '@prisma/client';
 import { User } from '@prisma/client';
 import { AttachedUserEntity } from 'src/users/entities/attachedUser.entity';
-import { Socket } from 'socket.io';
-
-// TODO: delete the `pictureURL` from `Message` Model, and instead of that query for it from `User` Model.
 
 @Injectable()
 export class ChatService {
@@ -42,161 +38,34 @@ export class ChatService {
     return user;
   }
 
-  async getDmData(room: Room, user: User): Promise<DmType> {
-    try {
-      const roomMsgs = await this.prisma.room.findUnique({
-        where: {
-          name: room.name,
-        },
-        select: {
-          messages: {
-            orderBy: {
-              createdAt: 'desc',
-            },
-          },
-        },
-      });
-
-      return {
-        id: user.id,
-        nickname: user.nickname,
-        pictureURL: user.pictureURL,
-        status: user.status,
-        type: room.type,
-        latestMessage:
-          roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
-        messages: roomMsgs.messages.map((msg) => ({
-          id: msg.id,
-          roomName: msg.roomName,
-          userId: msg.userId,
-          pictureURL: msg.pictureURL,
-          data: msg.data,
-        })),
-      };
-    } catch (error) {
-      this.handleUnexpectedErrors(error);
-    }
+  async createDM(user1Id: string, user2Id: string): Promise<void> {
+    await this.prisma.dM.create({
+      data: {
+        user1Id: user1Id < user2Id ? user1Id : user2Id,
+        user2Id: user1Id > user2Id ? user1Id : user2Id,
+      },
+    });
   }
 
-  async getDmsData(user: AttachedUserEntity): Promise<DmType[]> {
-    try {
-      const rooms = await this.prisma.room.findMany({
-        where: {
-          type: 'DM',
-          members: {
-            has: user.nickname,
-          },
-        },
-        orderBy: {
-          updatedAt: 'desc',
-        },
-      });
+  /*
+  id             String      @id @default(uuid())
 
-      const dmsData = await Promise.all(
-        rooms.map(async (room) => {
-          const friend = await this.prisma.user.findUnique({
-            where: {
-              nickname:
-                user.nickname === room.members[0]
-                  ? room.members[1]
-                  : room.members[0],
-            },
-          });
+  name           String      @db.VarChar(20) @unique
+  type           ChannelType
+  hashedPassword String?     @db.VarChar(20)
 
-          return this.getDmData(room, friend);
-        }),
-      );
+  createdAt      DateTime    @db.Timestamptz @default(now())
+  updatedAt      DateTime    @db.Timestamptz @default(now()) @updatedAt
+  */
 
-      return dmsData;
-    } catch (error) {
-      // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
-      if (error instanceof InternalServerErrorException) {
-        throw error;
-      }
-      this.handleUnexpectedErrors(error);
-    }
-  }
-
-  async getChannelData(
-    room: Room,
-    user: User,
-    isJoined: boolean,
-  ): Promise<ChannelType> {
-    try {
-      const roomMsgs = await this.prisma.room.findUnique({
-        where: {
-          name: room.name,
-        },
-        select: {
-          messages: {
-            orderBy: {
-              createdAt: 'desc',
-            },
-          },
-        },
-      });
-
-      return {
-        id: room.id,
-        name: room.name,
-        members: room.members.length,
-        role: this.getRole(room, user.nickname),
-        type: room.type,
-        latestMessage:
-          roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
-        messages: roomMsgs.messages.map((msg) => ({
-          id: msg.id,
-          roomName: msg.roomName,
-          userId: msg.userId,
-          pictureURL: msg.pictureURL,
-          data: msg.data,
-        })),
-        isJoined: isJoined,
-      };
-    } catch (error) {
-      this.handleUnexpectedErrors(error);
-    }
-  }
-
-  async getChannelsData(user: AttachedUserEntity): Promise<ChannelType[]> {
-    try {
-      const rooms = await this.prisma.room.findMany({
-        where: {
-          OR: [{ type: 'PROTECTED' }, { type: 'PUBLIC' }, { type: 'PRIVATE' }],
-        },
-        orderBy: {
-          updatedAt: 'desc',
-        },
-      });
-
-      const channelsData = (
-        await Promise.all(
-          rooms.map(async (room) => {
-            const isMember = room.members.includes(user.nickname);
-            const isBlocked = room.blocked.includes(user.nickname);
-
-            if (isMember) {
-              return this.getChannelData(room, user, true);
-            }
-
-            if (!isMember && !isBlocked && room.type !== 'PRIVATE') {
-              return this.getChannelData(room, user, false);
-            }
-          }),
-        )
-      ).filter((data) => data !== undefined);
-
-      return [
-        ...channelsData.filter((channel) => channel.isJoined),
-        ...channelsData.filter((channel) => !channel.isJoined),
-      ];
-    } catch (error) {
-      // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
-      if (error instanceof InternalServerErrorException) {
-        throw error;
-      }
-      this.handleUnexpectedErrors(error);
-    }
+  async createChannel(channelData: {
+    name: string;
+    type: ChannelType;
+    hashedPassword?: string;
+  }) {
+    await this.prisma.channel.create({
+      data: channelData,
+    });
   }
 
   async createRoom(
@@ -247,6 +116,163 @@ export class ChatService {
       );
     }
   }
+
+  // async getDmData(room: Room, user: User): Promise<DmType> {
+  //   try {
+  //     const roomMsgs = await this.prisma.room.findUnique({
+  //       where: {
+  //         name: room.name,
+  //       },
+  //       select: {
+  //         messages: {
+  //           orderBy: {
+  //             createdAt: 'desc',
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     return {
+  //       id: user.id,
+  //       nickname: user.nickname,
+  //       pictureURL: user.pictureURL,
+  //       status: user.status,
+  //       type: room.type,
+  //       latestMessage:
+  //         roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
+  //       messages: roomMsgs.messages.map((msg) => ({
+  //         id: msg.id,
+  //         roomName: msg.roomName,
+  //         userId: msg.userId,
+  //         pictureURL: msg.pictureURL,
+  //         data: msg.data,
+  //       })),
+  //     };
+  //   } catch (error) {
+  //     this.handleUnexpectedErrors(error);
+  //   }
+  // }
+
+  // async getDmsData(user: AttachedUserEntity): Promise<DmType[]> {
+  //   try {
+  //     const rooms = await this.prisma.room.findMany({
+  //       where: {
+  //         type: 'DM',
+  //         members: {
+  //           has: user.nickname,
+  //         },
+  //       },
+  //       orderBy: {
+  //         updatedAt: 'desc',
+  //       },
+  //     });
+
+  //     const dmsData = await Promise.all(
+  //       rooms.map(async (room) => {
+  //         const friend = await this.prisma.user.findUnique({
+  //           where: {
+  //             nickname:
+  //               user.nickname === room.members[0]
+  //                 ? room.members[1]
+  //                 : room.members[0],
+  //           },
+  //         });
+
+  //         return this.getDmData(room, friend);
+  //       }),
+  //     );
+
+  //     return dmsData;
+  //   } catch (error) {
+  //     // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
+  //     if (error instanceof InternalServerErrorException) {
+  //       throw error;
+  //     }
+  //     this.handleUnexpectedErrors(error);
+  //   }
+  // }
+
+  // async getChannelData(
+  //   room: Room,
+  //   user: User,
+  //   isJoined: boolean,
+  // ): Promise<ChannelType> {
+  //   try {
+  //     const roomMsgs = await this.prisma.room.findUnique({
+  //       where: {
+  //         name: room.name,
+  //       },
+  //       select: {
+  //         messages: {
+  //           orderBy: {
+  //             createdAt: 'desc',
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     return {
+  //       id: room.id,
+  //       name: room.name,
+  //       members: room.members.length,
+  //       role: this.getRole(room, user.nickname),
+  //       type: room.type,
+  //       latestMessage:
+  //         roomMsgs.messages[roomMsgs.messages.length - 1]?.data ?? '',
+  //       messages: roomMsgs.messages.map((msg) => ({
+  //         id: msg.id,
+  //         roomName: msg.roomName,
+  //         userId: msg.userId,
+  //         pictureURL: msg.pictureURL,
+  //         data: msg.data,
+  //       })),
+  //       isJoined: isJoined,
+  //     };
+  //   } catch (error) {
+  //     this.handleUnexpectedErrors(error);
+  //   }
+  // }
+
+  // async getChannelsData(user: AttachedUserEntity): Promise<ChannelType[]> {
+  //   try {
+  //     const rooms = await this.prisma.room.findMany({
+  //       where: {
+  //         OR: [{ type: 'PROTECTED' }, { type: 'PUBLIC' }, { type: 'PRIVATE' }],
+  //       },
+  //       orderBy: {
+  //         updatedAt: 'desc',
+  //       },
+  //     });
+
+  //     const channelsData = (
+  //       await Promise.all(
+  //         rooms.map(async (room) => {
+  //           const isMember = room.members.includes(user.nickname);
+  //           const isBlocked = room.blocked.includes(user.nickname);
+
+  //           if (isMember) {
+  //             return this.getChannelData(room, user, true);
+  //           }
+
+  //           if (!isMember && !isBlocked && room.type !== 'PRIVATE') {
+  //             return this.getChannelData(room, user, false);
+  //           }
+  //         }),
+  //       )
+  //     ).filter((data) => data !== undefined);
+
+  //     return [
+  //       ...channelsData.filter((channel) => channel.isJoined),
+  //       ...channelsData.filter((channel) => !channel.isJoined),
+  //     ];
+  //   } catch (error) {
+  //     // Re-throw InternalServerErrorException if it has already been thrown, without logging it again.
+  //     if (error instanceof InternalServerErrorException) {
+  //       throw error;
+  //     }
+  //     this.handleUnexpectedErrors(error);
+  //   }
+  // }
 
   async getChannelMembers(
     user: AttachedUserEntity,

@@ -1,5 +1,4 @@
 import React from "react";
-
 import axios from "axios";
 
 import {
@@ -8,7 +7,7 @@ import {
   TypeDataProfileUser,
   TypedataFriend,
 } from "./types";
-import { ChannelType, DmType, MemberType } from "../pages/Chat/types";
+import { ChannelType, MemberType } from "../pages/Chat/types";
 
 const BACKEND_ORIGIN =
   import.meta.env.MODE === "development"
@@ -199,7 +198,7 @@ export function unBlockFriend(id: string) {
  * Chat
  */
 
-export function getAllDms(getRes: (res: DmType[]) => void) {
+export function getAllDms(getRes: (res: any[]) => void) {
   axios
     .get(`${BACKEND_ORIGIN}/chat/dms/dms-messages`, {
       withCredentials: true,

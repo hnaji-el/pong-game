@@ -1,0 +1,3 @@
+1- API: GET /chat/rooms?type=dm (?type=channel) -> Rooms
+
+2- API: GET /chat/messages/:roomId -> Message[]

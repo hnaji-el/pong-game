@@ -1,6 +1,5 @@
 import React from "react";
 
-import { X as Close } from "react-feather";
 import FocusLock from "react-focus-lock";
 import { RemoveScroll } from "react-remove-scroll";
 
@@ -43,7 +42,9 @@ function Modal({ title, handleDismiss, children }: PropsType) {
             aria-label={title}
           >
             <header className="flex items-center justify-between border-b-[1px] border-b-secondaryText pb-[20px] pl-[8px]">
-              <h2 className="text-xl font-light capitalize text-primaryText">{title}</h2>
+              <h2 className="text-xl font-light capitalize text-primaryText">
+                {title}
+              </h2>
               <button
                 className="h-[32px] w-[32px] p-[8px]"
                 onClick={handleDismiss}

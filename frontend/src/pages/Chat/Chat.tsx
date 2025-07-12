@@ -1,11 +1,12 @@
 import React from "react";
 
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useNavigate, useParams } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
 import Messages from "./Messages";
 import VisuallyHidden from "../../components/VisuallyHidden";
 import { SendIcon } from "../../components/Icons";
-import { Socket } from "socket.io-client";
+
 import { UserType } from "../../api/types";
 import { ClientMessage, Message, Status } from "./types";
 
@@ -27,11 +28,6 @@ function Chat() {
 
   const id = React.useId();
   const inputId = `${id}-message`;
-
-  // API: GET /chat/messages/:roomId
-  // payload: Message[]
-  // success: 200 Ok
-  // failure: 1/ 401, !401
 
   React.useEffect(() => {
     async function fetcher() {
@@ -78,7 +74,7 @@ function Chat() {
     return () => {
       socket.off("FromServer", handleReceiveMessage);
     };
-  }, [socket, chatId, loggedUserData]);
+  }, [socket, chatId]);
 
   function handleSendMessage(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

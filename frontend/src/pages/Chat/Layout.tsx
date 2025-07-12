@@ -6,16 +6,14 @@ import { io, Socket } from "socket.io-client";
 import Header from "./Header";
 import SideNavBar from "./SideNavBar";
 import Footer from "./Footer";
-import Spinner from "../../components/Spinner";
+import { getDataUserLogged } from "../../api/API";
 import { Rooms, Status } from "./types";
 import { UserType } from "../../api/types";
-import { useVerifyUserAuthenticity, getDataUserLogged } from "../../api/API";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
-function ChatLayout() {
-  // const status = useVerifyUserAuthenticity();
+function Layout() {
   const [loggedUserData, setLoggedUserData] = React.useState<UserType>({
     id: "",
     email: "",
@@ -26,14 +24,6 @@ function ChatLayout() {
   });
   const [click, setClick] = React.useState(false);
 
-  // API: GET /chat/rooms?type=dm (?type=channel)
-  // payload: {
-  //   dms:               { id: string, nickname: string, pictureURL: string, isOnline: boolean }[],
-  //   joinedChannels:    { id: string, name: string, type: string, role: string, isJoined: boolean }[],
-  //   notJoinedChannels: { id: string, name: string, type: string, role: string, isJoined: boolean }[],
-  // }
-  // success: 200 Ok
-  // error: 4xx, 5xx [ 401 Unauthorized, 500 Internal Server Error ]
   const [socket, setSocket] = React.useState<Socket | null>(null);
 
   const [isDm, setIsDm] = React.useState(true);
@@ -88,7 +78,9 @@ function ChatLayout() {
           }
         } else {
           setRoomsStatus("error");
-          if (res.status === 401) navigate("/login");
+          if (res.status === 401) {
+            navigate("/login");
+          }
         }
       } catch {
         setRoomsStatus("error");
@@ -105,18 +97,6 @@ function ChatLayout() {
       setLoggedUserData(userData);
     });
   }, []);
-
-  // if (status === "error") {
-  //   navigate("/login");
-  // }
-
-  // if (status === "pending" || !loggedUserData.nickname.length) {
-  //   return (
-  //     <div className="mx-3 flex h-full items-center justify-center">
-  //       <Spinner />
-  //     </div>
-  //   );
-  // }
 
   return (
     <>
@@ -162,4 +142,4 @@ function ChatLayout() {
   );
 }
 
-export default ChatLayout;
+export default Layout;

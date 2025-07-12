@@ -47,17 +47,6 @@ export class ChatService {
     });
   }
 
-  /*
-  id             String      @id @default(uuid())
-
-  name           String      @db.VarChar(20) @unique
-  type           ChannelType
-  hashedPassword String?     @db.VarChar(20)
-
-  createdAt      DateTime    @db.Timestamptz @default(now())
-  updatedAt      DateTime    @db.Timestamptz @default(now()) @updatedAt
-  */
-
   async createChannel(channelData: {
     name: string;
     type: ChannelType;
@@ -68,54 +57,54 @@ export class ChatService {
     });
   }
 
-  async createRoom(
-    name: string,
-    owner: string,
-    members: string[],
-    type: string,
-    password?: string,
-  ) {
-    if (type === 'PROTECTED' && !password) {
-      throw new ForbiddenException('Password is required for protected rooms');
-    }
+  // async createRoom(
+  //   name: string,
+  //   owner: string,
+  //   members: string[],
+  //   type: string,
+  //   password?: string,
+  // ) {
+  //   if (type === 'PROTECTED' && !password) {
+  //     throw new ForbiddenException('Password is required for protected rooms');
+  //   }
 
-    try {
-      await this.prisma.room.create({
-        data: {
-          name: name,
-          owner: owner,
-          admins: [owner],
-          members: [owner, ...members],
-          type: type,
-          ...(type === 'PROTECTED' && password
-            ? {
-                hashedPassword: bcrypt.hashSync(password, bcrypt.genSaltSync()),
-              }
-            : {}),
-        },
-      });
-    } catch (error) {
-      // handle unique constraint violation error
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ForbiddenException(
-          'A room with this name already exists. Please choose a different name',
-        );
-      }
+  //   try {
+  //     await this.prisma.room.create({
+  //       data: {
+  //         name: name,
+  //         owner: owner,
+  //         admins: [owner],
+  //         members: [owner, ...members],
+  //         type: type,
+  //         ...(type === 'PROTECTED' && password
+  //           ? {
+  //               hashedPassword: bcrypt.hashSync(password, bcrypt.genSaltSync()),
+  //             }
+  //           : {}),
+  //       },
+  //     });
+  //   } catch (error) {
+  //     // handle unique constraint violation error
+  //     if (
+  //       error instanceof Prisma.PrismaClientKnownRequestError &&
+  //       error.code === 'P2002'
+  //     ) {
+  //       throw new ForbiddenException(
+  //         'A room with this name already exists. Please choose a different name',
+  //       );
+  //     }
 
-      // handle database connection error or other unexpected error
-      console.error(
-        'Database connection error or other unexpected error:',
-        error.stack,
-      );
+  //     // handle database connection error or other unexpected error
+  //     console.error(
+  //       'Database connection error or other unexpected error:',
+  //       error.stack,
+  //     );
 
-      throw new InternalServerErrorException(
-        'An unexpected error occurred. Please try again later',
-      );
-    }
-  }
+  //     throw new InternalServerErrorException(
+  //       'An unexpected error occurred. Please try again later',
+  //     );
+  //   }
+  // }
 
   // async getDmData(room: Room, user: User): Promise<DmType> {
   //   try {
@@ -274,524 +263,524 @@ export class ChatService {
   //   }
   // }
 
-  async getChannelMembers(
-    user: AttachedUserEntity,
-    channelId: string,
-  ): Promise<MemberType[]> {
-    const room = await this.prisma.room.findUnique({
-      where: { id: channelId },
-    });
+  //   async getChannelMembers(
+  //     user: AttachedUserEntity,
+  //     channelId: string,
+  //   ): Promise<MemberType[]> {
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: channelId },
+  //     });
 
-    const filteredMembers = [
-      ...room.members.filter((nickname) => nickname !== user.nickname),
-      ...room.blocked.filter((nickname) => nickname !== user.nickname),
-    ];
+  //     const filteredMembers = [
+  //       ...room.members.filter((nickname) => nickname !== user.nickname),
+  //       ...room.blocked.filter((nickname) => nickname !== user.nickname),
+  //     ];
 
-    const members = await Promise.all(
-      filteredMembers.map(async (member) => {
-        const memberData = await this.prisma.user.findUnique({
-          where: { nickname: member },
-        });
+  //     const members = await Promise.all(
+  //       filteredMembers.map(async (member) => {
+  //         const memberData = await this.prisma.user.findUnique({
+  //           where: { nickname: member },
+  //         });
 
-        return {
-          id: memberData.id,
-          nickname: memberData.nickname,
-          status: memberData.status,
-          pictureURL: memberData.pictureURL,
-          role: this.getRole(room, memberData.nickname),
-        };
-      }),
-    );
+  //         return {
+  //           id: memberData.id,
+  //           nickname: memberData.nickname,
+  //           status: memberData.status,
+  //           pictureURL: memberData.pictureURL,
+  //           role: this.getRole(room, memberData.nickname),
+  //         };
+  //       }),
+  //     );
 
-    return members;
-  }
+  //     return members;
+  //   }
 
-  async getChannelNonMemberFriends(
-    user: AttachedUserEntity,
-    channelId: string,
-  ): Promise<MemberType[]> {
-    const nonMemberFriends = [];
-    const room = await this.prisma.room.findUnique({
-      where: { id: channelId },
-    });
+  //   async getChannelNonMemberFriends(
+  //     user: AttachedUserEntity,
+  //     channelId: string,
+  //   ): Promise<MemberType[]> {
+  //     const nonMemberFriends = [];
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: channelId },
+  //     });
 
-    for (const { type, addresseeId } of user.requester) {
-      if (type !== 'FRIENDSHIP') continue;
+  //     for (const { type, addresseeId } of user.requester) {
+  //       if (type !== 'FRIENDSHIP') continue;
 
-      const friend = await this.prisma.user.findUnique({
-        where: { id: addresseeId },
-      });
+  //       const friend = await this.prisma.user.findUnique({
+  //         where: { id: addresseeId },
+  //       });
 
-      if (
-        !room.members.includes(friend.nickname) &&
-        !room.blocked.includes(friend.nickname)
-      ) {
-        nonMemberFriends.push({
-          id: friend.id,
-          nickname: friend.nickname,
-          status: friend.status,
-          pictureURL: friend.pictureURL,
-          role: '',
-        });
-      }
-    }
+  //       if (
+  //         !room.members.includes(friend.nickname) &&
+  //         !room.blocked.includes(friend.nickname)
+  //       ) {
+  //         nonMemberFriends.push({
+  //           id: friend.id,
+  //           nickname: friend.nickname,
+  //           status: friend.status,
+  //           pictureURL: friend.pictureURL,
+  //           role: '',
+  //         });
+  //       }
+  //     }
 
-    for (const { type, requesterId } of user.addressee) {
-      if (type !== 'FRIENDSHIP') continue;
+  //     for (const { type, requesterId } of user.addressee) {
+  //       if (type !== 'FRIENDSHIP') continue;
 
-      const friend = await this.prisma.user.findUnique({
-        where: { id: requesterId },
-      });
+  //       const friend = await this.prisma.user.findUnique({
+  //         where: { id: requesterId },
+  //       });
 
-      if (
-        !room.members.includes(friend.nickname) &&
-        !room.blocked.includes(friend.nickname)
-      ) {
-        nonMemberFriends.push({
-          id: friend.id,
-          nickname: friend.nickname,
-          status: friend.status,
-          pictureURL: friend.pictureURL,
-          role: '',
-        });
-      }
-    }
+  //       if (
+  //         !room.members.includes(friend.nickname) &&
+  //         !room.blocked.includes(friend.nickname)
+  //       ) {
+  //         nonMemberFriends.push({
+  //           id: friend.id,
+  //           nickname: friend.nickname,
+  //           status: friend.status,
+  //           pictureURL: friend.pictureURL,
+  //           role: '',
+  //         });
+  //       }
+  //     }
 
-    return nonMemberFriends;
-  }
+  //     return nonMemberFriends;
+  //   }
 
-  async joinChannel(
-    user: AttachedUserEntity,
-    channelId: string,
-  ): Promise<ChannelType> {
-    const room = await this.prisma.room.findUnique({
-      where: { id: channelId },
-    });
+  //   async joinChannel(
+  //     user: AttachedUserEntity,
+  //     channelId: string,
+  //   ): Promise<ChannelType> {
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: channelId },
+  //     });
 
-    if (!room) return;
+  //     if (!room) return;
 
-    if (room.blocked.includes(user.nickname))
-      throw new ForbiddenException('user already blocked');
+  //     if (room.blocked.includes(user.nickname))
+  //       throw new ForbiddenException('user already blocked');
 
-    if (room.members.includes(user.nickname))
-      throw new ForbiddenException('user already member');
+  //     if (room.members.includes(user.nickname))
+  //       throw new ForbiddenException('user already member');
 
-    const updatedRoom = await this.prisma.room.update({
-      where: { id: room.id },
-      data: {
-        members: {
-          push: user.nickname,
-        },
-      },
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-      },
-    });
+  //     const updatedRoom = await this.prisma.room.update({
+  //       where: { id: room.id },
+  //       data: {
+  //         members: {
+  //           push: user.nickname,
+  //         },
+  //       },
+  //       include: {
+  //         messages: {
+  //           orderBy: {
+  //             createdAt: 'desc',
+  //           },
+  //         },
+  //       },
+  //     });
 
-    return {
-      id: updatedRoom.id,
-      name: updatedRoom.name,
-      members: updatedRoom.members.length,
-      latestMessage:
-        updatedRoom.messages[updatedRoom.messages.length - 1]?.data ?? '',
-      role: 'MEMBER',
-      type: updatedRoom.type,
-      messages: updatedRoom.messages.map((msg) => ({
-        id: msg.id,
-        roomName: msg.roomName,
-        userId: msg.userId,
-        pictureURL: msg.pictureURL,
-        data: msg.data,
-      })),
-      isJoined: true,
-    };
-  }
+  //     return {
+  //       id: updatedRoom.id,
+  //       name: updatedRoom.name,
+  //       members: updatedRoom.members.length,
+  //       latestMessage:
+  //         updatedRoom.messages[updatedRoom.messages.length - 1]?.data ?? '',
+  //       role: 'MEMBER',
+  //       type: updatedRoom.type,
+  //       messages: updatedRoom.messages.map((msg) => ({
+  //         id: msg.id,
+  //         roomName: msg.roomName,
+  //         userId: msg.userId,
+  //         pictureURL: msg.pictureURL,
+  //         data: msg.data,
+  //       })),
+  //       isJoined: true,
+  //     };
+  //   }
 
-  async joinProtectedChannel(
-    user: AttachedUserEntity,
-    data: { id: string; type: string; password?: string },
-  ): Promise<ChannelType> {
-    const room = await this.prisma.room.findUnique({
-      where: { id: data.id },
-    });
+  //   async joinProtectedChannel(
+  //     user: AttachedUserEntity,
+  //     data: { id: string; type: string; password?: string },
+  //   ): Promise<ChannelType> {
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: data.id },
+  //     });
 
-    if (!bcrypt.compareSync(data.password, room.hashedPassword)) {
-      return {
-        id: '',
-        name: '',
-        role: '',
-        members: 0,
-        type: '',
-        latestMessage: '',
-        messages: [],
-        isJoined: false,
-        isPasswordValid: false,
-      };
-    }
+  //     if (!bcrypt.compareSync(data.password, room.hashedPassword)) {
+  //       return {
+  //         id: '',
+  //         name: '',
+  //         role: '',
+  //         members: 0,
+  //         type: '',
+  //         latestMessage: '',
+  //         messages: [],
+  //         isJoined: false,
+  //         isPasswordValid: false,
+  //       };
+  //     }
 
-    if (room.blocked.includes(user.nickname))
-      throw new ForbiddenException('user already blocked');
-    if (room.members.includes(user.nickname))
-      throw new ForbiddenException('user already member');
+  //     if (room.blocked.includes(user.nickname))
+  //       throw new ForbiddenException('user already blocked');
+  //     if (room.members.includes(user.nickname))
+  //       throw new ForbiddenException('user already member');
 
-    const updatedRoom = await this.prisma.room.update({
-      where: { id: room.id },
-      data: {
-        members: {
-          push: user.nickname,
-        },
-      },
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-      },
-    });
+  //     const updatedRoom = await this.prisma.room.update({
+  //       where: { id: room.id },
+  //       data: {
+  //         members: {
+  //           push: user.nickname,
+  //         },
+  //       },
+  //       include: {
+  //         messages: {
+  //           orderBy: {
+  //             createdAt: 'desc',
+  //           },
+  //         },
+  //       },
+  //     });
 
-    return {
-      id: updatedRoom.id,
-      name: updatedRoom.name,
-      role: 'MEMBER',
-      members: updatedRoom.members.length,
-      type: updatedRoom.type,
-      latestMessage:
-        updatedRoom.messages[updatedRoom.messages.length - 1]?.data ?? '',
-      messages: updatedRoom.messages.map((msg) => ({
-        id: msg.id,
-        roomName: msg.roomName,
-        userId: msg.userId,
-        pictureURL: msg.pictureURL,
-        data: msg.data,
-      })),
-      isJoined: true,
-      isPasswordValid: true,
-    };
-  }
+  //     return {
+  //       id: updatedRoom.id,
+  //       name: updatedRoom.name,
+  //       role: 'MEMBER',
+  //       members: updatedRoom.members.length,
+  //       type: updatedRoom.type,
+  //       latestMessage:
+  //         updatedRoom.messages[updatedRoom.messages.length - 1]?.data ?? '',
+  //       messages: updatedRoom.messages.map((msg) => ({
+  //         id: msg.id,
+  //         roomName: msg.roomName,
+  //         userId: msg.userId,
+  //         pictureURL: msg.pictureURL,
+  //         data: msg.data,
+  //       })),
+  //       isJoined: true,
+  //       isPasswordValid: true,
+  //     };
+  //   }
 
-  async addToChannelNotPublic(
-    user: AttachedUserEntity,
-    data: {
-      channelId: string;
-      channelType: string;
-      userId: string;
-    },
-  ) {
-    const friend = await this.prisma.user.findUnique({
-      where: { id: data.userId },
-    });
+  //   async addToChannelNotPublic(
+  //     user: AttachedUserEntity,
+  //     data: {
+  //       channelId: string;
+  //       channelType: string;
+  //       userId: string;
+  //     },
+  //   ) {
+  //     const friend = await this.prisma.user.findUnique({
+  //       where: { id: data.userId },
+  //     });
 
-    const room = await this.prisma.room.findUnique({
-      where: { id: data.channelId },
-    });
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: data.channelId },
+  //     });
 
-    if (!room.admins.includes(user.nickname))
-      throw new ForbiddenException('you are not an admin');
+  //     if (!room.admins.includes(user.nickname))
+  //       throw new ForbiddenException('you are not an admin');
 
-    if (room.blocked.includes(friend.nickname))
-      throw new ForbiddenException('user blocked');
+  //     if (room.blocked.includes(friend.nickname))
+  //       throw new ForbiddenException('user blocked');
 
-    if (room.members.includes(friend.nickname))
-      throw new ForbiddenException('user already a member');
+  //     if (room.members.includes(friend.nickname))
+  //       throw new ForbiddenException('user already a member');
 
-    await this.prisma.room.update({
-      where: { id: room.id },
-      data: {
-        members: {
-          push: friend.nickname,
-        },
-      },
-    });
-  }
+  //     await this.prisma.room.update({
+  //       where: { id: room.id },
+  //       data: {
+  //         members: {
+  //           push: friend.nickname,
+  //         },
+  //       },
+  //     });
+  //   }
 
-  async addMember(data: {
-    channelId: string;
-    channelType: string;
-    userId: string;
-  }) {
-    const friend = await this.prisma.user.findUnique({
-      where: { id: data.userId },
-    });
+  //   async addMember(data: {
+  //     channelId: string;
+  //     channelType: string;
+  //     userId: string;
+  //   }) {
+  //     const friend = await this.prisma.user.findUnique({
+  //       where: { id: data.userId },
+  //     });
 
-    const room = await this.prisma.room.findUnique({
-      where: { id: data.channelId },
-    });
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: data.channelId },
+  //     });
 
-    if (room.blocked.includes(friend.nickname))
-      throw new ForbiddenException('user blocked');
+  //     if (room.blocked.includes(friend.nickname))
+  //       throw new ForbiddenException('user blocked');
 
-    if (room.members.includes(friend.nickname))
-      throw new ForbiddenException('user already members');
+  //     if (room.members.includes(friend.nickname))
+  //       throw new ForbiddenException('user already members');
 
-    await this.prisma.room.update({
-      where: { id: room.id },
-      data: {
-        members: { push: friend.nickname },
-      },
-    });
-  }
+  //     await this.prisma.room.update({
+  //       where: { id: room.id },
+  //       data: {
+  //         members: { push: friend.nickname },
+  //       },
+  //     });
+  //   }
 
-  pushToEntities(entities: UserEntity[], user: User) {
-    entities.push({
-      id: user.id,
-      nickname: user.nickname,
-      pictureURL: user.pictureUrl,
-      status: user.isOnline ? 'online' : 'offline',
-      isFriendToLoggedUser: true,
-      friendsNumber: 0,
-    });
-  }
+  //   pushToEntities(entities: UserEntity[], user: User) {
+  //     entities.push({
+  //       id: user.id,
+  //       nickname: user.nickname,
+  //       pictureURL: user.pictureUrl,
+  //       status: user.isOnline ? 'online' : 'offline',
+  //       isFriendToLoggedUser: true,
+  //       friendsNumber: 0,
+  //     });
+  //   }
 
-  async setAdmin(
-    user: AttachedUserEntity,
-    data: { channelId: string; memberId: string },
-  ) {
-    const friend = await this.prisma.user.findUnique({
-      where: {
-        id: data.memberId,
-      },
-    });
+  //   async setAdmin(
+  //     user: AttachedUserEntity,
+  //     data: { channelId: string; memberId: string },
+  //   ) {
+  //     const friend = await this.prisma.user.findUnique({
+  //       where: {
+  //         id: data.memberId,
+  //       },
+  //     });
 
-    const room = await this.prisma.room.findUnique({
-      where: {
-        id: data.channelId,
-      },
-    });
+  //     const room = await this.prisma.room.findUnique({
+  //       where: {
+  //         id: data.channelId,
+  //       },
+  //     });
 
-    if (room.owner !== user.nickname)
-      throw new ForbiddenException('you are not owner');
-    const id1 = room.admins.find((login) => login === friend.nickname);
-    if (id1) throw new ForbiddenException('already admins');
-    const id2 = room.members.find((login) => login === friend.nickname);
-    if (!id2) throw new ForbiddenException('is not member');
+  //     if (room.owner !== user.nickname)
+  //       throw new ForbiddenException('you are not owner');
+  //     const id1 = room.admins.find((login) => login === friend.nickname);
+  //     if (id1) throw new ForbiddenException('already admins');
+  //     const id2 = room.members.find((login) => login === friend.nickname);
+  //     if (!id2) throw new ForbiddenException('is not member');
 
-    await this.prisma.room.update({
-      where: {
-        id: room.id,
-      },
-      data: {
-        admins: {
-          push: friend.nickname,
-        },
-      },
-    });
-  }
+  //     await this.prisma.room.update({
+  //       where: {
+  //         id: room.id,
+  //       },
+  //       data: {
+  //         admins: {
+  //           push: friend.nickname,
+  //         },
+  //       },
+  //     });
+  //   }
 
-  async blockMember(
-    user: AttachedUserEntity,
-    data: { channelId: string; memberId: string },
-  ) {
-    const friend = await this.prisma.user.findUnique({
-      where: {
-        id: data.memberId,
-      },
-    });
+  //   async blockMember(
+  //     user: AttachedUserEntity,
+  //     data: { channelId: string; memberId: string },
+  //   ) {
+  //     const friend = await this.prisma.user.findUnique({
+  //       where: {
+  //         id: data.memberId,
+  //       },
+  //     });
 
-    const room = await this.prisma.room.findUnique({
-      where: {
-        id: data.channelId,
-      },
-    });
+  //     const room = await this.prisma.room.findUnique({
+  //       where: {
+  //         id: data.channelId,
+  //       },
+  //     });
 
-    const id1 = room.admins.find((login) => login === user.nickname);
-    if (!id1) throw new ForbiddenException('you are  Not admins');
-    const id2 = room.admins.find((login) => login === friend.nickname);
-    if (id2 && room.owner != user.nickname)
-      throw new ForbiddenException(
-        'you are not owner, impossiple to remove admin',
-      );
+  //     const id1 = room.admins.find((login) => login === user.nickname);
+  //     if (!id1) throw new ForbiddenException('you are  Not admins');
+  //     const id2 = room.admins.find((login) => login === friend.nickname);
+  //     if (id2 && room.owner != user.nickname)
+  //       throw new ForbiddenException(
+  //         'you are not owner, impossiple to remove admin',
+  //       );
 
-    await this.prisma.room.update({
-      where: {
-        id: room.id,
-      },
-      data: {
-        members: {
-          set: room.members.filter((login) => login !== friend.nickname),
-        },
-      },
-    });
+  //     await this.prisma.room.update({
+  //       where: {
+  //         id: room.id,
+  //       },
+  //       data: {
+  //         members: {
+  //           set: room.members.filter((login) => login !== friend.nickname),
+  //         },
+  //       },
+  //     });
 
-    if (id2) {
-      await this.prisma.room.update({
-        where: {
-          id: room.id,
-        },
-        data: {
-          admins: {
-            set: room.admins.filter((login) => login !== friend.nickname),
-          },
-        },
-      });
-    }
-    await this.prisma.room.update({
-      where: {
-        id: room.id,
-      },
-      data: {
-        blocked: {
-          push: friend.nickname,
-        },
-      },
-    });
-  }
+  //     if (id2) {
+  //       await this.prisma.room.update({
+  //         where: {
+  //           id: room.id,
+  //         },
+  //         data: {
+  //           admins: {
+  //             set: room.admins.filter((login) => login !== friend.nickname),
+  //           },
+  //         },
+  //       });
+  //     }
+  //     await this.prisma.room.update({
+  //       where: {
+  //         id: room.id,
+  //       },
+  //       data: {
+  //         blocked: {
+  //           push: friend.nickname,
+  //         },
+  //       },
+  //     });
+  //   }
 
-  async kickMember(
-    user: AttachedUserEntity,
-    data: { channelId: string; memberId: string },
-  ) {
-    const friend = await this.prisma.user.findUnique({
-      where: { id: data.memberId },
-    });
+  //   async kickMember(
+  //     user: AttachedUserEntity,
+  //     data: { channelId: string; memberId: string },
+  //   ) {
+  //     const friend = await this.prisma.user.findUnique({
+  //       where: { id: data.memberId },
+  //     });
 
-    const room = await this.prisma.room.findUnique({
-      where: { id: data.channelId },
-    });
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: data.channelId },
+  //     });
 
-    const id1 = room.admins.find((login) => login === user.nickname);
-    if (!id1) throw new ForbiddenException('you are  Not admins');
-    const id2 = room.admins.find((login) => login === friend.nickname);
-    if (id2 && room.owner !== user.nickname)
-      throw new ForbiddenException(
-        'you are not owner, impossiple to remove admin',
-      );
+  //     const id1 = room.admins.find((login) => login === user.nickname);
+  //     if (!id1) throw new ForbiddenException('you are  Not admins');
+  //     const id2 = room.admins.find((login) => login === friend.nickname);
+  //     if (id2 && room.owner !== user.nickname)
+  //       throw new ForbiddenException(
+  //         'you are not owner, impossiple to remove admin',
+  //       );
 
-    await this.prisma.room.update({
-      where: {
-        id: room.id,
-      },
-      data: {
-        members: {
-          set: room.members.filter((login) => login !== friend.nickname),
-        },
-      },
-    });
+  //     await this.prisma.room.update({
+  //       where: {
+  //         id: room.id,
+  //       },
+  //       data: {
+  //         members: {
+  //           set: room.members.filter((login) => login !== friend.nickname),
+  //         },
+  //       },
+  //     });
 
-    if (id2) {
-      await this.prisma.room.update({
-        where: {
-          id: room.id,
-        },
-        data: {
-          admins: {
-            set: room.admins.filter((login) => login !== friend.nickname),
-          },
-        },
-      });
-    }
-  }
+  //     if (id2) {
+  //       await this.prisma.room.update({
+  //         where: {
+  //           id: room.id,
+  //         },
+  //         data: {
+  //           admins: {
+  //             set: room.admins.filter((login) => login !== friend.nickname),
+  //           },
+  //         },
+  //       });
+  //     }
+  //   }
 
-  async unblockMember(
-    user: AttachedUserEntity,
-    data: { channelId: string; memberId: string },
-  ) {
-    const friend = await this.prisma.user.findUnique({
-      where: { id: data.memberId },
-    });
+  //   async unblockMember(
+  //     user: AttachedUserEntity,
+  //     data: { channelId: string; memberId: string },
+  //   ) {
+  //     const friend = await this.prisma.user.findUnique({
+  //       where: { id: data.memberId },
+  //     });
 
-    const room = await this.prisma.room.findUnique({
-      where: { id: data.channelId },
-    });
+  //     const room = await this.prisma.room.findUnique({
+  //       where: { id: data.channelId },
+  //     });
 
-    if (!room.admins.includes(user.nickname)) {
-      throw new ForbiddenException('you are Not an admin');
-    }
+  //     if (!room.admins.includes(user.nickname)) {
+  //       throw new ForbiddenException('you are Not an admin');
+  //     }
 
-    await this.prisma.room.update({
-      where: { id: room.id },
-      data: {
-        blocked: {
-          set: room.blocked.filter((nickname) => nickname !== friend.nickname),
-        },
-      },
-    });
+  //     await this.prisma.room.update({
+  //       where: { id: room.id },
+  //       data: {
+  //         blocked: {
+  //           set: room.blocked.filter((nickname) => nickname !== friend.nickname),
+  //         },
+  //       },
+  //     });
 
-    await this.prisma.room.update({
-      where: { id: room.id },
-      data: {
-        members: {
-          push: friend.nickname,
-        },
-      },
-    });
-  }
+  //     await this.prisma.room.update({
+  //       where: { id: room.id },
+  //       data: {
+  //         members: {
+  //           push: friend.nickname,
+  //         },
+  //       },
+  //     });
+  //   }
 
-  async leaveChannel(user: any, rom: any) {
-    const rooms = await this.prisma.room.findUnique({
-      where: {
-        name: rom.name,
-      },
-    });
-    const id1 = rooms.admins.find((login) => login === user.nickname);
-    if (id1) {
-      await this.prisma.room.update({
-        where: {
-          name: rom.name,
-        },
-        data: {
-          admins: {
-            set: rooms.admins.filter((log) => log !== user.nickname),
-          },
-        },
-      });
-    }
-    await this.prisma.room.update({
-      where: {
-        name: rom.name,
-      },
-      data: {
-        members: {
-          set: rooms.members.filter((name) => name !== user.nickname),
-        },
-      },
-    });
-  }
+  //   async leaveChannel(user: any, rom: any) {
+  //     const rooms = await this.prisma.room.findUnique({
+  //       where: {
+  //         name: rom.name,
+  //       },
+  //     });
+  //     const id1 = rooms.admins.find((login) => login === user.nickname);
+  //     if (id1) {
+  //       await this.prisma.room.update({
+  //         where: {
+  //           name: rom.name,
+  //         },
+  //         data: {
+  //           admins: {
+  //             set: rooms.admins.filter((log) => log !== user.nickname),
+  //           },
+  //         },
+  //       });
+  //     }
+  //     await this.prisma.room.update({
+  //       where: {
+  //         name: rom.name,
+  //       },
+  //       data: {
+  //         members: {
+  //           set: rooms.members.filter((name) => name !== user.nickname),
+  //         },
+  //       },
+  //     });
+  //   }
 
-  async deleteChannel(user: any, room: any) {
-    await this.prisma.room.findUnique({
-      where: {
-        name: room.name,
-      },
-    });
+  //   async deleteChannel(user: any, room: any) {
+  //     await this.prisma.room.findUnique({
+  //       where: {
+  //         name: room.name,
+  //       },
+  //     });
 
-    await this.prisma.room.delete({
-      where: {
-        name: room.name,
-      },
-    });
+  //     await this.prisma.room.delete({
+  //       where: {
+  //         name: room.name,
+  //       },
+  //     });
 
-    return 'deleted';
-  }
+  //     return 'deleted';
+  //   }
 
-  /*
-   * helper functions
-   */
+  //   /*
+  //    * helper functions
+  //    */
 
-  getRole(room: Room, userNickname: string) {
-    if (room.owner === userNickname) return 'OWNER';
-    else if (room.admins.includes(userNickname)) return 'ADMIN';
-    else if (room.members.includes(userNickname)) return 'MEMBER';
-    else if (room.blocked.includes(userNickname)) return 'BLOCKED';
-    else return '';
-  }
+  //   getRole(room: Room, userNickname: string) {
+  //     if (room.owner === userNickname) return 'OWNER';
+  //     else if (room.admins.includes(userNickname)) return 'ADMIN';
+  //     else if (room.members.includes(userNickname)) return 'MEMBER';
+  //     else if (room.blocked.includes(userNickname)) return 'BLOCKED';
+  //     else return '';
+  //   }
 
-  generateDMRoomName(id1: string, id2: string) {
-    return id1 < id2 ? id1 + id2 : id2 + id1;
-  }
+  //   generateDMRoomName(id1: string, id2: string) {
+  //     return id1 < id2 ? id1 + id2 : id2 + id1;
+  //   }
 
-  handleUnexpectedErrors(error: Error) {
-    console.error(
-      'Database connection error or other unexpected error:',
-      error.stack,
-    );
+  //   handleUnexpectedErrors(error: Error) {
+  //     console.error(
+  //       'Database connection error or other unexpected error:',
+  //       error.stack,
+  //     );
 
-    throw new InternalServerErrorException(
-      'An unexpected error occurred. Please try again later',
-    );
-  }
+  //     throw new InternalServerErrorException(
+  //       'An unexpected error occurred. Please try again later',
+  //     );
+  //   }
 }

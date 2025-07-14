@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 
 import Header from "./Header";
@@ -10,7 +10,8 @@ import { getDataUserLogged } from "../../api/API";
 import { Rooms, Status } from "./types";
 import { UserType } from "../../api/types";
 
-const DOMAIN = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
+const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
+const DOMAIN_CHAT = import.meta.env.VITE_BACKEND_CHAT_ORIGIN;
 const SOCKET_CHAT_PATH = import.meta.env.VITE_SOCKET_CHAT_PATH;
 
 function Layout() {
@@ -35,10 +36,9 @@ function Layout() {
   const [roomsStatus, setRoomsStatus] = React.useState<Status>("idle");
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   React.useEffect(() => {
-    const newSocket = io(DOMAIN, {
+    const newSocket = io(DOMAIN_CHAT, {
       path: SOCKET_CHAT_PATH,
       withCredentials: true,
     });
@@ -56,7 +56,7 @@ function Layout() {
         setRoomsStatus("loading");
 
         const res = await fetch(
-          `http://localhost:5000/chat/rooms?type=${isDm ? "dm" : "channel"}`,
+          `${DOMAIN}/chat/rooms?type=${isDm ? "dm" : "channel"}`,
           { credentials: "include" },
         );
 
@@ -71,7 +71,7 @@ function Layout() {
           setRoomsStatus("success");
           setRooms(body);
 
-          if (location.pathname === "/chat" && initialChatId) {
+          if (initialChatId) {
             navigate(`/chat/${initialChatId}`, {
               replace: true,
             });
@@ -88,7 +88,7 @@ function Layout() {
     };
 
     fetcher();
-  }, [isDm, location.pathname, navigate]);
+  }, [isDm]);
 
   React.useEffect(() => {
     document.title = "Pong - Messages";

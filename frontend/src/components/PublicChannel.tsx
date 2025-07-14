@@ -3,9 +3,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import InputForm from "./inputs/InputForm";
-import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
 import { Status } from "../pages/Chat/types";
+
+const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
 
 function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
   const [value, setValue] = React.useState("");
@@ -25,7 +26,7 @@ function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
     try {
       setStatus("loading");
 
-      const res = await fetch("http://localhost:5000/chat/channels", {
+      const res = await fetch(`${DOMAIN}/chat/channels`, {
         method: "POST",
         credentials: "include",
         headers: {

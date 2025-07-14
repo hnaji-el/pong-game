@@ -90,7 +90,7 @@ function ChannelCardList({
         </Modal>
       )}
 
-      <h3 className="capitalize">{title}</h3>
+      <h3 className="pl-[10px] font-bold capitalize text-white">{title}</h3>
 
       {roomsStatus === "loading" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
@@ -98,7 +98,7 @@ function ChannelCardList({
         </div>
       )}
 
-      {roomsStatus && "error" && (
+      {roomsStatus === "error" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm capitalize text-primaryText">
           something went wrong
         </div>
@@ -123,7 +123,7 @@ function ChannelCardList({
             ))}
           </div>
         ) : (
-          <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
+          <div className="flex grow items-center justify-center text-sm text-primaryText">
             no channels.
           </div>
         ))}

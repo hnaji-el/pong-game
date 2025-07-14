@@ -16,6 +16,8 @@ interface ContextType {
   socket: Socket;
 }
 
+const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
+
 function Chat() {
   const [value, setValue] = React.useState("");
   const [messages, setMessages] = React.useState<Message[]>([]);
@@ -35,7 +37,7 @@ function Chat() {
         setStatus("loading");
 
         const res = await fetch(
-          `http://localhost:5000/chat/messages/${chatId}`,
+          `${DOMAIN}/chat/messages/${chatId}?type=${isDm ? "dm" : "channel"}`,
           { credentials: "include" },
         );
 
@@ -58,14 +60,14 @@ function Chat() {
     }
 
     fetcher();
-  }, [chatId, navigate]);
+  }, [chatId, isDm, navigate]);
 
   React.useEffect(() => {
     if (!socket) return;
 
     function handleReceiveMessage(msg: Message) {
       if (msg.chatId === chatId) {
-        setMessages((currentValue) => [...currentValue, msg]);
+        setMessages((currentValue) => [msg, ...currentValue]);
       }
     }
 

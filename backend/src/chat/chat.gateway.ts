@@ -12,8 +12,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
 import { UsersService } from 'src/users/users.service';
 import * as cookie from 'cookie';
-import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { User } from '@prisma/client';
 import { ClientMessage, Message } from './entities/chat.entity';
 
 interface AuthenticatedSocket extends Socket {
@@ -24,7 +24,6 @@ interface AuthenticatedSocket extends Socket {
   cors: {
     origin: process.env.FRONTEND_ORIGIN,
     credentials: true,
-    allowedHeaders: ['Cookie'],
   },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -90,7 +89,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         senderId: senderUser.id,
         senderPictureUrl: senderUser.pictureUrl,
         content: message.content,
-        sentAt: message.sentAt.toISOString(),
+        sentAt: message.sentAt,
       } as Message);
     } else {
       const channel = await this.prisma.channel.findUnique({
@@ -149,9 +148,29 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         senderId: senderUser.id,
         senderPictureUrl: senderUser.pictureUrl,
         content: message.content,
-        sentAt: message.sentAt.toISOString(),
+        sentAt: message.sentAt,
       } as Message);
     }
+  }
+
+  async handleConnection(@ConnectedSocket() client: AuthenticatedSocket) {
+    const { jwt } = cookie.parse(client.handshake.headers.cookie || '');
+    const user = await this.chatService.getUserFromJwtToken(jwt);
+
+    if (!user) {
+      client.disconnect();
+      console.log(
+        `[Chat]: Unauthorized connection attempt from client: ${client.id}`,
+      );
+      return;
+    }
+
+    client.user = user;
+    this.connectedClients.push(client);
+
+    console.log(
+      `[Chat]: Client connected: ${client.id} (user: ${user.nickname})`,
+    );
   }
 
   async handleDisconnect(@ConnectedSocket() client: AuthenticatedSocket) {
@@ -174,26 +193,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     console.log(
       `[Chat]: Client disconnected: ${client.id} (user: ${user.nickname})`,
-    );
-  }
-
-  async handleConnection(@ConnectedSocket() client: AuthenticatedSocket) {
-    const { jwt } = cookie.parse(client.handshake.headers.cookie || '');
-    const user = await this.chatService.getUserFromJwtToken(jwt);
-
-    if (!user) {
-      client.disconnect();
-      console.log(
-        `[Chat]: Unauthorized connection attempt from client: ${client.id}`,
-      );
-      return;
-    }
-
-    client.user = user;
-    this.connectedClients.push(client);
-
-    console.log(
-      `[Chat]: Client connected: ${client.id} (user: ${user.nickname})`,
     );
   }
 }

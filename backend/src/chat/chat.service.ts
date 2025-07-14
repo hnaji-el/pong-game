@@ -1,16 +1,12 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { ChannelType, Prisma } from '@prisma/client';
-import { User } from '@prisma/client';
+import { ChannelType, User } from '@prisma/client';
 import { AttachedUserEntity } from 'src/users/entities/attachedUser.entity';
+import { Channel, Dm, Message, Rooms } from './entities/chat.entity';
 
 @Injectable()
 export class ChatService {
@@ -47,13 +43,208 @@ export class ChatService {
     });
   }
 
-  async createChannel(channelData: {
-    name: string;
-    type: ChannelType;
-    hashedPassword?: string;
-  }) {
-    await this.prisma.channel.create({
-      data: channelData,
+  async createChannel(
+    userId: string,
+    name: string,
+    type: ChannelType,
+    password?: string,
+  ): Promise<{ id: string }> {
+    // Validate input for protected channels
+    if (type === 'PROTECTED' && !password) {
+      throw new Error('Password is required for protected channels.');
+    }
+
+    // Create the channel
+    const channel = await this.prisma.channel.create({
+      data: {
+        name,
+        type,
+        hashedPassword: password
+          ? bcrypt.hashSync(password, bcrypt.genSaltSync())
+          : null,
+      },
+    });
+
+    // Add the creator to the channelMembership table as OWNER
+    await this.prisma.channelMembership.create({
+      data: {
+        userId,
+        channelId: channel.id,
+        role: 'OWNER',
+      },
+    });
+
+    return { id: channel.id };
+  }
+
+  async getUserDms(userId: string): Promise<Dm[]> {
+    const dms = await this.prisma.dM.findMany({
+      where: {
+        OR: [{ user1Id: userId }, { user2Id: userId }],
+      },
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        user1: true,
+        user2: true,
+      },
+    });
+
+    return dms.map((dm) => {
+      const user = dm.user1.id === userId ? dm.user2 : dm.user1;
+
+      return {
+        id: dm.id,
+        createdAt: dm.createdAt,
+        updatedAt: dm.updatedAt,
+        userId: user.id,
+        nickname: user.nickname,
+        pictureURL: user.pictureUrl,
+        isOnline: user.isOnline,
+      };
+    });
+  }
+
+  async getUserJoinedChannels(userId: string): Promise<Channel[]> {
+    const memberships = await this.prisma.channelMembership.findMany({
+      where: { userId },
+      include: { channel: true },
+    });
+
+    // Sort memberships by channel.updatedAt descending
+    const joinedChannels = memberships
+      .sort(
+        (a, b) => b.channel.updatedAt.getTime() - a.channel.updatedAt.getTime(),
+      )
+      .map((m) => ({
+        id: m.channelId,
+        createdAt: m.channel.createdAt,
+        updatedAt: m.channel.updatedAt,
+        name: m.channel.name,
+        type: m.channel.type,
+        role: m.role,
+        isJoined: true,
+      }));
+
+    return joinedChannels;
+  }
+
+  async getUserNotJoinedChannels(
+    joinedChannelsIds: Set<string>,
+  ): Promise<Channel[]> {
+    const channels = await this.prisma.channel.findMany({
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    const notJoinedChannels = channels
+      .filter(
+        (channel) =>
+          !joinedChannelsIds.has(channel.id) && channel.type !== 'PRIVATE',
+      )
+      .sort((c1, c2) => c2.updatedAt.getTime() - c1.updatedAt.getTime())
+      .map(
+        (channel): Channel => ({
+          ...channel,
+          role: null,
+          isJoined: false,
+        }),
+      );
+
+    return notJoinedChannels;
+  }
+
+  async getUserRooms(userId: string, isDm: boolean): Promise<Rooms> {
+    const rooms: Rooms = {
+      dms: [],
+      joinedChannels: [],
+      notJoinedChannels: [],
+    };
+
+    if (isDm) {
+      rooms.dms = await this.getUserDms(userId);
+    } else {
+      rooms.joinedChannels = await this.getUserJoinedChannels(userId);
+      rooms.notJoinedChannels = await this.getUserNotJoinedChannels(
+        new Set(rooms.joinedChannels.map((channel) => channel.id)),
+      );
+    }
+
+    return rooms;
+  }
+
+  async getDmMessages(userId: string, roomId: string): Promise<Message[]> {
+    const dm = await this.prisma.dM.findFirst({
+      where: {
+        id: roomId,
+        OR: [{ user1Id: userId }, { user2Id: userId }],
+      },
+      select: {
+        messages: {
+          include: {
+            sender: {
+              select: {
+                pictureUrl: true,
+              },
+            },
+          },
+          orderBy: { sentAt: 'desc' },
+        },
+      },
+    });
+
+    if (!dm) {
+      return [];
+    }
+
+    return dm.messages.map((msg): Message => {
+      return {
+        id: msg.id,
+        chatId: msg.dmId,
+        senderId: msg.senderId,
+        senderPictureUrl: msg.sender.pictureUrl,
+        content: msg.content,
+        sentAt: msg.sentAt,
+      };
+    });
+  }
+
+  async getChannelMessages(userId: string, roomId: string): Promise<Message[]> {
+    const channelMembership = await this.prisma.channelMembership.findFirst({
+      where: { userId, channelId: roomId },
+      select: {
+        channel: {
+          select: {
+            messages: {
+              include: {
+                sender: {
+                  select: { pictureUrl: true },
+                },
+              },
+              orderBy: { sentAt: 'desc' },
+            },
+          },
+        },
+      },
+    });
+
+    if (!channelMembership) {
+      return [];
+    }
+
+    return channelMembership.channel.messages.map((msg): Message => {
+      return {
+        id: msg.id,
+        chatId: msg.channelId,
+        senderId: msg.senderId,
+        senderPictureUrl: msg.sender.pictureUrl,
+        content: msg.content,
+        sentAt: msg.sentAt,
+      };
     });
   }
 

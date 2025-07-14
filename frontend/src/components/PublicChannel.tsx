@@ -5,14 +5,16 @@ import { useNavigate } from "react-router-dom";
 import InputForm from "./inputs/InputForm";
 import { checkChannelName } from "../utilities/helpers";
 import { ExclamationIcon } from "./Icons";
+import { Status } from "../pages/Chat/types";
 
 function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
   const [value, setValue] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState("");
+  const [status, setStatus] = React.useState<Status>("idle");
 
   const navigate = useNavigate();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!value.trim().length) {
@@ -20,21 +22,38 @@ function PublicChannel({ handleDismiss }: { handleDismiss: () => void }) {
       return;
     }
 
-    checkChannelName(
-      (res: any) => {
-        if (res === "error") {
-          setErrorMessage("Name already exists");
-        } else {
-          navigate(`/chat/${res.id}`);
-          handleDismiss();
+    try {
+      setStatus("loading");
+
+      const res = await fetch("http://localhost:5000/chat/channels", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json", // Set the content type for JSON
+        },
+        body: JSON.stringify({
+          name: value,
+          type: "PUBLIC",
+        }),
+      });
+
+      const body = await res.json();
+
+      if (res.ok) {
+        setStatus("success");
+        navigate(`/chat/${body.id}`);
+        handleDismiss();
+      } else {
+        setStatus("error");
+        setErrorMessage("Name already exists");
+        if (res.status === 401) {
+          navigate("/login");
         }
-      },
-      {
-        name: value,
-        type: "PUBLIC",
-        password: "",
-      },
-    );
+      }
+    } catch {
+      setStatus("error");
+      setErrorMessage("Name already exists");
+    }
   }
 
   return (

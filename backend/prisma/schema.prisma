@@ -41,15 +41,15 @@ model User {
   isTwoFactorAuthValidated Boolean  @default(false)
   createdAt                DateTime @db.Timestamptz @default(now()) 
 
+  requester          Relationship[] @relation("Requester")
+  addressee          Relationship[] @relation("Addressee")
+
   channelMemberships ChannelMembership[]
   channelMessages    ChannelMessage[]
 
   dms1               DM[] @relation("DMUser1")
   dms2               DM[] @relation("DMUser2")
   dmMessages         DMMessage[]
-
-  requester          Relationship[] @relation("Requester")
-  addressee          Relationship[] @relation("Addressee")
 
   winGames           Game[] @relation("winGames")
   loseGames          Game[] @relation("loseGames")
@@ -67,7 +67,7 @@ model Relationship {
 
 model Channel {
   id             String      @id @default(uuid())
-  name           String      @db.VarChar(20) @unique
+  name           String      @unique @db.VarChar(20)
   type           ChannelType
   hashedPassword String?     @db.VarChar(20)
   createdAt      DateTime    @db.Timestamptz @default(now())

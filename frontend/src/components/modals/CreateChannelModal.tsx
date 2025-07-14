@@ -4,7 +4,7 @@ import PrivateChannel from "../PrivateChannel";
 import ProtectedChannel from "../ProtectedChannel";
 import PublicChannel from "../PublicChannel";
 import { CheckIcon } from "../Icons";
-import { ChannelType_ } from "../../pages/Chat/types";
+import { ChannelType } from "../../pages/Chat/types";
 
 interface ButtonPropsType {
   isClicked: boolean;
@@ -13,7 +13,7 @@ interface ButtonPropsType {
 }
 
 function CreateChannelModal({ handleDismiss }: { handleDismiss: () => void }) {
-  const [type, setType] = React.useState<ChannelType_>("PUBLIC");
+  const [type, setType] = React.useState<ChannelType>("PUBLIC");
 
   return (
     <div className="flex flex-col gap-[46px] pb-[30px] pt-[46px]">

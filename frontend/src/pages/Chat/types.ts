@@ -14,11 +14,13 @@ export interface Message {
   senderId: string;
   senderPictureUrl: string;
   content: string;
-  sentAt: string;
+  sentAt: Date;
 }
 
 export interface Dm {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
   userId: string;
   nickname: string;
   pictureURL: string;
@@ -27,9 +29,11 @@ export interface Dm {
 
 export interface Channel {
   id: string;
+  createdAt: Date;
+  updatedAt: Date;
   name: string;
   type: ChannelType;
-  role: UserRole;
+  role: UserRole | null;
   isJoined: boolean;
 }
 

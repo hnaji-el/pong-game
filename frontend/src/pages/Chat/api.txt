@@ -1,3 +1,10 @@
 1- API: GET /chat/rooms?type=dm (?type=channel) -> Rooms
 
-2- API: GET /chat/messages/:roomId -> Message[]
+2- API: GET /chat/messages/:roomId?type=dm (?type=channel) -> Message[]
+
+3- API: POST /chat/channels
+    payload: {
+        name: string;
+        type: ChannelType;
+        ps: string;
+    }

@@ -8,12 +8,12 @@ import MembersModal from "./modals/MembersModal";
 import useToggle from "../hooks/use-toggle";
 import { UserType } from "../api/types";
 import AddMemberModal from "./modals/AddMemberModal";
-import { ChannelType_, UserRole } from "../pages/Chat/types";
+import { ChannelType, UserRole } from "../pages/Chat/types";
 
 interface PropsType {
   channelId: string;
   channelName: string;
-  channelType: ChannelType_;
+  channelType: ChannelType;
   loggedUserRole: UserRole;
   loggedUserData: UserType;
   handleArrowLeftClick: () => void;

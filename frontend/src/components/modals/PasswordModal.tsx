@@ -32,7 +32,7 @@ function PasswordModal({ nextChatId, setClick, handleDismiss }: PropsType) {
         password: password,
       },
       (chnlData) => {
-        if (!chnlData?.isPasswordValid) {
+        if (!chnlData) {
           setErrorPassowrd("Password incorrect");
           return;
         } else {

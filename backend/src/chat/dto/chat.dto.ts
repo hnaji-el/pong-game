@@ -1,13 +1,15 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 
-export class RoomDto {
-  @IsNotEmpty()
+export type RoomType = 'dm' | 'channel';
+
+export class GetRoomParamsDto {
   @IsString()
-  name: string;
   @IsNotEmpty()
-  @IsString()
-  type: string;
+  id: string;
+}
+
+export class GetRoomQueryDto {
+  @IsIn(['dm', 'channel'])
   @IsNotEmpty()
-  @IsString()
-  owner: string;
+  type: RoomType;
 }

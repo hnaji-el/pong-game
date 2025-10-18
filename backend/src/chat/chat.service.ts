@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -6,7 +11,8 @@ import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { ChannelType, User } from '@prisma/client';
 import { AttachedUserEntity } from 'src/users/entities/attachedUser.entity';
-import { Channel, Dm, Message, Rooms } from './entities/chat.entity';
+import { Channel, Dm, Message, RoomData, Rooms } from './entities/chat.entity';
+import { RoomType } from './dto';
 
 @Injectable()
 export class ChatService {
@@ -75,6 +81,25 @@ export class ChatService {
     });
 
     return { id: channel.id };
+  }
+
+  async getUserRooms(userId: string, type: RoomType): Promise<Rooms> {
+    const rooms: Rooms = {
+      dms: [],
+      joinedChannels: [],
+      notJoinedChannels: [],
+    };
+
+    if (type === 'dm') {
+      rooms.dms = await this.getUserDms(userId);
+    } else {
+      rooms.joinedChannels = await this.getUserJoinedChannels(userId);
+      rooms.notJoinedChannels = await this.getUserNotJoinedChannels(
+        new Set(rooms.joinedChannels.map((channel) => channel.id)),
+      );
+    }
+
+    return rooms;
   }
 
   async getUserDms(userId: string): Promise<Dm[]> {
@@ -158,23 +183,90 @@ export class ChatService {
     return notJoinedChannels;
   }
 
-  async getUserRooms(userId: string, isDm: boolean): Promise<Rooms> {
-    const rooms: Rooms = {
-      dms: [],
-      joinedChannels: [],
-      notJoinedChannels: [],
-    };
+  async getRoomData(
+    userId: string,
+    roomId: string,
+    type: RoomType,
+  ): Promise<RoomData> {
+    const roomData: RoomData = { dm: null, channel: null };
 
-    if (isDm) {
-      rooms.dms = await this.getUserDms(userId);
-    } else {
-      rooms.joinedChannels = await this.getUserJoinedChannels(userId);
-      rooms.notJoinedChannels = await this.getUserNotJoinedChannels(
-        new Set(rooms.joinedChannels.map((channel) => channel.id)),
+    try {
+      if (type === 'dm') {
+        const dm = await this.prisma.dM.findUnique({
+          where: { id: roomId },
+          include: {
+            user1: true,
+            user2: true,
+          },
+        });
+
+        if (!dm) {
+          throw new NotFoundException('DM not found.');
+        } else if (userId !== dm.user1Id && userId !== dm.user2Id) {
+          throw new ForbiddenException(
+            'You do not have permission to access this DM.',
+          );
+        }
+
+        const otherUser = userId === dm.user1Id ? dm.user2 : dm.user1;
+
+        roomData.dm = {
+          id: dm.id,
+          createdAt: dm.createdAt,
+          updatedAt: dm.updatedAt,
+          userId: otherUser.id,
+          nickname: otherUser.nickname,
+          pictureURL: otherUser.pictureUrl,
+          isOnline: otherUser.isOnline,
+        };
+      }
+
+      if (type === 'channel') {
+        const channel = await this.prisma.channel.findUnique({
+          where: { id: roomId },
+          include: {
+            memberships: {
+              where: { userId },
+            },
+          },
+        });
+
+        if (!channel) {
+          throw new NotFoundException('Channel not found.');
+        } else if (!channel.memberships.length) {
+          throw new ForbiddenException(
+            'You do not have permission to access this channel.',
+          );
+        }
+
+        const member = channel.memberships[0];
+
+        roomData.channel = {
+          id: channel.id,
+          createdAt: channel.createdAt,
+          updatedAt: channel.updatedAt,
+          name: channel.name,
+          type: channel.type,
+          role: member.role,
+          isJoined: !!member,
+        };
+      }
+    } catch (error) {
+      if (
+        error instanceof NotFoundException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+
+      // handle database/network errors or other unexpected errors.
+      console.error('Database/network error or other unexpected error.', error);
+      throw new InternalServerErrorException(
+        'An unexpected error occurred. Please try again later.',
       );
     }
 
-    return rooms;
+    return roomData;
   }
 
   async getDmMessages(userId: string, roomId: string): Promise<Message[]> {

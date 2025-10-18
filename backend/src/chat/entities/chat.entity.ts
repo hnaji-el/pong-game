@@ -20,6 +20,11 @@ export interface Channel {
   isJoined: boolean;
 }
 
+export interface RoomData {
+  dm: Dm | null;
+  channel: Channel | null;
+}
+
 export interface Rooms {
   dms: Dm[];
   joinedChannels: Channel[];

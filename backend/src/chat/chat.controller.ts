@@ -6,23 +6,32 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
 import { ChannelType } from '@prisma/client';
 import { Request } from 'express';
-import { Message, Rooms } from './entities/chat.entity';
+import { Message, RoomData, Rooms } from './entities/chat.entity';
+import { GetRoomParamsDto, GetRoomQueryDto } from './dto';
 
 @Controller('chat')
+@UseGuards(JwtAuthGuard)
 export class ChatController {
   constructor(private chatService: ChatService) {}
 
   @Get('/rooms')
-  @UseGuards(JwtAuthGuard)
   async getUserRooms(
     @Req() req: Request,
-    @Query('type') type: 'dm' | 'channel',
+    @Query() query: GetRoomQueryDto,
   ): Promise<Rooms> {
-    return this.chatService.getUserRooms(req.user.id, type === 'dm');
+    return this.chatService.getUserRooms(req.user.id, query.type);
+  }
+
+  @Get('/rooms/:id')
+  async getRoomData(
+    @Req() req: Request,
+    @Param() params: GetRoomParamsDto,
+    @Query() query: GetRoomQueryDto,
+  ): Promise<RoomData> {
+    return this.chatService.getRoomData(req.user.id, params.id, query.type);
   }
 
   @Get('/messages/:roomId')
-  @UseGuards(JwtAuthGuard)
   async getRoomMessages(
     @Req() req: Request,
     @Param('roomId') roomId: string,

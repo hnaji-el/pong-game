@@ -1,6 +1,11 @@
 import React from "react";
 
-import { useOutletContext, useNavigate, useParams } from "react-router-dom";
+import {
+  useOutletContext,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { Socket } from "socket.io-client";
 
 import Messages from "./Messages";
@@ -12,7 +17,6 @@ import { ClientMessage, Message, Status } from "./types";
 
 interface ContextType {
   loggedUserData: UserType;
-  isDm: boolean;
   socket: Socket;
 }
 
@@ -23,10 +27,15 @@ function Chat() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [status, setStatus] = React.useState<Status>("idle");
 
-  const { chatId } = useParams();
-  const navigate = useNavigate();
+  const { loggedUserData, socket } = useOutletContext<ContextType>();
 
-  const { isDm, loggedUserData, socket } = useOutletContext<ContextType>();
+  const { chatId } = useParams();
+
+  const [searchParams] = useSearchParams();
+  const roomType = searchParams.get("type");
+  const isDm = roomType === "dm";
+
+  const navigate = useNavigate();
 
   const id = React.useId();
   const inputId = `${id}-message`;
@@ -37,7 +46,7 @@ function Chat() {
         setStatus("loading");
 
         const res = await fetch(
-          `${DOMAIN}/chat/messages/${chatId}?type=${isDm ? "dm" : "channel"}`,
+          `${DOMAIN}/chat/messages/${chatId}?type=${roomType}`,
           { credentials: "include" },
         );
 
@@ -59,8 +68,10 @@ function Chat() {
       }
     }
 
-    fetcher();
-  }, [chatId, isDm, navigate]);
+    if (chatId && roomType) {
+      fetcher();
+    }
+  }, [chatId, roomType, isDm, navigate]);
 
   React.useEffect(() => {
     if (!socket) return;

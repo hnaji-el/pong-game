@@ -1,21 +1,8 @@
 export type ChannelType = "PUBLIC" | "PROTECTED" | "PRIVATE";
-export type UserRole = "OWNER" | "ADMIN" | "MEMBER" | "BLOCKED" | null;
+
+export type UserRole = "OWNER" | "ADMIN" | "MEMBER" | "BLOCKED";
+
 export type Status = "idle" | "loading" | "success" | "error";
-
-export interface ClientMessage {
-  isDm: boolean;
-  chatId: string;
-  content: string;
-}
-
-export interface Message {
-  id: string;
-  chatId: string;
-  senderId: string;
-  senderPictureUrl: string;
-  content: string;
-  sentAt: Date;
-}
 
 export interface Dm {
   id: string;
@@ -37,10 +24,30 @@ export interface Channel {
   isJoined: boolean;
 }
 
+export interface RoomData {
+  dm: Dm | null;
+  channel: Channel | null;
+}
+
 export interface Rooms {
   dms: Dm[];
   joinedChannels: Channel[];
   notJoinedChannels: Channel[];
+}
+
+export interface ClientMessage {
+  isDm: boolean;
+  chatId: string;
+  content: string;
+}
+
+export interface Message {
+  id: string;
+  chatId: string;
+  senderId: string;
+  senderPictureUrl: string;
+  content: string;
+  sentAt: Date;
 }
 
 export interface MemberType {

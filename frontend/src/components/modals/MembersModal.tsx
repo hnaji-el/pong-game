@@ -17,7 +17,7 @@ import { UserRole } from "../../pages/Chat/types";
 
 interface PropsType {
   channelId: string;
-  loggedUserRole: UserRole;
+  loggedUserRole: UserRole | null;
   loggedUserData: UserType;
 }
 

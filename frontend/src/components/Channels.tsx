@@ -10,14 +10,14 @@ import ChannelCardList from "./ChannelCardList";
 interface PropsType {
   joinedChannels: Channel[];
   notJoinedChannels: Channel[];
-  roomsStatus: Status;
+  status: Status;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Channels({
   joinedChannels,
   notJoinedChannels,
-  roomsStatus,
+  status,
   setClick,
 }: PropsType) {
   const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
@@ -50,14 +50,14 @@ function Channels({
         <ChannelCardList
           title="joined channels:"
           channels={joinedChannels}
-          roomsStatus={roomsStatus}
+          status={status}
           setClick={setClick}
         />
 
         <ChannelCardList
           title="not joined channels:"
           channels={notJoinedChannels}
-          roomsStatus={roomsStatus}
+          status={status}
           setClick={setClick}
         />
       </div>

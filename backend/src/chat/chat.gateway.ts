@@ -154,6 +154,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleConnection(@ConnectedSocket() client: AuthenticatedSocket) {
+    console.log(
+      '>>>>>>>>>>>>>>>>>>>> handle chat socket connection <<<<<<<<<<<<<<<<<<<<<<<<<<<<<',
+    );
     const { jwt } = cookie.parse(client.handshake.headers.cookie || '');
     const user = await this.chatService.getUserFromJwtToken(jwt);
 
@@ -174,6 +177,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(@ConnectedSocket() client: AuthenticatedSocket) {
+    console.log(
+      '>>>>>>>>>>>>>> handle chat socket disconnection <<<<<<<<<<<<<<<<<<<<<<<<<',
+    );
     const { jwt } = cookie.parse(client.handshake.headers.cookie || '');
     const user = await this.chatService.getUserFromJwtToken(jwt);
 

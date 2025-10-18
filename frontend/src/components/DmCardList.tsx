@@ -1,7 +1,5 @@
 import React from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
-
 import DmCard from "./DmCard";
 import { blockFriend } from "../api/API";
 import { globalSocket } from "../utilities/socket";
@@ -10,20 +8,12 @@ import { UserType } from "../api/types";
 
 interface PropsType {
   dms: Dm[];
-  roomsStatus: Status;
+  status: Status;
   loggedUserData: UserType;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
-  const { chatId } = useParams();
-  const navigate = useNavigate();
-
-  function handleCardClick(cardChatId: string) {
-    setClick(true);
-    navigate(`/chat/${cardChatId}`);
-  }
-
+function DmCardList({ dms, status, loggedUserData, setClick }: PropsType) {
   function handleInviteToPlayClick(userId: string) {
     globalSocket.emit("inviteToPlay", {
       sender: loggedUserData,
@@ -39,27 +29,27 @@ function DmCardList({ dms, roomsStatus, loggedUserData, setClick }: PropsType) {
 
   return (
     <div className="flex grow flex-col gap-[24px] overflow-auto">
-      {roomsStatus === "loading" && (
+      {status === "loading" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
           loading...
         </div>
       )}
 
-      {roomsStatus === "error" && (
+      {status === "error" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm capitalize text-primaryText">
           something went wrong
         </div>
       )}
 
-      {roomsStatus === "success" &&
+      {status === "success" &&
         (dms.length ? (
           dms.map((dm) => (
             <DmCard
               key={dm.id}
+              id={dm.id}
               avatar={dm.pictureURL}
               title={dm.nickname}
-              isHovered={dm.id === chatId}
-              handleCardClick={() => handleCardClick(dm.id)}
+              handleCardClick={() => setClick(true)}
               handleInviteToPlayClick={() => handleInviteToPlayClick(dm.userId)}
               handleBlockClick={() => handleBlockClick(dm.userId)}
             />

@@ -1,14 +1,16 @@
 import React from "react";
 
+import { NavLink } from "react-router-dom";
+
 import { LockIcon, PointsIcon } from "./Icons";
 import VisuallyHidden from "./VisuallyHidden";
 import Dropdown from "./Dropdown/Dropdown";
 import useToggle from "../hooks/use-toggle";
 
 interface PropsType {
+  id: string;
   title: string;
   isLabeled: boolean;
-  isHovered: boolean;
   isJoined: boolean;
   isOwner: boolean;
   isProtected: boolean;
@@ -18,9 +20,9 @@ interface PropsType {
 }
 
 function ChannelCard({
+  id,
   title,
   isLabeled,
-  isHovered,
   isJoined,
   isOwner,
   isProtected,
@@ -40,15 +42,17 @@ function ChannelCard({
   }
 
   return (
-    <div
-      className={`flex border-b-[1px] border-b-backgroundHover px-3 hover:bg-backgroundHover lg:px-2 ${
-        isHovered ? "bg-backgroundHover" : ""
-      }`}
+    <NavLink
+      to={`/chat/${id}?type=channel`}
+      end
+      onClick={handleCardClick}
+      className={({ isActive }) =>
+        `flex border-b-[1px] border-b-backgroundHover px-3 hover:bg-backgroundHover lg:px-2 ${
+          isActive ? "bg-backgroundHover" : ""
+        }`
+      }
     >
-      <button
-        className="flex flex-1 items-start justify-between py-4"
-        onClick={handleCardClick}
-      >
+      <div className="flex flex-1 items-start justify-between py-4">
         <div className="flex items-center gap-2">
           <span className="max-w-[9.6rem] overflow-hidden text-ellipsis whitespace-nowrap text-sm capitalize text-primaryText">
             {title}
@@ -60,7 +64,7 @@ function ChannelCard({
           </div>
         )}
         <VisuallyHidden>Open the conversation</VisuallyHidden>
-      </button>
+      </div>
 
       {isJoined && (
         <Dropdown
@@ -86,7 +90,7 @@ function ChannelCard({
           <VisuallyHidden>Locked Icon</VisuallyHidden>
         </div>
       )}
-    </div>
+    </NavLink>
   );
 }
 

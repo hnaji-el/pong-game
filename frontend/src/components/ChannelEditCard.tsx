@@ -14,7 +14,7 @@ interface PropsType {
   channelId: string;
   channelName: string;
   channelType: ChannelType;
-  loggedUserRole: UserRole;
+  loggedUserRole: UserRole | null;
   loggedUserData: UserType;
   handleArrowLeftClick: () => void;
 }

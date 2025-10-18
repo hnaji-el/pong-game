@@ -1,7 +1,7 @@
 import React from "react";
 
 // useToggle custom hook is a replacement for useState hook for
-// state variables that toggles between true and false values.
+// state variables that toggle between true and false values.
 
 function useToggle(
   initialValue: boolean | (() => boolean) = false,

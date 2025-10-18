@@ -26,7 +26,7 @@ interface PropsType {
   setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
-function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
+function ChatFooter({ loggedUserData, setLoggedUserData }: PropsType) {
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
   const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
   const [isSearchModalOpen, toggleIsSearchModalOpen] = useToggle(false);
@@ -149,4 +149,4 @@ function Footer({ loggedUserData, setLoggedUserData }: PropsType) {
   );
 }
 
-export default Footer;
+export default ChatFooter;

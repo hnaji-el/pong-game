@@ -11,7 +11,7 @@ import useToggle from "../hooks/use-toggle";
 
 interface PropsType {
   member: MemberType;
-  loggedUserRole: UserRole;
+  loggedUserRole: UserRole | null;
   handleInviteToPlay: () => void;
   handleSetAdmin: () => void;
   handleBlockMember: () => void;

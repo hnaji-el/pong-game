@@ -1,26 +1,22 @@
 import React from "react";
 
+import { useNavigate, useParams } from "react-router-dom";
+
 import ChannelCard from "./ChannelCard";
 import { Channel, Status } from "../pages/Chat/types";
 import useToggle from "../hooks/use-toggle";
 import Modal from "./Modal/Modal";
 import PasswordModal from "./modals/PasswordModal";
-import { useNavigate, useParams } from "react-router-dom";
 import { deleteRoom, joinChannel, leaveRoom } from "../api/API";
 
 interface PropsType {
   title: string;
   channels: Channel[];
-  roomsStatus: Status;
+  status: Status;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ChannelCardList({
-  title,
-  channels,
-  roomsStatus,
-  setClick,
-}: PropsType) {
+function ChannelCardList({ title, channels, status, setClick }: PropsType) {
   const [isPasswordModalOpen, toggleIsPasswordModalOpen] = useToggle(false);
 
   const navigate = useNavigate();
@@ -31,7 +27,7 @@ function ChannelCardList({
   function handleCardClick(channel: Channel) {
     if (channel.isJoined) {
       setClick(true);
-      navigate(`/chat/${channel.id}`);
+      // navigate(`/chat/${channel.id}`);
     } else {
       if (channel.type === "PROTECTED") {
         setNextChatId(channel.id);
@@ -46,7 +42,7 @@ function ChannelCardList({
           },
           () => {
             setClick(true);
-            navigate(`/chat/${channel.id}`);
+            // navigate(`/chat/${channel.id}`);
           },
         );
       }
@@ -92,27 +88,27 @@ function ChannelCardList({
 
       <h3 className="pl-[10px] font-bold capitalize text-white">{title}</h3>
 
-      {roomsStatus === "loading" && (
+      {status === "loading" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
           loading...
         </div>
       )}
 
-      {roomsStatus === "error" && (
+      {status === "error" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm capitalize text-primaryText">
           something went wrong
         </div>
       )}
 
-      {roomsStatus === "success" &&
+      {status === "success" &&
         (channels.length ? (
           <div className="flex grow flex-col overflow-auto">
             {channels.map((channel) => (
               <ChannelCard
                 key={channel.id}
+                id={channel.id}
                 title={channel.name}
                 isLabeled={channel.type === "PRIVATE"}
-                isHovered={channel.id === chatId}
                 isJoined={channel.isJoined}
                 isOwner={channel.role === "OWNER"}
                 isProtected={channel.type === "PROTECTED"}

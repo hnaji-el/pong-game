@@ -1,32 +1,31 @@
 import React from "react";
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
+import useToggle from "../../hooks/use-toggle";
 import PlayNowLink from "../../components/links/PlayNowLink/PlayNowLink";
 import UserCard from "../../components/UserCard";
 import ChannelEditCard from "../../components/ChannelEditCard";
 import Dropdown from "../../components/Dropdown/Dropdown";
-import { logout } from "../../api/API";
 import SettingsButton from "../../components/buttons/SettingsButton/SettingsButton";
 import { IoSettingsOutline as SettingsIcon } from "react-icons/io5";
 import { LuLogOut as LogoutIcon } from "react-icons/lu";
 import Modal from "../../components/Modal/Modal";
 import SettingsModal from "../../components/modals/SettingsModal";
-import useToggle from "../../hooks/use-toggle";
+
+import { logout } from "../../api/API";
 import { UserType } from "../../api/types";
-import { Rooms } from "./types";
+import { RoomData } from "./types";
+
+const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
 
 interface PropsType {
-  rooms: Rooms;
-  isDm: boolean;
   loggedUserData: UserType;
   setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
   setClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Header({
-  rooms,
-  isDm,
+function ChatHeader({
   loggedUserData,
   setLoggedUserData,
   setClick,
@@ -34,11 +33,47 @@ function Header({
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
   const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
 
+  const [roomData, setRoomData] = React.useState<RoomData>({
+    dm: null,
+    channel: null,
+  });
+
   const { chatId } = useParams();
+
+  const [searchParams] = useSearchParams();
+  const roomType = searchParams.get("type");
+  const isDm = roomType === "dm";
+
   const navigate = useNavigate();
 
-  const dm = rooms.dms.find((element) => element.id === chatId);
-  const channel = rooms.joinedChannels.find((element) => element.id === chatId);
+  // GET /chat/rooms/:id?type=dm | channel => Dm | Channel
+  React.useEffect(() => {
+    const fetcher = async () => {
+      try {
+        const res = await fetch(
+          `${DOMAIN}/chat/rooms/${chatId}?type=${roomType}`,
+          { credentials: "include" },
+        );
+
+        const body: RoomData = await res.json();
+
+        if (res.ok) {
+          setRoomData(body);
+        } else {
+          res.status === 401
+            ? navigate("/login")
+            : window.alert("Something Went Wrong");
+        }
+      } catch (err) {
+        const error = err as Error;
+        window.alert(error.message);
+      }
+    };
+
+    if (chatId && roomType) {
+      fetcher();
+    }
+  }, [chatId, roomType, isDm, navigate]);
 
   async function handleLogout() {
     await logout();
@@ -57,22 +92,22 @@ function Header({
         </Modal>
       )}
 
-      {!chatId ? (
+      {!chatId || !roomType || (!roomData.dm && !roomData.channel) ? (
         <div className="flex grow"></div>
-      ) : isDm && dm ? (
+      ) : isDm && roomData.dm ? (
         <UserCard
-          id={dm.userId}
-          nickname={dm.nickname}
-          avatar={dm.pictureURL}
-          isOnline={dm.isOnline}
+          id={roomData.dm.userId}
+          nickname={roomData.dm.nickname}
+          avatar={roomData.dm.pictureURL}
+          isOnline={roomData.dm.isOnline}
           handleArrowLeftClick={() => setClick(false)}
         />
-      ) : !isDm && channel ? (
+      ) : !isDm && roomData.channel ? (
         <ChannelEditCard
-          channelId={channel.id}
-          channelName={channel.name}
-          channelType={channel.type}
-          loggedUserRole={channel.role}
+          channelId={roomData.channel.id}
+          channelName={roomData.channel.name}
+          channelType={roomData.channel.type}
+          loggedUserRole={roomData.channel.role}
           loggedUserData={loggedUserData}
           handleArrowLeftClick={() => setClick(false)}
         />
@@ -106,4 +141,4 @@ function Header({
   );
 }
 
-export default Header;
+export default ChatHeader;

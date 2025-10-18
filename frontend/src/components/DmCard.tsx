@@ -1,23 +1,25 @@
 import React from "react";
 
+import { NavLink } from "react-router-dom";
+
 import { PointsIcon } from "./Icons";
 import VisuallyHidden from "./VisuallyHidden";
 import useToggle from "../hooks/use-toggle";
 import Dropdown from "./Dropdown/Dropdown";
 
 interface PropsType {
+  id: string;
   avatar: string;
   title: string;
-  isHovered: boolean;
   handleCardClick: () => void;
   handleInviteToPlayClick: () => void;
   handleBlockClick: () => void;
 }
 
 function DmCard({
+  id,
   avatar,
   title,
-  isHovered,
   handleCardClick,
   handleInviteToPlayClick,
   handleBlockClick,
@@ -32,15 +34,17 @@ function DmCard({
   }
 
   return (
-    <div
-      className={`flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
-        isHovered ? "bg-backgroundHover" : ""
-      }`}
+    <NavLink
+      to={`/chat/${id}?type=dm`}
+      end
+      onClick={handleCardClick}
+      className={({ isActive }) =>
+        `flex border-b-[1px] border-b-backgroundHover px-3 last:border-b-0 hover:bg-backgroundHover lg:px-2 ${
+          isActive ? "bg-backgroundHover" : ""
+        }`
+      }
     >
-      <button
-        className="flex flex-1 justify-between py-4"
-        onClick={handleCardClick}
-      >
+      <div className="flex flex-1 justify-between py-4">
         <div className="flex items-center gap-2">
           <img src={avatar} alt="avatar" className="h-10 w-10 rounded-full" />
           <div className="flex items-center gap-1.5">
@@ -50,7 +54,7 @@ function DmCard({
           </div>
         </div>
         <VisuallyHidden>Open the conversation</VisuallyHidden>
-      </button>
+      </div>
 
       <Dropdown
         className="right-0 top-[80%]"
@@ -67,7 +71,7 @@ function DmCard({
           <VisuallyHidden>Show more actions</VisuallyHidden>
         </button>
       </Dropdown>
-    </div>
+    </NavLink>
   );
 }
 

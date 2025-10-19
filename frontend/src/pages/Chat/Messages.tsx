@@ -1,14 +1,14 @@
 import React from "react";
 
-import { Message } from "./types";
+import { Message, RoomType } from "./types";
 
 interface PropsType {
   messages: Message[];
   loggedUserId: string;
-  isDm: boolean;
+  roomType: RoomType | null;
 }
 
-function Messages({ messages, loggedUserId, isDm }: PropsType) {
+function Messages({ messages, loggedUserId, roomType }: PropsType) {
   return (
     <div className="flex h-full flex-col-reverse gap-[20px] overflow-auto px-[15px] pb-[10px] pt-[20px]">
       {messages.map((msg) =>
@@ -25,7 +25,7 @@ function Messages({ messages, loggedUserId, isDm }: PropsType) {
             key={msg.id}
             className="mr-[20px] flex items-start justify-start gap-2"
           >
-            {!isDm && (
+            {roomType === "channel" && (
               <img
                 src={msg.senderPictureUrl}
                 alt="avatar"

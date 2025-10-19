@@ -7,11 +7,11 @@ import { joinChannel } from "../../api/API";
 
 interface PropsType {
   nextChatId: string;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
   handleDismiss: () => void;
 }
 
-function PasswordModal({ nextChatId, setClick, handleDismiss }: PropsType) {
+function PasswordModal({ nextChatId, setToggle, handleDismiss }: PropsType) {
   const [errorPassword, setErrorPassowrd] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -36,7 +36,7 @@ function PasswordModal({ nextChatId, setClick, handleDismiss }: PropsType) {
           setErrorPassowrd("Password incorrect");
           return;
         } else {
-          setClick(true);
+          setToggle(true);
           navigate(`/chat/${nextChatId}`);
           handleDismiss();
         }

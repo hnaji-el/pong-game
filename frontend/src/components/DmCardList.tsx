@@ -5,15 +5,16 @@ import { blockFriend } from "../api/API";
 import { globalSocket } from "../utilities/socket";
 import { Dm, Status } from "../pages/Chat/types";
 import { UserType } from "../api/types";
+import Spinner from "./Spinner";
 
 interface PropsType {
   dms: Dm[];
   status: Status;
   loggedUserData: UserType;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function DmCardList({ dms, status, loggedUserData, setClick }: PropsType) {
+function DmCardList({ dms, status, loggedUserData, setToggle }: PropsType) {
   function handleInviteToPlayClick(userId: string) {
     globalSocket.emit("inviteToPlay", {
       sender: loggedUserData,
@@ -31,7 +32,7 @@ function DmCardList({ dms, status, loggedUserData, setClick }: PropsType) {
     <div className="flex grow flex-col gap-[24px] overflow-auto">
       {status === "loading" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-          loading...
+          <Spinner size={40} />
         </div>
       )}
 
@@ -49,7 +50,7 @@ function DmCardList({ dms, status, loggedUserData, setClick }: PropsType) {
               id={dm.id}
               avatar={dm.pictureURL}
               title={dm.nickname}
-              handleCardClick={() => setClick(true)}
+              handleCardClick={() => setToggle(true)}
               handleInviteToPlayClick={() => handleInviteToPlayClick(dm.userId)}
               handleBlockClick={() => handleBlockClick(dm.userId)}
             />

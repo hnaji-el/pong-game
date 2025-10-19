@@ -22,7 +22,7 @@ function ChatLayout() {
     status: "",
     isTwoFactorAuthEnabled: false,
   });
-  const [click, setClick] = React.useState(false);
+  const [toggle, setToggle] = React.useState(false);
   const [socket, setSocket] = React.useState<Socket | null>(null);
 
   React.useEffect(() => {
@@ -49,12 +49,12 @@ function ChatLayout() {
   return (
     <>
       <div
-        className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${click ? "flex" : "hidden"} lg:flex`}
+        className={`mx-[12px] h-full w-auto flex-col pb-[12px] pt-[28px] lg:ml-[252px] ${toggle ? "flex" : "hidden"} lg:flex`}
       >
         <ChatHeader
           loggedUserData={loggedUserData}
           setLoggedUserData={setLoggedUserData}
-          setClick={setClick}
+          setToggle={setToggle}
         />
 
         <Outlet
@@ -66,13 +66,10 @@ function ChatLayout() {
       </div>
       <div
         className={`h-full w-full flex-col pb-[12px] pt-[28px] lg:fixed lg:left-0 lg:top-0 lg:flex lg:w-[240px] lg:bg-sideBackground 2xl:left-auto ${
-          click ? "hidden" : "flex"
+          toggle ? "hidden" : "flex"
         } `}
       >
-        <ChatSideBar
-          loggedUserData={loggedUserData}
-          setClick={setClick}
-        />
+        <ChatSideBar loggedUserData={loggedUserData} setToggle={setToggle} />
 
         <ChatFooter
           loggedUserData={loggedUserData}

@@ -24,6 +24,8 @@ export interface Channel {
   isJoined: boolean;
 }
 
+export type RoomType = "dm" | "channel";
+
 export interface RoomData {
   dm: Dm | null;
   channel: Channel | null;
@@ -36,7 +38,7 @@ export interface Rooms {
 }
 
 export interface ClientMessage {
-  isDm: boolean;
+  roomType: RoomType;
   chatId: string;
   content: string;
 }

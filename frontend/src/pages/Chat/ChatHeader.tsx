@@ -15,20 +15,20 @@ import SettingsModal from "../../components/modals/SettingsModal";
 
 import { logout } from "../../api/API";
 import { UserType } from "../../api/types";
-import { RoomData } from "./types";
+import { RoomData, RoomType } from "./types";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
 
 interface PropsType {
   loggedUserData: UserType;
   setLoggedUserData: React.Dispatch<React.SetStateAction<UserType>>;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function ChatHeader({
   loggedUserData,
   setLoggedUserData,
-  setClick,
+  setToggle,
 }: PropsType) {
   const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
   const [isSettingsModalOpen, toggleIsSettingsModalOpen] = useToggle(false);
@@ -41,12 +41,10 @@ function ChatHeader({
   const { chatId } = useParams();
 
   const [searchParams] = useSearchParams();
-  const roomType = searchParams.get("type");
-  const isDm = roomType === "dm";
+  const roomType: RoomType | null = searchParams.get("type") as RoomType | null;
 
   const navigate = useNavigate();
 
-  // GET /chat/rooms/:id?type=dm | channel => Dm | Channel
   React.useEffect(() => {
     const fetcher = async () => {
       try {
@@ -59,21 +57,16 @@ function ChatHeader({
 
         if (res.ok) {
           setRoomData(body);
-        } else {
-          res.status === 401
-            ? navigate("/login")
-            : window.alert("Something Went Wrong");
+        } else if (res.status === 401) {
+          navigate("/login");
         }
-      } catch (err) {
-        const error = err as Error;
-        window.alert(error.message);
-      }
+      } catch {}
     };
 
     if (chatId && roomType) {
       fetcher();
     }
-  }, [chatId, roomType, isDm, navigate]);
+  }, [chatId, roomType, navigate]);
 
   async function handleLogout() {
     await logout();
@@ -92,26 +85,28 @@ function ChatHeader({
         </Modal>
       )}
 
-      {!chatId || !roomType || (!roomData.dm && !roomData.channel) ? (
+      {!chatId || !roomType ? (
         <div className="flex grow"></div>
-      ) : isDm && roomData.dm ? (
+      ) : roomType === "dm" && roomData.dm ? (
         <UserCard
           id={roomData.dm.userId}
           nickname={roomData.dm.nickname}
           avatar={roomData.dm.pictureURL}
           isOnline={roomData.dm.isOnline}
-          handleArrowLeftClick={() => setClick(false)}
+          handleArrowLeftClick={() => setToggle(false)}
         />
-      ) : !isDm && roomData.channel ? (
+      ) : roomType === "channel" && roomData.channel ? (
         <ChannelEditCard
           channelId={roomData.channel.id}
           channelName={roomData.channel.name}
           channelType={roomData.channel.type}
           loggedUserRole={roomData.channel.role}
           loggedUserData={loggedUserData}
-          handleArrowLeftClick={() => setClick(false)}
+          handleArrowLeftClick={() => setToggle(false)}
         />
-      ) : null}
+      ) : (
+        <div className="flex grow"></div>
+      )}
 
       <div className="hidden lg:flex lg:items-center lg:gap-5">
         <PlayNowLink />

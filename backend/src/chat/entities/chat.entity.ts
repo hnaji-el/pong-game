@@ -1,4 +1,5 @@
 import { ChannelType, UserRole } from '@prisma/client';
+import { RoomType } from '../dto';
 
 export interface Dm {
   id: string;
@@ -32,7 +33,7 @@ export interface Rooms {
 }
 
 export interface ClientMessage {
-  isDm: boolean;
+  roomType: RoomType;
   chatId: string;
   content: string;
 }

@@ -22,25 +22,25 @@ export class ChatController {
     return this.chatService.getUserRooms(req.user.id, query.type);
   }
 
-  @Get('/rooms/:id')
-  async getRoomData(
+  @Get('/rooms/:roomId')
+  async getOneRoom(
     @Req() req: Request,
     @Param() params: GetRoomParamsDto,
     @Query() query: GetRoomQueryDto,
   ): Promise<RoomData> {
-    return this.chatService.getRoomData(req.user.id, params.id, query.type);
+    return this.chatService.getOneRoom(req.user.id, params.roomId, query.type);
   }
 
   @Get('/messages/:roomId')
   async getRoomMessages(
     @Req() req: Request,
-    @Param('roomId') roomId: string,
-    @Query('type') type: 'dm' | 'channel',
+    @Param() params: GetRoomParamsDto,
+    @Query() query: GetRoomQueryDto,
   ): Promise<Message[]> {
-    if (type === 'dm') {
-      return this.chatService.getDmMessages(req.user.id, roomId);
+    if (query.type === 'dm') {
+      return this.chatService.getDmMessages(req.user.id, params.roomId);
     } else {
-      return this.chatService.getChannelMessages(req.user.id, roomId);
+      return this.chatService.getChannelMessages(req.user.id, params.roomId);
     }
   }
 

@@ -1,6 +1,11 @@
 import React from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 
 import Channels from "../../components/Channels";
 import DmCardList from "../../components/DmCardList";
@@ -9,17 +14,23 @@ import VisuallyHidden from "../../components/VisuallyHidden";
 import logo from "../../assets/logo.svg";
 
 import { UserType } from "../../api/types";
-import { Rooms, Status } from "./types";
+import { Rooms, RoomType, Status } from "./types";
 
 const DOMAIN = import.meta.env.VITE_BACKEND_ORIGIN;
 
 interface PropsType {
   loggedUserData: UserType;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ChatSideBar({ loggedUserData, setClick }: PropsType) {
-  const [isDm, setIsDm] = React.useState(true);
+function ChatSideBar({ loggedUserData, setToggle }: PropsType) {
+  const { chatId } = useParams();
+  const [searchParams] = useSearchParams();
+  const type: RoomType | null = searchParams.get("type") as RoomType | null;
+
+  const [roomType, setRoomType] = React.useState<RoomType>(
+    type && (type === "dm" || type === "channel") ? type : "dm",
+  );
   const [rooms, setRooms] = React.useState<Rooms>({
     dms: [],
     joinedChannels: [],
@@ -34,54 +45,57 @@ function ChatSideBar({ loggedUserData, setClick }: PropsType) {
       try {
         setStatus("loading");
 
-        const res = await fetch(
-          `${DOMAIN}/chat/rooms?type=${isDm ? "dm" : "channel"}`,
-          { credentials: "include" },
-        );
+        const res = await fetch(`${DOMAIN}/chat/rooms?type=${roomType}`, {
+          credentials: "include",
+        });
 
         const body: Rooms = await res.json();
 
         if (res.ok) {
           let initialChatId = "";
-          if (isDm && body.dms.length) {
-            initialChatId = body.dms[0].id;
+          if (roomType === "dm" && body.dms.length) {
+            initialChatId =
+              chatId && body.dms.find((element) => element.id === chatId)
+                ? chatId
+                : body.dms[0].id;
           }
-          if (!isDm && body.joinedChannels.length) {
-            initialChatId = body.joinedChannels[0].id;
+          if (roomType === "channel" && body.joinedChannels.length) {
+            initialChatId =
+              chatId && body.joinedChannels.find((element) => element.id === chatId)
+                ? chatId
+                : body.joinedChannels[0].id;
           }
 
           setStatus("success");
           setRooms(body);
 
           if (initialChatId) {
-            navigate(`/chat/${initialChatId}?type=${isDm ? "dm" : "channel"}`, {
+            navigate(`/chat/${initialChatId}?type=${roomType}`, {
               replace: true,
             });
           } else {
-            navigate("/chat")
+            navigate("/chat");
           }
         } else {
           setStatus("error");
-          res.status === 401
-            ? navigate("/login")
-            : window.alert("Something Went Wrong");
+          if (res.status === 401) {
+            navigate("/login");
+          }
         }
-      } catch (err) {
-        const error = err as Error;
+      } catch {
         setStatus("error");
-        window.alert(error.message);
       }
     };
 
     fetcher();
-  }, [isDm]);
+  }, [roomType]);
 
   function handleDmsButtonClick() {
-    setIsDm(true);
+    setRoomType("dm");
   }
 
   function handleChannelsButtonClick() {
-    setIsDm(false);
+    setRoomType("channel");
   }
 
   return (
@@ -93,27 +107,30 @@ function ChatSideBar({ loggedUserData, setClick }: PropsType) {
 
       <div className="flex grow flex-col gap-6 overflow-hidden">
         <div className="mx-3 flex items-center text-sm lg:mx-2">
-          <Button isHovered={isDm} onClick={handleDmsButtonClick}>
+          <Button isHovered={roomType === "dm"} onClick={handleDmsButtonClick}>
             Direct Messages
           </Button>
-          <Button isHovered={!isDm} onClick={handleChannelsButtonClick}>
+          <Button
+            isHovered={roomType === "channel"}
+            onClick={handleChannelsButtonClick}
+          >
             Channels
           </Button>
         </div>
 
-        {isDm ? (
+        {roomType === "dm" ? (
           <DmCardList
             dms={rooms.dms}
             status={status}
             loggedUserData={loggedUserData}
-            setClick={setClick}
+            setToggle={setToggle}
           />
         ) : (
           <Channels
             joinedChannels={rooms.joinedChannels}
             notJoinedChannels={rooms.notJoinedChannels}
             status={status}
-            setClick={setClick}
+            setToggle={setToggle}
           />
         )}
       </div>

@@ -5,7 +5,7 @@ export type RoomType = 'dm' | 'channel';
 export class GetRoomParamsDto {
   @IsString()
   @IsNotEmpty()
-  id: string;
+  roomId: string;
 }
 
 export class GetRoomQueryDto {

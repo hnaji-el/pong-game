@@ -8,15 +8,16 @@ import useToggle from "../hooks/use-toggle";
 import Modal from "./Modal/Modal";
 import PasswordModal from "./modals/PasswordModal";
 import { deleteRoom, joinChannel, leaveRoom } from "../api/API";
+import Spinner from "./Spinner";
 
 interface PropsType {
   title: string;
   channels: Channel[];
   status: Status;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function ChannelCardList({ title, channels, status, setClick }: PropsType) {
+function ChannelCardList({ title, channels, status, setToggle }: PropsType) {
   const [isPasswordModalOpen, toggleIsPasswordModalOpen] = useToggle(false);
 
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function ChannelCardList({ title, channels, status, setClick }: PropsType) {
 
   function handleCardClick(channel: Channel) {
     if (channel.isJoined) {
-      setClick(true);
+      setToggle(true);
       // navigate(`/chat/${channel.id}`);
     } else {
       if (channel.type === "PROTECTED") {
@@ -41,7 +42,7 @@ function ChannelCardList({ title, channels, status, setClick }: PropsType) {
             type: "PUBLIC",
           },
           () => {
-            setClick(true);
+            setToggle(true);
             // navigate(`/chat/${channel.id}`);
           },
         );
@@ -80,7 +81,7 @@ function ChannelCardList({ title, channels, status, setClick }: PropsType) {
         <Modal title="password" handleDismiss={toggleIsPasswordModalOpen}>
           <PasswordModal
             nextChatId={nextChatId}
-            setClick={setClick}
+            setToggle={setToggle}
             handleDismiss={toggleIsPasswordModalOpen}
           />
         </Modal>
@@ -90,7 +91,7 @@ function ChannelCardList({ title, channels, status, setClick }: PropsType) {
 
       {status === "loading" && (
         <div className="flex grow items-center justify-center pb-[7.3rem] text-sm text-primaryText">
-          loading...
+          <Spinner size={40} />
         </div>
       )}
 

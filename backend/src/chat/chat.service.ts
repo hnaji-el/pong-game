@@ -183,7 +183,7 @@ export class ChatService {
     return notJoinedChannels;
   }
 
-  async getRoomData(
+  async getOneRoom(
     userId: string,
     roomId: string,
     type: RoomType,

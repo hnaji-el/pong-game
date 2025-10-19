@@ -11,14 +11,14 @@ interface PropsType {
   joinedChannels: Channel[];
   notJoinedChannels: Channel[];
   status: Status;
-  setClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Channels({
   joinedChannels,
   notJoinedChannels,
   status,
-  setClick,
+  setToggle,
 }: PropsType) {
   const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
     useToggle(false);
@@ -51,14 +51,14 @@ function Channels({
           title="joined channels:"
           channels={joinedChannels}
           status={status}
-          setClick={setClick}
+          setToggle={setToggle}
         />
 
         <ChannelCardList
           title="not joined channels:"
           channels={notJoinedChannels}
           status={status}
-          setClick={setClick}
+          setToggle={setToggle}
         />
       </div>
     </>

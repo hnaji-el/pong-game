@@ -13,7 +13,8 @@ import VisuallyHidden from "../../components/VisuallyHidden";
 import { SendIcon } from "../../components/Icons";
 
 import { UserType } from "../../api/types";
-import { ClientMessage, Message, Status } from "./types";
+import { ClientMessage, Message, RoomType, Status } from "./types";
+import Spinner from "../../components/Spinner";
 
 interface ContextType {
   loggedUserData: UserType;
@@ -32,8 +33,7 @@ function Chat() {
   const { chatId } = useParams();
 
   const [searchParams] = useSearchParams();
-  const roomType = searchParams.get("type");
-  const isDm = roomType === "dm";
+  const roomType: RoomType | null = searchParams.get("type") as RoomType | null;
 
   const navigate = useNavigate();
 
@@ -50,28 +50,26 @@ function Chat() {
           { credentials: "include" },
         );
 
-        const body = await res.json();
+        const body: Message[] = await res.json();
 
         if (res.ok) {
           setStatus("success");
           setMessages(body);
         } else {
           setStatus("error");
-          res.status === 401
-            ? navigate("/login")
-            : window.alert("Something Went Wrong");
+          if (res.status === 401) {
+            navigate("/login");
+          }
         }
-      } catch (err) {
-        const error = err as Error;
+      } catch {
         setStatus("error");
-        window.alert(error.message);
       }
     }
 
     if (chatId && roomType) {
       fetcher();
     }
-  }, [chatId, roomType, isDm, navigate]);
+  }, [chatId, roomType, navigate]);
 
   React.useEffect(() => {
     if (!socket) return;
@@ -95,7 +93,7 @@ function Chat() {
     if (!value.trim() || status !== "success") return;
 
     socket.emit("FromClient", {
-      isDm,
+      roomType,
       chatId,
       content: value,
     } as ClientMessage);
@@ -103,19 +101,23 @@ function Chat() {
     setValue("");
   }
 
+  if (status === "error") {
+    return null;
+  }
+
   return (
     <main className="flex grow flex-col overflow-hidden">
       <div className="grow overflow-auto">
         {status === "loading" && (
           <div className="flex h-full items-center justify-center">
-            loading...
+            <Spinner size={40} />
           </div>
         )}
         {status === "success" && (
           <Messages
             messages={messages}
             loggedUserId={loggedUserData.id}
-            isDm={isDm}
+            roomType={roomType}
           />
         )}
       </div>

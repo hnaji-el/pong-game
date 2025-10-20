@@ -4,10 +4,9 @@ import { Body } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ChatService } from './chat.service';
-import { ChannelType } from '@prisma/client';
 import { Request } from 'express';
-import { Message, RoomData, Rooms } from './entities/chat.entity';
-import { GetRoomParamsDto, GetRoomQueryDto } from './dto';
+import { Message, RoomData, Rooms, Channel } from './entities/chat.entity';
+import { CreateChannelDto, RoomParamsDto, RoomQueryDto } from './dto';
 
 @Controller('chat')
 @UseGuards(JwtAuthGuard)
@@ -17,7 +16,7 @@ export class ChatController {
   @Get('/rooms')
   async getUserRooms(
     @Req() req: Request,
-    @Query() query: GetRoomQueryDto,
+    @Query() query: RoomQueryDto,
   ): Promise<Rooms> {
     return this.chatService.getUserRooms(req.user.id, query.type);
   }
@@ -25,8 +24,8 @@ export class ChatController {
   @Get('/rooms/:roomId')
   async getOneRoom(
     @Req() req: Request,
-    @Param() params: GetRoomParamsDto,
-    @Query() query: GetRoomQueryDto,
+    @Param() params: RoomParamsDto,
+    @Query() query: RoomQueryDto,
   ): Promise<RoomData> {
     return this.chatService.getOneRoom(req.user.id, params.roomId, query.type);
   }
@@ -34,8 +33,8 @@ export class ChatController {
   @Get('/messages/:roomId')
   async getRoomMessages(
     @Req() req: Request,
-    @Param() params: GetRoomParamsDto,
-    @Query() query: GetRoomQueryDto,
+    @Param() params: RoomParamsDto,
+    @Query() query: RoomQueryDto,
   ): Promise<Message[]> {
     if (query.type === 'dm') {
       return this.chatService.getDmMessages(req.user.id, params.roomId);
@@ -45,11 +44,10 @@ export class ChatController {
   }
 
   @Post('/channels')
-  @UseGuards(JwtAuthGuard)
   async createChannel(
     @Req() req: Request,
-    @Body() body: { name: string; type: ChannelType; password?: string },
-  ): Promise<{ id: string }> {
+    @Body() body: CreateChannelDto,
+  ): Promise<Channel> {
     return this.chatService.createChannel(
       req.user.id,
       body.name,

@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -9,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import * as cookie from 'cookie';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { ChannelType, User } from '@prisma/client';
+import { ChannelType, Prisma, User } from '@prisma/client';
 import { AttachedUserEntity } from 'src/users/entities/attachedUser.entity';
 import { Channel, Dm, Message, RoomData, Rooms } from './entities/chat.entity';
 import { RoomType } from './dto';
@@ -54,33 +55,55 @@ export class ChatService {
     name: string,
     type: ChannelType,
     password?: string,
-  ): Promise<{ id: string }> {
-    // Validate input for protected channels
-    if (type === 'PROTECTED' && !password) {
-      throw new Error('Password is required for protected channels.');
-    }
+  ): Promise<Channel> {
+    try {
+      const channel = await this.prisma.$transaction(async (prisma) => {
+        // Step 1: Create the channel
+        const newChannel = await prisma.channel.create({
+          data: {
+            name,
+            type,
+            hashedPassword: password
+              ? bcrypt.hashSync(password, bcrypt.genSaltSync())
+              : null,
+          },
+        });
 
-    // Create the channel
-    const channel = await this.prisma.channel.create({
-      data: {
-        name,
-        type,
-        hashedPassword: password
-          ? bcrypt.hashSync(password, bcrypt.genSaltSync())
-          : null,
-      },
-    });
+        // Step 2: Create the membership for the owner
+        await prisma.channelMembership.create({
+          data: {
+            userId,
+            channelId: newChannel.id,
+            role: 'OWNER',
+          },
+        });
 
-    // Add the creator to the channelMembership table as OWNER
-    await this.prisma.channelMembership.create({
-      data: {
-        userId,
-        channelId: channel.id,
+        return newChannel;
+      });
+
+      return {
+        id: channel.id,
+        createdAt: channel.createdAt,
+        updatedAt: channel.updatedAt,
+        name: channel.name,
+        type: channel.type,
         role: 'OWNER',
-      },
-    });
-
-    return { id: channel.id };
+        isJoined: true,
+      };
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        // Unique constraint violation (channel name already exists).
+        throw new ConflictException('A channel with this name already exists.');
+      }
+      // handle database/network errors or other unexpected errors.
+      console.error('Database/network error or other unexpected error.', error);
+      throw new InternalServerErrorException(
+        'Something went wrong. Please try again later.',
+      );
+    }
   }
 
   async getUserRooms(userId: string, type: RoomType): Promise<Rooms> {
@@ -262,7 +285,7 @@ export class ChatService {
       // handle database/network errors or other unexpected errors.
       console.error('Database/network error or other unexpected error.', error);
       throw new InternalServerErrorException(
-        'An unexpected error occurred. Please try again later.',
+        'Something went wrong. Please try again later.',
       );
     }
 

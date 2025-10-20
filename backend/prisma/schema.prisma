@@ -69,7 +69,7 @@ model Channel {
   id             String      @id @default(uuid())
   name           String      @unique @db.VarChar(20)
   type           ChannelType
-  hashedPassword String?     @db.VarChar(20)
+  hashedPassword String?
   createdAt      DateTime    @db.Timestamptz @default(now())
   updatedAt      DateTime    @db.Timestamptz @default(now()) @updatedAt
 

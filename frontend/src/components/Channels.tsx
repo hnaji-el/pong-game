@@ -1,25 +1,20 @@
 import React from "react";
 
 import { PlusIcon } from "./Icons";
-import { Channel, Status } from "../pages/Chat/types";
+import { Rooms, Status } from "../pages/Chat/types";
 import Modal from "./Modal/Modal";
 import useToggle from "../hooks/use-toggle";
 import CreateChannelModal from "./modals/CreateChannelModal";
 import ChannelCardList from "./ChannelCardList";
 
 interface PropsType {
-  joinedChannels: Channel[];
-  notJoinedChannels: Channel[];
+  rooms: Rooms;
+  setRooms: React.Dispatch<React.SetStateAction<Rooms>>;
   status: Status;
   setToggle: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Channels({
-  joinedChannels,
-  notJoinedChannels,
-  status,
-  setToggle,
-}: PropsType) {
+function Channels({ rooms, setRooms, status, setToggle }: PropsType) {
   const [isCreateChannelModalOpen, toggleIsCreateChannelModalOpen] =
     useToggle(false);
 
@@ -30,7 +25,11 @@ function Channels({
           title="create channel"
           handleDismiss={toggleIsCreateChannelModalOpen}
         >
-          <CreateChannelModal handleDismiss={toggleIsCreateChannelModalOpen} />
+          <CreateChannelModal
+            rooms={rooms}
+            setRooms={setRooms}
+            handleDismiss={toggleIsCreateChannelModalOpen}
+          />
         </Modal>
       )}
 
@@ -49,14 +48,14 @@ function Channels({
 
         <ChannelCardList
           title="joined channels:"
-          channels={joinedChannels}
+          channels={rooms.joinedChannels}
           status={status}
           setToggle={setToggle}
         />
 
         <ChannelCardList
           title="not joined channels:"
-          channels={notJoinedChannels}
+          channels={rooms.notJoinedChannels}
           status={status}
           setToggle={setToggle}
         />

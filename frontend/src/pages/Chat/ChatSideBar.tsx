@@ -61,7 +61,8 @@ function ChatSideBar({ loggedUserData, setToggle }: PropsType) {
           }
           if (roomType === "channel" && body.joinedChannels.length) {
             initialChatId =
-              chatId && body.joinedChannels.find((element) => element.id === chatId)
+              chatId &&
+              body.joinedChannels.find((element) => element.id === chatId)
                 ? chatId
                 : body.joinedChannels[0].id;
           }
@@ -127,8 +128,8 @@ function ChatSideBar({ loggedUserData, setToggle }: PropsType) {
           />
         ) : (
           <Channels
-            joinedChannels={rooms.joinedChannels}
-            notJoinedChannels={rooms.notJoinedChannels}
+            rooms={rooms}
+            setRooms={setRooms}
             status={status}
             setToggle={setToggle}
           />
